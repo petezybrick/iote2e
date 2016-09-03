@@ -1,0 +1,32 @@
+[
+  {
+    "sourceUuid": "8043c648-a45d-4352-b024-1b4dd72fe9bc",
+    "sensorUuid": "3c3122da-6db6-4eb2-bbd3-55456e65d76d",
+    "actuatorUuid": "558ad108-b893-4298-a97f-7c89f2d6ad2b",
+    "desc": "TempToFan"
+  },
+  {
+    "sourceUuid": "8043c648-a45d-4352-b024-1b4dd72fe9bc",
+    "sensorUuid": "fb0440cd-5933-47c2-b7f2-a60b99fa0ba8",
+    "actuatorUuid": "09844bc1-48d5-4916-bc85-f1953a7e53b4",
+    "desc": "HumidityToMister"
+  },
+  {
+    "sourceUuid": "102030a8-9cc9-47e5-8978-898ab010bd94",
+    "sensorUuid": "3fc0397a-9044-4c32-aaee-0d40924a0c30",
+    "actuatorUuid": "8043ae1b-49aa-4956-ba86-d142e16c28f5",
+    "desc": "Switch0ToLedGreen"
+  },
+  {
+    "sourceUuid": "102030a8-9cc9-47e5-8978-898ab010bd94",
+    "sensorUuid": "1767121a-d0f4-46b2-b568-da01e1dc950d",
+    "actuatorUuid": "bb4bde75-29d9-4df4-9728-60d409e64494",
+    "desc": "Switch1ToLedRed"
+  },
+  {
+    "sourceUuid": "102030a8-9cc9-47e5-8978-898ab010bd94",
+    "sensorUuid": "82abbfa2-7b08-4167-9d5f-8e99ba810a1a",
+    "actuatorUuid": "f314b275-da68-46cb-9183-c72af099c1cc",
+    "desc": "Switch2ToLedYellow"
+  }
+]

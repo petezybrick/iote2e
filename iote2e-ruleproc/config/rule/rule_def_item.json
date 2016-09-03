@@ -1,0 +1,142 @@
+[
+  {
+    "ruleUuid": "3c473a14-745c-4c3d-aed6-e73a91b70e56",
+    "ruleName": "TempFan",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "GE",
+        "sensorCompareValue": "80",
+        "sensorTypeValue": "dbl",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "off",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "fan",
+        "actuatorTargetValue": "on",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "LE",
+        "sensorCompareValue": "77",
+        "sensorTypeValue": "dbl",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "on",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "fan",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "b578b7d9-a5c0-44fe-8810-155b9fec52d0",
+    "ruleName": "HumidityMister",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "LE",
+        "sensorCompareValue": "85",
+        "sensorTypeValue": "dbl",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "off",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "mister",
+        "actuatorTargetValue": "on",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "GE",
+        "sensorCompareValue": "90",
+        "sensorTypeValue": "dbl",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "on",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "mister",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "f7cfec79-cc00-48e3-aa49-02833a996319",
+    "ruleName": "LedGreenOnOff",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "1",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "NE",
+        "actuatorCompareValue": "green",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "green",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "0",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "green",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "c52a97f8-1599-4487-83fe-e41d94dfd902",
+    "ruleName": "LedGreenOnOff",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "1",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "NE",
+        "actuatorCompareValue": "red",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "red",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "0",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "red",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "b0e1a989-9653-4c05-96f7-d0d9d8ea6ad2",
+    "ruleName": "LedGreenOnOff",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "1",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "NE",
+        "actuatorCompareValue": "yellow",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "yellow",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "0",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "green",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  }
+]

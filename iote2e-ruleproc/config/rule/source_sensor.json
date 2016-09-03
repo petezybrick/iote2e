@@ -1,0 +1,5 @@
+{
+  "jsonFileSourceSensorActuator":"config/rule/source_sensor_actuator.json",
+  "jsonFileRuleSourceSensor":"config/rule/rule_source_sensor.json",
+  "jsonFileRuleDefItem":"config/rule/rule_def_item.json"
+}

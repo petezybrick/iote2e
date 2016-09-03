@@ -7,8 +7,6 @@ import com.google.gson.annotations.Expose;
 @Generated("org.jsonschema2pojo")
 public class RuleConfig {
 	@Expose 
-	private String sourceSensorActuatorSvcClassname;
-	@Expose 
 	private String jsonFileSourceSensorActuator;
 	@Expose 
 	private String jsonFileRuleSourceSensor;
@@ -17,15 +15,6 @@ public class RuleConfig {
 	
 	public RuleConfig() {
 		
-	}
-
-	public String getSourceSensorActuatorSvcClassname() {
-		return sourceSensorActuatorSvcClassname;
-	}
-
-	public RuleConfig setSourceSensorActuatorSvcClassname(String sourceSensorAcuatorSvcClassname) {
-		this.sourceSensorActuatorSvcClassname = sourceSensorAcuatorSvcClassname;
-		return this;
 	}
 
 	public String getJsonFileSourceSensorActuator() {
@@ -39,9 +28,9 @@ public class RuleConfig {
 
 	@Override
 	public String toString() {
-		return "RuleConfig [sourceSensorActuatorSvcClassname=" + sourceSensorActuatorSvcClassname
-				+ ", jsonFileSourceSensorActuator=" + jsonFileSourceSensorActuator + ", jsonFileRuleSourceSensor="
-				+ jsonFileRuleSourceSensor + ", jsonFileRuleDefItem=" + jsonFileRuleDefItem + "]";
+		return "RuleConfig [jsonFileSourceSensorActuator=" + jsonFileSourceSensorActuator
+				+ ", jsonFileRuleSourceSensor=" + jsonFileRuleSourceSensor + ", jsonFileRuleDefItem="
+				+ jsonFileRuleDefItem + "]";
 	}
 
 	public String getJsonFileRuleSourceSensor() {
