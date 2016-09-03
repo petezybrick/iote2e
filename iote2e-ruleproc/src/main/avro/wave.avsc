@@ -1,0 +1,10 @@
+{"namespace": "com.pzybrick.avro.schema",
+ "type": "record",
+ "name": "Wave",
+ "fields": [
+     {"name": "source_uuid", "type": "string"},
+     {"name": "wave_type",  "type": "string"},
+     {"name": "wave_value", "type": "double"},
+     {"name": "ts_epoch", "type": "long"}
+ ]
+}
