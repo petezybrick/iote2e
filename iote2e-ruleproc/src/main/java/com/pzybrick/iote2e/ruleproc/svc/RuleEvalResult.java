@@ -1,32 +1,32 @@
 package com.pzybrick.iote2e.ruleproc.svc;
 
 public class RuleEvalResult {
-	private boolean success;
+	private boolean ruleActuatorHit;
 	private String actuatorTargetValue;
 	private SourceSensorActuator sourceSensorActuator;
 
 	public RuleEvalResult() {
-		this.success = false;
+		this.ruleActuatorHit = false;
 		this.sourceSensorActuator = null;
 		this.actuatorTargetValue = null;
 	}
 
-	public RuleEvalResult(boolean success, SourceSensorActuator sourceSensorActuator) {
-		this.success = success;
+	public RuleEvalResult(boolean ruleActuatorHit, SourceSensorActuator sourceSensorActuator) {
+		this.ruleActuatorHit = ruleActuatorHit;
 		this.sourceSensorActuator = sourceSensorActuator;
 		this.actuatorTargetValue = null;
 	}
 
-	public boolean isSuccess() {
-		return success;
+	public boolean isRuleActuatorHit() {
+		return ruleActuatorHit;
 	}
 
 	public SourceSensorActuator getSourceSensorActuator() {
 		return sourceSensorActuator;
 	}
 
-	public RuleEvalResult setSuccess(boolean success) {
-		this.success = success;
+	public RuleEvalResult setRuleActuatorHit(boolean ruleActuatorHit) {
+		this.ruleActuatorHit = ruleActuatorHit;
 		return this;
 	}
 
@@ -37,7 +37,7 @@ public class RuleEvalResult {
 
 	@Override
 	public String toString() {
-		return "RuleEvalResult [success=" + success + ", actuatorTargetValue=" + actuatorTargetValue
+		return "RuleEvalResult [ruleActuatorHit=" + ruleActuatorHit + ", actuatorTargetValue=" + actuatorTargetValue
 				+ ", sourceSensorActuator=" + sourceSensorActuator + "]";
 	}
 

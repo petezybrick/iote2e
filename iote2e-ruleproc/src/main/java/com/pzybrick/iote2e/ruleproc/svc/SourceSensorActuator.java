@@ -16,6 +16,8 @@ public class SourceSensorActuator {
 	private String actuatorValue;
 	@Expose
 	private String desc;
+	@Expose
+	private String actuatorValueUpdatedAt;
 
 	public SourceSensorActuator() {
 		
@@ -66,10 +68,20 @@ public class SourceSensorActuator {
 		return this;
 	}
 
+	public String getActuatorValueUpdatedAt() {
+		return actuatorValueUpdatedAt;
+	}
+
+	public SourceSensorActuator setActuatorValueUpdatedAt(String actuatorValueUpdatedAt) {
+		this.actuatorValueUpdatedAt = actuatorValueUpdatedAt;
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return "SourceSensorActuator [sourceUuid=" + sourceUuid + ", sensorUuid=" + sensorUuid + ", actuatorUuid="
-				+ actuatorUuid + ", actuatorValue=" + actuatorValue + ", desc=" + desc + "]";
+				+ actuatorUuid + ", actuatorValue=" + actuatorValue + ", desc=" + desc + ", actuatorValueUpdatedAt="
+				+ actuatorValueUpdatedAt + "]";
 	}
 	
 }

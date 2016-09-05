@@ -1,5 +1,6 @@
-package com.pzybrick.test.iote2e.ruleproc.svc;
+package com.pzybrick.test.iote2e.ruleproc.ignite;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -9,17 +10,16 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.pzybrick.avro.schema.SourceSensorValue;
+import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.sourcesensor.SourceSensorHandler;
-import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
-import com.pzybrick.test.iote2e.ruleproc.sourceresponse.SourceResponseSvcUnitTestImpl;
 
-public class TestSourceSensorHandlerBase {
-	private static final Log log = LogFactory.getLog(TestSourceSensorHandlerBase.class);
+public class TestIgniteSourceSensorHandlerBase {
+	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerBase.class);
 	protected ConcurrentLinkedQueue<SourceSensorValue> sourceSensorValues;
 	protected SourceSensorHandler sourceSensorHandler;
-	protected SourceResponseSvcUnitTestImpl sourceResponseSvcUnitTestImpl;
+	protected SourceResponseSvc sourceResponseSvc;
 	
-	public TestSourceSensorHandlerBase() {
+	public TestIgniteSourceSensorHandlerBase() {
 		super();
 	}
 	
@@ -28,8 +28,7 @@ public class TestSourceSensorHandlerBase {
 		log.info("------------------------------------------------------------------------------------------------------");		
 		sourceSensorValues = new ConcurrentLinkedQueue<SourceSensorValue>();
 		sourceSensorHandler = new SourceSensorHandler(System.getenv("SOURCE_SENSOR_CONFIG_JSON_FILE"), sourceSensorValues);
-		sourceResponseSvcUnitTestImpl = (SourceResponseSvcUnitTestImpl)sourceSensorHandler.getSourceResponseSvc();
-		sourceResponseSvcUnitTestImpl.setRuleEvalResults(null);
+		sourceResponseSvc = sourceSensorHandler.getSourceResponseSvc();
 		sourceSensorHandler.start();
 	}	
 	
@@ -53,13 +52,15 @@ public class TestSourceSensorHandlerBase {
 		}		
 	}
 	
-	protected List<RuleEvalResult> commonGetRuleEvalResults( long maxWaitMsecs ) {
+	// TODO: read cache results from string as Avro
+	protected List<String> commonReadCacheResults( long maxWaitMsecs ) {
+		List<String> results = new ArrayList<String>();
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while( System.currentTimeMillis() < wakeupAt ) {
-			if( sourceResponseSvcUnitTestImpl.getRuleEvalResults() != null )
-				return sourceResponseSvcUnitTestImpl.getRuleEvalResults();
+//			if( sourceResponseSvcUnitTestImpl.getRuleEvalResults() != null )
+//				return sourceResponseSvcUnitTestImpl.getRuleEvalResults();
 			try { Thread.sleep(100); }catch(Exception e){}
 		}
-		return null;
+		return results;
 	}
 }

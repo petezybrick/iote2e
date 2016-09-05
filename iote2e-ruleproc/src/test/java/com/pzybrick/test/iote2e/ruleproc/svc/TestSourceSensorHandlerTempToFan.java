@@ -28,7 +28,7 @@ public class TestSourceSensorHandlerTempToFan extends TestSourceSensorHandlerBas
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", ruleEvalResults.get(0).getActuatorTargetValue(), "off" );
+		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
 	
 	@Test
@@ -39,7 +39,7 @@ public class TestSourceSensorHandlerTempToFan extends TestSourceSensorHandlerBas
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", ruleEvalResults.get(0).getActuatorTargetValue(), "on" );
+		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "on", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
 	
 	@Test

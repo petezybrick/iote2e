@@ -38,7 +38,9 @@ public class SourceSensorHandler extends Thread {
 
 		rawJson = FileUtils.readFileToString(new File(sourceSensorConfig.getPathNameExtRuleConfigFile()));
 		RuleConfig ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
+		
 		ruleSvc.init(ruleConfig);
+		sourceResponseSvc.init(ruleConfig);
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public abstract class RuleSvc {
 				RuleEvalResult ruleEvalResult = ruleEvalActuator(sourceUuid, sensorUuid, ruleDefCondItem, ruleDefItem);
 				log.debug(ruleEvalResult);
 				ruleEvalResults.add(ruleEvalResult);
-				if (ruleEvalResult.isSuccess()) {
+				if (ruleEvalResult.isRuleActuatorHit()) {
 					ruleEvalResult.setActuatorTargetValue(ruleDefCondItem.getActuatorTargetValue());
 					if (ruleDefCondItem.getStopEvalOnMatch())
 						break;
@@ -79,9 +79,9 @@ public abstract class RuleSvc {
 					"Missing SourceSensorActuator, sourceUuid=" + sourceUuid + ", sensorUuid=" + sensorUuid);
 		log.debug(sourceSensorActuator);
 
-		boolean success = false;
+		boolean ruleActuatorHit = false;
 		if( sourceSensorActuator.getActuatorValue() != null ) {
-			success = ruleEvalCommon(sourceSensorActuator.getActuatorValue(),
+			ruleActuatorHit = ruleEvalCommon(sourceSensorActuator.getActuatorValue(),
 					ruleDefCondItem.getActuatorTypeValue(), ruleDefCondItem.getActuatorCompareValue(),
 					ruleDefCondItem.getIntActuatorCompareValue(), ruleDefCondItem.getDblActuatorCompareValue(),
 					ruleDefCondItem.getRuleComparatorActuator(), ruleDefItem);
@@ -90,16 +90,16 @@ public abstract class RuleSvc {
 			// If the ActuatorValue is null it means it hasn't been initialized yet, so force the rule to fire
 			// so that an initial state will be set for the actuator
 			log.debug("actuator not initialized yet - value is null");
-			success = true;
+			ruleActuatorHit = true;
 		}
-		RuleEvalResult ruleEvalResult = new RuleEvalResult(success, sourceSensorActuator);
+		RuleEvalResult ruleEvalResult = new RuleEvalResult(ruleActuatorHit, sourceSensorActuator);
 		return ruleEvalResult;
 	}
 
 	private boolean ruleEvalCommon(String currentValue, String typeValue, String strCompareValue,
 			Integer intCompareValue, Double dblCompareValue, RuleComparator ruleComparator, RuleDefItem ruleDefItem)
 			throws Exception {
-		boolean isSensorRuleHit = false;
+		boolean isRuleHit = false;
 		int compareResult = 0;
 		if ("dbl".equals(typeValue)) {
 			Double dblSensorValue = Double.parseDouble(currentValue);
@@ -114,24 +114,24 @@ public abstract class RuleSvc {
 
 		if (ruleComparator == RuleComparator.EQ) {
 			if (compareResult == 0)
-				isSensorRuleHit = true;
+				isRuleHit = true;
 		} else if (ruleComparator == RuleComparator.NE) {
 			if (compareResult != 0)
-				isSensorRuleHit = true;
+				isRuleHit = true;
 		} else if (ruleComparator == RuleComparator.LE) {
 			if (compareResult <= 0)
-				isSensorRuleHit = true;
+				isRuleHit = true;
 		} else if (ruleComparator == RuleComparator.GE) {
 			if (compareResult >= 0)
-				isSensorRuleHit = true;
+				isRuleHit = true;
 		} else if (ruleComparator == RuleComparator.LT) {
 			if (compareResult < 0)
-				isSensorRuleHit = true;
+				isRuleHit = true;
 		} else if (ruleComparator == RuleComparator.GT) {
 			if (compareResult > 0)
-				isSensorRuleHit = true;
+				isRuleHit = true;
 		}
-		return isSensorRuleHit;
+		return isRuleHit;
 	}
 
 }
