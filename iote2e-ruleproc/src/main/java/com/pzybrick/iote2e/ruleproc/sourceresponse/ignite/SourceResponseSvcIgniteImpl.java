@@ -20,10 +20,10 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
 public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
 	private static final Log log = LogFactory.getLog(SourceResponseSvcIgniteImpl.class);
-	private static Ignite ignite;
-	private static IgniteCache<String, String> cache;
+	private IgniteSingleton igniteSingleton;
 
 	public SourceResponseSvcIgniteImpl() throws Exception {
+
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
 				int cntRetry = 0;
 				while( System.currentTimeMillis() < timeoutAt ) {
 					try {
-						cache.put(key, ruleEvalResult.getSourceSensorActuator().toString());
+						igniteSingleton.getCache().put(key, ruleEvalResult.getSourceSensorActuator().toString());
 						log.debug("cache.put successful");
 						break;
 					} catch( CacheException inte ) {
@@ -61,30 +61,12 @@ public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
 			}
 		}
 	}
-	
-	private static synchronized void createIgniteInstance( RuleConfig ruleConfig ) throws Exception {
-		if( ignite == null ) {
-			try {
-				log.info("Initializing Ignite, config file=" + ruleConfig.getSourceResponseIgniteConfigFile() + ", config name=" +  ruleConfig.getSourceResponseIgniteConfigName());
-				IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
-						ruleConfig.getSourceResponseIgniteConfigFile(), ruleConfig.getSourceResponseIgniteConfigName());
-				Ignition.setClientMode(true);
-				ignite = Ignition.start(igniteConfiguration);
-				if (log.isDebugEnabled()) log.debug(ignite.toString());
-				cache = ignite.getOrCreateCache(ruleConfig.getSourceResponseIgniteCacheName());
-			} catch (Exception e) {
-				log.error("Ignite initialization failure", e);
-				throw e;
-			}
-		}
-	}
 
 	@Override
 	public void init(RuleConfig ruleConfig) throws Exception {
 		try {
-			log.info("Starting IgniteCache for: " + ruleConfig.getSourceResponseIgniteCacheName());
-			createIgniteInstance( ruleConfig );
-			//cache = ignite.getOrCreateCache(ruleConfig.getSourceResponseIgniteCacheName());
+			log.info("Getting IgniteCache for: " + ruleConfig.getSourceResponseIgniteCacheName());
+			this.igniteSingleton = IgniteSingleton.getInstance( ruleConfig );
 		} catch (Exception e) {
 			log.error("Ignite create cache failure", e);
 			throw e;
@@ -96,7 +78,7 @@ public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
 	public void close() throws Exception {
 		try {
 			// Be careful - ignite is a singleton, only close after last usage
-			ignite.close();
+			igniteSingleton.getIgnite().close();
 		} catch (Exception e) {
 			log.warn("Ignite close failure", e);
 		}

@@ -22,6 +22,8 @@ public class SourceSensorHandler extends Thread {
 	private RuleSvc ruleSvc;
 	private SourceResponseSvc sourceResponseSvc;
 	private boolean shutdown;
+	private SourceSensorConfig sourceSensorConfig;
+	private RuleConfig ruleConfig;
 
 	public SourceSensorHandler(String pathNameExtSourceSensorConfig,
 			ConcurrentLinkedQueue<SourceSensorValue> sourceSensorValues) throws Exception {
@@ -29,7 +31,7 @@ public class SourceSensorHandler extends Thread {
 		this.sourceSensorValues = sourceSensorValues;
 		String rawJson = FileUtils.readFileToString(new File(pathNameExtSourceSensorConfig));
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		SourceSensorConfig sourceSensorConfig = gson.fromJson(rawJson, SourceSensorConfig.class);
+		sourceSensorConfig = gson.fromJson(rawJson, SourceSensorConfig.class);
 
 		Class cls = Class.forName(sourceSensorConfig.getRuleSvcClassName());
 		ruleSvc = (RuleSvc) cls.newInstance();
@@ -37,7 +39,7 @@ public class SourceSensorHandler extends Thread {
 		sourceResponseSvc = (SourceResponseSvc) cls.newInstance();
 
 		rawJson = FileUtils.readFileToString(new File(sourceSensorConfig.getPathNameExtRuleConfigFile()));
-		RuleConfig ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
+		ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
 		
 		ruleSvc.init(ruleConfig);
 		sourceResponseSvc.init(ruleConfig);
@@ -97,6 +99,14 @@ public class SourceSensorHandler extends Thread {
 
 	public SourceResponseSvc getSourceResponseSvc() {
 		return sourceResponseSvc;
+	}
+
+	public SourceSensorConfig getSourceSensorConfig() {
+		return sourceSensorConfig;
+	}
+
+	public RuleConfig getRuleConfig() {
+		return ruleConfig;
 	}
 
 }
