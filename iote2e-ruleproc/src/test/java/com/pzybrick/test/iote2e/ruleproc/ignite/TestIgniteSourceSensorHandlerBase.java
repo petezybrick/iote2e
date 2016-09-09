@@ -12,17 +12,13 @@ import javax.cache.event.CacheEntryUpdatedListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.ignite.Ignite;
-import org.apache.ignite.IgniteCache;
-import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.query.ContinuousQuery;
 import org.apache.ignite.cache.query.QueryCursor;
-import org.apache.ignite.configuration.IgniteConfiguration;
 import org.junit.After;
 import org.junit.Before;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pzybrick.avro.schema.SourceSensorValue;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.IgniteSingleton;
@@ -32,25 +28,31 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 public class TestIgniteSourceSensorHandlerBase {
 	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerBase.class);
 	protected ConcurrentLinkedQueue<SourceSensorValue> sourceSensorValues;
+	protected ConcurrentLinkedQueue<String> subscribeResults;
 	protected SourceSensorHandler sourceSensorHandler;
 	protected SourceResponseSvc sourceResponseSvc;
 	protected ThreadSubscribe threadSubscribe;
 	protected boolean subscribeUp;
-
-	public TestIgniteSourceSensorHandlerBase() {
-		super();
-	}
+	protected IgniteSingleton igniteSingleton = null;
+	protected Gson gson;
 
 	@Before
 	public void before() throws Exception {
-		log.info( "------------------------------------------------------------------------------------------------------");
-		sourceSensorValues = new ConcurrentLinkedQueue<SourceSensorValue>();
-		sourceSensorHandler = new SourceSensorHandler(System.getenv("SOURCE_SENSOR_CONFIG_JSON_FILE"),
-				sourceSensorValues);
-		sourceResponseSvc = sourceSensorHandler.getSourceResponseSvc();
-		log.info(">>> Cache name: " + sourceSensorHandler.getRuleConfig().getSourceResponseIgniteCacheName());
-		startThreadSubscribe(sourceSensorHandler.getRuleConfig());
-		sourceSensorHandler.start();
+		try {
+			gson = new GsonBuilder().create();
+			subscribeResults = new ConcurrentLinkedQueue<String>();
+			sourceSensorValues = new ConcurrentLinkedQueue<SourceSensorValue>();
+			sourceSensorHandler = new SourceSensorHandler(System.getenv("SOURCE_SENSOR_CONFIG_JSON_FILE"),
+					sourceSensorValues);
+			sourceResponseSvc = sourceSensorHandler.getSourceResponseSvc();
+			igniteSingleton = IgniteSingleton.getInstance( sourceSensorHandler.getRuleConfig() );
+			log.info( "------------------------------------------------------------------------------------------------------");
+			log.info(">>> Cache name: " + sourceSensorHandler.getRuleConfig().getSourceResponseIgniteCacheName());
+			startThreadSubscribe(sourceSensorHandler.getRuleConfig());
+			sourceSensorHandler.start();
+		} catch(Exception e ) {
+			log.error("Exception in before, " + e.getMessage(), e);
+		}
 	}
 
 	private void startThreadSubscribe(RuleConfig ruleConfig) throws Exception {
@@ -79,6 +81,7 @@ public class TestIgniteSourceSensorHandlerBase {
 		sourceSensorHandler.join();
 		threadSubscribe.shutdown();
 		threadSubscribe.join();
+		IgniteSingleton.reset();
 	}
 
 	protected void commonRun(String sourceUuid, String sensorUuid, String sensorValue) {
@@ -93,12 +96,18 @@ public class TestIgniteSourceSensorHandlerBase {
 	}
 
 	// TODO: read cache results from string as Avro
-	protected List<String> commonReadCacheResults(long maxWaitMsecs) {
+	protected List<String> commonThreadSubscribeResults(long maxWaitMsecs) {
 		List<String> results = new ArrayList<String>();
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {
-			// if( sourceResponseSvcUnitTestImpl.getRuleEvalResults() != null )
-			// return sourceResponseSvcUnitTestImpl.getRuleEvalResults();
+			if( subscribeResults.size() > 0) {
+				try {
+					Thread.sleep(250);
+				} catch (Exception e) {
+				}
+				results.addAll(subscribeResults);
+				break;
+			}
 			try {
 				Thread.sleep(100);
 			} catch (Exception e) {
@@ -122,10 +131,7 @@ public class TestIgniteSourceSensorHandlerBase {
 
 		@Override
 		public void run() {
-			IgniteSingleton igniteSingleton = null;
 			try {
-				igniteSingleton = IgniteSingleton.getInstance( ruleConfig );
-
 				// Create new continuous query.
 				ContinuousQuery<Integer, String> qry = new ContinuousQuery<>();
 
@@ -134,8 +140,10 @@ public class TestIgniteSourceSensorHandlerBase {
 				qry.setLocalListener(new CacheEntryUpdatedListener<Integer, String>() {
 					@Override
 					public void onUpdated(Iterable<CacheEntryEvent<? extends Integer, ? extends String>> evts) {
-						for (CacheEntryEvent<? extends Integer, ? extends String> e : evts)
+						for (CacheEntryEvent<? extends Integer, ? extends String> e : evts) {
 							log.info("Updated entry [key=" + e.getKey() + ", val=" + e.getValue() + ']');
+							subscribeResults.add(e.getValue());
+						}
 					}
 				});
 				qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<Integer, String>>() {
@@ -153,7 +161,7 @@ public class TestIgniteSourceSensorHandlerBase {
 
 
 			} catch (Exception e) {
-				System.out.println(e);
+				log.error(e.getMessage(),e);
 				return;
 
 			}

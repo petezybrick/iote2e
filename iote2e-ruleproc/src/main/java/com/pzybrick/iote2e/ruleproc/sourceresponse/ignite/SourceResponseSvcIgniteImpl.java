@@ -6,14 +6,12 @@ import javax.cache.CacheException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.ignite.Ignite;
-import org.apache.ignite.IgniteCache;
-import org.apache.ignite.Ignition;
-import org.apache.ignite.configuration.IgniteConfiguration;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
@@ -21,9 +19,10 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
 	private static final Log log = LogFactory.getLog(SourceResponseSvcIgniteImpl.class);
 	private IgniteSingleton igniteSingleton;
+	private Gson gson;
 
 	public SourceResponseSvcIgniteImpl() throws Exception {
-
+		gson = new GsonBuilder().create();
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
 				int cntRetry = 0;
 				while( System.currentTimeMillis() < timeoutAt ) {
 					try {
-						igniteSingleton.getCache().put(key, ruleEvalResult.getSourceSensorActuator().toString());
+						igniteSingleton.getCache().put(key, gson.toJson( ruleEvalResult.getSourceSensorActuator()));
 						log.debug("cache.put successful");
 						break;
 					} catch( CacheException inte ) {

@@ -26,7 +26,7 @@ public class TestSourceSensorHandlerHumidityToMister extends TestSourceSensorHan
 		String testValue = "50";
 		commonRun( testSourceUuid, testSensorUuid, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
+		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
 		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "on", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
@@ -37,7 +37,7 @@ public class TestSourceSensorHandlerHumidityToMister extends TestSourceSensorHan
 		String testValue = "100";
 		commonRun( testSourceUuid, testSensorUuid, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
+		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
 		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
@@ -48,6 +48,6 @@ public class TestSourceSensorHandlerHumidityToMister extends TestSourceSensorHan
 		String testValue = "87";
 		commonRun( testSourceUuid, testSensorUuid, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNull("ruleEvalResults is not null", ruleEvalResults );
+		Assert.assertNull("ruleEvalResults must be null", ruleEvalResults );
 	}
 }

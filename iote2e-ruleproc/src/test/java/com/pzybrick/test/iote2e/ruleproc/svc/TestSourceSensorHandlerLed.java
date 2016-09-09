@@ -41,7 +41,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		commonRun( testSourceUuid, testSensorUuidGreen, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
+		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
 		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
 	
@@ -53,7 +53,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		commonRun( testSourceUuid, testSensorUuidRed, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
+		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
 		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "red", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
 	@Test
@@ -64,7 +64,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		commonRun( testSourceUuid, testSensorUuidRed, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
+		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
 		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
 	
@@ -76,7 +76,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		commonRun( testSourceUuid, testSensorUuidYellow, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
+		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
 		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "yellow", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
 	
@@ -88,7 +88,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		commonRun( testSourceUuid, testSensorUuidYellow, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
+		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
 		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
 	

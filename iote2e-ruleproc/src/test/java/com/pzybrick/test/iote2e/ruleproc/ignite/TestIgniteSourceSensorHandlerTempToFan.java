@@ -6,6 +6,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
+import com.pzybrick.iote2e.ruleproc.svc.SourceSensorActuator;
+
 import junit.framework.Assert;
 
 public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSensorHandlerBase {
@@ -22,10 +24,11 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 		log.info("begins");
 		String testValue = "50";
 		commonRun( testSourceUuid, testSensorUuid, testValue);
-		List<String> readCacheResults = commonReadCacheResults( 2000 );
-		Assert.assertNotNull("readCacheResults is null", readCacheResults == null );
-		Assert.assertEquals("readCacheResults must have size=1", 1, readCacheResults.size());
-		//Assert.assertEquals("readCacheResults getActuatorTargetValue", "off", readCacheResults.get(0).getActuatorTargetValue() );
+		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
+		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size());
+		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
+		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", sourceSensorActuator.getActuatorValue() );
 	}
 	
 	@Test
@@ -33,18 +36,19 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 		log.info("begins");
 		String testValue = "100";
 		commonRun( testSourceUuid, testSensorUuid, testValue);
-		List<String> readCacheResults = commonReadCacheResults( 2000 );
-		Assert.assertNotNull("readCacheResults is null", readCacheResults == null );
-		Assert.assertEquals("readCacheResults must have size=1", 1, readCacheResults.size() );
-		//Assert.assertEquals("readCacheResults getActuatorTargetValue", "on", readCacheResults.get(0).getActuatorTargetValue() );
+		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
+		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
+		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
+		Assert.assertEquals("subscribeResults getActuatorTargetValue", "on", sourceSensorActuator.getActuatorValue() );
 	}
 	
-	//@Test
+	@Test
 	public void testTempFanRuleNotFire() {
 		log.info("begins");
 		String testValue = "78";
 		commonRun( testSourceUuid, testSensorUuid, testValue);
-		List<String> readCacheResults = commonReadCacheResults( 2000 );
-		//Assert.assertNull("readCacheResults is not null", readCacheResults );
+		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+		Assert.assertEquals("subscribeResults must empty", 0, subscribeResults.size() );
 	}
 }

@@ -20,6 +20,23 @@ public class IgniteSingleton {
 		this.cache = cache;
 	}
 	
+	public static synchronized void reset( ) throws Exception {
+		if( igniteSingleton != null ) {
+			try {
+				igniteSingleton.getCache().close();
+			} catch( Exception e ) {
+				log.warn(e.getMessage(),e);
+			}			
+			try {
+				igniteSingleton.getIgnite().close();
+			} catch( Exception e ) {
+				log.warn(e.getMessage(),e);
+			}
+			igniteSingleton = null;
+		}
+		
+	}
+		
 	public static synchronized IgniteSingleton getInstance( RuleConfig ruleConfig ) throws Exception {
 		if( igniteSingleton == null ) {
 			try {
