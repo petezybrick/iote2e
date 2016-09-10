@@ -133,31 +133,31 @@ public class TestIgniteSourceSensorHandlerBase {
 		public void run() {
 			try {
 				// Create new continuous query.
-				ContinuousQuery<Integer, String> qry = new ContinuousQuery<>();
+				ContinuousQuery<String, String> qry = new ContinuousQuery<>();
 
 				// Callback that is called locally when update notifications are
 				// received.
-				qry.setLocalListener(new CacheEntryUpdatedListener<Integer, String>() {
+				qry.setLocalListener(new CacheEntryUpdatedListener<String, String>() {
 					@Override
-					public void onUpdated(Iterable<CacheEntryEvent<? extends Integer, ? extends String>> evts) {
-						for (CacheEntryEvent<? extends Integer, ? extends String> e : evts) {
+					public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends String>> evts) {
+						for (CacheEntryEvent<? extends String, ? extends String> e : evts) {
 							log.info("Updated entry [key=" + e.getKey() + ", val=" + e.getValue() + ']');
 							subscribeResults.add(e.getValue());
 						}
 					}
 				});
-				qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<Integer, String>>() {
+				qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<String, String>>() {
 					@Override
-					public CacheEntryEventFilter<Integer, String> create() {
-						return new CacheEntryEventFilter<Integer, String>() {
+					public CacheEntryEventFilter<String, String> create() {
+						return new CacheEntryEventFilter<String, String>() {
 							@Override
-							public boolean evaluate(CacheEntryEvent<? extends Integer, ? extends String> e) {
+							public boolean evaluate(CacheEntryEvent<? extends String, ? extends String> e) {
 								return true;
 							}
 						};
 					}
 				});
-				QueryCursor<Cache.Entry<Integer, String>> cur = igniteSingleton.getCache().query(qry);
+				QueryCursor<Cache.Entry<String, String>> cur = igniteSingleton.getCache().query(qry);
 
 
 			} catch (Exception e) {
