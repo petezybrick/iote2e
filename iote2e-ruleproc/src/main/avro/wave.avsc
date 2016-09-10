@@ -1,4 +1,4 @@
-{"namespace": "com.pzybrick.avro.schema",
+{"namespace": "com.pzybrick.iote2e.avro.schema",
  "type": "record",
  "name": "Wave",
  "fields": [

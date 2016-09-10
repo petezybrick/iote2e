@@ -1,9 +1,11 @@
-{"namespace": "com.pzybrick.avro.schema",
+{"namespace": "com.pzybrick.iote2e.avro.schema",
  "type": "record",
- "name": "SourceSensorValue",
+ "name": "ActuatorResponse",
  "fields": [
      {"name": "source_uuid", "type": "string"},
      {"name": "sensor_uuid",  "type": "string"},
-     {"name": "sensor_value", "type": "string"}
+     {"name": "actuator_uuid", "type": "string"},
+     {"name": "actuator_value", "type": "string"},
+     {"name": "actuator_value_updated_at", "type": "string"}
  ]
 }

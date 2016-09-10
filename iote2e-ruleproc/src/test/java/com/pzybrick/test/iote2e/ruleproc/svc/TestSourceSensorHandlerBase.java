@@ -8,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 
-import com.pzybrick.avro.schema.SourceSensorValue;
+import com.pzybrick.iote2e.avro.schema.SourceSensorValue;
 import com.pzybrick.iote2e.ruleproc.sourcesensor.SourceSensorHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.test.iote2e.ruleproc.sourceresponse.SourceResponseSvcUnitTestImpl;

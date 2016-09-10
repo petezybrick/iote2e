@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.cache.Cache;
 import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
-import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryUpdatedListener;
 
 import org.apache.commons.logging.Log;
@@ -19,7 +18,7 @@ import org.junit.Before;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pzybrick.avro.schema.SourceSensorValue;
+import com.pzybrick.iote2e.avro.schema.SourceSensorValue;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.SourceSensorCacheEntryEventFilter;

@@ -3,15 +3,15 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package com.pzybrick.avro.schema;
+package com.pzybrick.iote2e.avro.schema;
 
 import org.apache.avro.specific.SpecificData;
 
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Wave extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -6725879029682032048L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Wave\",\"namespace\":\"com.pzybrick.avro.schema\",\"fields\":[{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"wave_type\",\"type\":\"string\"},{\"name\":\"wave_value\",\"type\":\"double\"},{\"name\":\"ts_epoch\",\"type\":\"long\"}]}");
+  private static final long serialVersionUID = 6096189828878383920L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Wave\",\"namespace\":\"com.pzybrick.iote2e.avro.schema\",\"fields\":[{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"wave_type\",\"type\":\"string\"},{\"name\":\"wave_value\",\"type\":\"double\"},{\"name\":\"ts_epoch\",\"type\":\"long\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.CharSequence source_uuid;
   @Deprecated public java.lang.CharSequence wave_type;
@@ -131,8 +131,8 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
    * Creates a new Wave RecordBuilder.
    * @return A new Wave RecordBuilder
    */
-  public static com.pzybrick.avro.schema.Wave.Builder newBuilder() {
-    return new com.pzybrick.avro.schema.Wave.Builder();
+  public static com.pzybrick.iote2e.avro.schema.Wave.Builder newBuilder() {
+    return new com.pzybrick.iote2e.avro.schema.Wave.Builder();
   }
 
   /**
@@ -140,8 +140,8 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
    * @param other The existing builder to copy.
    * @return A new Wave RecordBuilder
    */
-  public static com.pzybrick.avro.schema.Wave.Builder newBuilder(com.pzybrick.avro.schema.Wave.Builder other) {
-    return new com.pzybrick.avro.schema.Wave.Builder(other);
+  public static com.pzybrick.iote2e.avro.schema.Wave.Builder newBuilder(com.pzybrick.iote2e.avro.schema.Wave.Builder other) {
+    return new com.pzybrick.iote2e.avro.schema.Wave.Builder(other);
   }
 
   /**
@@ -149,8 +149,8 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
    * @param other The existing instance to copy.
    * @return A new Wave RecordBuilder
    */
-  public static com.pzybrick.avro.schema.Wave.Builder newBuilder(com.pzybrick.avro.schema.Wave other) {
-    return new com.pzybrick.avro.schema.Wave.Builder(other);
+  public static com.pzybrick.iote2e.avro.schema.Wave.Builder newBuilder(com.pzybrick.iote2e.avro.schema.Wave other) {
+    return new com.pzybrick.iote2e.avro.schema.Wave.Builder(other);
   }
 
   /**
@@ -173,7 +173,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(com.pzybrick.avro.schema.Wave.Builder other) {
+    private Builder(com.pzybrick.iote2e.avro.schema.Wave.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.source_uuid)) {
         this.source_uuid = data().deepCopy(fields()[0].schema(), other.source_uuid);
@@ -197,7 +197,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
      * Creates a Builder by copying an existing Wave instance
      * @param other The existing instance to copy.
      */
-    private Builder(com.pzybrick.avro.schema.Wave other) {
+    private Builder(com.pzybrick.iote2e.avro.schema.Wave other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.source_uuid)) {
         this.source_uuid = data().deepCopy(fields()[0].schema(), other.source_uuid);
@@ -230,7 +230,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
       * @param value The value of 'source_uuid'.
       * @return This builder.
       */
-    public com.pzybrick.avro.schema.Wave.Builder setSourceUuid(java.lang.CharSequence value) {
+    public com.pzybrick.iote2e.avro.schema.Wave.Builder setSourceUuid(java.lang.CharSequence value) {
       validate(fields()[0], value);
       this.source_uuid = value;
       fieldSetFlags()[0] = true;
@@ -250,7 +250,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
       * Clears the value of the 'source_uuid' field.
       * @return This builder.
       */
-    public com.pzybrick.avro.schema.Wave.Builder clearSourceUuid() {
+    public com.pzybrick.iote2e.avro.schema.Wave.Builder clearSourceUuid() {
       source_uuid = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -269,7 +269,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
       * @param value The value of 'wave_type'.
       * @return This builder.
       */
-    public com.pzybrick.avro.schema.Wave.Builder setWaveType(java.lang.CharSequence value) {
+    public com.pzybrick.iote2e.avro.schema.Wave.Builder setWaveType(java.lang.CharSequence value) {
       validate(fields()[1], value);
       this.wave_type = value;
       fieldSetFlags()[1] = true;
@@ -289,7 +289,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
       * Clears the value of the 'wave_type' field.
       * @return This builder.
       */
-    public com.pzybrick.avro.schema.Wave.Builder clearWaveType() {
+    public com.pzybrick.iote2e.avro.schema.Wave.Builder clearWaveType() {
       wave_type = null;
       fieldSetFlags()[1] = false;
       return this;
@@ -308,7 +308,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
       * @param value The value of 'wave_value'.
       * @return This builder.
       */
-    public com.pzybrick.avro.schema.Wave.Builder setWaveValue(double value) {
+    public com.pzybrick.iote2e.avro.schema.Wave.Builder setWaveValue(double value) {
       validate(fields()[2], value);
       this.wave_value = value;
       fieldSetFlags()[2] = true;
@@ -328,7 +328,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
       * Clears the value of the 'wave_value' field.
       * @return This builder.
       */
-    public com.pzybrick.avro.schema.Wave.Builder clearWaveValue() {
+    public com.pzybrick.iote2e.avro.schema.Wave.Builder clearWaveValue() {
       fieldSetFlags()[2] = false;
       return this;
     }
@@ -346,7 +346,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
       * @param value The value of 'ts_epoch'.
       * @return This builder.
       */
-    public com.pzybrick.avro.schema.Wave.Builder setTsEpoch(long value) {
+    public com.pzybrick.iote2e.avro.schema.Wave.Builder setTsEpoch(long value) {
       validate(fields()[3], value);
       this.ts_epoch = value;
       fieldSetFlags()[3] = true;
@@ -366,7 +366,7 @@ public class Wave extends org.apache.avro.specific.SpecificRecordBase implements
       * Clears the value of the 'ts_epoch' field.
       * @return This builder.
       */
-    public com.pzybrick.avro.schema.Wave.Builder clearTsEpoch() {
+    public com.pzybrick.iote2e.avro.schema.Wave.Builder clearTsEpoch() {
       fieldSetFlags()[3] = false;
       return this;
     }
