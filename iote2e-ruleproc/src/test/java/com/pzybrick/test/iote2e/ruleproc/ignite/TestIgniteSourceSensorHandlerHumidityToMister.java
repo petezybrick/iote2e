@@ -14,9 +14,12 @@ public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSou
 	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerHumidityToMister.class);
 	private static String testSourceUuid = "8043c648-a45d-4352-b024-1b4dd72fe9bc";
 	private static String testSensorUuid = "fb0440cd-5933-47c2-b7f2-a60b99fa0ba8";
-	
+	private String filterKey;
+
+
 	public TestIgniteSourceSensorHandlerHumidityToMister() {
 		super();
+		filterKey = testSourceUuid + "|" + testSensorUuid + "|";
 	}
 	
 	@Test
@@ -24,7 +27,7 @@ public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSou
 		log.info("begins");
 
 		String testValue = "50";
-		commonRun( testSourceUuid, testSensorUuid, testValue);
+		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
 		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
 		Assert.assertNotNull("subscribeResults must not be null", subscribeResults );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
@@ -36,7 +39,7 @@ public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSou
 	public void testHumidityToMisterRuleFireFanOn() {
 		log.info("begins");
 		String testValue = "100";
-		commonRun( testSourceUuid, testSensorUuid, testValue);
+		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
 		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
 		Assert.assertNotNull("subscribeResults must not be null", subscribeResults );
 		Assert.assertEquals("subscribeResults must have size=1", subscribeResults.size(), 1 );
@@ -48,7 +51,7 @@ public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSou
 	public void testHumidityToMisterRuleNotFire() {
 		log.info("begins");
 		String testValue = "87";
-		commonRun( testSourceUuid, testSensorUuid, testValue);
+		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
 		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
 		Assert.assertEquals("subscribeResults must be empty", 0, subscribeResults.size() );
 	}

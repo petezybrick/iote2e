@@ -14,16 +14,18 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerTempToFan.class);
 	private static String testSourceUuid = "8043c648-a45d-4352-b024-1b4dd72fe9bc";
 	private static String testSensorUuid = "3c3122da-6db6-4eb2-bbd3-55456e65d76d";
+	private String filterKey;
 	
 	public TestIgniteSourceSensorHandlerTempToFan() {
 		super();
+		filterKey = testSourceUuid + "|" + testSensorUuid + "|";
 	}
 	
 	@Test
 	public void testTempFanRuleFireFanOff() {
 		log.info("begins");
 		String testValue = "50";
-		commonRun( testSourceUuid, testSensorUuid, testValue);
+		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
 		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size());
@@ -35,7 +37,7 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 	public void testTempFanRuleFireFanOn() {
 		log.info("begins");
 		String testValue = "100";
-		commonRun( testSourceUuid, testSensorUuid, testValue);
+		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
 		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
@@ -47,7 +49,7 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 	public void testTempFanRuleNotFire() {
 		log.info("begins");
 		String testValue = "78";
-		commonRun( testSourceUuid, testSensorUuid, testValue);
+		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
 		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
 		Assert.assertEquals("subscribeResults must empty", 0, subscribeResults.size() );
 	}

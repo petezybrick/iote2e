@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.pzybrick.avro.schema.SourceSensorValue;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.IgniteSingleton;
+import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.SourceSensorCacheEntryEventFilter;
 import com.pzybrick.iote2e.ruleproc.sourcesensor.SourceSensorHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 
@@ -45,29 +46,15 @@ public class TestIgniteSourceSensorHandlerBase {
 			sourceSensorHandler = new SourceSensorHandler(System.getenv("SOURCE_SENSOR_CONFIG_JSON_FILE"),
 					sourceSensorValues);
 			sourceResponseSvc = sourceSensorHandler.getSourceResponseSvc();
-			igniteSingleton = IgniteSingleton.getInstance( sourceSensorHandler.getRuleConfig() );
-			log.info( "------------------------------------------------------------------------------------------------------");
+			igniteSingleton = IgniteSingleton.getInstance(sourceSensorHandler.getRuleConfig());
+			log.info(
+					"------------------------------------------------------------------------------------------------------");
 			log.info(">>> Cache name: " + sourceSensorHandler.getRuleConfig().getSourceResponseIgniteCacheName());
-			startThreadSubscribe(sourceSensorHandler.getRuleConfig());
 			sourceSensorHandler.start();
-		} catch(Exception e ) {
+		} catch (Exception e) {
 			log.error("Exception in before, " + e.getMessage(), e);
 		}
 	}
-
-	private void startThreadSubscribe(RuleConfig ruleConfig) throws Exception {
-		threadSubscribe = new ThreadSubscribe(ruleConfig);
-		threadSubscribe.start();
-		long timeoutAt = System.currentTimeMillis() + 10000L;
-		while (System.currentTimeMillis() < timeoutAt && !subscribeUp) {
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-			}
-		}
-		if( !subscribeUp ) throw new Exception( "Timeout starting ThreadSubscribe");
-	}
-
 
 	@After
 	public void after() throws Exception {
@@ -84,9 +71,10 @@ public class TestIgniteSourceSensorHandlerBase {
 		IgniteSingleton.reset();
 	}
 
-	protected void commonRun(String sourceUuid, String sensorUuid, String sensorValue) {
+	protected void commonRun(String sourceUuid, String sensorUuid, String sensorValue, String igniteFilterKey) {
 		log.info("sourceUuid=" + sourceUuid + ", sensorUuid=" + sensorUuid + ", sensorValue=" + sensorValue);
 		try {
+			startThreadSubscribe(sourceSensorHandler.getRuleConfig(), igniteFilterKey);
 			SourceSensorValue sourceSensorValue = new SourceSensorValue(sourceUuid, sensorUuid, sensorValue);
 			sourceSensorHandler.putSourceSensorValue(sourceSensorValue);
 
@@ -100,7 +88,7 @@ public class TestIgniteSourceSensorHandlerBase {
 		List<String> results = new ArrayList<String>();
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {
-			if( subscribeResults.size() > 0) {
+			if (subscribeResults.size() > 0) {
 				try {
 					Thread.sleep(250);
 				} catch (Exception e) {
@@ -116,12 +104,28 @@ public class TestIgniteSourceSensorHandlerBase {
 		return results;
 	}
 
+	private void startThreadSubscribe(RuleConfig ruleConfig, String igniteFilterKey) throws Exception {
+		threadSubscribe = new ThreadSubscribe(ruleConfig, igniteFilterKey);
+		threadSubscribe.start();
+		long timeoutAt = System.currentTimeMillis() + 10000L;
+		while (System.currentTimeMillis() < timeoutAt && !subscribeUp) {
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+			}
+		}
+		if (!subscribeUp)
+			throw new Exception("Timeout starting ThreadSubscribe");
+	}
+
 	private class ThreadSubscribe extends Thread {
 		private RuleConfig ruleConfig;
+		private String remoteFilterKey;
 		private boolean shutdown;
 
-		public ThreadSubscribe(RuleConfig ruleConfig) {
+		public ThreadSubscribe(RuleConfig ruleConfig, String remoteFilterKey) {
 			this.ruleConfig = ruleConfig;
+			this.remoteFilterKey = remoteFilterKey;
 		}
 
 		public void shutdown() {
@@ -146,22 +150,38 @@ public class TestIgniteSourceSensorHandlerBase {
 						}
 					}
 				});
-				qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<String, String>>() {
+
+				SourceSensorCacheEntryEventFilter<String,String> sourceSensorCacheEntryEventFilter = 
+						new SourceSensorCacheEntryEventFilter<String, String>(remoteFilterKey);
+				qry.setRemoteFilterFactory(new Factory<SourceSensorCacheEntryEventFilter<String, String>>() {
 					@Override
-					public CacheEntryEventFilter<String, String> create() {
-						return new CacheEntryEventFilter<String, String>() {
-							@Override
-							public boolean evaluate(CacheEntryEvent<? extends String, ? extends String> e) {
-								return true;
-							}
-						};
+					public SourceSensorCacheEntryEventFilter<String, String> create() {
+						return sourceSensorCacheEntryEventFilter;
+						//return new SourceSensorCacheEntryEventFilter<String, String>(remoteFilterKey);
 					}
 				});
+
+//				qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<String, String>>() {
+//					@Override
+//					public CacheEntryEventFilter<String, String> create() {
+//						return new CacheEntryEventFilter<String, String>() {
+//							@Override
+//							public boolean evaluate(CacheEntryEvent<? extends String, ? extends String> e) {
+//								final String remoteFilter = "8043c648-a45d-4352-b024-1b4dd72fe9bc|3c3122da-6db6-4eb2-bbd3-55456e65d76d|";
+//								if (e.getKey().startsWith(remoteFilter))
+//									return true;
+//								else
+//									return false;
+//								// return false;
+//							}
+//						};
+//					}
+//				});
+				
 				QueryCursor<Cache.Entry<String, String>> cur = igniteSingleton.getCache().query(qry);
 
-
 			} catch (Exception e) {
-				log.error(e.getMessage(),e);
+				log.error(e.getMessage(), e);
 				return;
 
 			}
@@ -170,10 +190,11 @@ public class TestIgniteSourceSensorHandlerBase {
 				if (shutdown)
 					break;
 				try {
-					sleep(60*60*5);
+					sleep(60 * 60 * 5);
 				} catch (InterruptedException e) {
-				} 
+				}
 			}
 		}
 	}
+
 }
