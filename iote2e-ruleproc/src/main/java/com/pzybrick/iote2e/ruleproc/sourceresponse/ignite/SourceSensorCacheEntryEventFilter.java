@@ -4,7 +4,7 @@ import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryListenerException;
 
-public class SourceSensorCacheEntryEventFilter<K extends String, V extends String> implements CacheEntryEventFilter<String, String> {
+public class SourceSensorCacheEntryEventFilter<K,V> implements CacheEntryEventFilter<String, byte[]> {
 	private String remoteKey;
 	
 	public SourceSensorCacheEntryEventFilter( String remoteKey ) {
@@ -12,7 +12,7 @@ public class SourceSensorCacheEntryEventFilter<K extends String, V extends Strin
 	}
 
 	@Override
-	public boolean evaluate(CacheEntryEvent<? extends String, ? extends String> event) throws CacheEntryListenerException {
+	public boolean evaluate(CacheEntryEvent<? extends String, ? extends byte[]> event) throws CacheEntryListenerException {
 		if( event.getKey().startsWith(remoteKey)) return true; 
 		else return false;
 	}

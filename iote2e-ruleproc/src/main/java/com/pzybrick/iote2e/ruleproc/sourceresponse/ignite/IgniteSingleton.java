@@ -13,9 +13,9 @@ public class IgniteSingleton {
 	private static final Log log = LogFactory.getLog(IgniteSingleton.class);
 	private static IgniteSingleton igniteSingleton;
 	private Ignite ignite;
-	private IgniteCache<String, String> cache;
+	private IgniteCache<String, byte[]> cache;
 	
-	private IgniteSingleton(Ignite ignite, IgniteCache<String, String> cache) {
+	private IgniteSingleton(Ignite ignite, IgniteCache<String, byte[]> cache) {
 		this.ignite = ignite;
 		this.cache = cache;
 	}
@@ -46,7 +46,7 @@ public class IgniteSingleton {
 				Ignition.setClientMode(true);
 				Ignite ignite = Ignition.start(igniteConfiguration);
 				if (log.isDebugEnabled()) log.debug(ignite.toString());
-				IgniteCache<String, String> cache = ignite.getOrCreateCache(ruleConfig.getSourceResponseIgniteCacheName());
+				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(ruleConfig.getSourceResponseIgniteCacheName());
 				igniteSingleton = new IgniteSingleton( ignite, cache);
 			} catch (Exception e) {
 				log.error("Ignite initialization failure", e);
@@ -60,7 +60,7 @@ public class IgniteSingleton {
 		return ignite;
 	}
 
-	public IgniteCache<String, String> getCache() {
+	public IgniteCache<String, byte[]> getCache() {
 		return cache;
 	}
 	

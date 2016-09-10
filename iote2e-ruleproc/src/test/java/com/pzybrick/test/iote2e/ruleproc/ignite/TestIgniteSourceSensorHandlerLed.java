@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
+import com.pzybrick.iote2e.avro.schema.ActuatorResponse;
 import com.pzybrick.iote2e.ruleproc.svc.SourceSensorActuator;
 
 import junit.framework.Assert;
@@ -23,80 +24,79 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 	}
 	
 	@Test
-	public void testLedGreenOn() {
+	public void testLedGreenOn() throws Exception {
 		log.info("begins");
 		String filterKey = testSourceUuid + "|" + testSensorUuidGreen + "|";
 		String testValue = "1";
 		commonRun( testSourceUuid, testSensorUuidGreen, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "green", sourceSensorActuator.getActuatorValue() );
+		Assert.assertEquals("subscribeResults getActuatorTargetValue", "green", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	@Test
-	public void testLedGreenOff() {
+	public void testLedGreenOff() throws Exception {
 		log.info("begins");
 		String filterKey = testSourceUuid + "|" + testSensorUuidGreen + "|";
 		String testValue = "0";
 		commonRun( testSourceUuid, testSensorUuidGreen, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", sourceSensorActuator.getActuatorValue() );
+		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 	@Test
-	public void testLedRedOn() {
+	public void testLedRedOn() throws Exception {
 		log.info("begins");
 		String filterKey = testSourceUuid + "|" + testSensorUuidRed + "|";
 		String testValue = "1";
 		commonRun( testSourceUuid, testSensorUuidRed, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "red", sourceSensorActuator.getActuatorValue() );
+		Assert.assertEquals("subscribeResults getActuatorTargetValue", "red", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 	@Test
-	public void testLedRedOff() {
+	public void testLedRedOff() throws Exception {
 		log.info("begins");
 		String filterKey = testSourceUuid + "|" + testSensorUuidRed + "|";
 		String testValue = "0";
 		commonRun( testSourceUuid, testSensorUuidRed, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", sourceSensorActuator.getActuatorValue() );
+		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 	@Test
-	public void testLedYellowOn() {
+	public void testLedYellowOn() throws Exception {
 		log.info("begins");
 		String filterKey = testSourceUuid + "|" + testSensorUuidYellow + "|";
 		String testValue = "1";
 		commonRun( testSourceUuid, testSensorUuidYellow, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "yellow", sourceSensorActuator.getActuatorValue() );
+		Assert.assertEquals("subscribeResults getActuatorTargetValue", "yellow", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 	@Test
-	public void testLedYellowOff() {
+	public void testLedYellowOff() throws Exception {
 		log.info("begins");
 		String filterKey = testSourceUuid + "|" + testSensorUuidYellow + "|";
 		String testValue = "0";
 		commonRun( testSourceUuid, testSensorUuidYellow, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
+				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", sourceSensorActuator.getActuatorValue() );
+		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 }

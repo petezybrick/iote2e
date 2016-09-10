@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
-import com.pzybrick.iote2e.ruleproc.svc.SourceSensorActuator;
+import com.pzybrick.iote2e.avro.schema.ActuatorResponse;
 
 import junit.framework.Assert;
 
@@ -23,36 +23,33 @@ public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSou
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleFireFanOff() {
+	public void testHumidityToMisterRuleFireFanOff() throws Exception {
 		log.info("begins");
-
 		String testValue = "50";
 		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
-		Assert.assertNotNull("subscribeResults must not be null", subscribeResults );
-		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "on", sourceSensorActuator.getActuatorValue() );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		Assert.assertNotNull("actuatorResponses must not be null", actuatorResponses );
+		Assert.assertEquals("actuatorResponses must have size=1", 1, actuatorResponses.size() );
+		Assert.assertEquals("actuatorResponses getActuatorTargetValue", "on", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleFireFanOn() {
+	public void testHumidityToMisterRuleFireFanOn() throws Exception {
 		log.info("begins");
 		String testValue = "100";
 		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
-		Assert.assertNotNull("subscribeResults must not be null", subscribeResults );
-		Assert.assertEquals("subscribeResults must have size=1", subscribeResults.size(), 1 );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", sourceSensorActuator.getActuatorValue() );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		Assert.assertNotNull("actuatorResponses must not be null", actuatorResponses );
+		Assert.assertEquals("actuatorResponses must have size=1", actuatorResponses.size(), 1 );
+		Assert.assertEquals("actuatorResponses getActuatorTargetValue", "off", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleNotFire() {
+	public void testHumidityToMisterRuleNotFire() throws Exception {
 		log.info("begins");
 		String testValue = "87";
 		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
-		Assert.assertEquals("subscribeResults must be empty", 0, subscribeResults.size() );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		Assert.assertEquals("actuatorResponses must be empty", 0, actuatorResponses.size() );
 	}
 }

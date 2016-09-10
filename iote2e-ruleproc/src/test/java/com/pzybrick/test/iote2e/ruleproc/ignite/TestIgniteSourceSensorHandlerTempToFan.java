@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
+import com.pzybrick.iote2e.avro.schema.ActuatorResponse;
 import com.pzybrick.iote2e.ruleproc.svc.SourceSensorActuator;
 
 import junit.framework.Assert;
@@ -22,35 +23,33 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 	}
 	
 	@Test
-	public void testTempFanRuleFireFanOff() {
+	public void testTempFanRuleFireFanOff() throws Exception {
 		log.info("begins");
 		String testValue = "50";
 		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
-		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
-		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size());
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", sourceSensorActuator.getActuatorValue() );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		Assert.assertNotNull("actuatorResponses is null", actuatorResponses == null );
+		Assert.assertEquals("actuatorResponses must have size=1", 1, actuatorResponses.size());
+		Assert.assertEquals("actuatorResponses getActuatorValue", "off", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 	@Test
-	public void testTempFanRuleFireFanOn() {
+	public void testTempFanRuleFireFanOn() throws Exception {
 		log.info("begins");
 		String testValue = "100";
 		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
-		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
-		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
-		SourceSensorActuator sourceSensorActuator = gson.fromJson(subscribeResults.get(0), SourceSensorActuator.class);
-		Assert.assertEquals("subscribeResults getActuatorTargetValue", "on", sourceSensorActuator.getActuatorValue() );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		Assert.assertNotNull("actuatorResponses is null", actuatorResponses == null );
+		Assert.assertEquals("actuatorResponses must have size=1", 1, actuatorResponses.size() );
+		Assert.assertEquals("actuatorResponses getActuatorTargetValue", "on", actuatorResponses.get(0).getActuatorValue().toString() );
 	}
 	
 	@Test
-	public void testTempFanRuleNotFire() {
+	public void testTempFanRuleNotFire() throws Exception {
 		log.info("begins");
 		String testValue = "78";
 		commonRun( testSourceUuid, testSensorUuid, testValue, filterKey);
-		List<String> subscribeResults = commonThreadSubscribeResults( 2000 );
-		Assert.assertEquals("subscribeResults must empty", 0, subscribeResults.size() );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		Assert.assertEquals("actuatorResponses must empty", 0, actuatorResponses.size() );
 	}
 }

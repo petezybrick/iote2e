@@ -1,5 +1,6 @@
 package com.pzybrick.test.iote2e.ruleproc.ignite;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -9,6 +10,10 @@ import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryUpdatedListener;
 
+import org.apache.avro.io.BinaryDecoder;
+import org.apache.avro.io.DatumReader;
+import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ignite.cache.query.ContinuousQuery;
@@ -18,6 +23,7 @@ import org.junit.Before;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pzybrick.iote2e.avro.schema.ActuatorResponse;
 import com.pzybrick.iote2e.avro.schema.SourceSensorValue;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.IgniteSingleton;
@@ -28,19 +34,22 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 public class TestIgniteSourceSensorHandlerBase {
 	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerBase.class);
 	protected ConcurrentLinkedQueue<SourceSensorValue> sourceSensorValues;
-	protected ConcurrentLinkedQueue<String> subscribeResults;
+	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
 	protected SourceSensorHandler sourceSensorHandler;
 	protected SourceResponseSvc sourceResponseSvc;
 	protected ThreadSubscribe threadSubscribe;
 	protected boolean subscribeUp;
 	protected IgniteSingleton igniteSingleton = null;
 	protected Gson gson;
+	protected BinaryDecoder binaryDecoder = null;
+	private DatumReader<ActuatorResponse> datumReaderActuatorResponse = null;
 
 	@Before
 	public void before() throws Exception {
 		try {
 			gson = new GsonBuilder().create();
-			subscribeResults = new ConcurrentLinkedQueue<String>();
+			datumReaderActuatorResponse = new SpecificDatumReader<ActuatorResponse>(ActuatorResponse.getClassSchema());
+			subscribeResults = new ConcurrentLinkedQueue<byte[]>();
 			sourceSensorValues = new ConcurrentLinkedQueue<SourceSensorValue>();
 			sourceSensorHandler = new SourceSensorHandler(System.getenv("SOURCE_SENSOR_CONFIG_JSON_FILE"),
 					sourceSensorValues);
@@ -83,8 +92,8 @@ public class TestIgniteSourceSensorHandlerBase {
 	}
 
 	// TODO: read cache results from string as Avro
-	protected List<String> commonThreadSubscribeResults(long maxWaitMsecs) {
-		List<String> results = new ArrayList<String>();
+	protected List<ActuatorResponse> commonThreadSubscribeGetActuatorResponses(long maxWaitMsecs) throws Exception {
+		List<ActuatorResponse> actuatorResponses = new ArrayList<ActuatorResponse>();
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {
 			if (subscribeResults.size() > 0) {
@@ -92,7 +101,16 @@ public class TestIgniteSourceSensorHandlerBase {
 					Thread.sleep(250);
 				} catch (Exception e) {
 				}
-				results.addAll(subscribeResults);
+				for( byte[] bytes : subscribeResults ) {
+					binaryDecoder = DecoderFactory.get().binaryDecoder(bytes, binaryDecoder);
+					try {
+						ActuatorResponse actuatorResponse = datumReaderActuatorResponse.read(null,binaryDecoder);
+						actuatorResponses.add( actuatorResponse );
+					} catch( IOException e ) {
+						log.error(e.getMessage(),e);
+						throw e;
+					}
+				}
 				break;
 			}
 			try {
@@ -100,7 +118,7 @@ public class TestIgniteSourceSensorHandlerBase {
 			} catch (Exception e) {
 			}
 		}
-		return results;
+		return actuatorResponses;
 	}
 
 	private void startThreadSubscribe(RuleConfig ruleConfig, String igniteFilterKey) throws Exception {
@@ -136,25 +154,25 @@ public class TestIgniteSourceSensorHandlerBase {
 		public void run() {
 			try {
 				// Create new continuous query.
-				ContinuousQuery<String, String> qry = new ContinuousQuery<>();
+				ContinuousQuery<String,  byte[]> qry = new ContinuousQuery<>();
 
 				// Callback that is called locally when update notifications are
 				// received.
-				qry.setLocalListener(new CacheEntryUpdatedListener<String, String>() {
+				qry.setLocalListener(new CacheEntryUpdatedListener<String,  byte[]>() {
 					@Override
-					public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends String>> evts) {
-						for (CacheEntryEvent<? extends String, ? extends String> e : evts) {
+					public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends  byte[]>> evts) {
+						for (CacheEntryEvent<? extends String, ? extends  byte[]> e : evts) {
 							log.info("Updated entry [key=" + e.getKey() + ", val=" + e.getValue() + ']');
 							subscribeResults.add(e.getValue());
 						}
 					}
 				});
 
-				SourceSensorCacheEntryEventFilter<String,String> sourceSensorCacheEntryEventFilter = 
-						new SourceSensorCacheEntryEventFilter<String, String>(remoteFilterKey);
-				qry.setRemoteFilterFactory(new Factory<SourceSensorCacheEntryEventFilter<String, String>>() {
+				SourceSensorCacheEntryEventFilter<String,byte[]> sourceSensorCacheEntryEventFilter = 
+						new SourceSensorCacheEntryEventFilter<String, byte[]>(remoteFilterKey);
+				qry.setRemoteFilterFactory(new Factory<SourceSensorCacheEntryEventFilter<String, byte[]>>() {
 					@Override
-					public SourceSensorCacheEntryEventFilter<String, String> create() {
+					public SourceSensorCacheEntryEventFilter<String, byte[]> create() {
 						return sourceSensorCacheEntryEventFilter;
 						//return new SourceSensorCacheEntryEventFilter<String, String>(remoteFilterKey);
 					}
@@ -177,7 +195,7 @@ public class TestIgniteSourceSensorHandlerBase {
 //					}
 //				});
 				
-				QueryCursor<Cache.Entry<String, String>> cur = igniteSingleton.getCache().query(qry);
+				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
 
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
