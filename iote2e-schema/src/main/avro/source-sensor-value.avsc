@@ -1,0 +1,9 @@
+{"namespace": "com.pzybrick.iote2e.schema.avro",
+ "type": "record",
+ "name": "SourceSensorValue",
+ "fields": [
+     {"name": "source_uuid", "type": "string"},
+     {"name": "sensor_uuid",  "type": "string"},
+     {"name": "sensor_value", "type": "string"}
+ ]
+}

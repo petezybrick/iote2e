@@ -40,7 +40,7 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 		String filterKey = testSourceUuid + "|" + testSensorUuidGreen + "|";
 		String testValue = "0";
 		commonRun( testSourceUuid, testSensorUuidGreen, testValue, filterKey);
-				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
@@ -53,7 +53,7 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 		String filterKey = testSourceUuid + "|" + testSensorUuidRed + "|";
 		String testValue = "1";
 		commonRun( testSourceUuid, testSensorUuidRed, testValue, filterKey);
-				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
@@ -66,7 +66,7 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 		String filterKey = testSourceUuid + "|" + testSensorUuidRed + "|";
 		String testValue = "0";
 		commonRun( testSourceUuid, testSensorUuidRed, testValue, filterKey);
-				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
@@ -79,7 +79,7 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 		String filterKey = testSourceUuid + "|" + testSensorUuidYellow + "|";
 		String testValue = "1";
 		commonRun( testSourceUuid, testSensorUuidYellow, testValue, filterKey);
-				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
@@ -92,7 +92,7 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 		String filterKey = testSourceUuid + "|" + testSensorUuidYellow + "|";
 		String testValue = "0";
 		commonRun( testSourceUuid, testSensorUuidYellow, testValue, filterKey);
-				List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
+		List<ActuatorResponse> actuatorResponses = commonThreadSubscribeGetActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );

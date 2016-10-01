@@ -52,7 +52,7 @@ public class SubAvroWaveThread extends Thread {
 
 			// Create new continuous query.
 			ContinuousQuery<Integer, byte[]> qry = new ContinuousQuery<>();
-			qry.setLocalListener(new CacheEntryUpdatedListenerAvroWave(messagesToSend) );
+			qry.setLocalListener(new CacheEntryUpdatedListenerActuatorResponse(messagesToSend) );
             qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<Integer, byte[]>>() {
                 @Override public CacheEntryEventFilter<Integer, byte[]> create() {
                     return new CacheEntryEventFilter<Integer, byte[]>() {

@@ -18,6 +18,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pzybrick.iote2e.avro.schema.ActuatorResponse;
+import com.pzybrick.iote2e.common.utils.IotE2eUtils;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
@@ -46,8 +47,7 @@ public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
 						", new value=" + ruleEvalResult.getActuatorTargetValue() );
 				// Update the SourceSensorActuator
 				ruleEvalResult.getSourceSensorActuator().setActuatorValue(ruleEvalResult.getActuatorTargetValue());
-				String now8601 = ISODateTimeFormat.dateTime().print(new DateTime().toDateTime(DateTimeZone.UTC));
-				ruleEvalResult.getSourceSensorActuator().setActuatorValueUpdatedAt(now8601);
+				ruleEvalResult.getSourceSensorActuator().setActuatorValueUpdatedAt(IotE2eUtils.getDateNowUtc8601() );
 				String key = sourceUuid+"|"+sensorUuid+"|"+ruleEvalResult.getSourceSensorActuator().getActuatorUuid();
 				byte[] actuatorResponseBytes = createAvroActuatorResponseByteArray(ruleEvalResult.getSourceSensorActuator());
 				if( log.isDebugEnabled() ) log.debug(ruleEvalResult.toString());

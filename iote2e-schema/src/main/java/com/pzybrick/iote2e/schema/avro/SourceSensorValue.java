@@ -3,15 +3,15 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package com.pzybrick.iote2e.avro.schema;
+package com.pzybrick.iote2e.schema.avro;
 
 import org.apache.avro.specific.SpecificData;
 
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -3907926528019167336L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"SourceSensorValue\",\"namespace\":\"com.pzybrick.iote2e.avro.schema\",\"fields\":[{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"sensor_uuid\",\"type\":\"string\"},{\"name\":\"sensor_value\",\"type\":\"string\"}]}");
+  private static final long serialVersionUID = 9120240545882555524L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"SourceSensorValue\",\"namespace\":\"com.pzybrick.iote2e.schema.avro\",\"fields\":[{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"sensor_uuid\",\"type\":\"string\"},{\"name\":\"sensor_value\",\"type\":\"string\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.CharSequence source_uuid;
   @Deprecated public java.lang.CharSequence sensor_uuid;
@@ -110,8 +110,8 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
    * Creates a new SourceSensorValue RecordBuilder.
    * @return A new SourceSensorValue RecordBuilder
    */
-  public static com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder newBuilder() {
-    return new com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder();
+  public static com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder newBuilder() {
+    return new com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder();
   }
 
   /**
@@ -119,8 +119,8 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
    * @param other The existing builder to copy.
    * @return A new SourceSensorValue RecordBuilder
    */
-  public static com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder newBuilder(com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder other) {
-    return new com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder(other);
+  public static com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder newBuilder(com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder other) {
+    return new com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder(other);
   }
 
   /**
@@ -128,8 +128,8 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
    * @param other The existing instance to copy.
    * @return A new SourceSensorValue RecordBuilder
    */
-  public static com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder newBuilder(com.pzybrick.iote2e.avro.schema.SourceSensorValue other) {
-    return new com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder(other);
+  public static com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder newBuilder(com.pzybrick.iote2e.schema.avro.SourceSensorValue other) {
+    return new com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder(other);
   }
 
   /**
@@ -151,7 +151,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder other) {
+    private Builder(com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.source_uuid)) {
         this.source_uuid = data().deepCopy(fields()[0].schema(), other.source_uuid);
@@ -171,7 +171,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
      * Creates a Builder by copying an existing SourceSensorValue instance
      * @param other The existing instance to copy.
      */
-    private Builder(com.pzybrick.iote2e.avro.schema.SourceSensorValue other) {
+    private Builder(com.pzybrick.iote2e.schema.avro.SourceSensorValue other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.source_uuid)) {
         this.source_uuid = data().deepCopy(fields()[0].schema(), other.source_uuid);
@@ -200,7 +200,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
       * @param value The value of 'source_uuid'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder setSourceUuid(java.lang.CharSequence value) {
+    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder setSourceUuid(java.lang.CharSequence value) {
       validate(fields()[0], value);
       this.source_uuid = value;
       fieldSetFlags()[0] = true;
@@ -220,7 +220,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
       * Clears the value of the 'source_uuid' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder clearSourceUuid() {
+    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder clearSourceUuid() {
       source_uuid = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -239,7 +239,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
       * @param value The value of 'sensor_uuid'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder setSensorUuid(java.lang.CharSequence value) {
+    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder setSensorUuid(java.lang.CharSequence value) {
       validate(fields()[1], value);
       this.sensor_uuid = value;
       fieldSetFlags()[1] = true;
@@ -259,7 +259,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
       * Clears the value of the 'sensor_uuid' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder clearSensorUuid() {
+    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder clearSensorUuid() {
       sensor_uuid = null;
       fieldSetFlags()[1] = false;
       return this;
@@ -278,7 +278,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
       * @param value The value of 'sensor_value'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder setSensorValue(java.lang.CharSequence value) {
+    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder setSensorValue(java.lang.CharSequence value) {
       validate(fields()[2], value);
       this.sensor_value = value;
       fieldSetFlags()[2] = true;
@@ -298,7 +298,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
       * Clears the value of the 'sensor_value' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.SourceSensorValue.Builder clearSensorValue() {
+    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder clearSensorValue() {
       sensor_value = null;
       fieldSetFlags()[2] = false;
       return this;

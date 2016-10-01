@@ -1,0 +1,12 @@
+{"namespace": "com.pzybrick.iote2e.schema.avro",
+ "type": "record",
+ "name": "LoginActuatorResponse",
+ "fields": [
+     {"name": "login_uuid", "type": "string"},
+     {"name": "source_uuid", "type": "string"},
+     {"name": "sensor_uuid",  "type": "string"},
+     {"name": "actuator_uuid", "type": "string"},
+     {"name": "actuator_value", "type": "string"},
+     {"name": "actuator_value_updated_at", "type": "string"}
+ ]
+}

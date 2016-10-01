@@ -1,4 +1,4 @@
-{"namespace": "com.pzybrick.iote2e.avro.schema",
+{"namespace": "com.pzybrick.iote2e.schema.avro",
  "type": "record",
  "name": "ActuatorResponse",
  "fields": [

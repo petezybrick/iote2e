@@ -3,16 +3,17 @@
  *
  * DO NOT EDIT DIRECTLY
  */
-package com.pzybrick.iote2e.avro.schema;
+package com.pzybrick.iote2e.schema.avro;
 
 import org.apache.avro.specific.SpecificData;
 
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
-public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 7402202001806616659L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"ActuatorResponse\",\"namespace\":\"com.pzybrick.iote2e.avro.schema\",\"fields\":[{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"sensor_uuid\",\"type\":\"string\"},{\"name\":\"actuator_uuid\",\"type\":\"string\"},{\"name\":\"actuator_value\",\"type\":\"string\"},{\"name\":\"actuator_value_updated_at\",\"type\":\"string\"}]}");
+public class LoginActuatorResponse extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
+  private static final long serialVersionUID = 9147226605824150422L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"LoginActuatorResponse\",\"namespace\":\"com.pzybrick.iote2e.schema.avro\",\"fields\":[{\"name\":\"login_uuid\",\"type\":\"string\"},{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"sensor_uuid\",\"type\":\"string\"},{\"name\":\"actuator_uuid\",\"type\":\"string\"},{\"name\":\"actuator_value\",\"type\":\"string\"},{\"name\":\"actuator_value_updated_at\",\"type\":\"string\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
+  @Deprecated public java.lang.CharSequence login_uuid;
   @Deprecated public java.lang.CharSequence source_uuid;
   @Deprecated public java.lang.CharSequence sensor_uuid;
   @Deprecated public java.lang.CharSequence actuator_uuid;
@@ -24,17 +25,19 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
    * to their default values from the schema.  If that is desired then
    * one should use <code>newBuilder()</code>.
    */
-  public ActuatorResponse() {}
+  public LoginActuatorResponse() {}
 
   /**
    * All-args constructor.
+   * @param login_uuid The new value for login_uuid
    * @param source_uuid The new value for source_uuid
    * @param sensor_uuid The new value for sensor_uuid
    * @param actuator_uuid The new value for actuator_uuid
    * @param actuator_value The new value for actuator_value
    * @param actuator_value_updated_at The new value for actuator_value_updated_at
    */
-  public ActuatorResponse(java.lang.CharSequence source_uuid, java.lang.CharSequence sensor_uuid, java.lang.CharSequence actuator_uuid, java.lang.CharSequence actuator_value, java.lang.CharSequence actuator_value_updated_at) {
+  public LoginActuatorResponse(java.lang.CharSequence login_uuid, java.lang.CharSequence source_uuid, java.lang.CharSequence sensor_uuid, java.lang.CharSequence actuator_uuid, java.lang.CharSequence actuator_value, java.lang.CharSequence actuator_value_updated_at) {
+    this.login_uuid = login_uuid;
     this.source_uuid = source_uuid;
     this.sensor_uuid = sensor_uuid;
     this.actuator_uuid = actuator_uuid;
@@ -46,11 +49,12 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
   // Used by DatumWriter.  Applications should not call.
   public java.lang.Object get(int field$) {
     switch (field$) {
-    case 0: return source_uuid;
-    case 1: return sensor_uuid;
-    case 2: return actuator_uuid;
-    case 3: return actuator_value;
-    case 4: return actuator_value_updated_at;
+    case 0: return login_uuid;
+    case 1: return source_uuid;
+    case 2: return sensor_uuid;
+    case 3: return actuator_uuid;
+    case 4: return actuator_value;
+    case 5: return actuator_value_updated_at;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -59,13 +63,30 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: source_uuid = (java.lang.CharSequence)value$; break;
-    case 1: sensor_uuid = (java.lang.CharSequence)value$; break;
-    case 2: actuator_uuid = (java.lang.CharSequence)value$; break;
-    case 3: actuator_value = (java.lang.CharSequence)value$; break;
-    case 4: actuator_value_updated_at = (java.lang.CharSequence)value$; break;
+    case 0: login_uuid = (java.lang.CharSequence)value$; break;
+    case 1: source_uuid = (java.lang.CharSequence)value$; break;
+    case 2: sensor_uuid = (java.lang.CharSequence)value$; break;
+    case 3: actuator_uuid = (java.lang.CharSequence)value$; break;
+    case 4: actuator_value = (java.lang.CharSequence)value$; break;
+    case 5: actuator_value_updated_at = (java.lang.CharSequence)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
+  }
+
+  /**
+   * Gets the value of the 'login_uuid' field.
+   * @return The value of the 'login_uuid' field.
+   */
+  public java.lang.CharSequence getLoginUuid() {
+    return login_uuid;
+  }
+
+  /**
+   * Sets the value of the 'login_uuid' field.
+   * @param value the value to set.
+   */
+  public void setLoginUuid(java.lang.CharSequence value) {
+    this.login_uuid = value;
   }
 
   /**
@@ -149,37 +170,38 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
   }
 
   /**
-   * Creates a new ActuatorResponse RecordBuilder.
-   * @return A new ActuatorResponse RecordBuilder
+   * Creates a new LoginActuatorResponse RecordBuilder.
+   * @return A new LoginActuatorResponse RecordBuilder
    */
-  public static com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder newBuilder() {
-    return new com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder();
+  public static com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder newBuilder() {
+    return new com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder();
   }
 
   /**
-   * Creates a new ActuatorResponse RecordBuilder by copying an existing Builder.
+   * Creates a new LoginActuatorResponse RecordBuilder by copying an existing Builder.
    * @param other The existing builder to copy.
-   * @return A new ActuatorResponse RecordBuilder
+   * @return A new LoginActuatorResponse RecordBuilder
    */
-  public static com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder newBuilder(com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder other) {
-    return new com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder(other);
+  public static com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder newBuilder(com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder other) {
+    return new com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder(other);
   }
 
   /**
-   * Creates a new ActuatorResponse RecordBuilder by copying an existing ActuatorResponse instance.
+   * Creates a new LoginActuatorResponse RecordBuilder by copying an existing LoginActuatorResponse instance.
    * @param other The existing instance to copy.
-   * @return A new ActuatorResponse RecordBuilder
+   * @return A new LoginActuatorResponse RecordBuilder
    */
-  public static com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder newBuilder(com.pzybrick.iote2e.avro.schema.ActuatorResponse other) {
-    return new com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder(other);
+  public static com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder newBuilder(com.pzybrick.iote2e.schema.avro.LoginActuatorResponse other) {
+    return new com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder(other);
   }
 
   /**
-   * RecordBuilder for ActuatorResponse instances.
+   * RecordBuilder for LoginActuatorResponse instances.
    */
-  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<ActuatorResponse>
-    implements org.apache.avro.data.RecordBuilder<ActuatorResponse> {
+  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<LoginActuatorResponse>
+    implements org.apache.avro.data.RecordBuilder<LoginActuatorResponse> {
 
+    private java.lang.CharSequence login_uuid;
     private java.lang.CharSequence source_uuid;
     private java.lang.CharSequence sensor_uuid;
     private java.lang.CharSequence actuator_uuid;
@@ -195,56 +217,103 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder other) {
+    private Builder(com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder other) {
       super(other);
-      if (isValidValue(fields()[0], other.source_uuid)) {
-        this.source_uuid = data().deepCopy(fields()[0].schema(), other.source_uuid);
+      if (isValidValue(fields()[0], other.login_uuid)) {
+        this.login_uuid = data().deepCopy(fields()[0].schema(), other.login_uuid);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.sensor_uuid)) {
-        this.sensor_uuid = data().deepCopy(fields()[1].schema(), other.sensor_uuid);
+      if (isValidValue(fields()[1], other.source_uuid)) {
+        this.source_uuid = data().deepCopy(fields()[1].schema(), other.source_uuid);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.actuator_uuid)) {
-        this.actuator_uuid = data().deepCopy(fields()[2].schema(), other.actuator_uuid);
+      if (isValidValue(fields()[2], other.sensor_uuid)) {
+        this.sensor_uuid = data().deepCopy(fields()[2].schema(), other.sensor_uuid);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.actuator_value)) {
-        this.actuator_value = data().deepCopy(fields()[3].schema(), other.actuator_value);
+      if (isValidValue(fields()[3], other.actuator_uuid)) {
+        this.actuator_uuid = data().deepCopy(fields()[3].schema(), other.actuator_uuid);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.actuator_value_updated_at)) {
-        this.actuator_value_updated_at = data().deepCopy(fields()[4].schema(), other.actuator_value_updated_at);
+      if (isValidValue(fields()[4], other.actuator_value)) {
+        this.actuator_value = data().deepCopy(fields()[4].schema(), other.actuator_value);
         fieldSetFlags()[4] = true;
+      }
+      if (isValidValue(fields()[5], other.actuator_value_updated_at)) {
+        this.actuator_value_updated_at = data().deepCopy(fields()[5].schema(), other.actuator_value_updated_at);
+        fieldSetFlags()[5] = true;
       }
     }
 
     /**
-     * Creates a Builder by copying an existing ActuatorResponse instance
+     * Creates a Builder by copying an existing LoginActuatorResponse instance
      * @param other The existing instance to copy.
      */
-    private Builder(com.pzybrick.iote2e.avro.schema.ActuatorResponse other) {
+    private Builder(com.pzybrick.iote2e.schema.avro.LoginActuatorResponse other) {
             super(SCHEMA$);
-      if (isValidValue(fields()[0], other.source_uuid)) {
-        this.source_uuid = data().deepCopy(fields()[0].schema(), other.source_uuid);
+      if (isValidValue(fields()[0], other.login_uuid)) {
+        this.login_uuid = data().deepCopy(fields()[0].schema(), other.login_uuid);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.sensor_uuid)) {
-        this.sensor_uuid = data().deepCopy(fields()[1].schema(), other.sensor_uuid);
+      if (isValidValue(fields()[1], other.source_uuid)) {
+        this.source_uuid = data().deepCopy(fields()[1].schema(), other.source_uuid);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.actuator_uuid)) {
-        this.actuator_uuid = data().deepCopy(fields()[2].schema(), other.actuator_uuid);
+      if (isValidValue(fields()[2], other.sensor_uuid)) {
+        this.sensor_uuid = data().deepCopy(fields()[2].schema(), other.sensor_uuid);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.actuator_value)) {
-        this.actuator_value = data().deepCopy(fields()[3].schema(), other.actuator_value);
+      if (isValidValue(fields()[3], other.actuator_uuid)) {
+        this.actuator_uuid = data().deepCopy(fields()[3].schema(), other.actuator_uuid);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.actuator_value_updated_at)) {
-        this.actuator_value_updated_at = data().deepCopy(fields()[4].schema(), other.actuator_value_updated_at);
+      if (isValidValue(fields()[4], other.actuator_value)) {
+        this.actuator_value = data().deepCopy(fields()[4].schema(), other.actuator_value);
         fieldSetFlags()[4] = true;
       }
+      if (isValidValue(fields()[5], other.actuator_value_updated_at)) {
+        this.actuator_value_updated_at = data().deepCopy(fields()[5].schema(), other.actuator_value_updated_at);
+        fieldSetFlags()[5] = true;
+      }
+    }
+
+    /**
+      * Gets the value of the 'login_uuid' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getLoginUuid() {
+      return login_uuid;
+    }
+
+    /**
+      * Sets the value of the 'login_uuid' field.
+      * @param value The value of 'login_uuid'.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder setLoginUuid(java.lang.CharSequence value) {
+      validate(fields()[0], value);
+      this.login_uuid = value;
+      fieldSetFlags()[0] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'login_uuid' field has been set.
+      * @return True if the 'login_uuid' field has been set, false otherwise.
+      */
+    public boolean hasLoginUuid() {
+      return fieldSetFlags()[0];
+    }
+
+
+    /**
+      * Clears the value of the 'login_uuid' field.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder clearLoginUuid() {
+      login_uuid = null;
+      fieldSetFlags()[0] = false;
+      return this;
     }
 
     /**
@@ -260,10 +329,10 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @param value The value of 'source_uuid'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder setSourceUuid(java.lang.CharSequence value) {
-      validate(fields()[0], value);
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder setSourceUuid(java.lang.CharSequence value) {
+      validate(fields()[1], value);
       this.source_uuid = value;
-      fieldSetFlags()[0] = true;
+      fieldSetFlags()[1] = true;
       return this;
     }
 
@@ -272,7 +341,7 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @return True if the 'source_uuid' field has been set, false otherwise.
       */
     public boolean hasSourceUuid() {
-      return fieldSetFlags()[0];
+      return fieldSetFlags()[1];
     }
 
 
@@ -280,9 +349,9 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * Clears the value of the 'source_uuid' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder clearSourceUuid() {
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder clearSourceUuid() {
       source_uuid = null;
-      fieldSetFlags()[0] = false;
+      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -299,10 +368,10 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @param value The value of 'sensor_uuid'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder setSensorUuid(java.lang.CharSequence value) {
-      validate(fields()[1], value);
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder setSensorUuid(java.lang.CharSequence value) {
+      validate(fields()[2], value);
       this.sensor_uuid = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
@@ -311,7 +380,7 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @return True if the 'sensor_uuid' field has been set, false otherwise.
       */
     public boolean hasSensorUuid() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[2];
     }
 
 
@@ -319,9 +388,9 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * Clears the value of the 'sensor_uuid' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder clearSensorUuid() {
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder clearSensorUuid() {
       sensor_uuid = null;
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[2] = false;
       return this;
     }
 
@@ -338,10 +407,10 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @param value The value of 'actuator_uuid'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder setActuatorUuid(java.lang.CharSequence value) {
-      validate(fields()[2], value);
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder setActuatorUuid(java.lang.CharSequence value) {
+      validate(fields()[3], value);
       this.actuator_uuid = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -350,7 +419,7 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @return True if the 'actuator_uuid' field has been set, false otherwise.
       */
     public boolean hasActuatorUuid() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[3];
     }
 
 
@@ -358,9 +427,9 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * Clears the value of the 'actuator_uuid' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder clearActuatorUuid() {
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder clearActuatorUuid() {
       actuator_uuid = null;
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -377,10 +446,10 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @param value The value of 'actuator_value'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder setActuatorValue(java.lang.CharSequence value) {
-      validate(fields()[3], value);
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder setActuatorValue(java.lang.CharSequence value) {
+      validate(fields()[4], value);
       this.actuator_value = value;
-      fieldSetFlags()[3] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -389,7 +458,7 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @return True if the 'actuator_value' field has been set, false otherwise.
       */
     public boolean hasActuatorValue() {
-      return fieldSetFlags()[3];
+      return fieldSetFlags()[4];
     }
 
 
@@ -397,9 +466,9 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * Clears the value of the 'actuator_value' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder clearActuatorValue() {
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder clearActuatorValue() {
       actuator_value = null;
-      fieldSetFlags()[3] = false;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -416,10 +485,10 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @param value The value of 'actuator_value_updated_at'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder setActuatorValueUpdatedAt(java.lang.CharSequence value) {
-      validate(fields()[4], value);
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder setActuatorValueUpdatedAt(java.lang.CharSequence value) {
+      validate(fields()[5], value);
       this.actuator_value_updated_at = value;
-      fieldSetFlags()[4] = true;
+      fieldSetFlags()[5] = true;
       return this;
     }
 
@@ -428,7 +497,7 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * @return True if the 'actuator_value_updated_at' field has been set, false otherwise.
       */
     public boolean hasActuatorValueUpdatedAt() {
-      return fieldSetFlags()[4];
+      return fieldSetFlags()[5];
     }
 
 
@@ -436,21 +505,22 @@ public class ActuatorResponse extends org.apache.avro.specific.SpecificRecordBas
       * Clears the value of the 'actuator_value_updated_at' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.avro.schema.ActuatorResponse.Builder clearActuatorValueUpdatedAt() {
+    public com.pzybrick.iote2e.schema.avro.LoginActuatorResponse.Builder clearActuatorValueUpdatedAt() {
       actuator_value_updated_at = null;
-      fieldSetFlags()[4] = false;
+      fieldSetFlags()[5] = false;
       return this;
     }
 
     @Override
-    public ActuatorResponse build() {
+    public LoginActuatorResponse build() {
       try {
-        ActuatorResponse record = new ActuatorResponse();
-        record.source_uuid = fieldSetFlags()[0] ? this.source_uuid : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.sensor_uuid = fieldSetFlags()[1] ? this.sensor_uuid : (java.lang.CharSequence) defaultValue(fields()[1]);
-        record.actuator_uuid = fieldSetFlags()[2] ? this.actuator_uuid : (java.lang.CharSequence) defaultValue(fields()[2]);
-        record.actuator_value = fieldSetFlags()[3] ? this.actuator_value : (java.lang.CharSequence) defaultValue(fields()[3]);
-        record.actuator_value_updated_at = fieldSetFlags()[4] ? this.actuator_value_updated_at : (java.lang.CharSequence) defaultValue(fields()[4]);
+        LoginActuatorResponse record = new LoginActuatorResponse();
+        record.login_uuid = fieldSetFlags()[0] ? this.login_uuid : (java.lang.CharSequence) defaultValue(fields()[0]);
+        record.source_uuid = fieldSetFlags()[1] ? this.source_uuid : (java.lang.CharSequence) defaultValue(fields()[1]);
+        record.sensor_uuid = fieldSetFlags()[2] ? this.sensor_uuid : (java.lang.CharSequence) defaultValue(fields()[2]);
+        record.actuator_uuid = fieldSetFlags()[3] ? this.actuator_uuid : (java.lang.CharSequence) defaultValue(fields()[3]);
+        record.actuator_value = fieldSetFlags()[4] ? this.actuator_value : (java.lang.CharSequence) defaultValue(fields()[4]);
+        record.actuator_value_updated_at = fieldSetFlags()[5] ? this.actuator_value_updated_at : (java.lang.CharSequence) defaultValue(fields()[5]);
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

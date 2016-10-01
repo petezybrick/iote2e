@@ -1,7 +1,8 @@
-{"namespace": "com.pzybrick.iote2e.avro.schema",
+{"namespace": "com.pzybrick.iote2e.schema.avro",
  "type": "record",
- "name": "SourceSensorValue",
+ "name": "LoginSourceSensorValue",
  "fields": [
+     {"name": "login_uuid", "type": "string"},
      {"name": "source_uuid", "type": "string"},
      {"name": "sensor_uuid",  "type": "string"},
      {"name": "sensor_value", "type": "string"}
