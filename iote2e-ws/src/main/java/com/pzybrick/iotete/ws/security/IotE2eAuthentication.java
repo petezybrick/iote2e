@@ -8,14 +8,14 @@ public class IotE2eAuthentication {
 	
 	static {
 		mapLoginToUuid = new HashMap<String,String>();
-		mapLoginToUuid.put("test0001", "a1-a1-a1-a1");
-		mapLoginToUuid.put("test0002", "b1-b1-b1-b1");
-		mapLoginToUuid.put("test0003", "c1-c1-c1-c1");
-		mapLoginToUuid.put("test0004", "d1-d1-d1-d1");
-		mapLoginToUuid.put("test0005", "e1-e1-e1-e1");
-		mapLoginToUuid.put("test0006", "f1-f1-f1-f1");
-		mapLoginToUuid.put("test0007", "g1-g1-g1-g1");
-		mapLoginToUuid.put("test0008", "h1-h1-h1-h1");
+		mapLoginToUuid.put("test0001", "t1-t1-t1-t1");
+		mapLoginToUuid.put("test0002", "t2-t2-t2-t2");
+		mapLoginToUuid.put("test0003", "t3-t3-t3-t3");
+		mapLoginToUuid.put("test0004", "t4-t4-t4-t4");
+		mapLoginToUuid.put("test0005", "t5-t5-t5-t5");
+		mapLoginToUuid.put("test0006", "t6-t6-t6-t6");
+		mapLoginToUuid.put("test0007", "t7-t7-t7-t7");
+		mapLoginToUuid.put("test0008", "t8-t8-t8-t8");
 	}
 	
 	public static String authenticate( String login ) throws Exception {

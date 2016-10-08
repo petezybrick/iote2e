@@ -12,9 +12,10 @@ public class RouteLoginSourceSensorValueLoopbackImpl implements RouteLoginSource
 				.setLoginUuid(loginSourceSensorValue.getLoginUuid())
 				.setSourceUuid(loginSourceSensorValue.getSourceUuid())
 				.setSensorUuid(loginSourceSensorValue.getSensorUuid())
+				.setActuatorUuid("lb1-lb1-lb1-lb1")
 				.setActuatorValueUpdatedAt(IotE2eUtils.getDateNowUtc8601())
-				.setActuatorValue(String.valueOf(System.currentTimeMillis()))
+				.setActuatorValue(loginSourceSensorValue.getSensorValue())
 				.build();
-		EntryPointServerSourceSensorValue.toClientLoginActuatorResponses.add(loginActuatorResponse);
+		EntryPointServerSourceSensorValue.toClientActuatorResponses.add(loginActuatorResponse);
 	}
 }

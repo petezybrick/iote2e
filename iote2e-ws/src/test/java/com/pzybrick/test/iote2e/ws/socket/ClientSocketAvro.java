@@ -17,20 +17,20 @@ import org.apache.commons.logging.LogFactory;
 import com.pzybrick.iote2e.ws.socket.EntryPointServerSourceSensorValue;
 
 @ClientEndpoint
-@ServerEndpoint(value = "/e2e/")
+@ServerEndpoint(value = "/iote2e/")
 public class ClientSocketAvro {
 	private static final Log log = LogFactory.getLog(EntryPointServerSourceSensorValue.class);
 	private Thread iotClientSocketThread;
-	private ConcurrentLinkedQueue<String> rcvdMessages;
+	private ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays;
 	
 	public ClientSocketAvro( ) {
 		log.debug("IotClientSocketAvro ctor empty");
 	}
 	
-	public ClientSocketAvro( Thread iotClientSocketThread, ConcurrentLinkedQueue<String> rcvdMessages ) {
+	public ClientSocketAvro( Thread iotClientSocketThread, ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays ) {
 		log.debug("IotClientSocketAvro ctor thread, queue");
 		this.iotClientSocketThread = iotClientSocketThread;
-		this.rcvdMessages = rcvdMessages;
+		this.rcvdAvroByteArrays = rcvdAvroByteArrays;
 	}
 
 	@OnOpen
@@ -40,14 +40,14 @@ public class ClientSocketAvro {
 
 	@OnMessage
 	public void onWebSocketText(String message) {
-		rcvdMessages.add(message);
-		iotClientSocketThread.interrupt();
+		//rcvdAvroByteArrays.add(message);
+		//iotClientSocketThread.interrupt();
 	}
 
 	@OnMessage
 	public void onWebSocketText(byte[] messageByte) {
 		log.debug("rcvd byte message");
-		rcvdMessages.add( new String(messageByte) );
+		rcvdAvroByteArrays.add( messageByte );
 		iotClientSocketThread.interrupt();
 	}
 
@@ -61,11 +61,11 @@ public class ClientSocketAvro {
 		log.error(cause);
 	}
 
-	public ConcurrentLinkedQueue<String> getRcvdMessages() {
-		return rcvdMessages;
+	public ConcurrentLinkedQueue<byte[]> getRcvdAvroByteArrays() {
+		return rcvdAvroByteArrays;
 	}
 
-	public void setRcvdMessages(ConcurrentLinkedQueue<String> rcvdMessages) {
-		this.rcvdMessages = rcvdMessages;
+	public void setRcvdAvroByteArrays(ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays) {
+		this.rcvdAvroByteArrays = rcvdAvroByteArrays;
 	}
 }

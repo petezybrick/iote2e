@@ -22,15 +22,17 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
+import com.pzybrick.iote2e.schema.avro.ActuatorResponse;
 import com.pzybrick.iote2e.schema.avro.LoginActuatorResponse;
 import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
+import com.pzybrick.iote2e.schema.avro.SourceSensorValue;
 import com.pzybrick.iote2e.ws.route.RouteLoginSourceSensorValue;
 import com.pzybrick.iote2e.ws.route.RouteLoginSourceSensorValueLoopbackImpl;
 
 public class EntryPointServerSourceSensorValue {
 	private static final Log log = LogFactory.getLog(EntryPointServerSourceSensorValue.class);
 	public static final Map<String, ServerSideSocketSourceSensorValue> serverSideSocketSourceSensorValues = new ConcurrentHashMap<String, ServerSideSocketSourceSensorValue>();
-	public static final ConcurrentLinkedQueue<LoginActuatorResponse> toClientLoginActuatorResponses = new ConcurrentLinkedQueue<LoginActuatorResponse>();
+	public static final ConcurrentLinkedQueue<LoginActuatorResponse> toClientActuatorResponses = new ConcurrentLinkedQueue<LoginActuatorResponse>();
 	public static final ConcurrentLinkedQueue<LoginSourceSensorValue> fromClientLoginSourceSensorValues = new ConcurrentLinkedQueue<LoginSourceSensorValue>();
 	private RouteLoginSourceSensorValue routeLoginSourceSensorValue;
 	private Server server;
@@ -137,15 +139,15 @@ public class EntryPointServerSourceSensorValue {
 		@Override
 		public void run() {
 			log.info("Run");
-			DatumWriter<LoginActuatorResponse> datumWriterLoginActuatorResponse = new SpecificDatumWriter<LoginActuatorResponse>(LoginActuatorResponse.getClassSchema());
+			DatumWriter<ActuatorResponse> datumWriterActuatorResponse = new SpecificDatumWriter<ActuatorResponse>(ActuatorResponse.getClassSchema());
 			BinaryEncoder binaryEncoder = null;
 			//List<IotServerMessage> iotServerMessages = new ArrayList<IotServerMessage>();
 			Map<String,List<LoginActuatorResponse>> loginActuatorResponsesByLoginUuid = new HashMap<String,List<LoginActuatorResponse>>();
 			try {
 				while (true) {
 					loginActuatorResponsesByLoginUuid.clear();
-					while (!toClientLoginActuatorResponses.isEmpty()) {
-						LoginActuatorResponse loginActuatorResponse = toClientLoginActuatorResponses.poll();
+					while (!toClientActuatorResponses.isEmpty()) {
+						LoginActuatorResponse loginActuatorResponse = toClientActuatorResponses.poll();
 						List<LoginActuatorResponse> loginActuatorResponses = loginActuatorResponsesByLoginUuid.get(loginActuatorResponse.getLoginUuid());
 						if( loginActuatorResponses == null ) {
 							loginActuatorResponses = new ArrayList<LoginActuatorResponse>();
@@ -163,7 +165,15 @@ public class EntryPointServerSourceSensorValue {
 						try {
 							binaryEncoder = EncoderFactory.get().binaryEncoder(baos, binaryEncoder);
 							for (LoginActuatorResponse loginActuatorResponse : entry.getValue() ) {
-								datumWriterLoginActuatorResponse.write(loginActuatorResponse, binaryEncoder);
+								// Convert to ActuatorResponse so the client doeesn't get the LoginUuid
+								ActuatorResponse actuatorResponse = ActuatorResponse.newBuilder()
+										.setSourceUuid(loginActuatorResponse.getActuatorUuid())
+										.setSensorUuid(loginActuatorResponse.getSensorUuid())
+										.setActuatorUuid(loginActuatorResponse.getActuatorUuid())
+										.setActuatorValue(loginActuatorResponse.getActuatorValue())
+										.setActuatorValueUpdatedAt(loginActuatorResponse.getActuatorValueUpdatedAt())
+										.build();
+								datumWriterActuatorResponse.write(actuatorResponse, binaryEncoder);
 								binaryEncoder.flush();
 							}
 							bytes = baos.toByteArray();
