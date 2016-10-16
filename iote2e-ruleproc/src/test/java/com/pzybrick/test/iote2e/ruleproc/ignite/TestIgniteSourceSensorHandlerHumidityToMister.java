@@ -12,8 +12,8 @@ import junit.framework.Assert;
 
 public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSourceSensorHandlerBase {
 	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerHumidityToMister.class);
-	private static String testSourceUuid = "8043c648-a45d-4352-b024-1b4dd72fe9bc";
-	private static String testSensorUuid = "fb0440cd-5933-47c2-b7f2-a60b99fa0ba8";
+	private static String testSourceUuid = "lo1so1";
+	private static String testSensorUuid = "lo1so1se2";
 	private String filterKey;
 
 

@@ -2,6 +2,7 @@ package com.pzybrick.iote2e.schema.util;
 
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;
+import org.apache.avro.specific.SpecificDatumWriter;
 
 import com.pzybrick.iote2e.schema.avro.SourceSensorValue;
 
@@ -9,6 +10,11 @@ public class SourceSensorValueToByteArrayReuseItem {
 	private byte[] bytes;
 	private BinaryEncoder binaryEncoder;
 	private DatumWriter<SourceSensorValue> datumWriterSourceSensorValue;
+	
+	public SourceSensorValueToByteArrayReuseItem() {
+		datumWriterSourceSensorValue = new SpecificDatumWriter<SourceSensorValue>(SourceSensorValue.getClassSchema());
+	}
+	
 	public byte[] getBytes() {
 		return bytes;
 	}

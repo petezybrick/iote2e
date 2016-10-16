@@ -8,6 +8,6 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 public interface SourceResponseSvc {
 	public abstract void init(RuleConfig ruleConfig) throws Exception;
 	public void close() throws Exception;
-	public void processRuleEvalResults(String sourceUuid, String sensorUuid, List<RuleEvalResult> ruleEvalResults)
+	public void processRuleEvalResults(String loginUuid, String sourceUuid, String sensorUuid, List<RuleEvalResult> ruleEvalResults)
 			throws Exception;
 }

@@ -184,7 +184,7 @@ public class TestIgniteSourceSensorHandlerBase {
 //						return new CacheEntryEventFilter<String, String>() {
 //							@Override
 //							public boolean evaluate(CacheEntryEvent<? extends String, ? extends String> e) {
-//								final String remoteFilter = "8043c648-a45d-4352-b024-1b4dd72fe9bc|3c3122da-6db6-4eb2-bbd3-55456e65d76d|";
+//								final String remoteFilter = "lo1so1|lo1so1se1|";
 //								if (e.getKey().startsWith(remoteFilter))
 //									return true;
 //								else

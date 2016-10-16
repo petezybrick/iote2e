@@ -27,8 +27,8 @@ public class ClientTestInjector {
 	private static final Log log = LogFactory.getLog(ClientTestInjector.class);
 	private URI uri;
 	private WebSocketContainer container;
-	private static String testSourceUuid = "8043c648-a45d-4352-b024-1b4dd72fe9bc";
-	private static String testSensorUuid = "3c3122da-6db6-4eb2-bbd3-55456e65d76d";	// fan
+	private static String testSourceUuid = "lo1so1";
+	private static String testSensorUuid = "lo1so1se1";	// fan
 
 
 	public static void main(String[] args) {
@@ -83,10 +83,8 @@ public class ClientTestInjector {
 		private ActuatorResponseFromByteArrayReuseItem fromByteArrayReuseItem;
 
 		public IotClientSocketThread() throws Exception {
-			toByteArrayReuseItem = new SourceSensorValueToByteArrayReuseItem().setDatumWriterSourceSensorValue(
-					new SpecificDatumWriter<SourceSensorValue>(SourceSensorValue.getClassSchema()));
-			fromByteArrayReuseItem = new ActuatorResponseFromByteArrayReuseItem().setDatumReaderActuatorResponse(
-					new SpecificDatumReader<ActuatorResponse>(ActuatorResponse.getClassSchema()));
+			toByteArrayReuseItem = new SourceSensorValueToByteArrayReuseItem();
+			fromByteArrayReuseItem = new ActuatorResponseFromByteArrayReuseItem();
 		}
 
 		@Override

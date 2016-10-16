@@ -8,6 +8,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.pzybrick.iote2e.schema.avro.ActuatorResponse;
+import com.pzybrick.iote2e.schema.avro.LoginActuatorResponse;
+import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
 import com.pzybrick.iote2e.schema.avro.SourceSensorValue;
 
 public class AvroSchemaUtils {
@@ -47,6 +49,40 @@ public class AvroSchemaUtils {
 		}
 	}
 
+	public static void loginSourceSensorValueToByteArray( LoginSourceSensorValueToByteArrayReuseItem toByteArrayReuseItem,
+			String sourceUuid, String sensorUuid, String sensorValue ) throws Exception {
+		LoginSourceSensorValue loginSourceSensorValue = LoginSourceSensorValue.newBuilder()
+				.setSourceUuid(sourceUuid)
+				.setSensorUuid(sensorUuid)
+				.setSensorValue(sensorValue)
+				.build();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			toByteArrayReuseItem.setBinaryEncoder( EncoderFactory.get().binaryEncoder(baos, toByteArrayReuseItem.getBinaryEncoder() ));
+			toByteArrayReuseItem.getDatumWriterLoginSourceSensorValue().write(loginSourceSensorValue, toByteArrayReuseItem.getBinaryEncoder() );
+			toByteArrayReuseItem.getBinaryEncoder().flush();
+			toByteArrayReuseItem.setBytes( baos.toByteArray());
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw e;
+		} finally {
+			baos.close();
+		}
+	}
+
+	public static void loginSourceSensorActuatorFromByteArray( LoginSourceSensorValueFromByteArrayReuseItem fromByteArrayReuseItem,
+			byte[] bytes ) throws Exception {
+
+		try {
+			fromByteArrayReuseItem.setBinaryDecoder( DecoderFactory.get().binaryDecoder(bytes, fromByteArrayReuseItem.getBinaryDecoder()));
+			fromByteArrayReuseItem.setLoginSourceSensorValue(fromByteArrayReuseItem.getDatumReaderLoginSourceSensorValue().read(null,fromByteArrayReuseItem.getBinaryDecoder()));
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw e;
+		} finally {
+		}
+	}
+
 	public static void actuatorResponseFromByteArray( ActuatorResponseFromByteArrayReuseItem fromByteArrayReuseItem,
 			byte[] bytes ) throws Exception {
 
@@ -74,6 +110,44 @@ public class AvroSchemaUtils {
 		try {
 			toByteArrayReuseItem.setBinaryEncoder( EncoderFactory.get().binaryEncoder(baos, toByteArrayReuseItem.getBinaryEncoder() ));
 			toByteArrayReuseItem.getDatumWriterActuatorResponse().write(actuatorResponse, toByteArrayReuseItem.getBinaryEncoder() );
+			toByteArrayReuseItem.getBinaryEncoder().flush();
+			toByteArrayReuseItem.setBytes( baos.toByteArray());
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw e;
+		} finally {
+			baos.close();
+		}
+	}
+
+
+	public static void loginActuatorResponseFromByteArray( LoginActuatorResponseFromByteArrayReuseItem fromByteArrayReuseItem,
+			byte[] bytes ) throws Exception {
+
+		try {
+			fromByteArrayReuseItem.setBinaryDecoder( DecoderFactory.get().binaryDecoder(bytes, fromByteArrayReuseItem.getBinaryDecoder()));
+			fromByteArrayReuseItem.setLoginActuatorResponse( fromByteArrayReuseItem.getDatumReaderLoginActuatorResponse().read(null,fromByteArrayReuseItem.getBinaryDecoder()));
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw e;
+		} finally {
+		}
+	}
+
+	public static void loginActuatorResponseValueToByteArray( LoginActuatorResponseToByteArrayReuseItem toByteArrayReuseItem,
+			String sourceUuid, String sensorUuid, String actuatorUuid, String actuatorValue, String actuatorValueUpdatedAt 
+			) throws Exception {
+		LoginActuatorResponse loginActuatorResponse = LoginActuatorResponse.newBuilder()
+				.setSourceUuid(sourceUuid)
+				.setSensorUuid(sensorUuid)
+				.setActuatorUuid(actuatorUuid)
+				.setActuatorValue(actuatorValue)
+				.setActuatorValueUpdatedAt(actuatorValueUpdatedAt)
+				.build();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			toByteArrayReuseItem.setBinaryEncoder( EncoderFactory.get().binaryEncoder(baos, toByteArrayReuseItem.getBinaryEncoder() ));
+			toByteArrayReuseItem.getDatumWriterLoginActuatorResponse().write(loginActuatorResponse, toByteArrayReuseItem.getBinaryEncoder() );
 			toByteArrayReuseItem.getBinaryEncoder().flush();
 			toByteArrayReuseItem.setBytes( baos.toByteArray());
 		} catch (Exception e) {

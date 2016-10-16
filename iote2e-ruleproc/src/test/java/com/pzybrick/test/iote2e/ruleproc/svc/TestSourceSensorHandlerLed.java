@@ -12,10 +12,10 @@ import junit.framework.Assert;
 
 public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 	private static final Log log = LogFactory.getLog(TestSourceSensorHandlerLed.class);
-	private static String testSourceUuid = "102030a8-9cc9-47e5-8978-898ab010bd94";
-	private static String testSensorUuidGreen = "3fc0397a-9044-4c32-aaee-0d40924a0c30";
-	private static String testSensorUuidRed = "1767121a-d0f4-46b2-b568-da01e1dc950d";
-	private static String testSensorUuidYellow = "82abbfa2-7b08-4167-9d5f-8e99ba810a1a";
+	private static String testSourceUuid = "lo1so2";
+	private static String testSensorUuidGreen = "lo1so2se1";
+	private static String testSensorUuidRed = "lo1so2se2";
+	private static String testSensorUuidYellow = "lo1so2se3";
 	
 
 	public TestSourceSensorHandlerLed() {

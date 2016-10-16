@@ -1,6 +1,6 @@
 [
   {
-    "ruleUuid": "3c473a14-745c-4c3d-aed6-e73a91b70e56",
+    "ruleUuid": "lo1so1se1ru1",
     "ruleName": "TempFan",
     "ruleDefCondItems": [
       {
@@ -28,7 +28,7 @@
     ]
   },
   {
-    "ruleUuid": "b578b7d9-a5c0-44fe-8810-155b9fec52d0",
+    "ruleUuid": "lo1so1se2ru1",
     "ruleName": "HumidityMister",
     "ruleDefCondItems": [
       {
@@ -56,7 +56,7 @@
     ]
   },
   {
-    "ruleUuid": "f7cfec79-cc00-48e3-aa49-02833a996319",
+    "ruleUuid": "lo1so2se1ru1",
     "ruleName": "LedGreenOnOff",
     "ruleDefCondItems": [
       {
@@ -84,7 +84,7 @@
     ]
   },
   {
-    "ruleUuid": "c52a97f8-1599-4487-83fe-e41d94dfd902",
+    "ruleUuid": "lo1so2se2ru1",
     "ruleName": "LedGreenOnOff",
     "ruleDefCondItems": [
       {
@@ -112,7 +112,7 @@
     ]
   },
   {
-    "ruleUuid": "b0e1a989-9653-4c05-96f7-d0d9d8ea6ad2",
+    "ruleUuid": "lo1so2se3ru1",
     "ruleName": "LedGreenOnOff",
     "ruleDefCondItems": [
       {
