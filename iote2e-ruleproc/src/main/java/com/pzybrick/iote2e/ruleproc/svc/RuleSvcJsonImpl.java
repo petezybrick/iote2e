@@ -15,48 +15,50 @@ import com.google.gson.reflect.TypeToken;
 
 public class RuleSvcJsonImpl extends RuleSvc {
 	private static final Log log = LogFactory.getLog(RuleSvcJsonImpl.class);
-	private Map<String, Map<String, SourceSensorActuator>> ssaBySourceUuid;
-	private List<SourceSensorActuator> sourceSensorActuators;	
-	private Map<String, Map<String, RuleSourceSensor>> rssBySourceUuid;
-	private List<RuleSourceSensor> ruleSourceSensors;
+	private Map<String, Map<String, LoginSourceSensorActuator>> ssaByLoginSourceUuid;
+	private List<LoginSourceSensorActuator> loginSourceSensorActuators;	
+	private Map<String, Map<String, RuleLoginSourceSensor>> rssByLoginSourceUuid;
+	private List<RuleLoginSourceSensor> ruleLoginSourceSensors;
 	private Map<String, RuleDefItem> rdiByRuleUuid;
 	private List<RuleDefItem> ruleDefItems;
 
 	public RuleSvcJsonImpl() {
-		this.ssaBySourceUuid = new HashMap<String, Map<String, SourceSensorActuator>>();
-		this.rssBySourceUuid = new HashMap<String, Map<String, RuleSourceSensor>>();
+		this.ssaByLoginSourceUuid = new HashMap<String, Map<String, LoginSourceSensorActuator>>();
+		this.rssByLoginSourceUuid = new HashMap<String, Map<String, RuleLoginSourceSensor>>();
 		this.rdiByRuleUuid = new HashMap<String, RuleDefItem>();
 	}
 
 
 	public void init(RuleConfig ruleConfig) throws Exception {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileSourceSensorActuator()));
-		sourceSensorActuators = gson.fromJson(rawJson,
-				new TypeToken<List<SourceSensorActuator>>() {
+		String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileLoginSourceSensorActuator()));
+		loginSourceSensorActuators = gson.fromJson(rawJson,
+				new TypeToken<List<LoginSourceSensorActuator>>() {
 				}.getType());
-		for (SourceSensorActuator sourceSensorActuator : sourceSensorActuators) {
-			Map<String, SourceSensorActuator> mapBySensorUuid = ssaBySourceUuid
-					.get(sourceSensorActuator.getSourceUuid());
-			if (mapBySensorUuid == null) {
-				mapBySensorUuid = new HashMap<String, SourceSensorActuator>();
-				ssaBySourceUuid.put(sourceSensorActuator.getSourceUuid(), mapBySensorUuid);
+		for (LoginSourceSensorActuator loginSourceSensorActuator : loginSourceSensorActuators) {
+			String key = loginSourceSensorActuator.getLoginUuid() + "|" + loginSourceSensorActuator.getSourceUuid();
+			Map<String, LoginSourceSensorActuator> mapByLoginSensorUuid = ssaByLoginSourceUuid
+					.get(key);
+			if (mapByLoginSensorUuid == null) {
+				mapByLoginSensorUuid = new HashMap<String, LoginSourceSensorActuator>();
+				ssaByLoginSourceUuid.put(key, mapByLoginSensorUuid);
 			}
-			mapBySensorUuid.put(sourceSensorActuator.getSensorUuid(), sourceSensorActuator);
+			mapByLoginSensorUuid.put(loginSourceSensorActuator.getSensorUuid(), loginSourceSensorActuator);
 		}
 		
-		rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileRuleSourceSensor()));
-		ruleSourceSensors = gson.fromJson(rawJson,
-				new TypeToken<List<RuleSourceSensor>>() {
+		rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileRuleLoginSourceSensor()));
+		ruleLoginSourceSensors = gson.fromJson(rawJson,
+				new TypeToken<List<RuleLoginSourceSensor>>() {
 				}.getType());
-		for (RuleSourceSensor ruleSourceSensor : ruleSourceSensors) {
-			Map<String, RuleSourceSensor> mapBySensorUuid = rssBySourceUuid
-					.get(ruleSourceSensor.getSourceUuid());
+		for (RuleLoginSourceSensor ruleLoginSourceSensor : ruleLoginSourceSensors) {
+			String key = ruleLoginSourceSensor.getLoginUuid() + "|" + ruleLoginSourceSensor.getSourceUuid();
+			Map<String, RuleLoginSourceSensor> mapBySensorUuid = rssByLoginSourceUuid
+					.get(key);
 			if (mapBySensorUuid == null) {
-				mapBySensorUuid = new HashMap<String, RuleSourceSensor>();
-				rssBySourceUuid.put(ruleSourceSensor.getSourceUuid(), mapBySensorUuid);
+				mapBySensorUuid = new HashMap<String, RuleLoginSourceSensor>();
+				rssByLoginSourceUuid.put(key, mapBySensorUuid);
 			}
-			mapBySensorUuid.put(ruleSourceSensor.getSensorUuid(), ruleSourceSensor);
+			mapBySensorUuid.put(ruleLoginSourceSensor.getSensorUuid(), ruleLoginSourceSensor);
 		}
 		
 		rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileRuleDefItem()));
@@ -88,10 +90,11 @@ public class RuleSvcJsonImpl extends RuleSvc {
 		}
 	}
 
-	protected SourceSensorActuator findSourceSensorActuator(String sourceUuid, String sensorUuid) throws Exception {
-		if( ssaBySourceUuid.containsKey(sourceUuid)
-				&& ssaBySourceUuid.get(sourceUuid).containsKey(sensorUuid) )
-				return ssaBySourceUuid.get(sourceUuid).get(sensorUuid);
+	protected LoginSourceSensorActuator findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorUuid) throws Exception {
+		String key = loginUuid + "|" + sourceUuid;
+		if( ssaByLoginSourceUuid.containsKey(key)
+				&& ssaByLoginSourceUuid.get(key).containsKey(sensorUuid) )
+				return ssaByLoginSourceUuid.get(key).get(sensorUuid);
 		else return null;
 	}
 
@@ -100,17 +103,17 @@ public class RuleSvcJsonImpl extends RuleSvc {
 	}
 
 
-	protected void updateActuatorValue(SourceSensorActuator sourceSensorActuator) throws Exception {
+	protected void updateActuatorValue(LoginSourceSensorActuator sourceSensorActuator) throws Exception {
 		// TODO phase 1- show value, phase 2 write value to ignite
 		
 	}
 
-	protected RuleSourceSensor findRuleSourceSensor(String sourceUuid, String sensorUuid) throws Exception {
-		if( rssBySourceUuid.containsKey(sourceUuid)
-				&& rssBySourceUuid.get(sourceUuid).containsKey(sensorUuid) )
-				return rssBySourceUuid.get(sourceUuid).get(sensorUuid);
+	protected RuleLoginSourceSensor findRuleLoginSourceSensor(String loginUuid, String sourceUuid, String sensorUuid) throws Exception {
+		String key = loginUuid + "|" + sourceUuid;
+		if( rssByLoginSourceUuid.containsKey(key)
+				&& rssByLoginSourceUuid.get(key).containsKey(sensorUuid) )
+				return rssByLoginSourceUuid.get(key).get(sensorUuid);
 		else return null;
 	}
-
 
 }

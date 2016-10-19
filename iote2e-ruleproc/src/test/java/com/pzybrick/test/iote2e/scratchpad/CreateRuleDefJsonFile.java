@@ -13,8 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefCondItem;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefItem;
-import com.pzybrick.iote2e.ruleproc.svc.RuleSourceSensor;
-import com.pzybrick.iote2e.ruleproc.svc.SourceSensorActuator;
+import com.pzybrick.iote2e.ruleproc.svc.RuleLoginSourceSensor;
+import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
 
 public class CreateRuleDefJsonFile {
 	private static final Log log = LogFactory.getLog(CreateRuleDefJsonFile.class);
@@ -63,34 +63,34 @@ public class CreateRuleDefJsonFile {
 			String actuatorUuidLedRed = UUID.randomUUID().toString();
 			String actuatorUuidLedYellow = UUID.randomUUID().toString();
 
-			List<RuleSourceSensor> ruleSourceSensors = new ArrayList<>();
-			ruleSourceSensors.add( new RuleSourceSensor().setSourceUuid(sourceUuidFanMister).setSensorUuid(sensorUuidTemp)
+			List<RuleLoginSourceSensor> ruleSourceSensors = new ArrayList<>();
+			ruleSourceSensors.add( new RuleLoginSourceSensor().setSourceUuid(sourceUuidFanMister).setSensorUuid(sensorUuidTemp)
 					.setRuleUuid(fanRuleDefItem.getRuleUuid()).setDesc("TempToFan"));
-			ruleSourceSensors.add( new RuleSourceSensor().setSourceUuid(sourceUuidFanMister).setSensorUuid(sensorUuidHumidity)
+			ruleSourceSensors.add( new RuleLoginSourceSensor().setSourceUuid(sourceUuidFanMister).setSensorUuid(sensorUuidHumidity)
 					.setRuleUuid(misterRuleDefItem.getRuleUuid()).setDesc("HumidityToMister"));
 			
-			ruleSourceSensors.add( new RuleSourceSensor().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch0)
+			ruleSourceSensors.add( new RuleLoginSourceSensor().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch0)
 					.setRuleUuid(ledGreenRuleDefItem.getRuleUuid()).setDesc("Switch0ToLedGreen"));
-			ruleSourceSensors.add( new RuleSourceSensor().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch1)
+			ruleSourceSensors.add( new RuleLoginSourceSensor().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch1)
 					.setRuleUuid(ledRedRuleDefItem.getRuleUuid()).setDesc("Switch1ToLedRed"));
-			ruleSourceSensors.add( new RuleSourceSensor().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch2)
+			ruleSourceSensors.add( new RuleLoginSourceSensor().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch2)
 					.setRuleUuid(ledYellowRuleDefItem.getRuleUuid()).setDesc("Switch2ToLedYellow"));
 
-			List<SourceSensorActuator> sourceSensorActuators = new ArrayList<SourceSensorActuator>();
+			List<LoginSourceSensorActuator> sourceSensorActuators = new ArrayList<LoginSourceSensorActuator>();
 			sourceSensorActuators
-			.add(new SourceSensorActuator().setSourceUuid(sourceUuidFanMister).setSensorUuid(sensorUuidTemp)
+			.add(new LoginSourceSensorActuator().setSourceUuid(sourceUuidFanMister).setSensorUuid(sensorUuidTemp)
 					.setActuatorUuid(actuatorUuidFan).setActuatorValue(null).setDesc("TempToFan"));
 			sourceSensorActuators
-			.add(new SourceSensorActuator().setSourceUuid(sourceUuidFanMister).setSensorUuid(sensorUuidHumidity)
+			.add(new LoginSourceSensorActuator().setSourceUuid(sourceUuidFanMister).setSensorUuid(sensorUuidHumidity)
 					.setActuatorUuid(actuatorUuidMister).setActuatorValue(null).setDesc("HumidityToMister"));
 			sourceSensorActuators
-			.add(new SourceSensorActuator().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch0)
+			.add(new LoginSourceSensorActuator().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch0)
 					.setActuatorUuid(actuatorUuidLedGreen).setActuatorValue(null).setDesc("Switch0ToLedGreen"));
 			sourceSensorActuators
-			.add(new SourceSensorActuator().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch1)
+			.add(new LoginSourceSensorActuator().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch1)
 					.setActuatorUuid(actuatorUuidLedRed).setActuatorValue(null).setDesc("Switch1ToLedRed"));
 			sourceSensorActuators
-			.add(new SourceSensorActuator().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch2)
+			.add(new LoginSourceSensorActuator().setSourceUuid(sourceUuidLights).setSensorUuid(sensorUuidSwitch2)
 					.setActuatorUuid(actuatorUuidLedYellow).setActuatorValue(null).setDesc("Switch2ToLedYellow"));
 
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();

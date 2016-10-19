@@ -3,7 +3,7 @@ package com.pzybrick.iote2e.ruleproc.svc;
 public class RuleEvalResult {
 	private boolean ruleActuatorHit;
 	private String actuatorTargetValue;
-	private SourceSensorActuator sourceSensorActuator;
+	private LoginSourceSensorActuator sourceSensorActuator;
 
 	public RuleEvalResult() {
 		this.ruleActuatorHit = false;
@@ -11,7 +11,7 @@ public class RuleEvalResult {
 		this.actuatorTargetValue = null;
 	}
 
-	public RuleEvalResult(boolean ruleActuatorHit, SourceSensorActuator sourceSensorActuator) {
+	public RuleEvalResult(boolean ruleActuatorHit, LoginSourceSensorActuator sourceSensorActuator) {
 		this.ruleActuatorHit = ruleActuatorHit;
 		this.sourceSensorActuator = sourceSensorActuator;
 		this.actuatorTargetValue = null;
@@ -21,7 +21,7 @@ public class RuleEvalResult {
 		return ruleActuatorHit;
 	}
 
-	public SourceSensorActuator getSourceSensorActuator() {
+	public LoginSourceSensorActuator getSourceSensorActuator() {
 		return sourceSensorActuator;
 	}
 
@@ -30,7 +30,7 @@ public class RuleEvalResult {
 		return this;
 	}
 
-	public RuleEvalResult setSourceSensorActuator(SourceSensorActuator sourceSensorActuator) {
+	public RuleEvalResult setSourceSensorActuator(LoginSourceSensorActuator sourceSensorActuator) {
 		this.sourceSensorActuator = sourceSensorActuator;
 		return this;
 	}

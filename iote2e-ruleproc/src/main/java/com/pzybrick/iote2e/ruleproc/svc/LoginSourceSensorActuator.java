@@ -5,7 +5,9 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 
 @Generated("org.jsonschema2pojo")
-public class SourceSensorActuator {
+public class LoginSourceSensorActuator {
+	@Expose
+	private String loginUuid;
 	@Expose
 	private String sourceUuid;
 	@Expose
@@ -19,7 +21,7 @@ public class SourceSensorActuator {
 	@Expose
 	private String actuatorValueUpdatedAt;
 
-	public SourceSensorActuator() {
+	public LoginSourceSensorActuator() {
 		
 	}
 
@@ -43,27 +45,27 @@ public class SourceSensorActuator {
 		return desc;
 	}
 
-	public SourceSensorActuator setSourceUuid(String sourceUuid) {
+	public LoginSourceSensorActuator setSourceUuid(String sourceUuid) {
 		this.sourceUuid = sourceUuid;
 		return this;
 	}
 
-	public SourceSensorActuator setSensorUuid(String sensorUuid) {
+	public LoginSourceSensorActuator setSensorUuid(String sensorUuid) {
 		this.sensorUuid = sensorUuid;
 		return this;
 	}
 
-	public SourceSensorActuator setActuatorUuid(String actuatorUuid) {
+	public LoginSourceSensorActuator setActuatorUuid(String actuatorUuid) {
 		this.actuatorUuid = actuatorUuid;
 		return this;
 	}
 
-	public SourceSensorActuator setActuatorValue(String actuatorValue) {
+	public LoginSourceSensorActuator setActuatorValue(String actuatorValue) {
 		this.actuatorValue = actuatorValue;
 		return this;
 	}
 
-	public SourceSensorActuator setDesc(String desc) {
+	public LoginSourceSensorActuator setDesc(String desc) {
 		this.desc = desc;
 		return this;
 	}
@@ -72,16 +74,25 @@ public class SourceSensorActuator {
 		return actuatorValueUpdatedAt;
 	}
 
-	public SourceSensorActuator setActuatorValueUpdatedAt(String actuatorValueUpdatedAt) {
+	public LoginSourceSensorActuator setActuatorValueUpdatedAt(String actuatorValueUpdatedAt) {
 		this.actuatorValueUpdatedAt = actuatorValueUpdatedAt;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "SourceSensorActuator [sourceUuid=" + sourceUuid + ", sensorUuid=" + sensorUuid + ", actuatorUuid="
-				+ actuatorUuid + ", actuatorValue=" + actuatorValue + ", desc=" + desc + ", actuatorValueUpdatedAt="
-				+ actuatorValueUpdatedAt + "]";
+		return "LoginSourceSensorActuator [loginUuid=" + loginUuid + ", sourceUuid=" + sourceUuid + ", sensorUuid="
+				+ sensorUuid + ", actuatorUuid=" + actuatorUuid + ", actuatorValue=" + actuatorValue + ", desc=" + desc
+				+ ", actuatorValueUpdatedAt=" + actuatorValueUpdatedAt + "]";
+	}
+
+	public String getLoginUuid() {
+		return loginUuid;
+	}
+
+	public LoginSourceSensorActuator setLoginUuid(String loginUuid) {
+		this.loginUuid = loginUuid;
+		return this;
 	}
 	
 }

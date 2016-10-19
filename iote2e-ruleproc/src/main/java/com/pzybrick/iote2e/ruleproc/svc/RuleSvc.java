@@ -15,30 +15,30 @@ public abstract class RuleSvc {
 
 	protected abstract RuleDefItem findRuleDefItem(String ruleUuid) throws Exception;
 
-	protected abstract SourceSensorActuator findSourceSensorActuator(String sourceUuid, String sensorUuid)
+	protected abstract LoginSourceSensorActuator findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorUuid)
 			throws Exception;
 
-	protected abstract void updateActuatorValue(SourceSensorActuator sourceSensorActuator) throws Exception;
+	protected abstract void updateActuatorValue(LoginSourceSensorActuator loginSourceSensorActuator) throws Exception;
 
-	protected abstract RuleSourceSensor findRuleSourceSensor(String sourceUuid, String sensorUuid) throws Exception;
+	protected abstract RuleLoginSourceSensor findRuleLoginSourceSensor(String loginUuid, String sourceUuid, String sensorUuid) throws Exception;
 
 
-	public List<RuleEvalResult> process(String sourceUuid, String sensorUuid, String sensorValue) throws Exception {
+	public List<RuleEvalResult> process(String loginUuid, String sourceUuid, String sensorUuid, String sensorValue) throws Exception {
 		List<RuleEvalResult> ruleEvalResults = null;
-		RuleSourceSensor ruleSourceSensor = findRuleSourceSensor( sourceUuid, sensorUuid);
+		RuleLoginSourceSensor ruleSourceSensor = findRuleLoginSourceSensor( loginUuid, sourceUuid, sensorUuid);
 		if( ruleSourceSensor != null ) {
 			log.debug(ruleSourceSensor);
 			RuleDefItem ruleDefItem = findRuleDefItem( ruleSourceSensor.getRuleUuid());
 			if( ruleDefItem == null ) throw new Exception ("Missing RuleDefItem for ruleUuid=" + ruleSourceSensor.getRuleUuid());
 			log.debug(ruleDefItem);
-			ruleEvalResults = ruleEval( sourceUuid, sensorUuid, sensorValue, ruleDefItem);
+			ruleEvalResults = ruleEval( loginUuid, sourceUuid, sensorUuid, sensorValue, ruleDefItem);
 		} else {
 			if( log.isDebugEnabled()) log.debug("ruleSourceSensor doesn't exist for sourceUuid=" + sourceUuid + ", sensorUuid=" + sensorUuid );
 		}
 		return ruleEvalResults;
 	}
 	
-	protected List<RuleEvalResult> ruleEval(String sourceUuid, String sensorUuid, String sensorValue,
+	protected List<RuleEvalResult> ruleEval(String loginUuid, String sourceUuid, String sensorUuid, String sensorValue,
 			RuleDefItem ruleDefItem) throws Exception {
 		List<RuleEvalResult> ruleEvalResults = new ArrayList<RuleEvalResult>();
 		for (RuleDefCondItem ruleDefCondItem : ruleDefItem.getRuleDefCondItems()) {
@@ -50,7 +50,7 @@ public abstract class RuleSvc {
 			if( log.isDebugEnabled()) log.debug("isSensorRuleHit=" + isSensorRuleHit);
 			// only evaluate Actuator rule if the Sensor rule has hit
 			if (isSensorRuleHit) {
-				RuleEvalResult ruleEvalResult = ruleEvalActuator(sourceUuid, sensorUuid, ruleDefCondItem, ruleDefItem);
+				RuleEvalResult ruleEvalResult = ruleEvalActuator(loginUuid, sourceUuid, sensorUuid, ruleDefCondItem, ruleDefItem);
 				log.debug(ruleEvalResult);
 				ruleEvalResults.add(ruleEvalResult);
 				if (ruleEvalResult.isRuleActuatorHit()) {
@@ -71,12 +71,12 @@ public abstract class RuleSvc {
 				ruleDefCondItem.getDblSensorCompareValue(), ruleDefCondItem.getRuleComparatorSensor(), ruleDefItem);
 	}
 
-	private RuleEvalResult ruleEvalActuator(String sourceUuid, String sensorUuid, RuleDefCondItem ruleDefCondItem,
+	private RuleEvalResult ruleEvalActuator(String loginUuid, String sourceUuid, String sensorUuid, RuleDefCondItem ruleDefCondItem,
 			RuleDefItem ruleDefItem) throws Exception {
-		SourceSensorActuator sourceSensorActuator = findSourceSensorActuator(sourceUuid, sensorUuid);
+		LoginSourceSensorActuator sourceSensorActuator = findSourceSensorActuator(loginUuid, sourceUuid, sensorUuid);
 		if (sourceSensorActuator == null)
-			throw new Exception(
-					"Missing SourceSensorActuator, sourceUuid=" + sourceUuid + ", sensorUuid=" + sensorUuid);
+			throw new Exception( String.format(
+					"Missing SourceSensorActuator, loginUuid=%s, sourceUuid=%s, sensorUuid=%s", loginUuid, sourceUuid, sensorUuid) );
 		log.debug(sourceSensorActuator);
 
 		boolean ruleActuatorHit = false;

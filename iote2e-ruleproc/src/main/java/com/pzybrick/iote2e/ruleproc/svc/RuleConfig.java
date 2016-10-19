@@ -7,9 +7,9 @@ import com.google.gson.annotations.Expose;
 @Generated("org.jsonschema2pojo")
 public class RuleConfig {
 	@Expose 
-	private String jsonFileSourceSensorActuator;
+	private String jsonFileLoginSourceSensorActuator;
 	@Expose 
-	private String jsonFileRuleSourceSensor;
+	private String jsonFileRuleLoginSourceSensor;
 	@Expose 
 	private String jsonFileRuleDefItem;
 	@Expose
@@ -23,25 +23,25 @@ public class RuleConfig {
 		
 	}
 
-	public String getJsonFileSourceSensorActuator() {
-		return jsonFileSourceSensorActuator;
+	public String getJsonFileLoginSourceSensorActuator() {
+		return jsonFileLoginSourceSensorActuator;
 	}
 
-	public RuleConfig setJsonFileSourceSensorActuator(String jsonFilePathNameExt) {
-		this.jsonFileSourceSensorActuator = jsonFilePathNameExt;
+	public RuleConfig setJsonFileLoginSourceSensorActuator(String jsonFilePathNameExt) {
+		this.jsonFileLoginSourceSensorActuator = jsonFilePathNameExt;
 		return this;
 	}
 
-	public String getJsonFileRuleSourceSensor() {
-		return jsonFileRuleSourceSensor;
+	public String getJsonFileRuleLoginSourceSensor() {
+		return jsonFileRuleLoginSourceSensor;
 	}
 
 	public String getJsonFileRuleDefItem() {
 		return jsonFileRuleDefItem;
 	}
 
-	public RuleConfig setJsonFileRuleSourceSensor(String jsonFileRuleSourceSensor) {
-		this.jsonFileRuleSourceSensor = jsonFileRuleSourceSensor;
+	public RuleConfig setJsonFileRuleLoginSourceSensor(String jsonFileRuleSourceSensor) {
+		this.jsonFileRuleLoginSourceSensor = jsonFileRuleSourceSensor;
 		return this;
 	}
 
@@ -61,8 +61,8 @@ public class RuleConfig {
 
 	@Override
 	public String toString() {
-		return "RuleConfig [jsonFileSourceSensorActuator=" + jsonFileSourceSensorActuator
-				+ ", jsonFileRuleSourceSensor=" + jsonFileRuleSourceSensor + ", jsonFileRuleDefItem="
+		return "RuleConfig [jsonFileSourceSensorActuator=" + jsonFileLoginSourceSensorActuator
+				+ ", jsonFileRuleSourceSensor=" + jsonFileRuleLoginSourceSensor + ", jsonFileRuleDefItem="
 				+ jsonFileRuleDefItem + ", sourceResponseIgniteCacheName=" + sourceResponseIgniteCacheName
 				+ ", sourceResponseIgniteConfigFile=" + sourceResponseIgniteConfigFile
 				+ ", sourceResponseIgniteConfigName=" + sourceResponseIgniteConfigName + "]";

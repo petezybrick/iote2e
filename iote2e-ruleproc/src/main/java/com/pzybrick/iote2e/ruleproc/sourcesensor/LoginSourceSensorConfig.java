@@ -5,7 +5,7 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 
 @Generated("org.jsonschema2pojo")
-public class SourceSensorConfig {
+public class LoginSourceSensorConfig {
 	@Expose
 	private String ruleSvcClassName;
 	@Expose
@@ -21,12 +21,12 @@ public class SourceSensorConfig {
 		return sourceResponseSvcClassName;
 	}
 
-	public SourceSensorConfig setRuleSvcClassName(String ruleSvcClassName) {
+	public LoginSourceSensorConfig setRuleSvcClassName(String ruleSvcClassName) {
 		this.ruleSvcClassName = ruleSvcClassName;
 		return this;
 	}
 
-	public SourceSensorConfig setSourceResponseSvcClassName(String sourceResponseSvcClassName) {
+	public LoginSourceSensorConfig setSourceResponseSvcClassName(String sourceResponseSvcClassName) {
 		this.sourceResponseSvcClassName = sourceResponseSvcClassName;
 		return this;
 	}
@@ -41,7 +41,7 @@ public class SourceSensorConfig {
 		return pathNameExtRuleConfigFile;
 	}
 
-	public SourceSensorConfig setPathNameExtRuleConfigFile(String pathNameExtRuleConfigFile) {
+	public LoginSourceSensorConfig setPathNameExtRuleConfigFile(String pathNameExtRuleConfigFile) {
 		this.pathNameExtRuleConfigFile = pathNameExtRuleConfigFile;
 		return this;
 	}

@@ -4,10 +4,10 @@ import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryListenerException;
 
-public class SourceSensorCacheEntryEventFilter<K,V> implements CacheEntryEventFilter<String, byte[]> {
+public class LoginSourceSensorCacheEntryEventFilter<K,V> implements CacheEntryEventFilter<String, byte[]> {
 	private String remoteKey;
 	
-	public SourceSensorCacheEntryEventFilter( String remoteKey ) {
+	public LoginSourceSensorCacheEntryEventFilter( String remoteKey ) {
 		this.remoteKey = remoteKey;
 	}
 

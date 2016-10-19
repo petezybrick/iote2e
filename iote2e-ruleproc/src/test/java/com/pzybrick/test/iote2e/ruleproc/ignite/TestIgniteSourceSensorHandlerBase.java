@@ -10,8 +10,6 @@ import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryUpdatedListener;
 
-import org.apache.avro.io.BinaryDecoder;
-import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.commons.logging.Log;
@@ -23,42 +21,46 @@ import org.junit.Before;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pzybrick.iote2e.avro.schema.ActuatorResponse;
-import com.pzybrick.iote2e.avro.schema.SourceSensorValue;
-import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
+import com.pzybrick.iote2e.ruleproc.sourceresponse.LoginSourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.IgniteSingleton;
-import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.SourceSensorCacheEntryEventFilter;
-import com.pzybrick.iote2e.ruleproc.sourcesensor.SourceSensorHandler;
+import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.LoginSourceSensorCacheEntryEventFilter;
+import com.pzybrick.iote2e.ruleproc.sourcesensor.LoginSourceSensorHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
+import com.pzybrick.iote2e.schema.avro.ActuatorResponse;
+import com.pzybrick.iote2e.schema.avro.LoginActuatorResponse;
+import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
+import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
+import com.pzybrick.iote2e.schema.util.LoginActuatorResponseFromByteArrayReuseItem;
 
 public class TestIgniteSourceSensorHandlerBase {
 	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerBase.class);
-	protected ConcurrentLinkedQueue<SourceSensorValue> sourceSensorValues;
+	protected ConcurrentLinkedQueue<LoginSourceSensorValue> loginSourceSensorValues;
 	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
-	protected SourceSensorHandler sourceSensorHandler;
-	protected SourceResponseSvc sourceResponseSvc;
+	protected LoginSourceSensorHandler loginSourceSensorHandler;
+	protected LoginSourceResponseSvc loginSourceResponseSvc;
 	protected ThreadSubscribe threadSubscribe;
 	protected boolean subscribeUp;
 	protected IgniteSingleton igniteSingleton = null;
 	protected Gson gson;
-	protected BinaryDecoder binaryDecoder = null;
-	private DatumReader<ActuatorResponse> datumReaderActuatorResponse = null;
+	protected LoginActuatorResponseFromByteArrayReuseItem loginActuatorResponseFromByteArrayReuseItem;
+//	protected BinaryDecoder binaryDecoder = null;
+//	private DatumReader<ActuatorResponse> datumReaderActuatorResponse = null;
 
 	@Before
 	public void before() throws Exception {
 		try {
 			gson = new GsonBuilder().create();
-			datumReaderActuatorResponse = new SpecificDatumReader<ActuatorResponse>(ActuatorResponse.getClassSchema());
+			loginActuatorResponseFromByteArrayReuseItem = new LoginActuatorResponseFromByteArrayReuseItem();
 			subscribeResults = new ConcurrentLinkedQueue<byte[]>();
-			sourceSensorValues = new ConcurrentLinkedQueue<SourceSensorValue>();
-			sourceSensorHandler = new SourceSensorHandler(System.getenv("SOURCE_SENSOR_CONFIG_JSON_FILE"),
-					sourceSensorValues);
-			sourceResponseSvc = sourceSensorHandler.getSourceResponseSvc();
-			igniteSingleton = IgniteSingleton.getInstance(sourceSensorHandler.getRuleConfig());
+			loginSourceSensorValues = new ConcurrentLinkedQueue<LoginSourceSensorValue>();
+			loginSourceSensorHandler = new LoginSourceSensorHandler(System.getenv("LOGIN_SOURCE_SENSOR_CONFIG_JSON_FILE"),
+					loginSourceSensorValues);
+			loginSourceResponseSvc = loginSourceSensorHandler.getLoginSourceResponseSvc();
+			igniteSingleton = IgniteSingleton.getInstance(loginSourceSensorHandler.getRuleConfig());
 			log.info(
 					"------------------------------------------------------------------------------------------------------");
-			log.info(">>> Cache name: " + sourceSensorHandler.getRuleConfig().getSourceResponseIgniteCacheName());
-			sourceSensorHandler.start();
+			log.info(">>> Cache name: " + loginSourceSensorHandler.getRuleConfig().getSourceResponseIgniteCacheName());
+			loginSourceSensorHandler.start();
 		} catch (Exception e) {
 			log.error("Exception in before, " + e.getMessage(), e);
 		}
@@ -66,34 +68,32 @@ public class TestIgniteSourceSensorHandlerBase {
 
 	@After
 	public void after() throws Exception {
-		while (!sourceSensorValues.isEmpty()) {
+		while (!loginSourceSensorValues.isEmpty()) {
 			try {
 				Thread.sleep(2000L);
 			} catch (Exception e) {
 			}
 		}
-		sourceSensorHandler.shutdown();
-		sourceSensorHandler.join();
+		loginSourceSensorHandler.shutdown();
+		loginSourceSensorHandler.join();
 		threadSubscribe.shutdown();
 		threadSubscribe.join();
 		IgniteSingleton.reset();
 	}
 
-	protected void commonRun(String sourceUuid, String sensorUuid, String sensorValue, String igniteFilterKey) {
-		log.info("sourceUuid=" + sourceUuid + ", sensorUuid=" + sensorUuid + ", sensorValue=" + sensorValue);
+	protected void commonRun(String loginUuid, String sourceUuid, String sensorUuid, String sensorValue, String igniteFilterKey) {
+		log.info( String.format("loginUuid=%s, sourceUuid=%s, sensorUuid=%s, sensorValue=%s", loginUuid, sourceUuid, sensorUuid, sensorValue));
 		try {
-			startThreadSubscribe(sourceSensorHandler.getRuleConfig(), igniteFilterKey);
-			SourceSensorValue sourceSensorValue = new SourceSensorValue(sourceUuid, sensorUuid, sensorValue);
-			sourceSensorHandler.putSourceSensorValue(sourceSensorValue);
-
+			startThreadSubscribe(loginSourceSensorHandler.getRuleConfig(), igniteFilterKey);
+			LoginSourceSensorValue loginSourceSensorValue = new LoginSourceSensorValue(loginUuid, sourceUuid, sensorUuid, sensorValue);
+			loginSourceSensorHandler.putLoginSourceSensorValue(loginSourceSensorValue);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 	}
 
-	// TODO: read cache results from string as Avro
-	protected List<ActuatorResponse> commonThreadSubscribeGetActuatorResponses(long maxWaitMsecs) throws Exception {
-		List<ActuatorResponse> actuatorResponses = new ArrayList<ActuatorResponse>();
+	protected List<LoginActuatorResponse> commonThreadSubscribeGetLoginActuatorResponses(long maxWaitMsecs) throws Exception {
+		List<LoginActuatorResponse> loginActuatorResponses = new ArrayList<LoginActuatorResponse>();
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {
 			if (subscribeResults.size() > 0) {
@@ -102,10 +102,9 @@ public class TestIgniteSourceSensorHandlerBase {
 				} catch (Exception e) {
 				}
 				for( byte[] bytes : subscribeResults ) {
-					binaryDecoder = DecoderFactory.get().binaryDecoder(bytes, binaryDecoder);
 					try {
-						ActuatorResponse actuatorResponse = datumReaderActuatorResponse.read(null,binaryDecoder);
-						actuatorResponses.add( actuatorResponse );
+						AvroSchemaUtils.loginActuatorResponseFromByteArray(loginActuatorResponseFromByteArrayReuseItem, bytes);
+						loginActuatorResponses.add( loginActuatorResponseFromByteArrayReuseItem.getLoginActuatorResponse() );
 					} catch( IOException e ) {
 						log.error(e.getMessage(),e);
 						throw e;
@@ -118,7 +117,7 @@ public class TestIgniteSourceSensorHandlerBase {
 			} catch (Exception e) {
 			}
 		}
-		return actuatorResponses;
+		return loginActuatorResponses;
 	}
 
 	private void startThreadSubscribe(RuleConfig ruleConfig, String igniteFilterKey) throws Exception {
@@ -168,11 +167,11 @@ public class TestIgniteSourceSensorHandlerBase {
 					}
 				});
 
-				SourceSensorCacheEntryEventFilter<String,byte[]> sourceSensorCacheEntryEventFilter = 
-						new SourceSensorCacheEntryEventFilter<String, byte[]>(remoteFilterKey);
-				qry.setRemoteFilterFactory(new Factory<SourceSensorCacheEntryEventFilter<String, byte[]>>() {
+				LoginSourceSensorCacheEntryEventFilter<String,byte[]> sourceSensorCacheEntryEventFilter = 
+						new LoginSourceSensorCacheEntryEventFilter<String, byte[]>(remoteFilterKey);
+				qry.setRemoteFilterFactory(new Factory<LoginSourceSensorCacheEntryEventFilter<String, byte[]>>() {
 					@Override
-					public SourceSensorCacheEntryEventFilter<String, byte[]> create() {
+					public LoginSourceSensorCacheEntryEventFilter<String, byte[]> create() {
 						return sourceSensorCacheEntryEventFilter;
 						//return new SourceSensorCacheEntryEventFilter<String, String>(remoteFilterKey);
 					}

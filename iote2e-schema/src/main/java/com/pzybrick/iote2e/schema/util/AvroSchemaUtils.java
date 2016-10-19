@@ -50,8 +50,9 @@ public class AvroSchemaUtils {
 	}
 
 	public static void loginSourceSensorValueToByteArray( LoginSourceSensorValueToByteArrayReuseItem toByteArrayReuseItem,
-			String sourceUuid, String sensorUuid, String sensorValue ) throws Exception {
+			String loginUuid, String sourceUuid, String sensorUuid, String sensorValue ) throws Exception {
 		LoginSourceSensorValue loginSourceSensorValue = LoginSourceSensorValue.newBuilder()
+				.setLoginUuid(loginUuid)
 				.setSourceUuid(sourceUuid)
 				.setSensorUuid(sensorUuid)
 				.setSensorValue(sensorValue)
@@ -135,9 +136,10 @@ public class AvroSchemaUtils {
 	}
 
 	public static void loginActuatorResponseValueToByteArray( LoginActuatorResponseToByteArrayReuseItem toByteArrayReuseItem,
-			String sourceUuid, String sensorUuid, String actuatorUuid, String actuatorValue, String actuatorValueUpdatedAt 
+			String loginUuid, String sourceUuid, String sensorUuid, String actuatorUuid, String actuatorValue, String actuatorValueUpdatedAt 
 			) throws Exception {
 		LoginActuatorResponse loginActuatorResponse = LoginActuatorResponse.newBuilder()
+				.setLoginUuid(loginUuid)
 				.setSourceUuid(sourceUuid)
 				.setSensorUuid(sensorUuid)
 				.setActuatorUuid(actuatorUuid)

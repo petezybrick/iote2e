@@ -10,15 +10,16 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
 import junit.framework.Assert;
 
-public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
-	private static final Log log = LogFactory.getLog(TestSourceSensorHandlerLed.class);
+public class TestLoginSourceSensorHandlerLed extends TestLoginSourceSensorHandlerBase {
+	private static final Log log = LogFactory.getLog(TestLoginSourceSensorHandlerLed.class);
+	private static String testLoginUuid = "lo1";
 	private static String testSourceUuid = "lo1so2";
 	private static String testSensorUuidGreen = "lo1so2se1";
 	private static String testSensorUuidRed = "lo1so2se2";
 	private static String testSensorUuidYellow = "lo1so2se3";
 	
 
-	public TestSourceSensorHandlerLed() {
+	public TestLoginSourceSensorHandlerLed() {
 		super();
 	}
 	
@@ -27,7 +28,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		log.info("begins");
 
 		String testValue = "1";
-		commonRun( testSourceUuid, testSensorUuidGreen, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorUuidGreen, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -38,7 +39,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		log.info("begins");
 
 		String testValue = "0";
-		commonRun( testSourceUuid, testSensorUuidGreen, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorUuidGreen, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -50,7 +51,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		log.info("begins");
 
 		String testValue = "1";
-		commonRun( testSourceUuid, testSensorUuidRed, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorUuidRed, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -61,7 +62,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		log.info("begins");
 
 		String testValue = "0";
-		commonRun( testSourceUuid, testSensorUuidRed, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorUuidRed, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -73,7 +74,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		log.info("begins");
 
 		String testValue = "1";
-		commonRun( testSourceUuid, testSensorUuidYellow, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorUuidYellow, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -85,7 +86,7 @@ public class TestSourceSensorHandlerLed extends TestSourceSensorHandlerBase {
 		log.info("begins");
 
 		String testValue = "0";
-		commonRun( testSourceUuid, testSensorUuidYellow, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorUuidYellow, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );

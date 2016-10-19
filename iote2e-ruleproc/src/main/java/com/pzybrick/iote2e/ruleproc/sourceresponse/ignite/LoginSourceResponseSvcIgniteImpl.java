@@ -10,20 +10,20 @@ import org.apache.commons.logging.LogFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pzybrick.iote2e.common.utils.IotE2eUtils;
-import com.pzybrick.iote2e.ruleproc.sourceresponse.SourceResponseSvc;
+import com.pzybrick.iote2e.ruleproc.sourceresponse.LoginSourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
 import com.pzybrick.iote2e.schema.util.LoginActuatorResponseToByteArrayReuseItem;
 
-public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
-	private static final Log log = LogFactory.getLog(SourceResponseSvcIgniteImpl.class);
+public class LoginSourceResponseSvcIgniteImpl implements LoginSourceResponseSvc {
+	private static final Log log = LogFactory.getLog(LoginSourceResponseSvcIgniteImpl.class);
 	private IgniteSingleton igniteSingleton;
 	private Gson gson;
 	private LoginActuatorResponseToByteArrayReuseItem loginActuatorResponseToByteArray;
 
 
-	public SourceResponseSvcIgniteImpl() throws Exception {
+	public LoginSourceResponseSvcIgniteImpl() throws Exception {
 		this.gson = new GsonBuilder().create();
 		this.loginActuatorResponseToByteArray = new LoginActuatorResponseToByteArrayReuseItem();
 	}
@@ -42,7 +42,7 @@ public class SourceResponseSvcIgniteImpl implements SourceResponseSvc {
 				ruleEvalResult.getSourceSensorActuator().setActuatorValueUpdatedAt(IotE2eUtils.getDateNowUtc8601() );
 				String key = loginUuid+"|"+sourceUuid+"|"+sensorUuid+"|"+ruleEvalResult.getSourceSensorActuator().getActuatorUuid();
 				
-				AvroSchemaUtils.loginActuatorResponseValueToByteArray(loginActuatorResponseToByteArray, sourceUuid, sensorUuid, 
+				AvroSchemaUtils.loginActuatorResponseValueToByteArray(loginActuatorResponseToByteArray, loginUuid, sourceUuid, sensorUuid, 
 						ruleEvalResult.getSourceSensorActuator().getActuatorUuid(), 
 						ruleEvalResult.getSourceSensorActuator().getActuatorValue(), 
 						ruleEvalResult.getSourceSensorActuator().getActuatorValueUpdatedAt());

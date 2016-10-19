@@ -1,29 +1,34 @@
 [
   {
+    "loginUuid": "lo1",
     "sourceUuid": "lo1so1",
     "sensorUuid": "lo1so1se1",
     "actuatorUuid": "lo1so1se1ac1",
     "desc": "TempToFan"
   },
   {
+    "loginUuid": "lo1",
     "sourceUuid": "lo1so1",
     "sensorUuid": "lo1so1se2",
     "actuatorUuid": "lo1so1se2ac1",
     "desc": "HumidityToMister"
   },
   {
+    "loginUuid": "lo1",
     "sourceUuid": "lo1so2",
     "sensorUuid": "lo1so2se1",
     "actuatorUuid": "lo1so2se1ac1",
     "desc": "Switch0ToLedGreen"
   },
   {
+    "loginUuid": "lo1",
     "sourceUuid": "lo1so2",
     "sensorUuid": "lo1so2se2",
     "actuatorUuid": "lo1so2se2ac1",
     "desc": "Switch1ToLedRed"
   },
   {
+    "loginUuid": "lo1",
     "sourceUuid": "lo1so2",
     "sensorUuid": "lo1so2se3",
     "actuatorUuid": "lo1so2se3ac1",
