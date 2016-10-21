@@ -1,8 +1,7 @@
 {
-	"sourceSensorActuatorSvcClassname": "com.pzybrick.avro.ruledef.SourceSensorActuatorSvcJsonImpl",
-	"jsonFileSourceSensorActuator": "/home/pete/development/workspace/e2e/learnjetty/config/rule/source_sensor_actuator.json",
-	"jsonFileRuleSourceSensor": "/home/pete/development/workspace/e2e/learnjetty/config/rule/rule_source_sensor.json",
-	"jsonFileRuleDefItem": "/home/pete/development/workspace/e2e/learnjetty/config/rule/rule_def_item.json",
+	"jsonFileLoginSourceSensorActuator": "/home/pete/development/gitrepo/iote2e/iote2e-ruleproc/config/rule/login_source_sensor_actuator.json",
+	"jsonFileRuleLoginSourceSensor": "/home/pete/development/gitrepo/iote2e/iote2e-ruleproc/config/rule/rule_login_source_sensor.json",
+	"jsonFileRuleDefItem": "/home/pete/development/gitrepo/iote2e/iote2e-ruleproc/config/rule/rule_def_item.json",
 	"sourceResponseIgniteCacheName": "test-iote2e-sourceresponse-cache",
 	"sourceResponseIgniteConfigFile": "config/example-default.xml",
 	"sourceResponseIgniteConfigName": "ignite.cfg"
