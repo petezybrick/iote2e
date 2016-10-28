@@ -1,0 +1,143 @@
+version: '2'
+services:
+  zoo1:
+    image: zookeeper:3.4.8
+    entrypoint: /opt/zookeeper/bin/zkMyIdWrapper.sh
+    command: start-foreground
+    hostname: zoo1
+    container_name: zoo1
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.41
+    environment:
+      MYID_SERVER_ID: 1
+    expose:
+      - 2181
+      - 2888
+      - 3888
+    ports:
+      - 2181:2181
+    volumes:
+      - ./data:/tmp/data
+      
+  zoo2:
+    image: zookeeper:3.4.8
+    entrypoint: /opt/zookeeper/bin/zkMyIdWrapper.sh
+    command: start-foreground
+    hostname: zoo2
+    container_name: zoo2
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.42
+    environment:
+      MYID_SERVER_ID: 2
+    expose:
+      - 2181
+      - 2888
+      - 3888
+    ports:
+      - 2182:2181
+    volumes:
+      - ./data:/tmp/data
+
+  zoo3:
+    image: zookeeper:3.4.8
+    entrypoint: /opt/zookeeper/bin/zkMyIdWrapper.sh
+    command: start-foreground
+    hostname: zoo3
+    container_name: zoo3
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.43
+    environment:
+      MYID_SERVER_ID: 3
+    expose:
+      - 2181
+      - 2888
+      - 3888
+    ports:
+      - 2183:2181
+    volumes:
+      - ./data:/tmp/data
+
+  kafka1:
+    image: kafka:0.10.1.0
+    hostname: kafka1
+    container_name: kafka1
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.44
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_LOG_DIRS: /kafka
+      KAFKA_BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: my-topic:1:2
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_LOG_RETENTION_HOURS: "168"
+      KAFKA_LOG_RETENTION_BYTES: "100000000"
+      KAFKA_ZOOKEEPER_CONNECT:  zoo1:2181,zoo2:2181,zoo3:2181
+
+  kafka2:
+    image: kafka:0.10.1.0
+    hostname: kafka2
+    container_name: kafka2
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.45
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+    ports:
+      - "9093:9092"
+    environment:
+      KAFKA_LOG_DIRS: /kafka
+      KAFKA_BROKER_ID: 2
+      KAFKA_ADVERTISED_PORT: 9093
+      KAFKA_LOG_RETENTION_HOURS: "168"
+      KAFKA_LOG_RETENTION_BYTES: "100000000"
+      KAFKA_ZOOKEEPER_CONNECT:  zoo1:2181,zoo2:2181,zoo3:2181
+
+  kafka3:
+    image: kafka:0.10.1.0
+    hostname: kafka3
+    container_name: kafka3
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.46
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+    ports:
+      - "9094:9092"
+    environment:
+      KAFKA_LOG_DIRS: /kafka
+      KAFKA_BROKER_ID: 3
+      KAFKA_ADVERTISED_PORT: 9094
+      KAFKA_LOG_RETENTION_HOURS: "168"
+      KAFKA_LOG_RETENTION_BYTES: "100000000"
+      KAFKA_ZOOKEEPER_CONNECT:  zoo1:2181,zoo2:2181,zoo3:2181
+
+
+networks:
+  default:
+    external:
+      name: iote2enet

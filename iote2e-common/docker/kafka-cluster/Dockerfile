@@ -25,24 +25,22 @@ RUN curl -sL --retry 3 --insecure \
   && ln -s $JAVA_HOME /usr/java \
   && rm -rf $JAVA_HOME/man
 	
-# zookeeper
-RUN wget -q -O - http://mirror.metrocast.net/apache/zookeeper/zookeeper-3.4.8/zookeeper-3.4.8.tar.gz | tar -xzf - -C /opt \
-    && mv /opt/zookeeper-3.4.8 /opt/zookeeper 
-#    && rm zookeeper-3.4.8.tar.gz
+# Kafka
+ENV KAFKA_VERSION 0.10.1.0
+ENV SCALA_VERSION 2.11
+ENV KAFKA_HOME /opt/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION"
+RUN wget -q http://apache.mirrors.spacedump.net/kafka/"$KAFKA_VERSION"/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz -O /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz && \
+    tar xfz /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz -C /opt && \
+    rm /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz
 	
-COPY zoo.cfg /opt/zookeeper/conf/zoo.cfg
-COPY zkMyIdWrapper.sh /opt/zookeeper/bin/zkMyIdWrapper.sh
-RUN chmod +x /opt/zookeeper/bin/zkMyIdWrapper.sh
+ADD start-kafka.sh /usr/bin/start-kafka.sh
+ADD broker-list.sh /usr/bin/broker-list.sh
+ADD create-topics.sh /usr/bin/create-topics.sh
+# The scripts need to have executable permission
+RUN chmod a+x /usr/bin/start-kafka.sh && \
+    chmod a+x /usr/bin/broker-list.sh && \
+    chmod a+x /usr/bin/create-topics.sh
 
-EXPOSE 2181 2888 3888
-VOLUME ["/tmp/iote2d"]
-WORKDIR /opt/zookeeper
+EXPOSE 2181 9092
 
-RUN mkdir /opt/zookeeper/logs
-ENV ZOO_LOG_DIR /opt/zookeeper/logs
-ENV ZOO_LOG4J_PROP INFO,CONSOLE,ROLLINGFILE
-ENV MYID_SERVER_ID 1
-
-# ENTRYPOINT ["/opt/zookeeper/bin/zkServer.sh"]
-ENTRYPOINT ["/opt/zookeeper/bin/zkMyIdWrapper.sh"]
-CMD ["start-foreground"]
+CMD ["start-kafka.sh"]

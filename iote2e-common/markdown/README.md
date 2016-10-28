@@ -16,7 +16,7 @@ sudo docker network ls
 - Configuration database cluster: start address 192.168.21.10
 - Spark cluster: start address 192.168.21.20
 - Ignite cluster: start address 192.168.21.30
-- Kafka cluster: start address 192.168.21.40 (Zookeeper .40 and .41, Kafka starts .42)
+- Kafka cluster: start address 192.168.21.40 (zoo1-zoo3 .41-.43, Kafka starts .44)
 - ClientMgrWebSocket cluster: start address 192.168.21.50
 - RealtimeWebsocket Server cluster: start address 192.168.21.60
 - MySQL database cluster: start address 192.168.21.70
