@@ -45,12 +45,13 @@ public class IgniteSingleton {
 						ruleConfig.getSourceResponseIgniteConfigFile(), ruleConfig.getSourceResponseIgniteConfigName());
 				Ignition.setClientMode(true);
 				Ignite ignite = Ignition.start(igniteConfiguration);
+				System.out.println(ignite.toString());
 				if (log.isDebugEnabled()) log.debug(ignite.toString());
 				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(ruleConfig.getSourceResponseIgniteCacheName());
 				igniteSingleton = new IgniteSingleton( ignite, cache);
-			} catch (Exception e) {
-				log.error("Ignite initialization failure", e);
-				throw e;
+			} catch (Throwable t ) {
+				log.error("Ignite initialization failure", t);
+				throw t;
 			}
 		}
 		return igniteSingleton;

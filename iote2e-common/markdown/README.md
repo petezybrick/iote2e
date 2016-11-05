@@ -3,7 +3,7 @@
 ## Network Addresses
 
 ### Docker Network
-sudo docker network create --driver=bridge \
+docker network create --driver=bridge \
 --subnet=192.168.21.0/24 --gateway=192.168.21.1 \
 --ip-range=192.168.21.128/25 iote2enet
 
@@ -39,4 +39,6 @@ cluster: https://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html
 
 
 
+Reset
+remove iote2enet
 
