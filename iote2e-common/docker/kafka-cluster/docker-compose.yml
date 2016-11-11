@@ -136,6 +136,25 @@ services:
       KAFKA_LOG_RETENTION_BYTES: 100000000
       KAFKA_ZOOKEEPER_CONNECT:  iote2e-zoo1:2181,iote2e-zoo2:2181,iote2e-zoo3:2181
 
+  iote2e-kafka-manager1:
+    image: kafka-manager:1.3.2.1
+    entrypoint: /opt/kafka-manager/bin/kafka-manager
+    hostname: iote2e-kafka-manager1
+    container_name: iote2e-kafka-manager1
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.47
+    depends_on:
+      - iote2e-kafka1
+      - iote2e-kafka2
+      - iote2e-kafka3
+    ports:
+      - "9000:9000"
+    environment:
+      ZK_HOSTS: iote2e-zoo1:2181,iote2e-zoo2:2181,iote2e-zoo3:2181
+
 
 networks:
   default:

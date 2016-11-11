@@ -27,7 +27,7 @@ RUN curl -sL --retry 3 --insecure \
 	
 # Kafka Manager
 RUN mkdir /opt/kafka-manager 
-COPY kafka-manager.zip /tmp/kafka-manager.zip
+COPY kafka-manager-1.3.2.1.zip /tmp/kafka-manager.zip
 RUN unzip /tmp/kafka-manager.zip -d /opt/kafka-manager/ && \
     rm /tmp/kafka-manager.zip
 
