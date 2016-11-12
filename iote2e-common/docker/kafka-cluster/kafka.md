@@ -14,3 +14,22 @@ sudo docker network ls
 - zookeeper
  - review the zoo.cfg - note the ip addresses
 
+kafka monitor
+https://github.com/linkedin/kafka-monitor 
+cd to kafka-monitor installation
+./bin/end-to-end-test.sh --topic test --broker-list localhost:9091,localhost:9092,localhost:9092 --zookeeper localhost:2181,localhost:2182,localhost:2183
+localhost:9091,localhost:9092,localhost:9092
+    networks:
+      default:
+        ipv4_address: 192.168.21.45
+    depends_on:
+      - iote2e-zoo1
+      - iote2e-zoo2
+      - iote2e-zoo3
+    environment:
+      KAFKA_LOG_DIRS: /kafka
+      KAFKA_BROKER_ID: 2
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_RETENTION_BYTES: 100000000
+      KAFKA_ZOOKEEPER_CONNECT: iote2e-zoo1:2181,iote2e-zoo2:2181,iote2e-zoo3:2181
