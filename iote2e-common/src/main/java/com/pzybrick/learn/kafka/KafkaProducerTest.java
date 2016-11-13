@@ -15,7 +15,7 @@ public class KafkaProducerTest {
 
 		Properties props = new Properties();
 		//props.put("metadata.broker.list", "hp-lt-ubuntu-1:9092");
-		props.put("bootstrap.servers", "localhost:9091");
+		props.put("bootstrap.servers", "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092");
 		//props.put("producer.type", "sync");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");

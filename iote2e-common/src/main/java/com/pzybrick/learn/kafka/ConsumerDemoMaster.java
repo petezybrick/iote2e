@@ -82,7 +82,7 @@ public class ConsumerDemoMaster {
     }
  
     public static void main(String[] args) {
-        String zooKeeper = "localhost:2181"; // args[0];
+        String zooKeeper = "iote2e-zoo1:2181"; // args[0];
         String groupId = "group1"; // args[1];
         String topic = "pz-topic"; //args[2];
         int threads = 1; // Integer.parseInt(args[3]);

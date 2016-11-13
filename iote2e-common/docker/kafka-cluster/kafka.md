@@ -14,6 +14,12 @@ sudo docker network ls
 - zookeeper
  - review the zoo.cfg - note the ip addresses
 
+bin/kafka-console-producer.sh --broker-list localhost:9092 --topic pz-topic 
+
+bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic kafka-monitor-topic --from-beginning
+
+java -cp iote2e-common-1.0.0.jar com.pzybrick.learn.kafka.ConsumerDemoMaster
+
 kafka monitor
 https://github.com/linkedin/kafka-monitor 
 cd to kafka-monitor installation
