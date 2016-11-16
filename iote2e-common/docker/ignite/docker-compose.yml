@@ -1,7 +1,7 @@
 version: '2'
 services:
   iote2e-ignite0:
-    image: iote2e-ignite:1.7.0
+    image: ignite:1.7.0
     entrypoint: /bin/sh
     command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
     hostname: iote2e-ignite0
@@ -22,7 +22,7 @@ services:
       - ./data:/tmp/data
       
   iote2e-ignite1:
-    image: iote2e-ignite:1.7.0
+    image: ignite:1.7.0
     entrypoint: /bin/sh
     command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
     hostname: iote2e-ignite1
@@ -43,7 +43,7 @@ services:
       - ./data:/tmp/data
       
   iote2e-ignite2:
-    image: iote2e-ignite:1.7.0
+    image: ignite:1.7.0
     entrypoint: /bin/sh
     command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
     hostname: iote2e-ignite2

@@ -1,4 +1,4 @@
-docker build -t iote2e-ignite:1.7.0 .
+docker build -t ignite:1.7.0 .
 
 
 docker rm iote2e-ignite1y
@@ -17,6 +17,9 @@ docker run -it --name=iote2e-ignite2y --hostname=iote2e-ignite2y --network iote2
 
 
 docker create --name=iote2e-ignite1 --hostname=iote2e-ignite1 iote2e-ignite:1.7.0x
+
+logging: /opt/ignite/apache-ignite-fabric-1.7.0-bin/work/log/ignite-xxx.log
+
 
 
 
