@@ -82,15 +82,15 @@ public class ConsumerDemoMaster {
     }
  
     public static void main(String[] args) {
-        String zooKeeper = "iote2e-zoo1:2181"; // args[0];
+        String zooKeeper = "iote2e-zoo2:2181"; // args[0];
         String groupId = "group1"; // args[1];
-        String topic = "pz-topic"; //args[2];
+        String topic = "com.pzybrick.iote2e.schema.avro.SourceSensorValue-sandbox"; //args[2];
         int threads = 1; // Integer.parseInt(args[3]);
         
         ConsumerDemoMaster consumerDemoMaster = new ConsumerDemoMaster(zooKeeper, groupId, topic);
         consumerDemoMaster.run(threads);
         
-        String[] args2 = {"20"};
+        String[] args2 = {"1000"};
         KafkaProducerTest.main(args2);
         try { Thread.sleep(1000L); } catch(Exception e) {}
  

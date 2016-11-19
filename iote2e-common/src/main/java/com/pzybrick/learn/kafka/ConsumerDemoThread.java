@@ -1,10 +1,14 @@
 package com.pzybrick.learn.kafka;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
  
 public class ConsumerDemoThread implements Runnable {
+	private static final Log log = LogFactory.getLog(ConsumerDemoThread.class);
     private KafkaStream kafkaStream;
     private int threadNumber;
     private ConsumerDemoMaster consumerDemoMaster;
@@ -30,8 +34,8 @@ public class ConsumerDemoThread implements Runnable {
         			", offset=" + messageAndMetadata.offset() + 
         			", timestamp=" + messageAndMetadata.timestamp() + 
         			", timestampType=" + messageAndMetadata.timestampType();
-        	System.out.println(summary);
+        	log.info(">>> " + summary);
         }
-        System.out.println("Shutting down Thread: " + threadNumber);
+        log.info(">>> Shutting down Thread: " + threadNumber);
     }
 }
