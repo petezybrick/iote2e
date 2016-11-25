@@ -18,6 +18,8 @@ public class RuleConfig {
 	private String sourceResponseIgniteConfigFile;
 	@Expose
 	private String sourceResponseIgniteConfigName;
+	@Expose
+	private boolean igniteClientMode;
 	
 	public RuleConfig() {
 		
@@ -83,6 +85,15 @@ public class RuleConfig {
 
 	public RuleConfig setSourceResponseIgniteConfigFile(String sourceResponseIgniteConfigFile) {
 		this.sourceResponseIgniteConfigFile = sourceResponseIgniteConfigFile;
+		return this;
+	}
+
+	public boolean isIgniteClientMode() {
+		return igniteClientMode;
+	}
+
+	public RuleConfig setIgniteClientMode(boolean igniteClientMode) {
+		this.igniteClientMode = igniteClientMode;
 		return this;
 	}
 

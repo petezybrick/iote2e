@@ -14,19 +14,19 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerTempToFan.class);
 	private static String testLoginUuid = "lo1";
 	private static String testSourceUuid = "lo1so1";
-	private static String testSensorUuid = "lo1so1se1";
+	private static String testSensorName = "temp1";
 	private String filterKey;
 	
 	public TestIgniteSourceSensorHandlerTempToFan() {
 		super();
-		filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorUuid + "|";
+		filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorName + "|";
 	}
 	
 	@Test
 	public void testTempFanRuleFireFanOff() throws Exception {
 		log.info("begins");
 		String testValue = "50";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 		Assert.assertNotNull("loginActuatorResponses is null", loginActuatorResponses == null );
 		Assert.assertEquals("loginActuatorResponses must have size=1", 1, loginActuatorResponses.size());
@@ -37,7 +37,7 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 	public void testTempFanRuleFireFanOn() throws Exception {
 		log.info("begins");
 		String testValue = "100";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 		Assert.assertNotNull("loginActuatorResponses is null", loginActuatorResponses == null );
 		Assert.assertEquals("loginActuatorResponses must have size=1", 1, loginActuatorResponses.size() );
@@ -48,7 +48,7 @@ public class TestIgniteSourceSensorHandlerTempToFan extends TestIgniteSourceSens
 	public void testTempFanRuleNotFire() throws Exception {
 		log.info("begins");
 		String testValue = "78";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 		Assert.assertEquals("loginActuatorResponses must empty", 0, loginActuatorResponses.size() );
 	}

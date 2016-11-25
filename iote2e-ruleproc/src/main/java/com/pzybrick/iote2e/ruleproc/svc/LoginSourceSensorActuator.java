@@ -11,9 +11,9 @@ public class LoginSourceSensorActuator {
 	@Expose
 	private String sourceUuid;
 	@Expose
-	private String sensorUuid;
+	private String sensorName;
 	@Expose
-	private String actuatorUuid;
+	private String actuatorName;
 	@Expose
 	private String actuatorValue;
 	@Expose
@@ -29,12 +29,12 @@ public class LoginSourceSensorActuator {
 		return sourceUuid;
 	}
 
-	public String getSensorUuid() {
-		return sensorUuid;
+	public String getSensorName() {
+		return sensorName;
 	}
 
-	public String getActuatorUuid() {
-		return actuatorUuid;
+	public String getActuatorName() {
+		return actuatorName;
 	}
 
 	public String getActuatorValue() {
@@ -50,13 +50,13 @@ public class LoginSourceSensorActuator {
 		return this;
 	}
 
-	public LoginSourceSensorActuator setSensorUuid(String sensorUuid) {
-		this.sensorUuid = sensorUuid;
+	public LoginSourceSensorActuator setSensorName(String sensorName) {
+		this.sensorName = sensorName;
 		return this;
 	}
 
-	public LoginSourceSensorActuator setActuatorUuid(String actuatorUuid) {
-		this.actuatorUuid = actuatorUuid;
+	public LoginSourceSensorActuator setActuatorName(String actuatorName) {
+		this.actuatorName = actuatorName;
 		return this;
 	}
 
@@ -81,8 +81,8 @@ public class LoginSourceSensorActuator {
 
 	@Override
 	public String toString() {
-		return "LoginSourceSensorActuator [loginUuid=" + loginUuid + ", sourceUuid=" + sourceUuid + ", sensorUuid="
-				+ sensorUuid + ", actuatorUuid=" + actuatorUuid + ", actuatorValue=" + actuatorValue + ", desc=" + desc
+		return "LoginSourceSensorActuator [loginUuid=" + loginUuid + ", sourceUuid=" + sourceUuid + ", sensorName="
+				+ sensorName + ", actuatorName=" + actuatorName + ", actuatorValue=" + actuatorValue + ", desc=" + desc
 				+ ", actuatorValueUpdatedAt=" + actuatorValueUpdatedAt + "]";
 	}
 

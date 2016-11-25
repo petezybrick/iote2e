@@ -28,7 +28,7 @@ public class ClientTestInjector {
 	private URI uri;
 	private WebSocketContainer container;
 	private static String testSourceUuid = "lo1so1";
-	private static String testSensorUuid = "lo1so1se1";	// fan
+	private static String testSensorName = "lo1so1se1";	// fan
 
 
 	public static void main(String[] args) {
@@ -97,7 +97,7 @@ public class ClientTestInjector {
 				session.getBasicRemote().sendText(IotE2eConstants.LOGIN_HDR + login);
 				for (int i = 45; i < 56; i++) {
 					AvroSchemaUtils.sourceSensorValueToByteArray(
-							toByteArrayReuseItem, testSourceUuid, testSensorUuid, String.valueOf(i));
+							toByteArrayReuseItem, testSourceUuid, testSensorName, String.valueOf(i));
 					session.getBasicRemote().sendBinary(ByteBuffer.wrap(toByteArrayReuseItem.getBytes()));
 					try {
 						sleep(1000L);

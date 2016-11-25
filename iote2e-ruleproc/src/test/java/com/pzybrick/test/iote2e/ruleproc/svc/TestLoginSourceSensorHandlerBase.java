@@ -42,10 +42,10 @@ public class TestLoginSourceSensorHandlerBase {
 		loginSourceSensorHandler.join();
 	}
 	
-	protected void commonRun( String loginUuid, String sourceUuid, String sensorUuid, String sensorValue ) {
-		log.info( String.format("loginUuid=%s, sourceUuid=%s, sensorUuid=%s, sensorValue=%s", loginUuid, sourceUuid, sensorUuid, sensorValue ));
+	protected void commonRun( String loginUuid, String sourceUuid, String sensorName, String sensorValue ) {
+		log.info( String.format("loginUuid=%s, sourceUuid=%s, sensorName=%s, sensorValue=%s", loginUuid, sourceUuid, sensorName, sensorValue ));
 		try {
-			LoginSourceSensorValue loginSourceSensorValue = new LoginSourceSensorValue(loginUuid,sourceUuid, sensorUuid, sensorValue);
+			LoginSourceSensorValue loginSourceSensorValue = new LoginSourceSensorValue(loginUuid,sourceUuid, sensorName, sensorValue);
 			loginSourceSensorHandler.putLoginSourceSensorValue(loginSourceSensorValue);
 
 		} catch( Exception e ) {

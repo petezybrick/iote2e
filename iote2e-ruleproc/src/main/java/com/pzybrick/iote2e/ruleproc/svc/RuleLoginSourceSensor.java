@@ -11,7 +11,7 @@ public class RuleLoginSourceSensor {
 	@Expose
 	private String sourceUuid;
 	@Expose
-	private String sensorUuid;
+	private String sensorName;
 	@Expose
 	private String ruleUuid;
 	@Expose
@@ -21,16 +21,16 @@ public class RuleLoginSourceSensor {
 		super();
 	}
 
-	public String getSensorUuid() {
-		return sensorUuid;
+	public String getSensorName() {
+		return sensorName;
 	}
 
 	public String getRuleUuid() {
 		return ruleUuid;
 	}
 
-	public RuleLoginSourceSensor setSensorUuid(String sensorUuid) {
-		this.sensorUuid = sensorUuid;
+	public RuleLoginSourceSensor setSensorName(String sensorName) {
+		this.sensorName = sensorName;
 		return this;
 	}
 
@@ -59,8 +59,8 @@ public class RuleLoginSourceSensor {
 
 	@Override
 	public String toString() {
-		return "RuleLoginSourceSensor [loginUuid=" + loginUuid + ", sourceUuid=" + sourceUuid + ", sensorUuid="
-				+ sensorUuid + ", ruleUuid=" + ruleUuid + ", desc=" + desc + "]";
+		return "RuleLoginSourceSensor [loginUuid=" + loginUuid + ", sourceUuid=" + sourceUuid + ", sensorName="
+				+ sensorName + ", ruleUuid=" + ruleUuid + ", desc=" + desc + "]";
 	}
 
 	public String getLoginUuid() {

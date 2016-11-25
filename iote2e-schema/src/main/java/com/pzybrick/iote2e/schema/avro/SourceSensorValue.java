@@ -10,11 +10,11 @@ import org.apache.avro.specific.SpecificData;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 9120240545882555524L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"SourceSensorValue\",\"namespace\":\"com.pzybrick.iote2e.schema.avro\",\"fields\":[{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"sensor_uuid\",\"type\":\"string\"},{\"name\":\"sensor_value\",\"type\":\"string\"}]}");
+  private static final long serialVersionUID = 7184813630982988987L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"SourceSensorValue\",\"namespace\":\"com.pzybrick.iote2e.schema.avro\",\"fields\":[{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"sensor_name\",\"type\":\"string\"},{\"name\":\"sensor_value\",\"type\":\"string\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.CharSequence source_uuid;
-  @Deprecated public java.lang.CharSequence sensor_uuid;
+  @Deprecated public java.lang.CharSequence sensor_name;
   @Deprecated public java.lang.CharSequence sensor_value;
 
   /**
@@ -27,12 +27,12 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
   /**
    * All-args constructor.
    * @param source_uuid The new value for source_uuid
-   * @param sensor_uuid The new value for sensor_uuid
+   * @param sensor_name The new value for sensor_name
    * @param sensor_value The new value for sensor_value
    */
-  public SourceSensorValue(java.lang.CharSequence source_uuid, java.lang.CharSequence sensor_uuid, java.lang.CharSequence sensor_value) {
+  public SourceSensorValue(java.lang.CharSequence source_uuid, java.lang.CharSequence sensor_name, java.lang.CharSequence sensor_value) {
     this.source_uuid = source_uuid;
-    this.sensor_uuid = sensor_uuid;
+    this.sensor_name = sensor_name;
     this.sensor_value = sensor_value;
   }
 
@@ -41,7 +41,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
   public java.lang.Object get(int field$) {
     switch (field$) {
     case 0: return source_uuid;
-    case 1: return sensor_uuid;
+    case 1: return sensor_name;
     case 2: return sensor_value;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
@@ -52,7 +52,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: source_uuid = (java.lang.CharSequence)value$; break;
-    case 1: sensor_uuid = (java.lang.CharSequence)value$; break;
+    case 1: sensor_name = (java.lang.CharSequence)value$; break;
     case 2: sensor_value = (java.lang.CharSequence)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
@@ -75,19 +75,19 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
   }
 
   /**
-   * Gets the value of the 'sensor_uuid' field.
-   * @return The value of the 'sensor_uuid' field.
+   * Gets the value of the 'sensor_name' field.
+   * @return The value of the 'sensor_name' field.
    */
-  public java.lang.CharSequence getSensorUuid() {
-    return sensor_uuid;
+  public java.lang.CharSequence getSensorName() {
+    return sensor_name;
   }
 
   /**
-   * Sets the value of the 'sensor_uuid' field.
+   * Sets the value of the 'sensor_name' field.
    * @param value the value to set.
    */
-  public void setSensorUuid(java.lang.CharSequence value) {
-    this.sensor_uuid = value;
+  public void setSensorName(java.lang.CharSequence value) {
+    this.sensor_name = value;
   }
 
   /**
@@ -139,7 +139,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
     implements org.apache.avro.data.RecordBuilder<SourceSensorValue> {
 
     private java.lang.CharSequence source_uuid;
-    private java.lang.CharSequence sensor_uuid;
+    private java.lang.CharSequence sensor_name;
     private java.lang.CharSequence sensor_value;
 
     /** Creates a new Builder */
@@ -157,8 +157,8 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
         this.source_uuid = data().deepCopy(fields()[0].schema(), other.source_uuid);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.sensor_uuid)) {
-        this.sensor_uuid = data().deepCopy(fields()[1].schema(), other.sensor_uuid);
+      if (isValidValue(fields()[1], other.sensor_name)) {
+        this.sensor_name = data().deepCopy(fields()[1].schema(), other.sensor_name);
         fieldSetFlags()[1] = true;
       }
       if (isValidValue(fields()[2], other.sensor_value)) {
@@ -177,8 +177,8 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
         this.source_uuid = data().deepCopy(fields()[0].schema(), other.source_uuid);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.sensor_uuid)) {
-        this.sensor_uuid = data().deepCopy(fields()[1].schema(), other.sensor_uuid);
+      if (isValidValue(fields()[1], other.sensor_name)) {
+        this.sensor_name = data().deepCopy(fields()[1].schema(), other.sensor_name);
         fieldSetFlags()[1] = true;
       }
       if (isValidValue(fields()[2], other.sensor_value)) {
@@ -227,40 +227,40 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
     }
 
     /**
-      * Gets the value of the 'sensor_uuid' field.
+      * Gets the value of the 'sensor_name' field.
       * @return The value.
       */
-    public java.lang.CharSequence getSensorUuid() {
-      return sensor_uuid;
+    public java.lang.CharSequence getSensorName() {
+      return sensor_name;
     }
 
     /**
-      * Sets the value of the 'sensor_uuid' field.
-      * @param value The value of 'sensor_uuid'.
+      * Sets the value of the 'sensor_name' field.
+      * @param value The value of 'sensor_name'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder setSensorUuid(java.lang.CharSequence value) {
+    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder setSensorName(java.lang.CharSequence value) {
       validate(fields()[1], value);
-      this.sensor_uuid = value;
+      this.sensor_name = value;
       fieldSetFlags()[1] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'sensor_uuid' field has been set.
-      * @return True if the 'sensor_uuid' field has been set, false otherwise.
+      * Checks whether the 'sensor_name' field has been set.
+      * @return True if the 'sensor_name' field has been set, false otherwise.
       */
-    public boolean hasSensorUuid() {
+    public boolean hasSensorName() {
       return fieldSetFlags()[1];
     }
 
 
     /**
-      * Clears the value of the 'sensor_uuid' field.
+      * Clears the value of the 'sensor_name' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder clearSensorUuid() {
-      sensor_uuid = null;
+    public com.pzybrick.iote2e.schema.avro.SourceSensorValue.Builder clearSensorName() {
+      sensor_name = null;
       fieldSetFlags()[1] = false;
       return this;
     }
@@ -309,7 +309,7 @@ public class SourceSensorValue extends org.apache.avro.specific.SpecificRecordBa
       try {
         SourceSensorValue record = new SourceSensorValue();
         record.source_uuid = fieldSetFlags()[0] ? this.source_uuid : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.sensor_uuid = fieldSetFlags()[1] ? this.sensor_uuid : (java.lang.CharSequence) defaultValue(fields()[1]);
+        record.sensor_name = fieldSetFlags()[1] ? this.sensor_name : (java.lang.CharSequence) defaultValue(fields()[1]);
         record.sensor_value = fieldSetFlags()[2] ? this.sensor_value : (java.lang.CharSequence) defaultValue(fields()[2]);
         return record;
       } catch (Exception e) {

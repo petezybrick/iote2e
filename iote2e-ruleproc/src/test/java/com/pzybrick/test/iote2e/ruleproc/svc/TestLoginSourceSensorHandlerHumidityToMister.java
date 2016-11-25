@@ -14,7 +14,7 @@ public class TestLoginSourceSensorHandlerHumidityToMister extends TestLoginSourc
 	private static final Log log = LogFactory.getLog(TestLoginSourceSensorHandlerHumidityToMister.class);
 	private static String testLoginUuid = "lo1";
 	private static String testSourceUuid = "lo1so1";
-	private static String testSensorUuid = "lo1so1se2";
+	private static String testSensorName = "humidity1";
 	
 	public TestLoginSourceSensorHandlerHumidityToMister() {
 		super();
@@ -25,7 +25,7 @@ public class TestLoginSourceSensorHandlerHumidityToMister extends TestLoginSourc
 		log.info("begins");
 
 		String testValue = "50";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -36,7 +36,7 @@ public class TestLoginSourceSensorHandlerHumidityToMister extends TestLoginSourc
 	public void testHumidityToMisterRuleFireFanOn() {
 		log.info("begins");
 		String testValue = "100";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -47,7 +47,7 @@ public class TestLoginSourceSensorHandlerHumidityToMister extends TestLoginSourc
 	public void testHumidityToMisterRuleNotFire() {
 		log.info("begins");
 		String testValue = "87";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNull("ruleEvalResults must be null", ruleEvalResults );
 	}

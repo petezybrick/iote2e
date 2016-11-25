@@ -1,8 +1,9 @@
 {
-	"jsonFileLoginSourceSensorActuator": "/Users/pzybrick/git/iote2e/iote2e-ruleproc/config/rule/login_source_sensor_actuator.json",
-	"jsonFileRuleLoginSourceSensor": "/Users/pzybrick/git/iote2e/iote2e-ruleproc/config/rule/rule_login_source_sensor.json",
-	"jsonFileRuleDefItem": "/Users/pzybrick/git/iote2e/iote2e-ruleproc/config/rule/rule_def_item.json",
+	"jsonFileLoginSourceSensorActuator": "/home/pete/development/gitrepo/iote2e/iote2e-ruleproc/config/rule/login_source_sensor_actuator.json",
+	"jsonFileRuleLoginSourceSensor": "/home/pete/development/gitrepo/iote2e/iote2e-ruleproc/config/rule/rule_login_source_sensor.json",
+	"jsonFileRuleDefItem": "/home/pete/development/gitrepo/iote2e/iote2e-ruleproc/config/rule/rule_def_item.json",
 	"sourceResponseIgniteCacheName": "test-iote2e-sourceresponse-cache",
 	"sourceResponseIgniteConfigFile": "config/example-default.xml",
-	"sourceResponseIgniteConfigName": "ignite.cfg"
+	"sourceResponseIgniteConfigName": "ignite.cfg",
+	"igniteClientMode":false
 }

@@ -95,7 +95,7 @@ public class ServerSideSocketSourceSensorValue {
 					log.debug("sourceSensorValue: " + sourceSensorValue.toString());
 					LoginSourceSensorValue loginSourceSensorValue = LoginSourceSensorValue.newBuilder()
 							.setLoginUuid(login_uuid).setSourceUuid(sourceSensorValue.getSourceUuid())
-							.setSensorUuid(sourceSensorValue.getSensorUuid()).setSensorValue(sourceSensorValue.getSensorValue())
+							.setSensorName(sourceSensorValue.getSensorName()).setSensorValue(sourceSensorValue.getSensorValue())
 							.build();
 					EntryPointServerSourceSensorValue.fromClientLoginSourceSensorValues.add(loginSourceSensorValue);
 				}

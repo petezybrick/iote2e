@@ -14,9 +14,9 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerLed.class);
 	private static String testLoginUuid = "lo1";
 	private static String testSourceUuid = "lo1so2";
-	private static String testSensorUuidGreen = "lo1so2se1";
-	private static String testSensorUuidRed = "lo1so2se2";
-	private static String testSensorUuidYellow = "lo1so2se3";
+	private static String testSensorNameGreen = "switch0";
+	private static String testSensorNameRed = "switch1";
+	private static String testSensorNameYellow = "switch2";
 	
 
 	public TestIgniteSourceSensorHandlerLed() {
@@ -26,9 +26,9 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 	@Test
 	public void testLedGreenOn() throws Exception {
 		log.info("begins");
-		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorUuidGreen + "|";
+		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorNameGreen + "|";
 		String testValue = "1";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuidGreen, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorNameGreen, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
@@ -38,9 +38,9 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 	@Test
 	public void testLedGreenOff() throws Exception {
 		log.info("begins");
-		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorUuidGreen + "|";
+		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorNameGreen + "|";
 		String testValue = "0";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuidGreen, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorNameGreen, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
@@ -51,9 +51,9 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 	@Test
 	public void testLedRedOn() throws Exception {
 		log.info("begins");
-		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorUuidRed + "|";
+		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorNameRed + "|";
 		String testValue = "1";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuidRed, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorNameRed, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
@@ -64,9 +64,9 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 	@Test
 	public void testLedRedOff() throws Exception {
 		log.info("begins");
-		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorUuidRed + "|";
+		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorNameRed + "|";
 		String testValue = "0";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuidRed, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorNameRed, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
@@ -77,9 +77,9 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 	@Test
 	public void testLedYellowOn() throws Exception {
 		log.info("begins");
-		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorUuidYellow + "|";
+		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorNameYellow + "|";
 		String testValue = "1";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuidYellow, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorNameYellow, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
@@ -90,9 +90,9 @@ public class TestIgniteSourceSensorHandlerLed extends TestIgniteSourceSensorHand
 	@Test
 	public void testLedYellowOff() throws Exception {
 		log.info("begins");
-		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorUuidYellow + "|";
+		String filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorNameYellow + "|";
 		String testValue = "0";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuidYellow, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSensorNameYellow, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );

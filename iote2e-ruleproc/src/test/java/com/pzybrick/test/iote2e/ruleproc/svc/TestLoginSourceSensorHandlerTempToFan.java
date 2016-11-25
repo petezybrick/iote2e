@@ -14,7 +14,7 @@ public class TestLoginSourceSensorHandlerTempToFan extends TestLoginSourceSensor
 	private static final Log log = LogFactory.getLog(TestLoginSourceSensorHandlerTempToFan.class);
 	private static String testLoginUuid = "lo1";
 	private static String testSourceUuid = "lo1so1";
-	private static String testSensorUuid = "lo1so1se1";
+	private static String testSensorName = "temp1";
 	
 	public TestLoginSourceSensorHandlerTempToFan() {
 		super();
@@ -25,7 +25,7 @@ public class TestLoginSourceSensorHandlerTempToFan extends TestLoginSourceSensor
 		log.info("begins");
 
 		String testValue = "50";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -36,7 +36,7 @@ public class TestLoginSourceSensorHandlerTempToFan extends TestLoginSourceSensor
 	public void testTempFanRuleFireFanOn() {
 		log.info("begins");
 		String testValue = "100";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -47,7 +47,7 @@ public class TestLoginSourceSensorHandlerTempToFan extends TestLoginSourceSensor
 	public void testTempFanRuleNotFire() {
 		log.info("begins");
 		String testValue = "78";
-		commonRun( testLoginUuid, testSourceUuid, testSensorUuid, testValue);
+		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNull("ruleEvalResults is not null", ruleEvalResults );
 	}

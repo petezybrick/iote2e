@@ -3,8 +3,8 @@
  "name": "ActuatorResponse",
  "fields": [
      {"name": "source_uuid", "type": "string"},
-     {"name": "sensor_uuid",  "type": "string"},
-     {"name": "actuator_uuid", "type": "string"},
+     {"name": "sensor_name",  "type": "string"},
+     {"name": "actuator_name", "type": "string"},
      {"name": "actuator_value", "type": "string"},
      {"name": "actuator_value_updated_at", "type": "string"}
  ]

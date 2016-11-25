@@ -11,8 +11,8 @@ public class RouteLoginSourceSensorValueLoopbackImpl implements RouteLoginSource
 		LoginActuatorResponse loginActuatorResponse = LoginActuatorResponse.newBuilder()
 				.setLoginUuid(loginSourceSensorValue.getLoginUuid())
 				.setSourceUuid(loginSourceSensorValue.getSourceUuid())
-				.setSensorUuid(loginSourceSensorValue.getSensorUuid())
-				.setActuatorUuid(loginSourceSensorValue.getSensorUuid()+"ac1")
+				.setSensorName(loginSourceSensorValue.getSensorName())
+				.setActuatorName(loginSourceSensorValue.getSensorName()+"ac1")
 				.setActuatorValueUpdatedAt(IotE2eUtils.getDateNowUtc8601())
 				.setActuatorValue(loginSourceSensorValue.getSensorValue())
 				.build();

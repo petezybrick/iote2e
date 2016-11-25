@@ -14,10 +14,10 @@ public class LoginSourceResponseSvcUnitTestImpl implements LoginSourceResponseSv
 	private List<RuleEvalResult> ruleEvalResults;
 
 	@Override
-	public void processRuleEvalResults(String loginUuid, String sourceUuid, String sensorUuid, List<RuleEvalResult> ruleEvalResults)
+	public void processRuleEvalResults(String loginUuid, String sourceUuid, String sensorName, List<RuleEvalResult> ruleEvalResults)
 			throws Exception {
 		if (log.isDebugEnabled())
-			log.debug( String.format("loginUuid=%s, sourceUuid=%s, sensorUuid=%s, ruleEvalResults=%s", loginUuid, sourceUuid, sensorUuid, ruleEvalResults));
+			log.debug( String.format("loginUuid=%s, sourceUuid=%s, sensorName=%s, ruleEvalResults=%s", loginUuid, sourceUuid, sensorName, ruleEvalResults));
 		this.ruleEvalResults = ruleEvalResults;
 	}
 

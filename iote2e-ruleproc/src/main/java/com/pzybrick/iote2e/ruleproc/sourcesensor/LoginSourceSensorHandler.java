@@ -28,6 +28,7 @@ public class LoginSourceSensorHandler extends Thread {
 	public LoginSourceSensorHandler(String pathNameExtSourceSensorConfig,
 			ConcurrentLinkedQueue<LoginSourceSensorValue> loginSourceSensorValues) throws Exception {
 		log.debug("ctor");
+		try {
 		this.loginSourceSensorValues = loginSourceSensorValues;
 		String rawJson = FileUtils.readFileToString(new File(pathNameExtSourceSensorConfig));
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -43,6 +44,10 @@ public class LoginSourceSensorHandler extends Thread {
 		
 		ruleSvc.init(ruleConfig);
 		loginSourceResponseSvc.init(ruleConfig);
+		} catch( Exception e ) {
+			log.error(e.getMessage(),e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -56,14 +61,14 @@ public class LoginSourceSensorHandler extends Thread {
 						List<RuleEvalResult> ruleEvalResults = ruleSvc.process(
 								loginSourceSensorValue.getLoginUuid().toString(),
 								loginSourceSensorValue.getSourceUuid().toString(),
-								loginSourceSensorValue.getSensorUuid().toString(),
+								loginSourceSensorValue.getSensorName().toString(),
 								loginSourceSensorValue.getSensorValue().toString());
 						if (ruleEvalResults != null && ruleEvalResults.size() > 0 ) {
 							log.debug(ruleEvalResults);
 							loginSourceResponseSvc.processRuleEvalResults(
 									loginSourceSensorValue.getLoginUuid().toString(), 
 									loginSourceSensorValue.getSourceUuid().toString(),
-									loginSourceSensorValue.getSensorUuid().toString(), ruleEvalResults);
+									loginSourceSensorValue.getSensorName().toString(), ruleEvalResults);
 						}
 					}
 				}

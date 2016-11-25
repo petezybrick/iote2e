@@ -10,12 +10,12 @@ import org.apache.avro.specific.SpecificData;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -675717155152493697L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"LoginSourceSensorValue\",\"namespace\":\"com.pzybrick.iote2e.schema.avro\",\"fields\":[{\"name\":\"login_uuid\",\"type\":\"string\"},{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"sensor_uuid\",\"type\":\"string\"},{\"name\":\"sensor_value\",\"type\":\"string\"}]}");
+  private static final long serialVersionUID = -1460484278144048320L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"LoginSourceSensorValue\",\"namespace\":\"com.pzybrick.iote2e.schema.avro\",\"fields\":[{\"name\":\"login_uuid\",\"type\":\"string\"},{\"name\":\"source_uuid\",\"type\":\"string\"},{\"name\":\"sensor_name\",\"type\":\"string\"},{\"name\":\"sensor_value\",\"type\":\"string\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.CharSequence login_uuid;
   @Deprecated public java.lang.CharSequence source_uuid;
-  @Deprecated public java.lang.CharSequence sensor_uuid;
+  @Deprecated public java.lang.CharSequence sensor_name;
   @Deprecated public java.lang.CharSequence sensor_value;
 
   /**
@@ -29,13 +29,13 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
    * All-args constructor.
    * @param login_uuid The new value for login_uuid
    * @param source_uuid The new value for source_uuid
-   * @param sensor_uuid The new value for sensor_uuid
+   * @param sensor_name The new value for sensor_name
    * @param sensor_value The new value for sensor_value
    */
-  public LoginSourceSensorValue(java.lang.CharSequence login_uuid, java.lang.CharSequence source_uuid, java.lang.CharSequence sensor_uuid, java.lang.CharSequence sensor_value) {
+  public LoginSourceSensorValue(java.lang.CharSequence login_uuid, java.lang.CharSequence source_uuid, java.lang.CharSequence sensor_name, java.lang.CharSequence sensor_value) {
     this.login_uuid = login_uuid;
     this.source_uuid = source_uuid;
-    this.sensor_uuid = sensor_uuid;
+    this.sensor_name = sensor_name;
     this.sensor_value = sensor_value;
   }
 
@@ -45,7 +45,7 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
     switch (field$) {
     case 0: return login_uuid;
     case 1: return source_uuid;
-    case 2: return sensor_uuid;
+    case 2: return sensor_name;
     case 3: return sensor_value;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
@@ -57,7 +57,7 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
     switch (field$) {
     case 0: login_uuid = (java.lang.CharSequence)value$; break;
     case 1: source_uuid = (java.lang.CharSequence)value$; break;
-    case 2: sensor_uuid = (java.lang.CharSequence)value$; break;
+    case 2: sensor_name = (java.lang.CharSequence)value$; break;
     case 3: sensor_value = (java.lang.CharSequence)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
@@ -96,19 +96,19 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
   }
 
   /**
-   * Gets the value of the 'sensor_uuid' field.
-   * @return The value of the 'sensor_uuid' field.
+   * Gets the value of the 'sensor_name' field.
+   * @return The value of the 'sensor_name' field.
    */
-  public java.lang.CharSequence getSensorUuid() {
-    return sensor_uuid;
+  public java.lang.CharSequence getSensorName() {
+    return sensor_name;
   }
 
   /**
-   * Sets the value of the 'sensor_uuid' field.
+   * Sets the value of the 'sensor_name' field.
    * @param value the value to set.
    */
-  public void setSensorUuid(java.lang.CharSequence value) {
-    this.sensor_uuid = value;
+  public void setSensorName(java.lang.CharSequence value) {
+    this.sensor_name = value;
   }
 
   /**
@@ -161,7 +161,7 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
 
     private java.lang.CharSequence login_uuid;
     private java.lang.CharSequence source_uuid;
-    private java.lang.CharSequence sensor_uuid;
+    private java.lang.CharSequence sensor_name;
     private java.lang.CharSequence sensor_value;
 
     /** Creates a new Builder */
@@ -183,8 +183,8 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
         this.source_uuid = data().deepCopy(fields()[1].schema(), other.source_uuid);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.sensor_uuid)) {
-        this.sensor_uuid = data().deepCopy(fields()[2].schema(), other.sensor_uuid);
+      if (isValidValue(fields()[2], other.sensor_name)) {
+        this.sensor_name = data().deepCopy(fields()[2].schema(), other.sensor_name);
         fieldSetFlags()[2] = true;
       }
       if (isValidValue(fields()[3], other.sensor_value)) {
@@ -207,8 +207,8 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
         this.source_uuid = data().deepCopy(fields()[1].schema(), other.source_uuid);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.sensor_uuid)) {
-        this.sensor_uuid = data().deepCopy(fields()[2].schema(), other.sensor_uuid);
+      if (isValidValue(fields()[2], other.sensor_name)) {
+        this.sensor_name = data().deepCopy(fields()[2].schema(), other.sensor_name);
         fieldSetFlags()[2] = true;
       }
       if (isValidValue(fields()[3], other.sensor_value)) {
@@ -296,40 +296,40 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
     }
 
     /**
-      * Gets the value of the 'sensor_uuid' field.
+      * Gets the value of the 'sensor_name' field.
       * @return The value.
       */
-    public java.lang.CharSequence getSensorUuid() {
-      return sensor_uuid;
+    public java.lang.CharSequence getSensorName() {
+      return sensor_name;
     }
 
     /**
-      * Sets the value of the 'sensor_uuid' field.
-      * @param value The value of 'sensor_uuid'.
+      * Sets the value of the 'sensor_name' field.
+      * @param value The value of 'sensor_name'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue.Builder setSensorUuid(java.lang.CharSequence value) {
+    public com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue.Builder setSensorName(java.lang.CharSequence value) {
       validate(fields()[2], value);
-      this.sensor_uuid = value;
+      this.sensor_name = value;
       fieldSetFlags()[2] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'sensor_uuid' field has been set.
-      * @return True if the 'sensor_uuid' field has been set, false otherwise.
+      * Checks whether the 'sensor_name' field has been set.
+      * @return True if the 'sensor_name' field has been set, false otherwise.
       */
-    public boolean hasSensorUuid() {
+    public boolean hasSensorName() {
       return fieldSetFlags()[2];
     }
 
 
     /**
-      * Clears the value of the 'sensor_uuid' field.
+      * Clears the value of the 'sensor_name' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue.Builder clearSensorUuid() {
-      sensor_uuid = null;
+    public com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue.Builder clearSensorName() {
+      sensor_name = null;
       fieldSetFlags()[2] = false;
       return this;
     }
@@ -379,7 +379,7 @@ public class LoginSourceSensorValue extends org.apache.avro.specific.SpecificRec
         LoginSourceSensorValue record = new LoginSourceSensorValue();
         record.login_uuid = fieldSetFlags()[0] ? this.login_uuid : (java.lang.CharSequence) defaultValue(fields()[0]);
         record.source_uuid = fieldSetFlags()[1] ? this.source_uuid : (java.lang.CharSequence) defaultValue(fields()[1]);
-        record.sensor_uuid = fieldSetFlags()[2] ? this.sensor_uuid : (java.lang.CharSequence) defaultValue(fields()[2]);
+        record.sensor_name = fieldSetFlags()[2] ? this.sensor_name : (java.lang.CharSequence) defaultValue(fields()[2]);
         record.sensor_value = fieldSetFlags()[3] ? this.sensor_value : (java.lang.CharSequence) defaultValue(fields()[3]);
         return record;
       } catch (Exception e) {

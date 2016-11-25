@@ -43,7 +43,7 @@ public class IgniteSingleton {
 				log.info("Initializing Ignite, config file=" + ruleConfig.getSourceResponseIgniteConfigFile() + ", config name=" +  ruleConfig.getSourceResponseIgniteConfigName());
 				IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
 						ruleConfig.getSourceResponseIgniteConfigFile(), ruleConfig.getSourceResponseIgniteConfigName());
-				Ignition.setClientMode(true);
+				Ignition.setClientMode(ruleConfig.isIgniteClientMode());
 				Ignite ignite = Ignition.start(igniteConfiguration);
 				System.out.println(ignite.toString());
 				if (log.isDebugEnabled()) log.debug(ignite.toString());

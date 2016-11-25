@@ -29,21 +29,21 @@ public class LoginSourceResponseSvcIgniteImpl implements LoginSourceResponseSvc 
 	}
 
 	@Override
-	public void processRuleEvalResults(String loginUuid, String sourceUuid, String sensorUuid, List<RuleEvalResult> ruleEvalResults)
+	public void processRuleEvalResults(String loginUuid, String sourceUuid, String sensorName, List<RuleEvalResult> ruleEvalResults)
 			throws Exception {
 		for (RuleEvalResult ruleEvalResult : ruleEvalResults) {
 			if( ruleEvalResult.isRuleActuatorHit() ) {
 				log.info("Updating Actuator: loginUuid="+ loginUuid + ", sourceUuid="+sourceUuid + 
-						", actuatorUuid=" + ruleEvalResult.getSourceSensorActuator().getActuatorUuid() +
+						", actuatorName=" + ruleEvalResult.getSourceSensorActuator().getActuatorName() +
 						", old value=" + ruleEvalResult.getSourceSensorActuator().getActuatorValue() + 
 						", new value=" + ruleEvalResult.getActuatorTargetValue() );
 				// Update the SourceSensorActuator
 				ruleEvalResult.getSourceSensorActuator().setActuatorValue(ruleEvalResult.getActuatorTargetValue());
 				ruleEvalResult.getSourceSensorActuator().setActuatorValueUpdatedAt(IotE2eUtils.getDateNowUtc8601() );
-				String key = loginUuid+"|"+sourceUuid+"|"+sensorUuid+"|"+ruleEvalResult.getSourceSensorActuator().getActuatorUuid();
+				String key = loginUuid+"|"+sourceUuid+"|"+sensorName+"|"+ruleEvalResult.getSourceSensorActuator().getActuatorName();
 				
-				AvroSchemaUtils.loginActuatorResponseValueToByteArray(loginActuatorResponseToByteArray, loginUuid, sourceUuid, sensorUuid, 
-						ruleEvalResult.getSourceSensorActuator().getActuatorUuid(), 
+				AvroSchemaUtils.loginActuatorResponseValueToByteArray(loginActuatorResponseToByteArray, loginUuid, sourceUuid, sensorName, 
+						ruleEvalResult.getSourceSensorActuator().getActuatorName(), 
 						ruleEvalResult.getSourceSensorActuator().getActuatorValue(), 
 						ruleEvalResult.getSourceSensorActuator().getActuatorValueUpdatedAt());
 				

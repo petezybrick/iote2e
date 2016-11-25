@@ -81,11 +81,11 @@ public class TestIgniteSourceSensorHandlerBase {
 		IgniteSingleton.reset();
 	}
 
-	protected void commonRun(String loginUuid, String sourceUuid, String sensorUuid, String sensorValue, String igniteFilterKey) {
-		log.info( String.format("loginUuid=%s, sourceUuid=%s, sensorUuid=%s, sensorValue=%s", loginUuid, sourceUuid, sensorUuid, sensorValue));
+	protected void commonRun(String loginUuid, String sourceUuid, String sensorName, String sensorValue, String igniteFilterKey) {
+		log.info( String.format("loginUuid=%s, sourceUuid=%s, sensorName=%s, sensorValue=%s", loginUuid, sourceUuid, sensorName, sensorValue));
 		try {
 			startThreadSubscribe(loginSourceSensorHandler.getRuleConfig(), igniteFilterKey);
-			LoginSourceSensorValue loginSourceSensorValue = new LoginSourceSensorValue(loginUuid, sourceUuid, sensorUuid, sensorValue);
+			LoginSourceSensorValue loginSourceSensorValue = new LoginSourceSensorValue(loginUuid, sourceUuid, sensorName, sensorValue);
 			loginSourceSensorHandler.putLoginSourceSensorValue(loginSourceSensorValue);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

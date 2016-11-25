@@ -168,8 +168,8 @@ public class EntryPointServerSourceSensorValue {
 								// Convert to ActuatorResponse so the client doeesn't get the LoginUuid
 								ActuatorResponse actuatorResponse = ActuatorResponse.newBuilder()
 										.setSourceUuid(loginActuatorResponse.getSourceUuid())
-										.setSensorUuid(loginActuatorResponse.getSensorUuid())
-										.setActuatorUuid(loginActuatorResponse.getActuatorUuid())
+										.setSensorName(loginActuatorResponse.getSensorName())
+										.setActuatorName(loginActuatorResponse.getActuatorName())
 										.setActuatorValue(loginActuatorResponse.getActuatorValue())
 										.setActuatorValueUpdatedAt(loginActuatorResponse.getActuatorValueUpdatedAt())
 										.build();

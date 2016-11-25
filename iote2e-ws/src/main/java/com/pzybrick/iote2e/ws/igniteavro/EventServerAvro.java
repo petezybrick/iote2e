@@ -135,7 +135,7 @@ public class EventServerAvro {
 					
 					for( int i=0 ; i<NUM_TEST_SENSORS ; i++ ) {
 						waveItem.setSensorId(i);
-						waveItem.setSensorUuid(testUuids.get(i));
+						waveItem.setSensorName(testUuids.get(i));
 						waveItem.setWaveValue( waveItem.getWaveValue()+i);
 						String testMessage = gson.toJson(waveItem);
 						messagesToSend.add(testMessage);
@@ -157,7 +157,7 @@ public class EventServerAvro {
 					
 					for( int i=0 ; i<NUM_TEST_SENSORS ; i++ ) {
 						waveItem.setSensorId(i);
-						waveItem.setSensorUuid(testUuids.get(i));
+						waveItem.setSensorName(testUuids.get(i));
 						waveItem.setWaveValue( waveItem.getWaveValue()+i);
 						String testMessage = gson.toJson(waveItem);
 						messagesToSend.add(testMessage);
