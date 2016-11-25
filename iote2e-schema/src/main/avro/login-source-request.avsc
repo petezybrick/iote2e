@@ -1,0 +1,23 @@
+{"namespace": "com.pzybrick.iote2e.schema.avro",
+ "type": "record",
+ "name": "LoginSourceRequest",
+ "fields": [
+     {"name": "login_uuid", "type": "string"},
+     {"name": "source_uuid", "type": "string"},
+     {"name": "timestamp", "type": "string"},
+     {
+     "name":"sensorValues",
+	     "type":{
+	            "type": "array",  
+	            "items":{
+	                        "name":"SensorValue",
+	                        "type":"record",
+	                        "fields":[
+							     {"name": "sensor_name",  "type": "string"},
+							     {"name": "sensor_value", "type": "string"}
+	                        ]
+	             }
+	       }
+       }
+ ]
+}

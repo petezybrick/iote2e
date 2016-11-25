@@ -116,6 +116,12 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.pzybrick.iote2e</groupId>
+			<artifactId>iote2e-schema</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>

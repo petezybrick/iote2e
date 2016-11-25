@@ -112,6 +112,17 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.pzybrick.iote2e</groupId>
+			<artifactId>iote2e-common</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>

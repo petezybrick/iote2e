@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.pzybrick.iote2e.schema.avro.ActuatorResponse;
 import com.pzybrick.iote2e.schema.avro.LoginActuatorResponse;
+import com.pzybrick.iote2e.schema.avro.LoginSourceRequest;
 import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
 import com.pzybrick.iote2e.schema.avro.SourceSensorValue;
 
@@ -159,5 +160,45 @@ public class AvroSchemaUtils {
 			baos.close();
 		}
 	}
+
+	
+	public static void loginSourceRequestFromByteArray( LoginSourceRequestFromByteArrayReuseItem fromByteArrayReuseItem,
+			byte[] bytes ) throws Exception {
+
+		try {
+			fromByteArrayReuseItem.setBinaryDecoder( DecoderFactory.get().binaryDecoder(bytes, fromByteArrayReuseItem.getBinaryDecoder()));
+			fromByteArrayReuseItem.setLoginSourceRequest( fromByteArrayReuseItem.getDatumReaderLoginSourceRequest().read(null,fromByteArrayReuseItem.getBinaryDecoder()));
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw e;
+		} finally {
+		}
+	}
+
+	public static void loginSourceRequestValueToByteArray( LoginSourceRequestToByteArrayReuseItem toByteArrayReuseItem,
+			String loginUuid, String sourceUuid, String sensorUuid, String actuatorUuid, String actuatorValue, String actuatorValueUpdatedAt 
+			) throws Exception {
+		LoginSourceRequest loginSourceRequest = LoginSourceRequest.newBuilder()
+				.setLoginUuid(loginUuid)
+				.setSourceUuid(sourceUuid)
+				.build();
+	}
+
+	public static void loginSourceRequestValueToByteArray( LoginSourceRequestToByteArrayReuseItem toByteArrayReuseItem,
+			LoginSourceRequest loginSourceRequest ) throws Exception {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			toByteArrayReuseItem.setBinaryEncoder( EncoderFactory.get().binaryEncoder(baos, toByteArrayReuseItem.getBinaryEncoder() ));
+			toByteArrayReuseItem.getDatumWriterLoginSourceRequest().write(loginSourceRequest, toByteArrayReuseItem.getBinaryEncoder() );
+			toByteArrayReuseItem.getBinaryEncoder().flush();
+			toByteArrayReuseItem.setBytes( baos.toByteArray());
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw e;
+		} finally {
+			baos.close();
+		}
+	}
+	
 
 }
