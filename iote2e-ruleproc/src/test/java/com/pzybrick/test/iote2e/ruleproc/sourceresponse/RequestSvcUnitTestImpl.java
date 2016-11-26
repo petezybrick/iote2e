@@ -9,8 +9,8 @@ import com.pzybrick.iote2e.ruleproc.sourceresponse.LoginSourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
-public class LoginSourceResponseSvcUnitTestImpl implements LoginSourceResponseSvc {
-	private static final Log log = LogFactory.getLog(LoginSourceResponseSvcUnitTestImpl.class);
+public class RequestSvcUnitTestImpl implements LoginSourceResponseSvc {
+	private static final Log log = LogFactory.getLog(RequestSvcUnitTestImpl.class);
 	private List<RuleEvalResult> ruleEvalResults;
 
 	@Override
@@ -30,7 +30,7 @@ public class LoginSourceResponseSvcUnitTestImpl implements LoginSourceResponseSv
 		return ruleEvalResults;
 	}
 
-	public LoginSourceResponseSvcUnitTestImpl setRuleEvalResults(List<RuleEvalResult> ruleEvalResults) {
+	public RequestSvcUnitTestImpl setRuleEvalResults(List<RuleEvalResult> ruleEvalResults) {
 		this.ruleEvalResults = ruleEvalResults;
 		return this;
 	}

@@ -1,17 +1,27 @@
 package com.pzybrick.iote2e.ruleproc.svc;
 
 public class RuleEvalResult {
+	private String sensorName;
 	private boolean ruleActuatorHit;
 	private String actuatorTargetValue;
 	private LoginSourceSensorActuator sourceSensorActuator;
 
 	public RuleEvalResult() {
+		this.sensorName = null;
 		this.ruleActuatorHit = false;
 		this.sourceSensorActuator = null;
 		this.actuatorTargetValue = null;
 	}
 
 	public RuleEvalResult(boolean ruleActuatorHit, LoginSourceSensorActuator sourceSensorActuator) {
+		this.sensorName = null;
+		this.ruleActuatorHit = ruleActuatorHit;
+		this.sourceSensorActuator = sourceSensorActuator;
+		this.actuatorTargetValue = null;
+	}
+
+	public RuleEvalResult(String sensorName, boolean ruleActuatorHit, LoginSourceSensorActuator sourceSensorActuator) {
+		this.sensorName = sensorName;
 		this.ruleActuatorHit = ruleActuatorHit;
 		this.sourceSensorActuator = sourceSensorActuator;
 		this.actuatorTargetValue = null;
@@ -37,8 +47,9 @@ public class RuleEvalResult {
 
 	@Override
 	public String toString() {
-		return "RuleEvalResult [ruleActuatorHit=" + ruleActuatorHit + ", actuatorTargetValue=" + actuatorTargetValue
-				+ ", sourceSensorActuator=" + sourceSensorActuator + "]";
+		return "RuleEvalResult [sensorName=" + sensorName + ", ruleActuatorHit=" + ruleActuatorHit
+				+ ", actuatorTargetValue=" + actuatorTargetValue + ", sourceSensorActuator=" + sourceSensorActuator
+				+ "]";
 	}
 
 	public String getActuatorTargetValue() {
@@ -47,6 +58,15 @@ public class RuleEvalResult {
 
 	public RuleEvalResult setActuatorTargetValue(String actuatorTargetValue) {
 		this.actuatorTargetValue = actuatorTargetValue;
+		return this;
+	}
+
+	public String getSensorName() {
+		return sensorName;
+	}
+
+	public RuleEvalResult setSensorName(String sensorName) {
+		this.sensorName = sensorName;
 		return this;
 	}
 

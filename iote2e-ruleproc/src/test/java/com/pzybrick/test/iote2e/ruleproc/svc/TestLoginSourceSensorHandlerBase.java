@@ -11,13 +11,13 @@ import org.junit.Before;
 import com.pzybrick.iote2e.ruleproc.sourcesensor.LoginSourceSensorHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
-import com.pzybrick.test.iote2e.ruleproc.sourceresponse.LoginSourceResponseSvcUnitTestImpl;
+import com.pzybrick.test.iote2e.ruleproc.sourceresponse.RequestSvcUnitTestImpl;
 
 public class TestLoginSourceSensorHandlerBase {
 	private static final Log log = LogFactory.getLog(TestLoginSourceSensorHandlerBase.class);
 	protected ConcurrentLinkedQueue<LoginSourceSensorValue> loginSourceSensorValues;
 	protected LoginSourceSensorHandler loginSourceSensorHandler;
-	protected LoginSourceResponseSvcUnitTestImpl loginSourceResponseSvcUnitTestImpl;
+	protected RequestSvcUnitTestImpl loginSourceResponseSvcUnitTestImpl;
 	
 	public TestLoginSourceSensorHandlerBase() {
 		super();
@@ -28,7 +28,7 @@ public class TestLoginSourceSensorHandlerBase {
 		log.info("------------------------------------------------------------------------------------------------------");		
 		loginSourceSensorValues = new ConcurrentLinkedQueue<LoginSourceSensorValue>();
 		loginSourceSensorHandler = new LoginSourceSensorHandler(System.getenv("LOGIN_SOURCE_SENSOR_CONFIG_JSON_FILE"), loginSourceSensorValues);
-		loginSourceResponseSvcUnitTestImpl = (LoginSourceResponseSvcUnitTestImpl)loginSourceSensorHandler.getLoginSourceResponseSvc();
+		loginSourceResponseSvcUnitTestImpl = (RequestSvcUnitTestImpl)loginSourceSensorHandler.getLoginSourceResponseSvc();
 		loginSourceResponseSvcUnitTestImpl.setRuleEvalResults(null);
 		loginSourceSensorHandler.start();
 	}	
