@@ -17,6 +17,7 @@
 	            "values": "string"
 	       }
        },
+       
      {"name":"operation",
 	     "type":{
 	     	"name":"OPERATION",
