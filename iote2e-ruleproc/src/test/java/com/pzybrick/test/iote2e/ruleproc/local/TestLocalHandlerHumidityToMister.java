@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ruleproc.svc;
+package com.pzybrick.test.iote2e.ruleproc.local;
 
 import java.util.List;
 
@@ -7,25 +7,27 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
+import com.pzybrick.test.iote2e.ruleproc.local.TestLocalHandlerBase;
 
 import junit.framework.Assert;
 
-public class TestLoginSourceSensorHandlerHumidityToMister extends TestLoginSourceSensorHandlerBase {
-	private static final Log log = LogFactory.getLog(TestLoginSourceSensorHandlerHumidityToMister.class);
-	private static String testLoginUuid = "lo1";
-	private static String testSourceUuid = "lo1so1";
+public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
+	private static final Log log = LogFactory.getLog(TestLocalHandlerHumidityToMister.class);
+	private static String testLoginName = "lo1";
+	private static String testSourceName = "lo1so1";
+	private static String testSourceType = "humidity";
 	private static String testSensorName = "humidity1";
 	
-	public TestLoginSourceSensorHandlerHumidityToMister() {
+	public TestLocalHandlerHumidityToMister() {
 		super();
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleFireFanOff() {
+	public void testHumidityToMisterRuleFireFanOff() throws Exception {
 		log.info("begins");
 
 		String testValue = "50";
-		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
+		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -33,10 +35,10 @@ public class TestLoginSourceSensorHandlerHumidityToMister extends TestLoginSourc
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleFireFanOn() {
+	public void testHumidityToMisterRuleFireFanOn() throws Exception {
 		log.info("begins");
 		String testValue = "100";
-		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
+		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -44,10 +46,10 @@ public class TestLoginSourceSensorHandlerHumidityToMister extends TestLoginSourc
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleNotFire() {
+	public void testHumidityToMisterRuleNotFire() throws Exception {
 		log.info("begins");
 		String testValue = "87";
-		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue);
+		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNull("ruleEvalResults must be null", ruleEvalResults );
 	}

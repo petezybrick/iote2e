@@ -2,7 +2,10 @@ package com.pzybrick.test.iote2e.ruleproc.ignite;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.cache.Cache;
@@ -10,8 +13,6 @@ import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryUpdatedListener;
 
-import org.apache.avro.io.DecoderFactory;
-import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ignite.cache.query.ContinuousQuery;
@@ -21,23 +22,25 @@ import org.junit.Before;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pzybrick.iote2e.ruleproc.sourceresponse.LoginSourceResponseSvc;
-import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.IgniteSingleton;
-import com.pzybrick.iote2e.ruleproc.sourceresponse.ignite.LoginSourceSensorCacheEntryEventFilter;
-import com.pzybrick.iote2e.ruleproc.sourcesensor.LoginSourceSensorHandler;
+import com.pzybrick.iote2e.common.utils.IotE2eUtils;
+import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
+import com.pzybrick.iote2e.ruleproc.ignite.Iote2eIgniteCacheEntryEventFilter;
+import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
+import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
-import com.pzybrick.iote2e.schema.avro.ActuatorResponse;
+import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.LoginActuatorResponse;
-import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
+import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
 import com.pzybrick.iote2e.schema.util.LoginActuatorResponseFromByteArrayReuseItem;
+import com.pzybrick.iote2e.schema.util.LoginSourceRequestToByteArrayReuseItem;
 
-public class TestIgniteSourceSensorHandlerBase {
-	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerBase.class);
-	protected ConcurrentLinkedQueue<LoginSourceSensorValue> loginSourceSensorValues;
+public class TestIgniteHandlerBase {
+	private static final Log log = LogFactory.getLog(TestIgniteHandlerBase.class);
+	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
-	protected LoginSourceSensorHandler loginSourceSensorHandler;
-	protected LoginSourceResponseSvc loginSourceResponseSvc;
+	protected Iote2eRequestHandler iote2eRequestHandler;
+	protected Iote2eSvc iote2eSvc;
 	protected ThreadSubscribe threadSubscribe;
 	protected boolean subscribeUp;
 	protected IgniteSingleton igniteSingleton = null;
@@ -52,15 +55,15 @@ public class TestIgniteSourceSensorHandlerBase {
 			gson = new GsonBuilder().create();
 			loginActuatorResponseFromByteArrayReuseItem = new LoginActuatorResponseFromByteArrayReuseItem();
 			subscribeResults = new ConcurrentLinkedQueue<byte[]>();
-			loginSourceSensorValues = new ConcurrentLinkedQueue<LoginSourceSensorValue>();
-			loginSourceSensorHandler = new LoginSourceSensorHandler(System.getenv("LOGIN_SOURCE_SENSOR_CONFIG_JSON_FILE"),
-					loginSourceSensorValues);
-			loginSourceResponseSvc = loginSourceSensorHandler.getLoginSourceResponseSvc();
-			igniteSingleton = IgniteSingleton.getInstance(loginSourceSensorHandler.getRuleConfig());
+			iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
+			iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_IGNITE"),
+					iote2eRequests);
+			iote2eSvc = iote2eRequestHandler.getIote2eRequestSvc();
+			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getRuleConfig());
 			log.info(
 					"------------------------------------------------------------------------------------------------------");
-			log.info(">>> Cache name: " + loginSourceSensorHandler.getRuleConfig().getSourceResponseIgniteCacheName());
-			loginSourceSensorHandler.start();
+			log.info(">>> Cache name: " + iote2eRequestHandler.getRuleConfig().getSourceResponseIgniteCacheName());
+			iote2eRequestHandler.start();
 		} catch (Exception e) {
 			log.error("Exception in before, " + e.getMessage(), e);
 		}
@@ -68,27 +71,36 @@ public class TestIgniteSourceSensorHandlerBase {
 
 	@After
 	public void after() throws Exception {
-		while (!loginSourceSensorValues.isEmpty()) {
+		while (!iote2eRequests.isEmpty()) {
 			try {
 				Thread.sleep(2000L);
 			} catch (Exception e) {
 			}
 		}
-		loginSourceSensorHandler.shutdown();
-		loginSourceSensorHandler.join();
+		iote2eRequestHandler.shutdown();
+		iote2eRequestHandler.join();
 		threadSubscribe.shutdown();
 		threadSubscribe.join();
 		IgniteSingleton.reset();
 	}
 
-	protected void commonRun(String loginUuid, String sourceUuid, String sensorName, String sensorValue, String igniteFilterKey) {
-		log.info( String.format("loginUuid=%s, sourceUuid=%s, sensorName=%s, sensorValue=%s", loginUuid, sourceUuid, sensorName, sensorValue));
+	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
+			String sensorValue, String igniteFilterKey) throws Exception {
+		log.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
+				sourceName, sourceType, sensorName, sensorValue));
 		try {
-			startThreadSubscribe(loginSourceSensorHandler.getRuleConfig(), igniteFilterKey);
-			LoginSourceSensorValue loginSourceSensorValue = new LoginSourceSensorValue(loginUuid, sourceUuid, sensorName, sensorValue);
-			loginSourceSensorHandler.putLoginSourceSensorValue(loginSourceSensorValue);
+			startThreadSubscribe(iote2eRequestHandler.getRuleConfig(), igniteFilterKey);
+			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
+			pairs.put(sensorName, sensorValue);
+			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(loginName).setSourceName(sourceName)
+					.setSourceType(sourceType).setRequestUuid(UUID.randomUUID().toString())
+					.setTimestamp(IotE2eUtils.getDateNowUtc8601()).setOperation(OPERATION.SENSORS_VALUES)
+					.setPairs(pairs).build();
+			iote2eRequestHandler.addIote2eRequest(iote2eRequest);
+
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
+			throw e;
 		}
 	}
 
@@ -167,11 +179,11 @@ public class TestIgniteSourceSensorHandlerBase {
 					}
 				});
 
-				LoginSourceSensorCacheEntryEventFilter<String,byte[]> sourceSensorCacheEntryEventFilter = 
-						new LoginSourceSensorCacheEntryEventFilter<String, byte[]>(remoteFilterKey);
-				qry.setRemoteFilterFactory(new Factory<LoginSourceSensorCacheEntryEventFilter<String, byte[]>>() {
+				Iote2eIgniteCacheEntryEventFilter<String,byte[]> sourceSensorCacheEntryEventFilter = 
+						new Iote2eIgniteCacheEntryEventFilter<String, byte[]>(remoteFilterKey);
+				qry.setRemoteFilterFactory(new Factory<Iote2eIgniteCacheEntryEventFilter<String, byte[]>>() {
 					@Override
-					public LoginSourceSensorCacheEntryEventFilter<String, byte[]> create() {
+					public Iote2eIgniteCacheEntryEventFilter<String, byte[]> create() {
 						return sourceSensorCacheEntryEventFilter;
 						//return new SourceSensorCacheEntryEventFilter<String, String>(remoteFilterKey);
 					}

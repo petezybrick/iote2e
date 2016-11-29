@@ -11,6 +11,8 @@ sudo docker network create --driver=bridge \
 
 sudo docker network ls
 
+docker build -t kafka:0.10.1.0 .
+
 - zookeeper
  - review the zoo.cfg - note the ip addresses
 
@@ -18,9 +20,9 @@ bin/kafka-console-producer.sh --broker-list localhost:9092 --topic pz-topic
 
 bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic kafka-monitor-topic --from-beginning
 
-java -cp iote2e-common-1.0.0.jar com.pzybrick.iote2e.common.kafkademo.KafkaStringDemo 15 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.SourceSensorValue-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
+java -cp iote2e-common-1.0.0.jar com.pzybrick.iote2e.common.kafkademo.KafkaStringDemo 15 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
 
-java -cp iote2e-common-1.0.0.jar com.pzybrick.iote2e.common.kafkademo.KafkaAvroDemo 1000 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.SourceSensorValue-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
+java -cp iote2e-common-1.0.0.jar com.pzybrick.iote2e.common.kafkademo.KafkaAvroDemo 1000 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
 
 kafka monitor
 https://github.com/linkedin/kafka-monitor 

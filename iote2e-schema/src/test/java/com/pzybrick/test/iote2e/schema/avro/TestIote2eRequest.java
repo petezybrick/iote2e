@@ -32,7 +32,7 @@ public class TestIote2eRequest {
 				.setSourceName("testSourceName")
 				.setSourceType("testSourceType")
 				.setRequestUuid("testRequestUuid")
-				.setTimestamp(IotE2eUtils.getDateNowUtc8601())
+				.setRequestTimestamp(IotE2eUtils.getDateNowUtc8601())
 				.setOperation(OPERATION.SENSORS_VALUES)
 				.setPairs(pairs)
 				.build();

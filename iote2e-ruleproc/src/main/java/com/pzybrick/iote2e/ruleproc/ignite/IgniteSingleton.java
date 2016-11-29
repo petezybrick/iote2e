@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ruleproc.sourceresponse.ignite;
+package com.pzybrick.iote2e.ruleproc.ignite;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

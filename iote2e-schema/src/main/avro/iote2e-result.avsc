@@ -7,6 +7,10 @@
      {"name": "source_type", "type": "string"},
      {"name": "request_uuid", "type": "string"},
      {"name": "request_timestamp", "type": "string"},
+     {"name": "result_code", "type": "string"},
+     {"name": "result_error_message", "type": "string"},
+     {"name": "result_uuid", "type": "string"},
+     {"name": "result_timestamp", "type": "string"},
      {"name":"pairs",
 	     "type":{
 	            "type": "map",  

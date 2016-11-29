@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ruleproc.sourceresponse.ignite;
+package com.pzybrick.iote2e.ruleproc.ignite;
 
 import java.util.List;
 
@@ -10,39 +10,45 @@ import org.apache.commons.logging.LogFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pzybrick.iote2e.common.utils.IotE2eUtils;
-import com.pzybrick.iote2e.ruleproc.sourceresponse.LoginSourceResponseSvc;
+import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
+import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
 import com.pzybrick.iote2e.schema.util.LoginActuatorResponseToByteArrayReuseItem;
 
-public class LoginSourceResponseSvcIgniteImpl implements LoginSourceResponseSvc {
-	private static final Log log = LogFactory.getLog(LoginSourceResponseSvcIgniteImpl.class);
+public class Iote2eSvcIgniteImpl implements Iote2eSvc {
+	private static final Log log = LogFactory.getLog(Iote2eSvcIgniteImpl.class);
 	private IgniteSingleton igniteSingleton;
 	private Gson gson;
 	private LoginActuatorResponseToByteArrayReuseItem loginActuatorResponseToByteArray;
 
 
-	public LoginSourceResponseSvcIgniteImpl() throws Exception {
+	public Iote2eSvcIgniteImpl() throws Exception {
 		this.gson = new GsonBuilder().create();
 		this.loginActuatorResponseToByteArray = new LoginActuatorResponseToByteArrayReuseItem();
 	}
 
 	@Override
-	public void processRuleEvalResults(String loginUuid, String sourceUuid, String sensorName, List<RuleEvalResult> ruleEvalResults)
+	public void processRuleEvalResults(Iote2eRequest iote2eRequest, List<RuleEvalResult> ruleEvalResults)
 			throws Exception {
 		for (RuleEvalResult ruleEvalResult : ruleEvalResults) {
 			if( ruleEvalResult.isRuleActuatorHit() ) {
-				log.info("Updating Actuator: loginUuid="+ loginUuid + ", sourceUuid="+sourceUuid + 
+				log.info("Updating Actuator: loginName="+ iote2eRequest.getLoginName().toString() + 
+						", sourceName="+ iote2eRequest.getSourceName().toString() + 
 						", actuatorName=" + ruleEvalResult.getSourceSensorActuator().getActuatorName() +
 						", old value=" + ruleEvalResult.getSourceSensorActuator().getActuatorValue() + 
 						", new value=" + ruleEvalResult.getActuatorTargetValue() );
 				// Update the SourceSensorActuator
 				ruleEvalResult.getSourceSensorActuator().setActuatorValue(ruleEvalResult.getActuatorTargetValue());
 				ruleEvalResult.getSourceSensorActuator().setActuatorValueUpdatedAt(IotE2eUtils.getDateNowUtc8601() );
-				String key = loginUuid+"|"+sourceUuid+"|"+sensorName+"|"+ruleEvalResult.getSourceSensorActuator().getActuatorName();
+				String key = iote2eRequest.getLoginName().toString()+"|"+iote2eRequest.getSourceName().toString() +
+						"|"+ruleEvalResult.getSensorName()+"|"+ruleEvalResult.getSourceSensorActuator().getActuatorName();
 				
-				AvroSchemaUtils.loginActuatorResponseValueToByteArray(loginActuatorResponseToByteArray, loginUuid, sourceUuid, sensorName, 
+				AvroSchemaUtils.loginActuatorResponseValueToByteArray(loginActuatorResponseToByteArray, 
+						iote2eRequest.getLoginName().toString(), 
+						iote2eRequest.getSourceName().toString(), 
+						ruleEvalResult.getSensorName(), 
 						ruleEvalResult.getSourceSensorActuator().getActuatorName(), 
 						ruleEvalResult.getSourceSensorActuator().getActuatorValue(), 
 						ruleEvalResult.getSourceSensorActuator().getActuatorValueUpdatedAt());

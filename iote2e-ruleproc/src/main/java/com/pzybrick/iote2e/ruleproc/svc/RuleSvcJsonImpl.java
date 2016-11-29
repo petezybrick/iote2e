@@ -36,7 +36,7 @@ public class RuleSvcJsonImpl extends RuleSvc {
 				new TypeToken<List<LoginSourceSensorActuator>>() {
 				}.getType());
 		for (LoginSourceSensorActuator loginSourceSensorActuator : loginSourceSensorActuators) {
-			String key = loginSourceSensorActuator.getLoginUuid() + "|" + loginSourceSensorActuator.getSourceUuid();
+			String key = loginSourceSensorActuator.getLoginName() + "|" + loginSourceSensorActuator.getSourceName();
 			Map<String, LoginSourceSensorActuator> mapByLoginSensorName = ssaByLoginSourceUuid
 					.get(key);
 			if (mapByLoginSensorName == null) {
@@ -51,7 +51,7 @@ public class RuleSvcJsonImpl extends RuleSvc {
 				new TypeToken<List<RuleLoginSourceSensor>>() {
 				}.getType());
 		for (RuleLoginSourceSensor ruleLoginSourceSensor : ruleLoginSourceSensors) {
-			String key = ruleLoginSourceSensor.getLoginUuid() + "|" + ruleLoginSourceSensor.getSourceUuid();
+			String key = ruleLoginSourceSensor.getLoginName() + "|" + ruleLoginSourceSensor.getSourceName();
 			Map<String, RuleLoginSourceSensor> mapBySensorName = rssByLoginSourceUuid
 					.get(key);
 			if (mapBySensorName == null) {

@@ -1,13 +1,13 @@
-package com.pzybrick.iote2e.ruleproc.sourceresponse.ignite;
+package com.pzybrick.iote2e.ruleproc.ignite;
 
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryListenerException;
 
-public class LoginSourceSensorCacheEntryEventFilter<K,V> implements CacheEntryEventFilter<String, byte[]> {
+public class Iote2eIgniteCacheEntryEventFilter<K,V> implements CacheEntryEventFilter<String, byte[]> {
 	private String remoteKey;
 	
-	public LoginSourceSensorCacheEntryEventFilter( String remoteKey ) {
+	public Iote2eIgniteCacheEntryEventFilter( String remoteKey ) {
 		this.remoteKey = remoteKey;
 	}
 

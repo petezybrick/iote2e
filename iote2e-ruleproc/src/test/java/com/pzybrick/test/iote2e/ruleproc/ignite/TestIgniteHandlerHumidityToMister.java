@@ -10,15 +10,16 @@ import com.pzybrick.iote2e.schema.avro.LoginActuatorResponse;
 
 import junit.framework.Assert;
 
-public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSourceSensorHandlerBase {
-	private static final Log log = LogFactory.getLog(TestIgniteSourceSensorHandlerHumidityToMister.class);
+public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
+	private static final Log log = LogFactory.getLog(TestIgniteHandlerHumidityToMister.class);
 	private static String testLoginUuid = "lo1";
 	private static String testSourceUuid = "lo1so1";
+	private static String testSourceType = "humidity";
 	private static String testSensorName = "humidity1";
 	private String filterKey;
 
 
-	public TestIgniteSourceSensorHandlerHumidityToMister() {
+	public TestIgniteHandlerHumidityToMister() {
 		super();
 		filterKey = testLoginUuid + "|" + testSourceUuid + "|" + testSensorName + "|";
 	}
@@ -27,7 +28,7 @@ public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSou
 	public void testHumidityToMisterRuleFireFanOff() throws Exception {
 		log.info("begins");
 		String testValue = "50";
-		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 		Assert.assertNotNull("loginActuatorResponses must not be null", loginActuatorResponses );
 		Assert.assertEquals("loginActuatorResponses must have size=1", 1, loginActuatorResponses.size() );
@@ -38,7 +39,7 @@ public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSou
 	public void testHumidityToMisterRuleFireFanOn() throws Exception {
 		log.info("begins");
 		String testValue = "100";
-		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 		Assert.assertNotNull("loginActuatorResponses must not be null", loginActuatorResponses );
 		Assert.assertEquals("loginActuatorResponses must have size=1", loginActuatorResponses.size(), 1 );
@@ -49,7 +50,7 @@ public class TestIgniteSourceSensorHandlerHumidityToMister extends TestIgniteSou
 	public void testHumidityToMisterRuleNotFire() throws Exception {
 		log.info("begins");
 		String testValue = "87";
-		commonRun( testLoginUuid, testSourceUuid, testSensorName, testValue, filterKey);
+		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
 		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
 		Assert.assertEquals("loginActuatorResponses must be empty", 0, loginActuatorResponses.size() );
 	}

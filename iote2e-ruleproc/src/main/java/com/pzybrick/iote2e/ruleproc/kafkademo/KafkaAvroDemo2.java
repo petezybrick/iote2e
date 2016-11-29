@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.common.kafkademo;
+package com.pzybrick.iote2e.ruleproc.kafkademo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +27,13 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
  
-public class KafkaAvroDemo {
-	private static final Log log = LogFactory.getLog(KafkaAvroDemo.class);
+public class KafkaAvroDemo2 {
+	private static final Log log = LogFactory.getLog(KafkaAvroDemo2.class);
     private final ConsumerConnector consumer;
     private final String topic;
     private  ExecutorService executor;
  
-    public KafkaAvroDemo(String zookeeper, String groupId, String topic) {
+    public KafkaAvroDemo2(String zookeeper, String groupId, String topic) {
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
                 createConsumerConfig(zookeeper, groupId));
         this.topic = topic;
@@ -105,7 +105,7 @@ public class KafkaAvroDemo {
         String bootstrapServers = args[4]; //"iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
         int threads = 3; 
         
-        KafkaAvroDemo kafkaStringDemo = new KafkaAvroDemo(zooKeeper, groupId, topic);
+        KafkaAvroDemo2 kafkaStringDemo = new KafkaAvroDemo2(zooKeeper, groupId, topic);
         kafkaStringDemo.run(threads);
         
         try {
@@ -169,9 +169,9 @@ public class KafkaAvroDemo {
 	public class ConsumerDemoThread implements Runnable {
 	    private KafkaStream kafkaStream;
 	    private int threadNumber;
-	    private KafkaAvroDemo consumerDemoMaster;
+	    private KafkaAvroDemo2 consumerDemoMaster;
 	 
-	    public ConsumerDemoThread(KafkaStream kafkaStream, int threadNumber, KafkaAvroDemo consumerDemoMaster) {
+	    public ConsumerDemoThread(KafkaStream kafkaStream, int threadNumber, KafkaAvroDemo2 consumerDemoMaster) {
 	        this.threadNumber = threadNumber;
 	        this.kafkaStream = kafkaStream;
 	        this.consumerDemoMaster = consumerDemoMaster;

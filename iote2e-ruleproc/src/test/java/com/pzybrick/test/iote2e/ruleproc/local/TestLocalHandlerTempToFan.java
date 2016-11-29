@@ -10,46 +10,46 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
 import junit.framework.Assert;
 
-public class TestIote2eRequestHandlerHumidityToMister extends TestIote2eRequestHandlerBase {
-	private static final Log log = LogFactory.getLog(TestIote2eRequestHandlerHumidityToMister.class);
+public class TestLocalHandlerTempToFan extends TestLocalHandlerBase {
+	private static final Log log = LogFactory.getLog(TestLocalHandlerTempToFan.class);
 	private static String testLoginName = "lo1";
 	private static String testSourceName = "lo1so1";
-	private static String testSourceType = "humidity";
-	private static String testSensorName = "humidity1";
+	private static String testSourceType = "temp";
+	private static String testSensorName = "temp1";
 	
-	public TestIote2eRequestHandlerHumidityToMister() {
+	public TestLocalHandlerTempToFan() {
 		super();
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleFireFanOff() {
+	public void testTempFanRuleFireFanOff() throws Exception {
 		log.info("begins");
 
 		String testValue = "50";
 		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
-		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "on", ruleEvalResults.get(0).getActuatorTargetValue() );
-	}
-	
-	@Test
-	public void testHumidityToMisterRuleFireFanOn() {
-		log.info("begins");
-		String testValue = "100";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
+		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
 		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleNotFire() {
+	public void testTempFanRuleFireFanOn() throws Exception {
 		log.info("begins");
-		String testValue = "87";
+		String testValue = "100";
 		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNull("ruleEvalResults must be null", ruleEvalResults );
+		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
+		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
+		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "on", ruleEvalResults.get(0).getActuatorTargetValue() );
+	}
+	
+	@Test
+	public void testTempFanRuleNotFire() throws Exception {
+		log.info("begins");
+		String testValue = "78";
+		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
+		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
+		Assert.assertNull("ruleEvalResults is not null", ruleEvalResults );
 	}
 }

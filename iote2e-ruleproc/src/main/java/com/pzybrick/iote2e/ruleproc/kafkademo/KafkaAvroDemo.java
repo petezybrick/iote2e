@@ -1,5 +1,6 @@
-package com.pzybrick.iote2e.common.kafkademo;
+package com.pzybrick.iote2e.ruleproc.kafkademo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,19 +14,27 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
+import com.pzybrick.iote2e.common.utils.IotE2eUtils;
+import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
+import com.pzybrick.iote2e.schema.avro.OPERATION;
+import com.pzybrick.iote2e.schema.avro.SensorValue;
+import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
+import com.pzybrick.iote2e.schema.util.Iote2eRequestFromByteArrayReuseItem;
+import com.pzybrick.iote2e.schema.util.Iote2eRequestToByteArrayReuseItem;
+
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
  
-public class KafkaStringDemo {
-	private static final Log log = LogFactory.getLog(KafkaStringDemo.class);
+public class KafkaAvroDemo {
+	private static final Log log = LogFactory.getLog(KafkaAvroDemo.class);
     private final ConsumerConnector consumer;
     private final String topic;
     private  ExecutorService executor;
  
-    public KafkaStringDemo(String zookeeper, String groupId, String topic) {
+    public KafkaAvroDemo(String zookeeper, String groupId, String topic) {
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
                 createConsumerConfig(zookeeper, groupId));
         this.topic = topic;
@@ -97,10 +106,16 @@ public class KafkaStringDemo {
         String bootstrapServers = args[4]; //"iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
         int threads = 3; 
         
-        KafkaStringDemo kafkaStringDemo = new KafkaStringDemo(zooKeeper, groupId, topic);
+        KafkaAvroDemo kafkaStringDemo = new KafkaAvroDemo(zooKeeper, groupId, topic);
         kafkaStringDemo.run(threads);
         
-        produceTestMsgs( numMsgs, bootstrapServers, topic );
+        try {
+        	produceTestMsgs( numMsgs, bootstrapServers, topic );
+        } catch( Exception e ) {
+        	log.error(e.getMessage(),e);
+        	System.exit(8);
+        }
+        
         try { Thread.sleep(1000L); } catch(Exception e) {}
  
         try {
@@ -112,29 +127,42 @@ public class KafkaStringDemo {
     }
     
 	
-	private static void produceTestMsgs( long numEvents, String bootstrapServers, String topic ) {
+	private static void produceTestMsgs( long numEvents, String bootstrapServers, String topic ) throws Exception {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", bootstrapServers );
 		//props.put("producer.type", "sync");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 		props.put("partition.assignment.strategy", "RoundRobin");
 		props.put("request.required.acks", "1");
 		props.put("group.id", "group1");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		KafkaProducer<String, Object> producer = new KafkaProducer<String, Object>(props);
+		KafkaProducer<String, byte[]> producer = new KafkaProducer<String, byte[]>(props);
 		long keyNum = System.currentTimeMillis();
 		long msgOffset = 0;
-
+		Iote2eRequestToByteArrayReuseItem toByteArrayReuseItem = new Iote2eRequestToByteArrayReuseItem();
 		for (int i = 0; i < numEvents; i++) {
-			log.info(">>> Producing: " + i);
+			log.info(">>> Producing Iote2eRequest: " + i);
+			Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
+			pairs.put("testSensorNamea_"+i, "testSensorValuea_"+i);
+			pairs.put("testSensorNameb_"+i, "testSensorValueb_"+i);
+			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder()
+					.setLoginName("testLoginName_"+i)
+					.setSourceName("testSourceName_"+i)
+					.setSourceType("testSourceType_"+i)
+					.setRequestUuid("testRequestUuid_"+i)
+					.setTimestamp(IotE2eUtils.getDateNowUtc8601())
+					.setOperation(OPERATION.SENSORS_VALUES)
+					.setPairs(pairs)
+					.build();
+			
+			AvroSchemaUtils.iote2eRequestToByteArray( toByteArrayReuseItem, iote2eRequest );
 			String key = String.valueOf(keyNum);
-			String value = "some data " + msgOffset++;
-			ProducerRecord<String, Object> data = new ProducerRecord<String, Object>(topic, key, value);
+			ProducerRecord<String, byte[]> data = new ProducerRecord<String, byte[]>(topic, key, toByteArrayReuseItem.getBytes());
 			producer.send(data);
 			keyNum++;
 		}
@@ -145,30 +173,35 @@ public class KafkaStringDemo {
 	public class ConsumerDemoThread implements Runnable {
 	    private KafkaStream kafkaStream;
 	    private int threadNumber;
-	    private KafkaStringDemo consumerDemoMaster;
+	    private KafkaAvroDemo consumerDemoMaster;
 	 
-	    public ConsumerDemoThread(KafkaStream kafkaStream, int threadNumber, KafkaStringDemo consumerDemoMaster) {
+	    public ConsumerDemoThread(KafkaStream kafkaStream, int threadNumber, KafkaAvroDemo consumerDemoMaster) {
 	        this.threadNumber = threadNumber;
 	        this.kafkaStream = kafkaStream;
 	        this.consumerDemoMaster = consumerDemoMaster;
 	    }
 	 
 	    public void run() {
+	    	Iote2eRequestFromByteArrayReuseItem fromByteArrayReuseItem = new Iote2eRequestFromByteArrayReuseItem();
 	        ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
 	        while (it.hasNext()) {
-	        	MessageAndMetadata<byte[], byte[]> messageAndMetadata = it.next();
-	        	String key = new String(  messageAndMetadata.key() );
-	        	String message = new String(  messageAndMetadata.message() );
-	        	String summary = 
-	        			"Thread " + threadNumber + 
-	        			", topic=" + messageAndMetadata.topic() + 
-	        			", partition=" + messageAndMetadata.partition() + 
-	        			", key=" + key + 
-	        			", message=" + message + 
-	        			", offset=" + messageAndMetadata.offset() + 
-	        			", timestamp=" + messageAndMetadata.timestamp() + 
-	        			", timestampType=" + messageAndMetadata.timestampType();
-	        	log.info(">>> Consumed: " + summary);
+				MessageAndMetadata<byte[], byte[]> messageAndMetadata = it.next();
+				String key = new String(messageAndMetadata.key());
+				try {
+					AvroSchemaUtils.iote2eRequestFromByteArray( fromByteArrayReuseItem,messageAndMetadata.message() );
+		        	String summary = 
+		        			"Thread " + threadNumber + 
+		        			", topic=" + messageAndMetadata.topic() + 
+		        			", partition=" + messageAndMetadata.partition() + 
+		        			", key=" + key + 
+		        			", offset=" + messageAndMetadata.offset() + 
+		        			", timestamp=" + messageAndMetadata.timestamp() + 
+		        			", timestampType=" + messageAndMetadata.timestampType() + 
+		        			", iote2eRequest=" + fromByteArrayReuseItem.getIote2eRequest().toString();
+		        	log.info(">>> Consumed: " + summary);
+				} catch( Exception e ) {
+					log.error(e.getMessage(), e);
+				}
 	        }
 	        log.info(">>> Shutting down Thread: " + threadNumber);
 	    }

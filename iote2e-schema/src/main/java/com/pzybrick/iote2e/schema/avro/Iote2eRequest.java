@@ -10,14 +10,18 @@ import org.apache.avro.specific.SpecificData;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 8364613780725515210L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Iote2eRequest\",\"namespace\":\"com.pzybrick.iote2e.schema.avro\",\"fields\":[{\"name\":\"login_name\",\"type\":\"string\"},{\"name\":\"source_name\",\"type\":\"string\"},{\"name\":\"source_type\",\"type\":\"string\"},{\"name\":\"request_uuid\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"string\"},{\"name\":\"pairs\",\"type\":{\"type\":\"map\",\"values\":\"string\"}},{\"name\":\"operation\",\"type\":{\"type\":\"enum\",\"name\":\"OPERATION\",\"symbols\":[\"SENSORS_VALUES\",\"ACTUATOR_CONFIRM\",\"LOOPBACK\"]}}]}");
+  private static final long serialVersionUID = -1468451031881273315L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Iote2eRequest\",\"namespace\":\"com.pzybrick.iote2e.schema.avro\",\"fields\":[{\"name\":\"login_name\",\"type\":\"string\"},{\"name\":\"source_name\",\"type\":\"string\"},{\"name\":\"source_type\",\"type\":\"string\"},{\"name\":\"request_uuid\",\"type\":\"string\"},{\"name\":\"request_timestamp\",\"type\":\"string\"},{\"name\":\"result_code\",\"type\":\"string\"},{\"name\":\"result_error_message\",\"type\":\"string\"},{\"name\":\"result_uuid\",\"type\":\"string\"},{\"name\":\"result_timestamp\",\"type\":\"string\"},{\"name\":\"pairs\",\"type\":{\"type\":\"map\",\"values\":\"string\"}},{\"name\":\"operation\",\"type\":{\"type\":\"enum\",\"name\":\"OPERATION\",\"symbols\":[\"SENSORS_VALUES\",\"ACTUATOR_VALUES\",\"ACTUATOR_CONFIRM\",\"LOOPBACK\"]}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.CharSequence login_name;
   @Deprecated public java.lang.CharSequence source_name;
   @Deprecated public java.lang.CharSequence source_type;
   @Deprecated public java.lang.CharSequence request_uuid;
-  @Deprecated public java.lang.CharSequence timestamp;
+  @Deprecated public java.lang.CharSequence request_timestamp;
+  @Deprecated public java.lang.CharSequence result_code;
+  @Deprecated public java.lang.CharSequence result_error_message;
+  @Deprecated public java.lang.CharSequence result_uuid;
+  @Deprecated public java.lang.CharSequence result_timestamp;
   @Deprecated public java.util.Map<java.lang.CharSequence,java.lang.CharSequence> pairs;
   @Deprecated public com.pzybrick.iote2e.schema.avro.OPERATION operation;
 
@@ -34,16 +38,24 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
    * @param source_name The new value for source_name
    * @param source_type The new value for source_type
    * @param request_uuid The new value for request_uuid
-   * @param timestamp The new value for timestamp
+   * @param request_timestamp The new value for request_timestamp
+   * @param result_code The new value for result_code
+   * @param result_error_message The new value for result_error_message
+   * @param result_uuid The new value for result_uuid
+   * @param result_timestamp The new value for result_timestamp
    * @param pairs The new value for pairs
    * @param operation The new value for operation
    */
-  public Iote2eRequest(java.lang.CharSequence login_name, java.lang.CharSequence source_name, java.lang.CharSequence source_type, java.lang.CharSequence request_uuid, java.lang.CharSequence timestamp, java.util.Map<java.lang.CharSequence,java.lang.CharSequence> pairs, com.pzybrick.iote2e.schema.avro.OPERATION operation) {
+  public Iote2eRequest(java.lang.CharSequence login_name, java.lang.CharSequence source_name, java.lang.CharSequence source_type, java.lang.CharSequence request_uuid, java.lang.CharSequence request_timestamp, java.lang.CharSequence result_code, java.lang.CharSequence result_error_message, java.lang.CharSequence result_uuid, java.lang.CharSequence result_timestamp, java.util.Map<java.lang.CharSequence,java.lang.CharSequence> pairs, com.pzybrick.iote2e.schema.avro.OPERATION operation) {
     this.login_name = login_name;
     this.source_name = source_name;
     this.source_type = source_type;
     this.request_uuid = request_uuid;
-    this.timestamp = timestamp;
+    this.request_timestamp = request_timestamp;
+    this.result_code = result_code;
+    this.result_error_message = result_error_message;
+    this.result_uuid = result_uuid;
+    this.result_timestamp = result_timestamp;
     this.pairs = pairs;
     this.operation = operation;
   }
@@ -56,9 +68,13 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
     case 1: return source_name;
     case 2: return source_type;
     case 3: return request_uuid;
-    case 4: return timestamp;
-    case 5: return pairs;
-    case 6: return operation;
+    case 4: return request_timestamp;
+    case 5: return result_code;
+    case 6: return result_error_message;
+    case 7: return result_uuid;
+    case 8: return result_timestamp;
+    case 9: return pairs;
+    case 10: return operation;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -71,9 +87,13 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
     case 1: source_name = (java.lang.CharSequence)value$; break;
     case 2: source_type = (java.lang.CharSequence)value$; break;
     case 3: request_uuid = (java.lang.CharSequence)value$; break;
-    case 4: timestamp = (java.lang.CharSequence)value$; break;
-    case 5: pairs = (java.util.Map<java.lang.CharSequence,java.lang.CharSequence>)value$; break;
-    case 6: operation = (com.pzybrick.iote2e.schema.avro.OPERATION)value$; break;
+    case 4: request_timestamp = (java.lang.CharSequence)value$; break;
+    case 5: result_code = (java.lang.CharSequence)value$; break;
+    case 6: result_error_message = (java.lang.CharSequence)value$; break;
+    case 7: result_uuid = (java.lang.CharSequence)value$; break;
+    case 8: result_timestamp = (java.lang.CharSequence)value$; break;
+    case 9: pairs = (java.util.Map<java.lang.CharSequence,java.lang.CharSequence>)value$; break;
+    case 10: operation = (com.pzybrick.iote2e.schema.avro.OPERATION)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -143,19 +163,83 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
   }
 
   /**
-   * Gets the value of the 'timestamp' field.
-   * @return The value of the 'timestamp' field.
+   * Gets the value of the 'request_timestamp' field.
+   * @return The value of the 'request_timestamp' field.
    */
-  public java.lang.CharSequence getTimestamp() {
-    return timestamp;
+  public java.lang.CharSequence getRequestTimestamp() {
+    return request_timestamp;
   }
 
   /**
-   * Sets the value of the 'timestamp' field.
+   * Sets the value of the 'request_timestamp' field.
    * @param value the value to set.
    */
-  public void setTimestamp(java.lang.CharSequence value) {
-    this.timestamp = value;
+  public void setRequestTimestamp(java.lang.CharSequence value) {
+    this.request_timestamp = value;
+  }
+
+  /**
+   * Gets the value of the 'result_code' field.
+   * @return The value of the 'result_code' field.
+   */
+  public java.lang.CharSequence getResultCode() {
+    return result_code;
+  }
+
+  /**
+   * Sets the value of the 'result_code' field.
+   * @param value the value to set.
+   */
+  public void setResultCode(java.lang.CharSequence value) {
+    this.result_code = value;
+  }
+
+  /**
+   * Gets the value of the 'result_error_message' field.
+   * @return The value of the 'result_error_message' field.
+   */
+  public java.lang.CharSequence getResultErrorMessage() {
+    return result_error_message;
+  }
+
+  /**
+   * Sets the value of the 'result_error_message' field.
+   * @param value the value to set.
+   */
+  public void setResultErrorMessage(java.lang.CharSequence value) {
+    this.result_error_message = value;
+  }
+
+  /**
+   * Gets the value of the 'result_uuid' field.
+   * @return The value of the 'result_uuid' field.
+   */
+  public java.lang.CharSequence getResultUuid() {
+    return result_uuid;
+  }
+
+  /**
+   * Sets the value of the 'result_uuid' field.
+   * @param value the value to set.
+   */
+  public void setResultUuid(java.lang.CharSequence value) {
+    this.result_uuid = value;
+  }
+
+  /**
+   * Gets the value of the 'result_timestamp' field.
+   * @return The value of the 'result_timestamp' field.
+   */
+  public java.lang.CharSequence getResultTimestamp() {
+    return result_timestamp;
+  }
+
+  /**
+   * Sets the value of the 'result_timestamp' field.
+   * @param value the value to set.
+   */
+  public void setResultTimestamp(java.lang.CharSequence value) {
+    this.result_timestamp = value;
   }
 
   /**
@@ -226,7 +310,11 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
     private java.lang.CharSequence source_name;
     private java.lang.CharSequence source_type;
     private java.lang.CharSequence request_uuid;
-    private java.lang.CharSequence timestamp;
+    private java.lang.CharSequence request_timestamp;
+    private java.lang.CharSequence result_code;
+    private java.lang.CharSequence result_error_message;
+    private java.lang.CharSequence result_uuid;
+    private java.lang.CharSequence result_timestamp;
     private java.util.Map<java.lang.CharSequence,java.lang.CharSequence> pairs;
     private com.pzybrick.iote2e.schema.avro.OPERATION operation;
 
@@ -257,17 +345,33 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
         this.request_uuid = data().deepCopy(fields()[3].schema(), other.request_uuid);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[4].schema(), other.timestamp);
+      if (isValidValue(fields()[4], other.request_timestamp)) {
+        this.request_timestamp = data().deepCopy(fields()[4].schema(), other.request_timestamp);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.pairs)) {
-        this.pairs = data().deepCopy(fields()[5].schema(), other.pairs);
+      if (isValidValue(fields()[5], other.result_code)) {
+        this.result_code = data().deepCopy(fields()[5].schema(), other.result_code);
         fieldSetFlags()[5] = true;
       }
-      if (isValidValue(fields()[6], other.operation)) {
-        this.operation = data().deepCopy(fields()[6].schema(), other.operation);
+      if (isValidValue(fields()[6], other.result_error_message)) {
+        this.result_error_message = data().deepCopy(fields()[6].schema(), other.result_error_message);
         fieldSetFlags()[6] = true;
+      }
+      if (isValidValue(fields()[7], other.result_uuid)) {
+        this.result_uuid = data().deepCopy(fields()[7].schema(), other.result_uuid);
+        fieldSetFlags()[7] = true;
+      }
+      if (isValidValue(fields()[8], other.result_timestamp)) {
+        this.result_timestamp = data().deepCopy(fields()[8].schema(), other.result_timestamp);
+        fieldSetFlags()[8] = true;
+      }
+      if (isValidValue(fields()[9], other.pairs)) {
+        this.pairs = data().deepCopy(fields()[9].schema(), other.pairs);
+        fieldSetFlags()[9] = true;
+      }
+      if (isValidValue(fields()[10], other.operation)) {
+        this.operation = data().deepCopy(fields()[10].schema(), other.operation);
+        fieldSetFlags()[10] = true;
       }
     }
 
@@ -293,17 +397,33 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
         this.request_uuid = data().deepCopy(fields()[3].schema(), other.request_uuid);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[4].schema(), other.timestamp);
+      if (isValidValue(fields()[4], other.request_timestamp)) {
+        this.request_timestamp = data().deepCopy(fields()[4].schema(), other.request_timestamp);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.pairs)) {
-        this.pairs = data().deepCopy(fields()[5].schema(), other.pairs);
+      if (isValidValue(fields()[5], other.result_code)) {
+        this.result_code = data().deepCopy(fields()[5].schema(), other.result_code);
         fieldSetFlags()[5] = true;
       }
-      if (isValidValue(fields()[6], other.operation)) {
-        this.operation = data().deepCopy(fields()[6].schema(), other.operation);
+      if (isValidValue(fields()[6], other.result_error_message)) {
+        this.result_error_message = data().deepCopy(fields()[6].schema(), other.result_error_message);
         fieldSetFlags()[6] = true;
+      }
+      if (isValidValue(fields()[7], other.result_uuid)) {
+        this.result_uuid = data().deepCopy(fields()[7].schema(), other.result_uuid);
+        fieldSetFlags()[7] = true;
+      }
+      if (isValidValue(fields()[8], other.result_timestamp)) {
+        this.result_timestamp = data().deepCopy(fields()[8].schema(), other.result_timestamp);
+        fieldSetFlags()[8] = true;
+      }
+      if (isValidValue(fields()[9], other.pairs)) {
+        this.pairs = data().deepCopy(fields()[9].schema(), other.pairs);
+        fieldSetFlags()[9] = true;
+      }
+      if (isValidValue(fields()[10], other.operation)) {
+        this.operation = data().deepCopy(fields()[10].schema(), other.operation);
+        fieldSetFlags()[10] = true;
       }
     }
 
@@ -464,41 +584,197 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
     }
 
     /**
-      * Gets the value of the 'timestamp' field.
+      * Gets the value of the 'request_timestamp' field.
       * @return The value.
       */
-    public java.lang.CharSequence getTimestamp() {
-      return timestamp;
+    public java.lang.CharSequence getRequestTimestamp() {
+      return request_timestamp;
     }
 
     /**
-      * Sets the value of the 'timestamp' field.
-      * @param value The value of 'timestamp'.
+      * Sets the value of the 'request_timestamp' field.
+      * @param value The value of 'request_timestamp'.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder setTimestamp(java.lang.CharSequence value) {
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder setRequestTimestamp(java.lang.CharSequence value) {
       validate(fields()[4], value);
-      this.timestamp = value;
+      this.request_timestamp = value;
       fieldSetFlags()[4] = true;
       return this;
     }
 
     /**
-      * Checks whether the 'timestamp' field has been set.
-      * @return True if the 'timestamp' field has been set, false otherwise.
+      * Checks whether the 'request_timestamp' field has been set.
+      * @return True if the 'request_timestamp' field has been set, false otherwise.
       */
-    public boolean hasTimestamp() {
+    public boolean hasRequestTimestamp() {
       return fieldSetFlags()[4];
     }
 
 
     /**
-      * Clears the value of the 'timestamp' field.
+      * Clears the value of the 'request_timestamp' field.
       * @return This builder.
       */
-    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder clearTimestamp() {
-      timestamp = null;
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder clearRequestTimestamp() {
+      request_timestamp = null;
       fieldSetFlags()[4] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'result_code' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getResultCode() {
+      return result_code;
+    }
+
+    /**
+      * Sets the value of the 'result_code' field.
+      * @param value The value of 'result_code'.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder setResultCode(java.lang.CharSequence value) {
+      validate(fields()[5], value);
+      this.result_code = value;
+      fieldSetFlags()[5] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'result_code' field has been set.
+      * @return True if the 'result_code' field has been set, false otherwise.
+      */
+    public boolean hasResultCode() {
+      return fieldSetFlags()[5];
+    }
+
+
+    /**
+      * Clears the value of the 'result_code' field.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder clearResultCode() {
+      result_code = null;
+      fieldSetFlags()[5] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'result_error_message' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getResultErrorMessage() {
+      return result_error_message;
+    }
+
+    /**
+      * Sets the value of the 'result_error_message' field.
+      * @param value The value of 'result_error_message'.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder setResultErrorMessage(java.lang.CharSequence value) {
+      validate(fields()[6], value);
+      this.result_error_message = value;
+      fieldSetFlags()[6] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'result_error_message' field has been set.
+      * @return True if the 'result_error_message' field has been set, false otherwise.
+      */
+    public boolean hasResultErrorMessage() {
+      return fieldSetFlags()[6];
+    }
+
+
+    /**
+      * Clears the value of the 'result_error_message' field.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder clearResultErrorMessage() {
+      result_error_message = null;
+      fieldSetFlags()[6] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'result_uuid' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getResultUuid() {
+      return result_uuid;
+    }
+
+    /**
+      * Sets the value of the 'result_uuid' field.
+      * @param value The value of 'result_uuid'.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder setResultUuid(java.lang.CharSequence value) {
+      validate(fields()[7], value);
+      this.result_uuid = value;
+      fieldSetFlags()[7] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'result_uuid' field has been set.
+      * @return True if the 'result_uuid' field has been set, false otherwise.
+      */
+    public boolean hasResultUuid() {
+      return fieldSetFlags()[7];
+    }
+
+
+    /**
+      * Clears the value of the 'result_uuid' field.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder clearResultUuid() {
+      result_uuid = null;
+      fieldSetFlags()[7] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'result_timestamp' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getResultTimestamp() {
+      return result_timestamp;
+    }
+
+    /**
+      * Sets the value of the 'result_timestamp' field.
+      * @param value The value of 'result_timestamp'.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder setResultTimestamp(java.lang.CharSequence value) {
+      validate(fields()[8], value);
+      this.result_timestamp = value;
+      fieldSetFlags()[8] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'result_timestamp' field has been set.
+      * @return True if the 'result_timestamp' field has been set, false otherwise.
+      */
+    public boolean hasResultTimestamp() {
+      return fieldSetFlags()[8];
+    }
+
+
+    /**
+      * Clears the value of the 'result_timestamp' field.
+      * @return This builder.
+      */
+    public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder clearResultTimestamp() {
+      result_timestamp = null;
+      fieldSetFlags()[8] = false;
       return this;
     }
 
@@ -516,9 +792,9 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder setPairs(java.util.Map<java.lang.CharSequence,java.lang.CharSequence> value) {
-      validate(fields()[5], value);
+      validate(fields()[9], value);
       this.pairs = value;
-      fieldSetFlags()[5] = true;
+      fieldSetFlags()[9] = true;
       return this;
     }
 
@@ -527,7 +803,7 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'pairs' field has been set, false otherwise.
       */
     public boolean hasPairs() {
-      return fieldSetFlags()[5];
+      return fieldSetFlags()[9];
     }
 
 
@@ -537,7 +813,7 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
       */
     public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder clearPairs() {
       pairs = null;
-      fieldSetFlags()[5] = false;
+      fieldSetFlags()[9] = false;
       return this;
     }
 
@@ -555,9 +831,9 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder setOperation(com.pzybrick.iote2e.schema.avro.OPERATION value) {
-      validate(fields()[6], value);
+      validate(fields()[10], value);
       this.operation = value;
-      fieldSetFlags()[6] = true;
+      fieldSetFlags()[10] = true;
       return this;
     }
 
@@ -566,7 +842,7 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'operation' field has been set, false otherwise.
       */
     public boolean hasOperation() {
-      return fieldSetFlags()[6];
+      return fieldSetFlags()[10];
     }
 
 
@@ -576,7 +852,7 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
       */
     public com.pzybrick.iote2e.schema.avro.Iote2eRequest.Builder clearOperation() {
       operation = null;
-      fieldSetFlags()[6] = false;
+      fieldSetFlags()[10] = false;
       return this;
     }
 
@@ -588,9 +864,13 @@ public class Iote2eRequest extends org.apache.avro.specific.SpecificRecordBase i
         record.source_name = fieldSetFlags()[1] ? this.source_name : (java.lang.CharSequence) defaultValue(fields()[1]);
         record.source_type = fieldSetFlags()[2] ? this.source_type : (java.lang.CharSequence) defaultValue(fields()[2]);
         record.request_uuid = fieldSetFlags()[3] ? this.request_uuid : (java.lang.CharSequence) defaultValue(fields()[3]);
-        record.timestamp = fieldSetFlags()[4] ? this.timestamp : (java.lang.CharSequence) defaultValue(fields()[4]);
-        record.pairs = fieldSetFlags()[5] ? this.pairs : (java.util.Map<java.lang.CharSequence,java.lang.CharSequence>) defaultValue(fields()[5]);
-        record.operation = fieldSetFlags()[6] ? this.operation : (com.pzybrick.iote2e.schema.avro.OPERATION) defaultValue(fields()[6]);
+        record.request_timestamp = fieldSetFlags()[4] ? this.request_timestamp : (java.lang.CharSequence) defaultValue(fields()[4]);
+        record.result_code = fieldSetFlags()[5] ? this.result_code : (java.lang.CharSequence) defaultValue(fields()[5]);
+        record.result_error_message = fieldSetFlags()[6] ? this.result_error_message : (java.lang.CharSequence) defaultValue(fields()[6]);
+        record.result_uuid = fieldSetFlags()[7] ? this.result_uuid : (java.lang.CharSequence) defaultValue(fields()[7]);
+        record.result_timestamp = fieldSetFlags()[8] ? this.result_timestamp : (java.lang.CharSequence) defaultValue(fields()[8]);
+        record.pairs = fieldSetFlags()[9] ? this.pairs : (java.util.Map<java.lang.CharSequence,java.lang.CharSequence>) defaultValue(fields()[9]);
+        record.operation = fieldSetFlags()[10] ? this.operation : (com.pzybrick.iote2e.schema.avro.OPERATION) defaultValue(fields()[10]);
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);

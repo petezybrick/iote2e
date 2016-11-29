@@ -24,8 +24,6 @@ public abstract class RuleSvc {
 
 	protected abstract RuleLoginSourceSensor findRuleLoginSourceSensor(String loginUuid, String sourceUuid, String sensorName) throws Exception;
 
-
-	// NEW  
 	public List<RuleEvalResult> process(Iote2eRequest iote2eRequest ) throws Exception {
 		List<RuleEvalResult> ruleEvalResults = new ArrayList<RuleEvalResult>();
 		for( Map.Entry<CharSequence,CharSequence> entry : iote2eRequest.getPairs().entrySet() ) {
@@ -35,30 +33,14 @@ public abstract class RuleSvc {
 			RuleLoginSourceSensor ruleSourceSensor = findRuleLoginSourceSensor( loginName, sourceName, sensorName );
 			if( ruleSourceSensor != null ) {
 				log.debug(ruleSourceSensor);
-				RuleDefItem ruleDefItem = findRuleDefItem( ruleSourceSensor.getRuleUuid());
-				if( ruleDefItem == null ) throw new Exception ("Missing RuleDefItem for ruleUuid=" + ruleSourceSensor.getRuleUuid());
+				RuleDefItem ruleDefItem = findRuleDefItem( ruleSourceSensor.getRuleName());
+				if( ruleDefItem == null ) throw new Exception ("Missing RuleDefItem for ruleUuid=" + ruleSourceSensor.getRuleName());
 				log.debug(ruleDefItem);
 				String sensorValue = entry.getValue().toString();
 				ruleEvalResults = ruleEval( loginName, sourceName, sensorName, sensorValue, ruleDefItem, ruleEvalResults);
 			} else {
 				if( log.isDebugEnabled()) log.debug("ruleSourceSensor doesn't exist for sourceName=" + sourceName + ", sensorName=" + sensorName );
 			}
-		}
-		return ruleEvalResults;
-	}
-	
-	// OLD 
-	public List<RuleEvalResult> process(String loginUuid, String sourceUuid, String sensorName, String sensorValue) throws Exception {
-		List<RuleEvalResult> ruleEvalResults = new ArrayList<RuleEvalResult>();
-		RuleLoginSourceSensor ruleSourceSensor = findRuleLoginSourceSensor( loginUuid, sourceUuid, sensorName);
-		if( ruleSourceSensor != null ) {
-			log.debug(ruleSourceSensor);
-			RuleDefItem ruleDefItem = findRuleDefItem( ruleSourceSensor.getRuleUuid());
-			if( ruleDefItem == null ) throw new Exception ("Missing RuleDefItem for ruleUuid=" + ruleSourceSensor.getRuleUuid());
-			log.debug(ruleDefItem);
-			ruleEvalResults = ruleEval( loginUuid, sourceUuid, sensorName, sensorValue, ruleDefItem, ruleEvalResults);
-		} else {
-			if( log.isDebugEnabled()) log.debug("ruleSourceSensor doesn't exist for sourceUuid=" + sourceUuid + ", sensorName=" + sensorName );
 		}
 		return ruleEvalResults;
 	}

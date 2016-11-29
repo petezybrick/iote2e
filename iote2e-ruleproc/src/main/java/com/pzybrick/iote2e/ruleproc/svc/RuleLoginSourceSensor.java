@@ -7,9 +7,9 @@ import com.google.gson.annotations.Expose;
 @Generated("org.jsonschema2pojo")
 public class RuleLoginSourceSensor {
 	@Expose
-	private String loginUuid;
+	private String loginName;
 	@Expose
-	private String sourceUuid;
+	private String sourceName;
 	@Expose
 	private String sensorName;
 	@Expose
@@ -25,7 +25,7 @@ public class RuleLoginSourceSensor {
 		return sensorName;
 	}
 
-	public String getRuleUuid() {
+	public String getRuleName() {
 		return ruleUuid;
 	}
 
@@ -34,8 +34,8 @@ public class RuleLoginSourceSensor {
 		return this;
 	}
 
-	public RuleLoginSourceSensor setRuleUuid(String ruleUuid) {
-		this.ruleUuid = ruleUuid;
+	public RuleLoginSourceSensor setRuleName(String ruleName) {
+		this.ruleUuid = ruleName;
 		return this;
 	}
 
@@ -48,27 +48,27 @@ public class RuleLoginSourceSensor {
 		return this;
 	}
 
-	public String getSourceUuid() {
-		return sourceUuid;
+	public String getSourceName() {
+		return sourceName;
 	}
 
-	public RuleLoginSourceSensor setSourceUuid(String sourceUuid) {
-		this.sourceUuid = sourceUuid;
+	public RuleLoginSourceSensor setSourceName(String sourceName) {
+		this.sourceName = sourceName;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "RuleLoginSourceSensor [loginUuid=" + loginUuid + ", sourceUuid=" + sourceUuid + ", sensorName="
-				+ sensorName + ", ruleUuid=" + ruleUuid + ", desc=" + desc + "]";
+		return "RuleLoginSourceSensor [loginName=" + loginName + ", sourceName=" + sourceName + ", sensorName="
+				+ sensorName + ", ruleName=" + ruleUuid + ", desc=" + desc + "]";
 	}
 
-	public String getLoginUuid() {
-		return loginUuid;
+	public String getLoginName() {
+		return loginName;
 	}
 
-	public RuleLoginSourceSensor setLoginUuid(String loginUuid) {
-		this.loginUuid = loginUuid;
+	public RuleLoginSourceSensor setLoginName(String loginName) {
+		this.loginName = loginName;
 		return this;
 	}
 	

@@ -86,7 +86,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ADVERTISED_PORT: 9092
       # name:partitions:replicas
-      KAFKA_CREATE_TOPICS: com.pzybrick.iote2e.schema.avro.SourceSensorValue-sandbox:3:2,kafka-monitor-topic:3:3
+      KAFKA_CREATE_TOPICS: com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox:3:2,kafka-monitor-topic:3:3
       KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_LOG_RETENTION_BYTES: 100000000
       KAFKA_ZOOKEEPER_CONNECT: iote2e-zoo1:2181,iote2e-zoo2:2181,iote2e-zoo3:2181

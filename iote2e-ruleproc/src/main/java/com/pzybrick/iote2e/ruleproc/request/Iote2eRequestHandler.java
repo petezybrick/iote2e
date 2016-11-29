@@ -10,12 +10,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pzybrick.iote2e.ruleproc.sourceresponse.LoginSourceResponseSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.ruleproc.svc.RuleSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
-import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
 
 public class Iote2eRequestHandler extends Thread {
 	private static final Log log = LogFactory.getLog(Iote2eRequestHandler.class);
@@ -106,9 +104,20 @@ public class Iote2eRequestHandler extends Thread {
 		return iote2eRequests;
 	}
 
-	public void setIote2eRequests(ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) {
+	public Iote2eRequestHandler setIote2eRequests(ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) {
 		this.iote2eRequests = iote2eRequests;
 		return this;
+	}
+	
+
+	public void addIote2eRequest(Iote2eRequest iote2eRequest) {
+		iote2eRequests.add(iote2eRequest);
+		interrupt();
+	}
+
+	public void addIote2eRequest(List<Iote2eRequest> iote2eRequests) {
+		iote2eRequests.addAll(iote2eRequests);
+		interrupt();
 	}
 
 }

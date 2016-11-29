@@ -7,9 +7,9 @@ import com.google.gson.annotations.Expose;
 @Generated("org.jsonschema2pojo")
 public class LoginSourceSensorActuator {
 	@Expose
-	private String loginUuid;
+	private String loginName;
 	@Expose
-	private String sourceUuid;
+	private String sourceName;
 	@Expose
 	private String sensorName;
 	@Expose
@@ -25,8 +25,8 @@ public class LoginSourceSensorActuator {
 		
 	}
 
-	public String getSourceUuid() {
-		return sourceUuid;
+	public String getSourceName() {
+		return sourceName;
 	}
 
 	public String getSensorName() {
@@ -45,8 +45,8 @@ public class LoginSourceSensorActuator {
 		return desc;
 	}
 
-	public LoginSourceSensorActuator setSourceUuid(String sourceUuid) {
-		this.sourceUuid = sourceUuid;
+	public LoginSourceSensorActuator setSourceName(String sourceName) {
+		this.sourceName = sourceName;
 		return this;
 	}
 
@@ -81,17 +81,17 @@ public class LoginSourceSensorActuator {
 
 	@Override
 	public String toString() {
-		return "LoginSourceSensorActuator [loginUuid=" + loginUuid + ", sourceUuid=" + sourceUuid + ", sensorName="
+		return "LoginSourceSensorActuator [loginName=" + loginName + ", sourceName=" + sourceName + ", sensorName="
 				+ sensorName + ", actuatorName=" + actuatorName + ", actuatorValue=" + actuatorValue + ", desc=" + desc
 				+ ", actuatorValueUpdatedAt=" + actuatorValueUpdatedAt + "]";
 	}
 
-	public String getLoginUuid() {
-		return loginUuid;
+	public String getLoginName() {
+		return loginName;
 	}
 
-	public LoginSourceSensorActuator setLoginUuid(String loginUuid) {
-		this.loginUuid = loginUuid;
+	public LoginSourceSensorActuator setLoginName(String loginName) {
+		this.loginName = loginName;
 		return this;
 	}
 	
