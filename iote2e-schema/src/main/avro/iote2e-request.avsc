@@ -5,6 +5,13 @@
      {"name": "login_name", "type": "string"},
      {"name": "source_name", "type": "string"},
      {"name": "source_type", "type": "string"},
+     {"name":"metadata",
+         "default":"null",
+	     "type":{
+	            "type": "map",  
+	            "values": "string"
+	       }
+       },
      {"name": "request_uuid", "type": "string"},
      {"name": "request_timestamp", "type": "string"},
      {"name":"pairs",

@@ -1,13 +1,20 @@
 {"namespace": "com.pzybrick.iote2e.schema.avro",
  "type": "record",
- "name": "Iote2eRequest",
+ "name": "Iote2eResult",
  "fields": [
      {"name": "login_name", "type": "string"},
      {"name": "source_name", "type": "string"},
      {"name": "source_type", "type": "string"},
+     {"name":"metadata",
+         "default":"null",
+	     "type":{
+	            "type": "map",  
+	            "values": "string"
+	       }
+       },
      {"name": "request_uuid", "type": "string"},
      {"name": "request_timestamp", "type": "string"},
-     {"name": "result_code", "type": "string"},
+     {"name": "result_code", "type": "int"},
      {"name": "result_error_message", "type": "string"},
      {"name": "result_uuid", "type": "string"},
      {"name": "result_timestamp", "type": "string"},
@@ -17,7 +24,6 @@
 	            "values": "string"
 	       }
        },
-       
      {"name":"operation",
 	     "type":{
 	     	"name":"OPERATION",

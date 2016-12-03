@@ -2,11 +2,12 @@ package com.pzybrick.test.iote2e.ruleproc.ignite;
 
 import java.util.List;
 
+import org.apache.avro.util.Utf8;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
-import com.pzybrick.iote2e.schema.avro.LoginActuatorResponse;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
 import junit.framework.Assert;
 
@@ -29,10 +30,12 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 		log.info("begins");
 		String testValue = "50";
 		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
-		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
-		Assert.assertNotNull("loginActuatorResponses must not be null", loginActuatorResponses );
-		Assert.assertEquals("loginActuatorResponses must have size=1", 1, loginActuatorResponses.size() );
-		Assert.assertEquals("loginActuatorResponses getActuatorTargetValue", "on", loginActuatorResponses.get(0).getActuatorValue().toString() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
+		Assert.assertNotNull("iote2eResults must not be null", iote2eResults );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		System.out.println(iote2eResults.get(0).getPairs());
+		Assert.assertEquals("iote2eResults getActuatorTargetValue", "on", 
+				iote2eResults.get(0).getPairs().get( new Utf8("actuatorValue")).toString() );
 	}
 	
 	@Test
@@ -40,10 +43,11 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 		log.info("begins");
 		String testValue = "100";
 		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
-		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
-		Assert.assertNotNull("loginActuatorResponses must not be null", loginActuatorResponses );
-		Assert.assertEquals("loginActuatorResponses must have size=1", loginActuatorResponses.size(), 1 );
-		Assert.assertEquals("loginActuatorResponses getActuatorTargetValue", "off", loginActuatorResponses.get(0).getActuatorValue().toString() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
+		Assert.assertNotNull("iote2eResults must not be null", iote2eResults );
+		Assert.assertEquals("iote2eResults must have size=1", iote2eResults.size(), 1 );
+		Assert.assertEquals("iote2eResults getActuatorTargetValue", "off", 
+				iote2eResults.get(0).getPairs().get(new Utf8("actuatorValue")).toString() );
 	}
 	
 	@Test
@@ -51,7 +55,7 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 		log.info("begins");
 		String testValue = "87";
 		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
-		List<LoginActuatorResponse> loginActuatorResponses = commonThreadSubscribeGetLoginActuatorResponses( 2000 );
-		Assert.assertEquals("loginActuatorResponses must be empty", 0, loginActuatorResponses.size() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
+		Assert.assertEquals("iote2eResults must be empty", 0, iote2eResults.size() );
 	}
 }

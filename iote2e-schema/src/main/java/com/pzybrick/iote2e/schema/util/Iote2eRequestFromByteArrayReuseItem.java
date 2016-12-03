@@ -5,6 +5,7 @@ import org.apache.avro.io.DatumReader;
 import org.apache.avro.specific.SpecificDatumReader;
 
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
 public class Iote2eRequestFromByteArrayReuseItem {
 	private Iote2eRequest iote2eRequest;

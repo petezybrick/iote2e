@@ -22,18 +22,17 @@ import org.junit.Before;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pzybrick.iote2e.common.utils.IotE2eUtils;
+import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.ignite.Iote2eIgniteCacheEntryEventFilter;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
-import com.pzybrick.iote2e.schema.avro.LoginActuatorResponse;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
-import com.pzybrick.iote2e.schema.util.LoginActuatorResponseFromByteArrayReuseItem;
-import com.pzybrick.iote2e.schema.util.LoginSourceRequestToByteArrayReuseItem;
+import com.pzybrick.iote2e.schema.util.Iote2eResultFromByteArrayReuseItem;
 
 public class TestIgniteHandlerBase {
 	private static final Log log = LogFactory.getLog(TestIgniteHandlerBase.class);
@@ -45,7 +44,7 @@ public class TestIgniteHandlerBase {
 	protected boolean subscribeUp;
 	protected IgniteSingleton igniteSingleton = null;
 	protected Gson gson;
-	protected LoginActuatorResponseFromByteArrayReuseItem loginActuatorResponseFromByteArrayReuseItem;
+	protected Iote2eResultFromByteArrayReuseItem iote2eResultFromByteArrayReuseItem;
 //	protected BinaryDecoder binaryDecoder = null;
 //	private DatumReader<ActuatorResponse> datumReaderActuatorResponse = null;
 
@@ -53,7 +52,7 @@ public class TestIgniteHandlerBase {
 	public void before() throws Exception {
 		try {
 			gson = new GsonBuilder().create();
-			loginActuatorResponseFromByteArrayReuseItem = new LoginActuatorResponseFromByteArrayReuseItem();
+			iote2eResultFromByteArrayReuseItem = new Iote2eResultFromByteArrayReuseItem();
 			subscribeResults = new ConcurrentLinkedQueue<byte[]>();
 			iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 			iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_IGNITE"),
@@ -94,7 +93,7 @@ public class TestIgniteHandlerBase {
 			pairs.put(sensorName, sensorValue);
 			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(loginName).setSourceName(sourceName)
 					.setSourceType(sourceType).setRequestUuid(UUID.randomUUID().toString())
-					.setTimestamp(IotE2eUtils.getDateNowUtc8601()).setOperation(OPERATION.SENSORS_VALUES)
+					.setRequestTimestamp(Iote2eUtils.getDateNowUtc8601()).setOperation(OPERATION.SENSORS_VALUES)
 					.setPairs(pairs).build();
 			iote2eRequestHandler.addIote2eRequest(iote2eRequest);
 
@@ -104,8 +103,8 @@ public class TestIgniteHandlerBase {
 		}
 	}
 
-	protected List<LoginActuatorResponse> commonThreadSubscribeGetLoginActuatorResponses(long maxWaitMsecs) throws Exception {
-		List<LoginActuatorResponse> loginActuatorResponses = new ArrayList<LoginActuatorResponse>();
+	protected List<Iote2eResult> commonThreadSubscribeGetIote2eResults(long maxWaitMsecs) throws Exception {
+		List<Iote2eResult> iote2eResults = new ArrayList<Iote2eResult>();
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {
 			if (subscribeResults.size() > 0) {
@@ -115,8 +114,8 @@ public class TestIgniteHandlerBase {
 				}
 				for( byte[] bytes : subscribeResults ) {
 					try {
-						AvroSchemaUtils.loginActuatorResponseFromByteArray(loginActuatorResponseFromByteArrayReuseItem, bytes);
-						loginActuatorResponses.add( loginActuatorResponseFromByteArrayReuseItem.getLoginActuatorResponse() );
+						AvroSchemaUtils.iote2eResultFromByteArray(iote2eResultFromByteArrayReuseItem, bytes);
+						iote2eResults.add( iote2eResultFromByteArrayReuseItem.getIote2eResult() );
 					} catch( IOException e ) {
 						log.error(e.getMessage(),e);
 						throw e;
@@ -129,7 +128,7 @@ public class TestIgniteHandlerBase {
 			} catch (Exception e) {
 			}
 		}
-		return loginActuatorResponses;
+		return iote2eResults;
 	}
 
 	private void startThreadSubscribe(RuleConfig ruleConfig, String igniteFilterKey) throws Exception {

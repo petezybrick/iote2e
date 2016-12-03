@@ -14,6 +14,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.ruleproc.svc.RuleSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
 public class Iote2eRequestHandler extends Thread {
 	private static final Log log = LogFactory.getLog(Iote2eRequestHandler.class);
@@ -115,7 +116,7 @@ public class Iote2eRequestHandler extends Thread {
 		interrupt();
 	}
 
-	public void addIote2eRequest(List<Iote2eRequest> iote2eRequests) {
+	public void addIote2eRequest(List<Iote2eResult> iote2eRequests) {
 		iote2eRequests.addAll(iote2eRequests);
 		interrupt();
 	}

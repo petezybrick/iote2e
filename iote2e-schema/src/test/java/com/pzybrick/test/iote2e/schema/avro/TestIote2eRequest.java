@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.pzybrick.iote2e.common.utils.IotE2eUtils;
+import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 
@@ -24,6 +24,9 @@ public class TestIote2eRequest {
 
 	@Test
 	public void test() {
+		Map<CharSequence,CharSequence> metadata = new HashMap<CharSequence,CharSequence>();
+		metadata.put("testMetadataNamea", "testMetadataValuea");
+		metadata.put("testMetadataNameb", "testMetadataValueb");
 		Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
 		pairs.put("testSensorNamea", "testSensorValuea");
 		pairs.put("testSensorNameb", "testSensorValueb");
@@ -31,8 +34,9 @@ public class TestIote2eRequest {
 				.setLoginName("testLoginName")
 				.setSourceName("testSourceName")
 				.setSourceType("testSourceType")
+				.setMetadata(metadata)
 				.setRequestUuid("testRequestUuid")
-				.setRequestTimestamp(IotE2eUtils.getDateNowUtc8601())
+				.setRequestTimestamp(Iote2eUtils.getDateNowUtc8601())
 				.setOperation(OPERATION.SENSORS_VALUES)
 				.setPairs(pairs)
 				.build();
@@ -48,6 +52,12 @@ public class TestIote2eRequest {
 		Assert.assertEquals("sensor name b", "testSensorValueb",
 				iote2eRequest.getPairs().get("testSensorNameb"));
 		Assert.assertNull("sensor name c", iote2eRequest.getPairs().get("testSensorNamec"));
+
+		Assert.assertEquals("metadata name a", "testMetadataValuea",
+				iote2eRequest.getMetadata().get("testMetadataNamea"));
+		Assert.assertEquals("metadata name b", "testMetadataValueb",
+				iote2eRequest.getMetadata().get("testMetadataNameb"));
+		Assert.assertNull("metadata name c", iote2eRequest.getMetadata().get("testMetadataNamec"));
 
 	}
 

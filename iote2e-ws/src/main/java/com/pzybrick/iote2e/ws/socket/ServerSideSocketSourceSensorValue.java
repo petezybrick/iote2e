@@ -18,7 +18,7 @@ import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.pzybrick.iote2e.common.utils.IotE2eConstants;
+import com.pzybrick.iote2e.common.utils.Iote2eConstants;
 import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
 import com.pzybrick.iote2e.schema.avro.SourceSensorValue;
 import com.pzybrick.iotete.ws.security.IotE2eAuthentication;
@@ -60,9 +60,9 @@ public class ServerSideSocketSourceSensorValue {
 			log.error("Invalid message attempt - text instead of byte array - need to force close the socket");
 			// TODO: force close on socket
 
-		} else if (message.startsWith(IotE2eConstants.LOGIN_HDR)) {
+		} else if (message.startsWith(Iote2eConstants.LOGIN_HDR)) {
 			try {
-				String login = message.substring(IotE2eConstants.LOGIN_HDR_LEN);
+				String login = message.substring(Iote2eConstants.LOGIN_HDR_LEN);
 				login_uuid = IotE2eAuthentication.authenticate(login);
 				authenticated = true;
 				EntryPointServerSourceSensorValue.serverSideSocketSourceSensorValues.put(login_uuid, this);

@@ -16,7 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.util.component.LifeCycle;
 
-import com.pzybrick.iote2e.common.utils.IotE2eConstants;
+import com.pzybrick.iote2e.common.utils.Iote2eConstants;
 import com.pzybrick.iote2e.schema.avro.ActuatorResponse;
 import com.pzybrick.iote2e.schema.avro.SourceSensorValue;
 import com.pzybrick.iote2e.schema.util.ActuatorResponseFromByteArrayReuseItem;
@@ -94,7 +94,7 @@ public class ClientTestInjector {
 				ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays = new ConcurrentLinkedQueue<byte[]>();
 				ClientSocketAvro iotClientSocketAvro = new ClientSocketAvro(this,rcvdAvroByteArrays);
 				session = container.connectToServer(iotClientSocketAvro, uri);
-				session.getBasicRemote().sendText(IotE2eConstants.LOGIN_HDR + login);
+				session.getBasicRemote().sendText(Iote2eConstants.LOGIN_HDR + login);
 				for (int i = 45; i < 56; i++) {
 					AvroSchemaUtils.sourceSensorValueToByteArray(
 							toByteArrayReuseItem, testSourceUuid, testSensorName, String.valueOf(i));

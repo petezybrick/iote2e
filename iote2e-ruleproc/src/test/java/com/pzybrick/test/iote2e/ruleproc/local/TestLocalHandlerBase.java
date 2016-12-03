@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 
-import com.pzybrick.iote2e.common.utils.IotE2eUtils;
+import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
@@ -59,7 +59,7 @@ public class TestLocalHandlerBase {
 			pairs.put(sensorName, sensorValue);
 			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(loginName).setSourceName(sourceName)
 					.setSourceType(sourceType).setRequestUuid(UUID.randomUUID().toString())
-					.setTimestamp(IotE2eUtils.getDateNowUtc8601()).setOperation(OPERATION.SENSORS_VALUES)
+					.setRequestTimestamp(Iote2eUtils.getDateNowUtc8601()).setOperation(OPERATION.SENSORS_VALUES)
 					.setPairs(pairs).build();
 			iote2eRequestHandler.addIote2eRequest(iote2eRequest);
 

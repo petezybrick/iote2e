@@ -1,6 +1,5 @@
 package com.pzybrick.iote2e.ruleproc.kafkademo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +13,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-import com.pzybrick.iote2e.common.utils.IotE2eUtils;
+import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
-import com.pzybrick.iote2e.schema.avro.SensorValue;
 import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestFromByteArrayReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestToByteArrayReuseItem;
@@ -150,12 +148,16 @@ public class KafkaAvroDemo {
 			Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
 			pairs.put("testSensorNamea_"+i, "testSensorValuea_"+i);
 			pairs.put("testSensorNameb_"+i, "testSensorValueb_"+i);
+			Map<CharSequence,CharSequence> metadata = new HashMap<CharSequence,CharSequence>();
+			metadata.put("testMetadataNamea_"+i, "testMetadataValuea_"+i);
+			metadata.put("testMetadataNameb_"+i, "testMetadataValueb_"+i);
 			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder()
 					.setLoginName("testLoginName_"+i)
 					.setSourceName("testSourceName_"+i)
 					.setSourceType("testSourceType_"+i)
+					.setMetadata(metadata)
 					.setRequestUuid("testRequestUuid_"+i)
-					.setTimestamp(IotE2eUtils.getDateNowUtc8601())
+					.setRequestTimestamp(Iote2eUtils.getDateNowUtc8601())
 					.setOperation(OPERATION.SENSORS_VALUES)
 					.setPairs(pairs)
 					.build();
@@ -188,7 +190,7 @@ public class KafkaAvroDemo {
 				MessageAndMetadata<byte[], byte[]> messageAndMetadata = it.next();
 				String key = new String(messageAndMetadata.key());
 				try {
-					AvroSchemaUtils.iote2eRequestFromByteArray( fromByteArrayReuseItem,messageAndMetadata.message() );
+		        	AvroSchemaUtils.iote2eRequestFromByteArray( fromByteArrayReuseItem,messageAndMetadata.message() );
 		        	String summary = 
 		        			"Thread " + threadNumber + 
 		        			", topic=" + messageAndMetadata.topic() + 
