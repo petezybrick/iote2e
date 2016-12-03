@@ -11,10 +11,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefCondItem;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefItem;
 import com.pzybrick.iote2e.ruleproc.svc.RuleLoginSourceSensor;
-import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
 
 public class CreateRuleDefJsonFile {
 	private static final Log log = LogFactory.getLog(CreateRuleDefJsonFile.class);

@@ -16,9 +16,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
-import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
-import com.pzybrick.iote2e.schema.util.Iote2eRequestFromByteArrayReuseItem;
-import com.pzybrick.iote2e.schema.util.Iote2eRequestToByteArrayReuseItem;
+import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -142,7 +140,7 @@ public class KafkaAvroDemo {
 		KafkaProducer<String, byte[]> producer = new KafkaProducer<String, byte[]>(props);
 		long keyNum = System.currentTimeMillis();
 		long msgOffset = 0;
-		Iote2eRequestToByteArrayReuseItem toByteArrayReuseItem = new Iote2eRequestToByteArrayReuseItem();
+		Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		for (int i = 0; i < numEvents; i++) {
 			log.info(">>> Producing Iote2eRequest: " + i);
 			Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
@@ -161,10 +159,8 @@ public class KafkaAvroDemo {
 					.setOperation(OPERATION.SENSORS_VALUES)
 					.setPairs(pairs)
 					.build();
-			
-			AvroSchemaUtils.iote2eRequestToByteArray( toByteArrayReuseItem, iote2eRequest );
 			String key = String.valueOf(keyNum);
-			ProducerRecord<String, byte[]> data = new ProducerRecord<String, byte[]>(topic, key, toByteArrayReuseItem.getBytes());
+			ProducerRecord<String, byte[]> data = new ProducerRecord<String, byte[]>(topic, key, iote2eRequestReuseItem.toByteArray(iote2eRequest));
 			producer.send(data);
 			keyNum++;
 		}
@@ -184,13 +180,12 @@ public class KafkaAvroDemo {
 	    }
 	 
 	    public void run() {
-	    	Iote2eRequestFromByteArrayReuseItem fromByteArrayReuseItem = new Iote2eRequestFromByteArrayReuseItem();
+	    	Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 	        ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
 	        while (it.hasNext()) {
 				MessageAndMetadata<byte[], byte[]> messageAndMetadata = it.next();
 				String key = new String(messageAndMetadata.key());
 				try {
-		        	AvroSchemaUtils.iote2eRequestFromByteArray( fromByteArrayReuseItem,messageAndMetadata.message() );
 		        	String summary = 
 		        			"Thread " + threadNumber + 
 		        			", topic=" + messageAndMetadata.topic() + 
@@ -199,7 +194,7 @@ public class KafkaAvroDemo {
 		        			", offset=" + messageAndMetadata.offset() + 
 		        			", timestamp=" + messageAndMetadata.timestamp() + 
 		        			", timestampType=" + messageAndMetadata.timestampType() + 
-		        			", iote2eRequest=" + fromByteArrayReuseItem.getIote2eRequest().toString();
+		        			", iote2eRequest=" + iote2eRequestReuseItem.fromByteArray(messageAndMetadata.message()).toString();
 		        	log.info(">>> Consumed: " + summary);
 				} catch( Exception e ) {
 					log.error(e.getMessage(), e);

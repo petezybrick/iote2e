@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.cache.CacheException;
 
+import org.apache.avro.util.Utf8;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,16 +17,15 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
-import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
-import com.pzybrick.iote2e.schema.util.Iote2eResultToByteArrayReuseItem;
+import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	private static final Log log = LogFactory.getLog(Iote2eSvcIgniteImpl.class);
 	private IgniteSingleton igniteSingleton;
-	private Iote2eResultToByteArrayReuseItem iote2eResultToByteArray;
+	private Iote2eResultReuseItem iote2eResultReuseItem;
 
 	public Iote2eSvcIgniteImpl() throws Exception {
-		this.iote2eResultToByteArray = new Iote2eResultToByteArrayReuseItem();
+		this.iote2eResultReuseItem = new Iote2eResultReuseItem();
 	}
 
 	@Override
@@ -45,25 +45,24 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 						"|"+ruleEvalResult.getSensorName()+"|"+ruleEvalResult.getSourceSensorActuator().getActuatorName();
 				
 				Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
-				pairs.put( "sensorName", ruleEvalResult.getSourceSensorActuator().getSensorName() );
-				pairs.put( "actuatorName", ruleEvalResult.getSourceSensorActuator().getActuatorName() );
-				pairs.put( "actuatorValue", ruleEvalResult.getSourceSensorActuator().getActuatorValue() );
-				pairs.put( "actuatorValueUpdatedAt", ruleEvalResult.getSourceSensorActuator().getActuatorValueUpdatedAt() );
+				pairs.put( new Utf8("sensorName"), new Utf8(ruleEvalResult.getSourceSensorActuator().getSensorName() ));
+				pairs.put( new Utf8("actuatorName"), new Utf8(ruleEvalResult.getSourceSensorActuator().getActuatorName() ));
+				pairs.put( new Utf8("actuatorValue"), new Utf8(ruleEvalResult.getSourceSensorActuator().getActuatorValue() ));
+				pairs.put( new Utf8("actuatorValueUpdatedAt"), new Utf8(ruleEvalResult.getSourceSensorActuator().getActuatorValueUpdatedAt() ));
 				
 				Iote2eResult iote2eResult = Iote2eResult.newBuilder()
 					.setPairs(pairs)
-					.setLoginName(iote2eRequest.getLoginName().toString())
-					.setSourceName(iote2eRequest.getSourceName().toString())
-					.setSourceType(iote2eRequest.getSourceType().toString())
-					.setRequestUuid(iote2eRequest.getRequestUuid().toString())
-					.setRequestTimestamp(iote2eRequest.getRequestTimestamp().toString())
+					.setLoginName(iote2eRequest.getLoginName())
+					.setSourceName(iote2eRequest.getSourceName())
+					.setSourceType(iote2eRequest.getSourceType())
+					.setRequestUuid(iote2eRequest.getRequestUuid())
+					.setRequestTimestamp(iote2eRequest.getRequestTimestamp())
 					.setOperation(iote2eRequest.getOperation())
 					.setResultCode(8)
-					.setResultErrorMessage("testErrorMessage")
-					.setResultTimestamp(Iote2eUtils.getDateNowUtc8601())
-					.setResultUuid(UUID.randomUUID().toString())
+					.setResultErrorMessage( new Utf8("testErrorMessage"))
+					.setResultTimestamp( new Utf8(Iote2eUtils.getDateNowUtc8601()))
+					.setResultUuid(  new Utf8(UUID.randomUUID().toString()))
 					.build();
-				AvroSchemaUtils.iote2eResultValueToByteArray(iote2eResultToByteArray, iote2eResult );
 				
 				if( log.isDebugEnabled() ) log.debug(ruleEvalResult.toString());
 				// TODO: need circuit breaker here
@@ -72,7 +71,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 				int cntRetry = 0;
 				while( System.currentTimeMillis() < timeoutAt ) {
 					try {
-						igniteSingleton.getCache().put(key, iote2eResultToByteArray.getBytes());
+						igniteSingleton.getCache().put(key, iote2eResultReuseItem.toByteArray(iote2eResult));
 						log.debug("cache.put successful");
 						break;
 					} catch( CacheException inte ) {

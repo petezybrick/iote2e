@@ -31,8 +31,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
-import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
-import com.pzybrick.iote2e.schema.util.Iote2eResultFromByteArrayReuseItem;
+import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 public class TestIgniteHandlerBase {
 	private static final Log log = LogFactory.getLog(TestIgniteHandlerBase.class);
@@ -44,15 +43,13 @@ public class TestIgniteHandlerBase {
 	protected boolean subscribeUp;
 	protected IgniteSingleton igniteSingleton = null;
 	protected Gson gson;
-	protected Iote2eResultFromByteArrayReuseItem iote2eResultFromByteArrayReuseItem;
-//	protected BinaryDecoder binaryDecoder = null;
-//	private DatumReader<ActuatorResponse> datumReaderActuatorResponse = null;
+	protected Iote2eResultReuseItem iote2eResultReuseItem;
 
 	@Before
 	public void before() throws Exception {
 		try {
 			gson = new GsonBuilder().create();
-			iote2eResultFromByteArrayReuseItem = new Iote2eResultFromByteArrayReuseItem();
+			iote2eResultReuseItem = new Iote2eResultReuseItem();
 			subscribeResults = new ConcurrentLinkedQueue<byte[]>();
 			iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 			iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_IGNITE"),
@@ -114,8 +111,7 @@ public class TestIgniteHandlerBase {
 				}
 				for( byte[] bytes : subscribeResults ) {
 					try {
-						AvroSchemaUtils.iote2eResultFromByteArray(iote2eResultFromByteArrayReuseItem, bytes);
-						iote2eResults.add( iote2eResultFromByteArrayReuseItem.getIote2eResult() );
+						iote2eResults.add( iote2eResultReuseItem.fromByteArray(bytes) );
 					} catch( IOException e ) {
 						log.error(e.getMessage(),e);
 						throw e;

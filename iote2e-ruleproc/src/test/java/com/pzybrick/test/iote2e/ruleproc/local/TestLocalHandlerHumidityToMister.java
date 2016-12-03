@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
-import com.pzybrick.test.iote2e.ruleproc.local.TestLocalHandlerBase;
 
 import junit.framework.Assert;
 
