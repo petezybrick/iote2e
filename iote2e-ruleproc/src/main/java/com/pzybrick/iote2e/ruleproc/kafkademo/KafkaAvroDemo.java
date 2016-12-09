@@ -28,7 +28,7 @@ public class KafkaAvroDemo {
 	private static final Log log = LogFactory.getLog(KafkaAvroDemo.class);
     private final ConsumerConnector consumer;
     private final String topic;
-    private  ExecutorService executor;
+    private ExecutorService executor;
  
     public KafkaAvroDemo(String zookeeper, String groupId, String topic) {
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
@@ -102,8 +102,8 @@ public class KafkaAvroDemo {
         String bootstrapServers = args[4]; //"iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
         int threads = 3; 
         
-        KafkaAvroDemo kafkaStringDemo = new KafkaAvroDemo(zooKeeper, groupId, topic);
-        kafkaStringDemo.run(threads);
+        KafkaAvroDemo kafkaAvroDemo = new KafkaAvroDemo(zooKeeper, groupId, topic);
+        kafkaAvroDemo.run(threads);
         
         try {
         	produceTestMsgs( numMsgs, bootstrapServers, topic );
@@ -119,7 +119,7 @@ public class KafkaAvroDemo {
         } catch (InterruptedException ie) {
  
         }
-        kafkaStringDemo.shutdown();
+        kafkaAvroDemo.shutdown();
     }
     
 	

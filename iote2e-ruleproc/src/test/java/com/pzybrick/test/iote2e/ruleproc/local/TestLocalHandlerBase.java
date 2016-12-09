@@ -33,7 +33,7 @@ public class TestLocalHandlerBase {
 				"------------------------------------------------------------------------------------------------------");
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_LOCAL"), iote2eRequests);
-		iote2eSvc = (Iote2eSvcLocalTestImpl) iote2eRequestHandler.getIote2eRequestSvc();
+		iote2eSvc = (Iote2eSvcLocalTestImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();
 	}

@@ -20,7 +20,7 @@ public class Iote2eRequestHandler extends Thread {
 	private static final Log log = LogFactory.getLog(Iote2eRequestHandler.class);
 	private ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests = null;
 	private RuleSvc ruleSvc;
-	private Iote2eSvc iote2eRequestSvc;
+	private Iote2eSvc iote2eSvc;
 	private boolean shutdown;
 	private Iote2eRequestConfig iote2eRequestConfig;
 	private RuleConfig ruleConfig;
@@ -37,13 +37,13 @@ public class Iote2eRequestHandler extends Thread {
 		Class cls = Class.forName(iote2eRequestConfig.getRuleSvcClassName());
 		ruleSvc = (RuleSvc) cls.newInstance();
 		cls = Class.forName(iote2eRequestConfig.getRequestSvcClassName());
-		iote2eRequestSvc = (Iote2eSvc) cls.newInstance();
+		iote2eSvc = (Iote2eSvc) cls.newInstance();
 
 		rawJson = FileUtils.readFileToString(new File(iote2eRequestConfig.getPathNameExtRuleConfigFile()));
 		ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
 		
 		ruleSvc.init(ruleConfig);
-		iote2eRequestSvc.init(ruleConfig);
+		iote2eSvc.init(ruleConfig);
 		} catch( Exception e ) {
 			log.error(e.getMessage(),e);
 			throw e;
@@ -61,7 +61,7 @@ public class Iote2eRequestHandler extends Thread {
 						List<RuleEvalResult> ruleEvalResults = ruleSvc.process( iote2eRequest);
 						if (ruleEvalResults != null && ruleEvalResults.size() > 0 ) {
 							log.debug(ruleEvalResults);
-							iote2eRequestSvc.processRuleEvalResults( iote2eRequest, ruleEvalResults);
+							iote2eSvc.processRuleEvalResults( iote2eRequest, ruleEvalResults);
 						}
 					}
 				}
@@ -89,8 +89,8 @@ public class Iote2eRequestHandler extends Thread {
 		return ruleSvc;
 	}
 
-	public Iote2eSvc getIote2eRequestSvc() {
-		return iote2eRequestSvc;
+	public Iote2eSvc getIote2eSvc() {
+		return iote2eSvc;
 	}
 
 	public Iote2eRequestConfig getIote2eRequestConfig() {
