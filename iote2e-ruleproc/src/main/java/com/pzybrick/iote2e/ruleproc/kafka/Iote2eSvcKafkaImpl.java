@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ruleproc.kafka;
+package com.pzybrick.iote2e.ruleproc.kafka;
 
 import java.util.List;
 
@@ -17,8 +17,7 @@ public class Iote2eSvcKafkaImpl implements Iote2eSvc {
 	@Override
 	public void processRuleEvalResults(Iote2eRequest iote2eRequest, List<RuleEvalResult> ruleEvalResults)
 			throws Exception {
-		if (log.isDebugEnabled())
-			log.debug( String.format("iote2eRequest=%s, ruleEvalResults=%s", iote2eRequest.toString(), ruleEvalResults));
+		log.info( String.format(">>>>> iote2eRequest=%s, ruleEvalResults=%s", iote2eRequest.toString(), ruleEvalResults));
 		this.ruleEvalResults = ruleEvalResults;		
 	}
 	

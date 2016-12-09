@@ -17,8 +17,9 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.kafkademo.KafkaAvroDemo;
-import com.pzybrick.iote2e.ruleproc.kafkademo.KafkaAvroDemo.ConsumerDemoThread;
+import com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl;
+import com.pzybrick.iote2e.ruleproc.kafka.KafkaAvroDemo;
+import com.pzybrick.iote2e.ruleproc.kafka.KafkaAvroDemo.ConsumerDemoThread;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
@@ -39,6 +40,7 @@ public class TestKafkaHandlerBase {
 	protected KafkaProducer<String, byte[]> kafkaProducer;
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem;
 	protected String kafkaTopic;
+	protected String kafkaGroup;
 	protected ConsumerConnector kafkaConsumerConnector;
 	protected ExecutorService executor;
 
@@ -50,7 +52,15 @@ public class TestKafkaHandlerBase {
 	public void before() throws Exception {
 		log.info(
 				"------------------------------------------------------------------------------------------------------");
+		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
+		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
+		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_KAFKA"), iote2eRequests);
+		iote2eSvc = (Iote2eSvcKafkaImpl) iote2eRequestHandler.getIote2eSvc();
+		iote2eSvc.setRuleEvalResults(null);
+		iote2eRequestHandler.start();
+		
 		kafkaTopic = System.getenv("KAFKA_TOPIC_UNIT_TEST");
+		kafkaGroup = System.getenv("KAFKA_GROUP_UNIT_TEST");
 		Properties props = new Properties();
 		props.put("bootstrap.servers", System.getenv("KAFKA_BOOTSTRAP_SERVERS_UNIT_TEST") );
 		//props.put("producer.type", "sync");
@@ -60,17 +70,11 @@ public class TestKafkaHandlerBase {
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 		props.put("partition.assignment.strategy", "RoundRobin");
 		props.put("request.required.acks", "1");
-		props.put("group.id", "group1");
+		props.put("group.id", kafkaGroup);
 		kafkaProducer = new KafkaProducer<String, byte[]>(props);
 		kafkaConsumerConnector = kafka.consumer.Consumer.createJavaConsumerConnector(
-                createConsumerConfig(System.getenv("KAFKA_ZOOKEEPER_UNIT_TEST"), System.getenv("KAFKA_GROUP_UNIT_TEST")));
-		startStreamConsumers(Integer.parseInt(System.getenv("KAFKA_GROUP_UNIT_TEST")));
-		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
-		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_KAFKA"), iote2eRequests);
-		iote2eSvc = (Iote2eSvcKafkaImpl) iote2eRequestHandler.getIote2eSvc();
-		iote2eSvc.setRuleEvalResults(null);
-		iote2eRequestHandler.start();
+                createConsumerConfig(System.getenv("KAFKA_ZOOKEEPER_UNIT_TEST"),kafkaGroup));
+		startStreamConsumers(Integer.parseInt(System.getenv("KAFKA_STREAM_CONSUMER_NUM_THREADS_UNIT_TEST")));
 	}
 
 	@After
@@ -83,6 +87,7 @@ public class TestKafkaHandlerBase {
 		}
 		iote2eRequestHandler.shutdown();
 		iote2eRequestHandler.join();
+		kafkaConsumerConnector.shutdown();
 		kafkaProducer.close();
 	}
 

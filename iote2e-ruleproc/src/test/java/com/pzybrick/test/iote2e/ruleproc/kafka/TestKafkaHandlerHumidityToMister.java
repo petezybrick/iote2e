@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
 import junit.framework.Assert;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKafkaHandlerHumidityToMister extends TestKafkaHandlerBase {
 	private static final Log log = LogFactory.getLog(TestKafkaHandlerHumidityToMister.class);
 	private static String testLoginName = "lo1";
