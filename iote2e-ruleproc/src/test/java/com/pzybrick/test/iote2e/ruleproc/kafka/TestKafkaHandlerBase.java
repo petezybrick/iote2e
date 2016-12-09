@@ -141,7 +141,7 @@ public class TestKafkaHandlerBase {
         List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(kafkaTopic);
         executor = Executors.newFixedThreadPool(numThreads);
         int threadNumber = 0;
-        for (final KafkaStream stream : streams) {
+        for (final KafkaStream<byte[], byte[]> stream : streams) {
             executor.submit(new KafkaConsumerThread(stream, threadNumber));
             threadNumber++;
         }
@@ -149,11 +149,10 @@ public class TestKafkaHandlerBase {
     
 	
 	public class KafkaConsumerThread implements Runnable {
-	    private KafkaStream kafkaStream;
+	    private KafkaStream<byte[], byte[]> kafkaStream;
 	    private int threadNumber;
-	    private KafkaAvroDemo consumerDemoMaster;
 	 
-	    public KafkaConsumerThread(KafkaStream kafkaStream, int threadNumber ) {
+	    public KafkaConsumerThread(KafkaStream<byte[], byte[]> kafkaStream, int threadNumber ) {
 	        this.threadNumber = threadNumber;
 	        this.kafkaStream = kafkaStream;
 	    }
