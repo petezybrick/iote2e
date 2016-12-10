@@ -192,6 +192,13 @@
 			<version>${spark.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-streaming-kafka_2.10 -->
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming-kafka_2.10</artifactId>
+			<version>1.6.3</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.pzybrick.iote2e</groupId>
 			<artifactId>iote2e-schema</artifactId>
