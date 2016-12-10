@@ -1,6 +1,7 @@
 package com.pzybrick.iote2e.schema.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 
 import org.apache.avro.io.BinaryDecoder;
 import org.apache.avro.io.BinaryEncoder;
@@ -15,7 +16,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
-public class Iote2eRequestReuseItem {
+public class Iote2eRequestReuseItem implements Serializable {
+	private static final long serialVersionUID = 7618508500668288196L;
 	private static final Log log = LogFactory.getLog(Iote2eRequestReuseItem.class);	
 	private Iote2eRequest iote2eRequest;
 	private BinaryDecoder binaryDecoder;

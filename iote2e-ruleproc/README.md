@@ -21,6 +21,10 @@ KAFKA_STREAM_CONSUMER_NUM_THREADS_UNIT_TEST 3
 REQUEST_CONFIG_JSON_FILE_KAFKA
 
 
+Spark Kafka Consumer
+https://github.com/dibbhatt/kafka-spark-consumer
+Follow the directions to build the jar and install in local maven repo
+>>> that ran into dependency hell, cloned into workspace and changed pom to point to spark 2.0.2 and scala versions
 
 
 

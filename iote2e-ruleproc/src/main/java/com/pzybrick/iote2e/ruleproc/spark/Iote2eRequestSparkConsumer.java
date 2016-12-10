@@ -2,31 +2,26 @@ package com.pzybrick.iote2e.ruleproc.spark;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Properties;
 
-import org.apache.avro.io.BinaryDecoder;
-import org.apache.avro.io.DecoderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.Duration;
-import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
+import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.apache.spark.streaming.kafka.KafkaUtils;
-import org.apache.spark.streaming.kafka.OffsetRange;
 
-import kafka.serializer.DefaultDecoder;
-import kafka.serializer.StringDecoder;
+import consumer.kafka.MessageAndMetadata;
+import consumer.kafka.ReceiverLauncher;
 
 public class Iote2eRequestSparkConsumer {
     private static final Log log = LogFactory.getLog(Iote2eRequestSparkConsumer.class);
 	
 	
     public static void main(String[] args) {
-    	Iote2eRequestSparkConsumer sparkAvroConsumer = new Iote2eRequestSparkConsumer();
-    	sparkAvroConsumer.process(args);
+    	Iote2eRequestSparkConsumer iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
+    	iote2eRequestSparkConsumer.process(args);
     }
     	
     public void process(String[] args) {
@@ -34,81 +29,65 @@ public class Iote2eRequestSparkConsumer {
 		String groupId = args[1];
 		String topic = args[2];
 		int numThreads = Integer.parseInt(args[3]);
-    	
+
         SparkConf conf = new SparkConf()
                 .setAppName("kafka-sandbox")
                 .setMaster("local[*]");
-        JavaSparkContext sc = new JavaSparkContext(conf);
-        JavaStreamingContext ssc = new JavaStreamingContext(sc, new Duration(2000));
+        //JavaSparkContext sc = new JavaSparkContext(conf);
+        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(250));
 
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(topic, new Integer(numThreads));
-        Map<String, String> kafkaParams = new HashMap<>();
+        Properties kafkaProps = new Properties();
         
-        //kafkaParams.put("metadata.broker.list", "localhost:9092");
-        kafkaParams.put("zookeeper.connect", zooKeeper);
-        kafkaParams.put("group.id", groupId);
-        kafkaParams.put("zookeeper.session.timeout.ms", "400");
-        kafkaParams.put("zookeeper.sync.time.ms", "200");
-        kafkaParams.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        kafkaParams.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
-
-        JavaPairReceiverInputDStream<String, byte[]> directKafkaStream = KafkaUtils.createStream(ssc,
-                String.class, byte[].class, StringDecoder.class, DefaultDecoder.class, kafkaParams, topicCountMap, StorageLevel.MEMORY_ONLY());
+        //kafkaProps.put("zookeeper.connect", zooKeeper);
+        kafkaProps.put("group.id", "iote2e-group-sandbox");
+        // Spark Kafka Consumer https://github.com/dibbhatt/kafka-spark-consumer
         
-        final AtomicReference<OffsetRange[]> offsetRanges = new AtomicReference<>();
-    	
-//        directKafkaStream.transformToPair(
-//          new Function<JavaPairRDD<String, byte[]>, JavaPairRDD<String, byte[]>>() {
-//            @Override
-//            public JavaPairRDD<String, byte[]> call(JavaPairRDD<String, byte[]> rdd) throws Exception {
-//            	System.out.println(">>>> before offsetranges: " + rdd._2 );
-////              OffsetRange[] offsets = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
-////              offsetRanges.set(offsets);
-//              return rdd;
-//            }
-//          }
-//        ).foreachRDD(
-//          new Function<JavaPairRDD<String, byte[]>, Void>() {
-//            @Override
-//            public Void call(JavaPairRDD<String, byte[]> rdd) throws IOException {
-//              for (OffsetRange o : offsetRanges.get()) {
-//                System.out.println(
-//                  o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset()
-//                );
-//              }
-//              return null;
-//            }
-//          }
-//        );
+        kafkaProps.put("zookeeper.hosts", "hp-lt-ubuntu-1");
+        kafkaProps.put("zookeeper.port", "2181");
+        kafkaProps.put("zookeeper.broker.path", "/brokers");
+        kafkaProps.put("kafka.topic", "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox");
+        kafkaProps.put("kafka.consumer.id", "test-id");
+        kafkaProps.put("zookeeper.consumer.connection", "hp-lt-ubuntu-1");
+        kafkaProps.put("zookeeper.consumer.path", "/iote2erequest-sandbox");
+        // consumer optional 
+        kafkaProps.put("consumer.forcefromstart", "false");
+        kafkaProps.put("consumer.fetchsizebytes", "1048576");
+        kafkaProps.put("consumer.fillfreqms", "250");
+        kafkaProps.put("consumer.backpressure.enabled", "true");
+        
+        kafkaProps.put("zookeeper.session.timeout.ms", "400");
+        kafkaProps.put("zookeeper.sync.time.ms", "200");
+        kafkaProps.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        kafkaProps.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 
-        directKafkaStream.foreachRDD(rdd -> {
-            rdd.foreach(avroRecord -> {
-        		BinaryDecoder binaryDecoder = DecoderFactory.get().binaryDecoder(avroRecord._2, null);
-				Wave wave = datumReaderWave.read(null, binaryDecoder);
-
-            	System.out.println("Key: " + avroRecord._1 + ", Wave=" + wave.toString()) ;
-            	waves.add(wave);
-//                Schema.Parser parser = new Schema.Parser();
-//                Schema schema = parser.parse(SimpleAvroProducer.USER_SCHEMA);
-//                Injection<GenericRecord, byte[]> recordInjection = GenericAvroCodecs.toBinary(schema);
-//                GenericRecord record = recordInjection.invert(avroRecord._2).get();
-//
-//                System.out.println("str1= " + record.get("str1")
-//                        + ", str2= " + record.get("str2")
-//                        + ", int1=" + record.get("int1"));
-            });
-            System.out.println("This: " + this );
-            System.out.println("Number of waves: " + waves.size());
-            waves.clear();
-        });
         
         Iote2eRequestSparkProcessor streamProcessor = new Iote2eRequestSparkProcessor();
-        directKafkaStream.map(String::new)
-                    .map(streamProcessor::convertFromJson)
-                    .foreachRDD(streamProcessor::processIote2eRequestRDD);
+        
+        int numberOfReceivers = 3;
 
-        ssc.start();
-        ssc.awaitTermination();
+		JavaDStream<MessageAndMetadata> unionStreams = ReceiverLauncher.launch(
+				ssc, kafkaProps, numberOfReceivers, StorageLevel.MEMORY_ONLY());
+		
+		unionStreams.foreachRDD(streamProcessor::processIote2eRequestRDD);
+		try {
+			log.info("Starting Iote2eRequestSparkConsumer");
+			ssc.start();
+		} catch( Exception e ) {
+			log.error(e.getMessage(),e);
+			System.exit(8);
+		}
+
+		try {
+			log.info("Starting Iote2eRequestSparkConsumer");
+			ssc.awaitTermination();
+		} catch( InterruptedException e1 ) {
+			log.warn(e1.getMessage());
+		} catch( Exception e2 ) {
+			log.error(e2.getMessage(),e2);
+			System.exit(8);
+		}
+		
     }
 }

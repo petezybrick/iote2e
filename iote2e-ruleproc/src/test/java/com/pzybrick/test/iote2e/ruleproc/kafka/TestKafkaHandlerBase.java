@@ -18,8 +18,6 @@ import org.junit.Before;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl;
-import com.pzybrick.iote2e.ruleproc.kafka.KafkaAvroDemo;
-import com.pzybrick.iote2e.ruleproc.kafka.KafkaAvroDemo.ConsumerDemoThread;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;

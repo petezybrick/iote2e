@@ -37,7 +37,11 @@ public class RouterIote2eRequestImpl implements Router {
     public void flush() throws Exception {
         // TODO: Rule processor here, then push to Ignite
     	// CRITICAL: need to get key/value for LoginSensorActuator - can i do this in Ignite, or need to install something like Mongo or Cassandra
-        log.debug("Flushed");
+        log.info("------------------- Flush Start");
+        for( Iote2eRequest iote2eRequest : iote2eRequests ) {
+            log.info("------------------- iote2eRequest: " + iote2eRequest.toString());        	
+        }
+        log.info("------------------- Flush End");
     }
 
     @Override
