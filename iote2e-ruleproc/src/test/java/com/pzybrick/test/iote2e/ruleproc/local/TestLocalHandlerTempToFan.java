@@ -2,16 +2,18 @@ package com.pzybrick.test.iote2e.ruleproc.local;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
-import junit.framework.Assert;
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLocalHandlerTempToFan extends TestLocalHandlerBase {
-	private static final Log log = LogFactory.getLog(TestLocalHandlerTempToFan.class);
+	private static final Logger logger = LogManager.getLogger(TestLocalHandlerTempToFan.class);
 	private static String testLoginName = "lo1";
 	private static String testSourceName = "lo1so1";
 	private static String testSourceType = "temp";
@@ -23,7 +25,7 @@ public class TestLocalHandlerTempToFan extends TestLocalHandlerBase {
 	
 	@Test
 	public void testTempFanRuleFireFanOff() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 
 		String testValue = "50";
 		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
@@ -35,7 +37,7 @@ public class TestLocalHandlerTempToFan extends TestLocalHandlerBase {
 	
 	@Test
 	public void testTempFanRuleFireFanOn() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 		String testValue = "100";
 		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
@@ -46,7 +48,7 @@ public class TestLocalHandlerTempToFan extends TestLocalHandlerBase {
 	
 	@Test
 	public void testTempFanRuleNotFire() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 		String testValue = "78";
 		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );

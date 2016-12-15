@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,7 +17,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleDefItem;
 import com.pzybrick.iote2e.ruleproc.svc.RuleLoginSourceSensor;
 
 public class CreateRuleDefJsonFile {
-	private static final Log log = LogFactory.getLog(CreateRuleDefJsonFile.class);
+	private static final Logger logger = LogManager.getLogger(CreateRuleDefJsonFile.class);
 
 	public static void main(String[] args) {
 		try {
@@ -99,7 +99,7 @@ public class CreateRuleDefJsonFile {
 			FileUtils.writeStringToFile(fileNameExtSourceSensorActuator, gson.toJson(sourceSensorActuators));
 
 		} catch (Exception e) {
-			log.error(e);
+			logger.error(e);
 		}
 
 	}

@@ -3,16 +3,18 @@ package com.pzybrick.test.iote2e.ruleproc.ignite;
 import java.util.List;
 
 import org.apache.avro.util.Utf8;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
-import junit.framework.Assert;
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
-	private static final Log log = LogFactory.getLog(TestIgniteHandlerHumidityToMister.class);
+	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerHumidityToMister.class);
 	private static String testLoginUuid = "lo1";
 	private static String testSourceUuid = "lo1so1";
 	private static String testSourceType = "humidity";
@@ -27,7 +29,7 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 	
 	@Test
 	public void testHumidityToMisterRuleFireFanOff() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 		String testValue = "50";
 		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
@@ -40,7 +42,7 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 	
 	@Test
 	public void testHumidityToMisterRuleFireFanOn() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 		String testValue = "100";
 		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
@@ -52,7 +54,7 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 	
 	@Test
 	public void testHumidityToMisterRuleNotFire() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 		String testValue = "87";
 		commonRun( testLoginUuid, testSourceUuid, testSourceType, testSensorName, testValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );

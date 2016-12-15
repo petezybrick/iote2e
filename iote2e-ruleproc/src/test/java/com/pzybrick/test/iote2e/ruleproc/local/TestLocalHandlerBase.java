@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 
@@ -18,7 +18,7 @@ import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 
 public class TestLocalHandlerBase {
-	private static final Log log = LogFactory.getLog(TestLocalHandlerBase.class);
+	private static final Logger logger = LogManager.getLogger(TestLocalHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvcLocalTestImpl iote2eSvc;
@@ -29,7 +29,7 @@ public class TestLocalHandlerBase {
 
 	@Before
 	public void before() throws Exception {
-		log.info(
+		logger.info(
 				"------------------------------------------------------------------------------------------------------");
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_LOCAL"), iote2eRequests);
@@ -52,7 +52,7 @@ public class TestLocalHandlerBase {
 
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
 			String sensorValue) throws Exception {
-		log.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
+		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
@@ -64,7 +64,7 @@ public class TestLocalHandlerBase {
 			iote2eRequestHandler.addIote2eRequest(iote2eRequest);
 
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}

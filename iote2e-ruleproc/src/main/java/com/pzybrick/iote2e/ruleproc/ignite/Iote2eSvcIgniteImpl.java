@@ -8,8 +8,8 @@ import java.util.UUID;
 import javax.cache.CacheException;
 
 import org.apache.avro.util.Utf8;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
@@ -20,7 +20,7 @@ import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 public class Iote2eSvcIgniteImpl implements Iote2eSvc {
-	private static final Log log = LogFactory.getLog(Iote2eSvcIgniteImpl.class);
+	private static final Logger logger = LogManager.getLogger(Iote2eSvcIgniteImpl.class);
 	private IgniteSingleton igniteSingleton;
 	private Iote2eResultReuseItem iote2eResultReuseItem;
 
@@ -33,7 +33,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 			throws Exception {
 		for (RuleEvalResult ruleEvalResult : ruleEvalResults) {
 			if( ruleEvalResult.isRuleActuatorHit() ) {
-				log.info("Updating Actuator: loginName="+ iote2eRequest.getLoginName().toString() + 
+				logger.info("Updating Actuator: loginName="+ iote2eRequest.getLoginName().toString() + 
 						", sourceName="+ iote2eRequest.getSourceName().toString() + 
 						", actuatorName=" + ruleEvalResult.getSourceSensorActuator().getActuatorName() +
 						", old value=" + ruleEvalResult.getSourceSensorActuator().getActuatorValue() + 
@@ -64,7 +64,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 					.setResultUuid(  new Utf8(UUID.randomUUID().toString()))
 					.build();
 				
-				if( log.isDebugEnabled() ) log.debug(ruleEvalResult.toString());
+				if( logger.isDebugEnabled() ) logger.debug(ruleEvalResult.toString());
 				// TODO: need circuit breaker here
 				// For now, just retry once/second for 15 seconds
 				long timeoutAt = System.currentTimeMillis() + (15*1000L);
@@ -72,14 +72,14 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 				while( System.currentTimeMillis() < timeoutAt ) {
 					try {
 						igniteSingleton.getCache().put(key, iote2eResultReuseItem.toByteArray(iote2eResult));
-						log.debug("cache.put successful");
+						logger.debug("cache.put successful");
 						break;
 					} catch( CacheException inte ) {
 						cntRetry++;
-						if( log.isDebugEnabled() ) log.debug("cache.put failed with CacheException, will retry, cntRetry=" + cntRetry );
+						if( logger.isDebugEnabled() ) logger.debug("cache.put failed with CacheException, will retry, cntRetry=" + cntRetry );
 						try { Thread.sleep(1000L); } catch(Exception e ) {}
 					} catch( Exception e ) {
-						log.error(e.getMessage(),e);
+						logger.error(e.getMessage(),e);
 						throw e;
 					}
 				}				
@@ -90,10 +90,10 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	@Override
 	public void init(RuleConfig ruleConfig) throws Exception {
 		try {
-			log.info("Getting IgniteCache for: " + ruleConfig.getSourceResponseIgniteCacheName());
+			logger.info("Getting IgniteCache for: " + ruleConfig.getSourceResponseIgniteCacheName());
 			this.igniteSingleton = IgniteSingleton.getInstance(ruleConfig);
 		} catch (Exception e) {
-			log.error("Ignite create cache failure", e);
+			logger.error("Ignite create cache failure", e);
 			throw e;
 		} finally {
 		}
@@ -105,7 +105,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 			// Be careful - ignite is a singleton, only close after last usage
 			igniteSingleton.getIgnite().close();
 		} catch (Exception e) {
-			log.warn("Ignite close failure", e);
+			logger.warn("Ignite close failure", e);
 		}
 	}
 }

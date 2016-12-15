@@ -11,14 +11,14 @@ package com.pzybrick.iote2e.ruleproc.router;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
 
 public class RouterIote2eRequestImpl implements Router {
-	private static final Log log = LogFactory.getLog(RouterIote2eRequestImpl.class);
+	private static final Logger logger = LogManager.getLogger(RouterIote2eRequestImpl.class);
     public static final int DEFAULT_BATCH_SIZE = 1000;
     private int batchSize;
     private List<Iote2eRequest> iote2eRequests;
@@ -37,16 +37,16 @@ public class RouterIote2eRequestImpl implements Router {
     public void flush() throws Exception {
         // TODO: Rule processor here, then push to Ignite
     	// CRITICAL: need to get key/value for LoginSensorActuator - can i do this in Ignite, or need to install something like Mongo or Cassandra
-        log.info("------------------- Flush Start");
+        logger.info("------------------- Flush Start");
         for( Iote2eRequest iote2eRequest : iote2eRequests ) {
-            log.info("------------------- iote2eRequest: " + iote2eRequest.toString());        	
+            logger.info("------------------- iote2eRequest: " + iote2eRequest.toString());        	
         }
-        log.info("------------------- Flush End");
+        logger.info("------------------- Flush End");
     }
 
     @Override
     public void close() throws Exception {
-        log.debug("Closing");
+        logger.debug("Closing");
         flush();
     }
 

@@ -2,16 +2,18 @@ package com.pzybrick.test.iote2e.ruleproc.local;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
-import junit.framework.Assert;
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
-	private static final Log log = LogFactory.getLog(TestLocalHandlerHumidityToMister.class);
+	private static final Logger logger = LogManager.getLogger(TestLocalHandlerHumidityToMister.class);
 	private static String testLoginName = "lo1";
 	private static String testSourceName = "lo1so1";
 	private static String testSourceType = "humidity";
@@ -23,7 +25,7 @@ public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
 	
 	@Test
 	public void testHumidityToMisterRuleFireFanOff() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 
 		String testValue = "50";
 		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
@@ -35,7 +37,7 @@ public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
 	
 	@Test
 	public void testHumidityToMisterRuleFireFanOn() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 		String testValue = "100";
 		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
@@ -46,7 +48,7 @@ public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
 	
 	@Test
 	public void testHumidityToMisterRuleNotFire() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 		String testValue = "87";
 		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );

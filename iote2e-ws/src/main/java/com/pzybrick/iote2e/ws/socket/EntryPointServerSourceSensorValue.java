@@ -15,8 +15,8 @@ import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -30,7 +30,7 @@ import com.pzybrick.iote2e.ws.route.RouteLoginSourceSensorValue;
 import com.pzybrick.iote2e.ws.route.RouteLoginSourceSensorValueLoopbackImpl;
 
 public class EntryPointServerSourceSensorValue {
-	private static final Log log = LogFactory.getLog(EntryPointServerSourceSensorValue.class);
+	private static final Logger logger = LogManager.getLogger(EntryPointServerSourceSensorValue.class);
 	public static final Map<String, ServerSideSocketSourceSensorValue> serverSideSocketSourceSensorValues = new ConcurrentHashMap<String, ServerSideSocketSourceSensorValue>();
 	public static final ConcurrentLinkedQueue<LoginActuatorResponse> toClientActuatorResponses = new ConcurrentLinkedQueue<LoginActuatorResponse>();
 	public static final ConcurrentLinkedQueue<LoginSourceSensorValue> fromClientLoginSourceSensorValues = new ConcurrentLinkedQueue<LoginSourceSensorValue>();
@@ -39,13 +39,13 @@ public class EntryPointServerSourceSensorValue {
 	private ServerConnector connector;
 
 	public static void main(String[] args) {
-		log.info("Starting");
+		logger.info("Starting");
 		try {
 			EntryPointServerSourceSensorValue entryPointServerSourceSensorValue = new EntryPointServerSourceSensorValue();
 			entryPointServerSourceSensorValue.setRouteLoginSourceSensorValue( new RouteLoginSourceSensorValueLoopbackImpl() );
 			entryPointServerSourceSensorValue.process();
 		} catch( Exception e ) {
-			log.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 		}
 	}
 
@@ -69,9 +69,9 @@ public class EntryPointServerSourceSensorValue {
 			ThreadToClientLoginActuatorResponse threadToClientLoginActuatorResponse = new ThreadToClientLoginActuatorResponse();
 			threadToClientLoginActuatorResponse.start();
 
-			log.info("Server starting");
+			logger.info("Server starting");
 			server.start();
-			log.info("Server started");
+			logger.info("Server started");
 			server.join();
 			threadToClientLoginActuatorResponse.shutdown();
 			threadFromClientLoginSourceSensorValue.shutdown();
@@ -79,7 +79,7 @@ public class EntryPointServerSourceSensorValue {
 			threadFromClientLoginSourceSensorValue.join(15 * 1000L);
 
 		} catch (Throwable t) {
-			log.error("Server Exception",t);
+			logger.error("Server Exception",t);
 		} finally {
 		}
 	}
@@ -94,14 +94,14 @@ public class EntryPointServerSourceSensorValue {
 		}
 
 		public void shutdown() {
-			log.info("Shutdown");
+			logger.info("Shutdown");
 			shutdown = true;
 			interrupt();
 		}
 
 		@Override
 		public void run() {
-			log.info("Run");
+			logger.info("Run");
 			List<LoginSourceSensorValue> loginSourceSensorValues = new ArrayList<LoginSourceSensorValue>();
 			try {
 				while (true) {
@@ -121,9 +121,9 @@ public class EntryPointServerSourceSensorValue {
 						break;
 				}
 			} catch (Exception e) {
-				log.error("Exception in source thread processing", e);
+				logger.error("Exception in source thread processing", e);
 			}
-			log.info("Exit");
+			logger.info("Exit");
 		}
 	}
 
@@ -131,14 +131,14 @@ public class EntryPointServerSourceSensorValue {
 		private boolean shutdown;
 
 		public void shutdown() {
-			log.info("Shutdown");
+			logger.info("Shutdown");
 			shutdown = true;
 			interrupt();
 		}
 
 		@Override
 		public void run() {
-			log.info("Run");
+			logger.info("Run");
 			DatumWriter<ActuatorResponse> datumWriterActuatorResponse = new SpecificDatumWriter<ActuatorResponse>(ActuatorResponse.getClassSchema());
 			BinaryEncoder binaryEncoder = null;
 			//List<IotServerMessage> iotServerMessages = new ArrayList<IotServerMessage>();
@@ -180,7 +180,7 @@ public class EntryPointServerSourceSensorValue {
 							socket.getSession().getBasicRemote().sendBinary(ByteBuffer.wrap(bytes));
 
 						} catch (Exception e) {
-							log.error("Exception sending byte message",e);
+							logger.error("Exception sending byte message",e);
 							break;
 						} finally {
 							baos.close();
@@ -195,9 +195,9 @@ public class EntryPointServerSourceSensorValue {
 						break;
 				}
 			} catch (Exception e) {
-				log.error("Exception processing target byte message", e);
+				logger.error("Exception processing target byte message", e);
 			}
-			log.info("Exit");
+			logger.info("Exit");
 		}
 	}
 

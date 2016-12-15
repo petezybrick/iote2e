@@ -8,10 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
@@ -25,7 +25,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
  
 public class KafkaAvroDemo {
-	private static final Log log = LogFactory.getLog(KafkaAvroDemo.class);
+	private static final Logger logger = LogManager.getLogger(KafkaAvroDemo.class);
     private final ConsumerConnector consumer;
     private final String topic;
     private ExecutorService executor;
@@ -108,7 +108,7 @@ public class KafkaAvroDemo {
         try {
         	produceTestMsgs( numMsgs, bootstrapServers, topic );
         } catch( Exception e ) {
-        	log.error(e.getMessage(),e);
+        	logger.error(e.getMessage(),e);
         	System.exit(8);
         }
         
@@ -142,7 +142,7 @@ public class KafkaAvroDemo {
 		long msgOffset = 0;
 		Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		for (int i = 0; i < numEvents; i++) {
-			log.info(">>> Producing Iote2eRequest: " + i);
+			logger.info(">>> Producing Iote2eRequest: " + i);
 			Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
 			pairs.put("testSensorNamea_"+i, "testSensorValuea_"+i);
 			pairs.put("testSensorNameb_"+i, "testSensorValueb_"+i);
@@ -195,12 +195,12 @@ public class KafkaAvroDemo {
 		        			", timestamp=" + messageAndMetadata.timestamp() + 
 		        			", timestampType=" + messageAndMetadata.timestampType() + 
 		        			", iote2eRequest=" + iote2eRequestReuseItem.fromByteArray(messageAndMetadata.message()).toString();
-		        	log.info(">>> Consumed: " + summary);
+		        	logger.info(">>> Consumed: " + summary);
 				} catch( Exception e ) {
-					log.error(e.getMessage(), e);
+					logger.error(e.getMessage(), e);
 				}
 	        }
-	        log.info(">>> Shutting down Thread: " + threadNumber);
+	        logger.info(">>> Shutting down Thread: " + threadNumber);
 	    }
 	}
 }

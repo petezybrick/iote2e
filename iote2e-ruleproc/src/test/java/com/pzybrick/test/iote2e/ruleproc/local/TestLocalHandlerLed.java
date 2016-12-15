@@ -2,16 +2,18 @@ package com.pzybrick.test.iote2e.ruleproc.local;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
-import junit.framework.Assert;
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLocalHandlerLed extends TestLocalHandlerBase {
-	private static final Log log = LogFactory.getLog(TestLocalHandlerLed.class);
+	private static final Logger logger = LogManager.getLogger(TestLocalHandlerLed.class);
 	private static String testLoginUuid = "lo1";
 	private static String testSourceUuid = "lo1so2";
 	private static String testSensorType = "switch";
@@ -26,7 +28,7 @@ public class TestLocalHandlerLed extends TestLocalHandlerBase {
 	
 	@Test
 	public void testLedGreenOn() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 
 		String testValue = "1";
 		commonRun( testLoginUuid, testSourceUuid, testSensorType, testSensorNameGreen, testValue);
@@ -37,7 +39,7 @@ public class TestLocalHandlerLed extends TestLocalHandlerBase {
 	}
 	@Test
 	public void testLedGreenOff() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 
 		String testValue = "0";
 		commonRun( testLoginUuid, testSourceUuid, testSensorType, testSensorNameGreen, testValue);
@@ -49,7 +51,7 @@ public class TestLocalHandlerLed extends TestLocalHandlerBase {
 	
 	@Test
 	public void testLedRedOn() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 
 		String testValue = "1";
 		commonRun( testLoginUuid, testSourceUuid, testSensorType, testSensorNameRed, testValue);
@@ -60,7 +62,7 @@ public class TestLocalHandlerLed extends TestLocalHandlerBase {
 	}
 	@Test
 	public void testLedRedOff() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 
 		String testValue = "0";
 		commonRun( testLoginUuid, testSourceUuid, testSensorType, testSensorNameRed, testValue);
@@ -72,7 +74,7 @@ public class TestLocalHandlerLed extends TestLocalHandlerBase {
 	
 	@Test
 	public void testLedYellowOn() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 
 		String testValue = "1";
 		commonRun( testLoginUuid, testSourceUuid, testSensorType, testSensorNameYellow, testValue);
@@ -84,7 +86,7 @@ public class TestLocalHandlerLed extends TestLocalHandlerBase {
 	
 	@Test
 	public void testLedYellowOff() throws Exception {
-		log.info("begins");
+		logger.info("begins");
 
 		String testValue = "0";
 		commonRun( testLoginUuid, testSourceUuid, testSensorType, testSensorNameYellow, testValue);

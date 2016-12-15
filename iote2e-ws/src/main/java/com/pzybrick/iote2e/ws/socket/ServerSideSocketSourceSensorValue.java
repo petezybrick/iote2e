@@ -15,9 +15,8 @@ import org.apache.avro.io.BinaryDecoder;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.pzybrick.iote2e.common.utils.Iote2eConstants;
 import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
 import com.pzybrick.iote2e.schema.avro.SourceSensorValue;
@@ -27,7 +26,7 @@ import com.pzybrick.iotete.ws.security.IotE2eAuthentication.IotAuthenticationExc
 @ClientEndpoint
 @ServerEndpoint(value = "/iote2e/")
 public class ServerSideSocketSourceSensorValue {
-	private static final Log log = LogFactory.getLog(ServerSideSocketSourceSensorValue.class);
+	private static final Logger logger = LogManager.getLogger(ServerSideSocketSourceSensorValue.class);
 	private Session session;
 	private boolean authenticated;
 	private String login_uuid;
@@ -50,14 +49,14 @@ public class ServerSideSocketSourceSensorValue {
 	@OnOpen
 	public void onWebSocketConnect(Session session) {
 		this.session = session;
-		log.info("Socket Connected: " + session.getId());
+		logger.info("Socket Connected: " + session.getId());
 	}
 
 	@OnMessage
 	public void onWebSocketText(String message) {
-		log.debug("onWebSocketText " + message);
+		logger.debug("onWebSocketText " + message);
 		if (authenticated) {
-			log.error("Invalid message attempt - text instead of byte array - need to force close the socket");
+			logger.error("Invalid message attempt - text instead of byte array - need to force close the socket");
 			// TODO: force close on socket
 
 		} else if (message.startsWith(Iote2eConstants.LOGIN_HDR)) {
@@ -67,21 +66,21 @@ public class ServerSideSocketSourceSensorValue {
 				authenticated = true;
 				EntryPointServerSourceSensorValue.serverSideSocketSourceSensorValues.put(login_uuid, this);
 			} catch (IotAuthenticationException e) {
-				log.error(e.getMessage());
+				logger.error(e.getMessage());
 				// TODO: force close on socket
 			} catch (Exception e) {
-				log.error(e);
+				logger.error(e);
 				// TODO: force close on socket
 			}
 		} else {
-			log.error("Invalid login attempt - need to force close the socket");
+			logger.error("Invalid login attempt - need to force close the socket");
 			// TODO: force close on socket
 		}
 	}
 
 	@OnMessage
 	public void onWebSocketByte(byte[] messageByte) {
-		log.debug("onWebSocketByte len=" + messageByte.length);
+		logger.debug("onWebSocketByte len=" + messageByte.length);
 		if (authenticated) {
 			try {
 				binaryDecoder = DecoderFactory.get().binaryDecoder(messageByte, binaryDecoder);
@@ -92,7 +91,7 @@ public class ServerSideSocketSourceSensorValue {
 					} catch (EOFException e) {
 						break; 
 					}
-					log.debug("sourceSensorValue: " + sourceSensorValue.toString());
+					logger.debug("sourceSensorValue: " + sourceSensorValue.toString());
 					LoginSourceSensorValue loginSourceSensorValue = LoginSourceSensorValue.newBuilder()
 							.setLoginUuid(login_uuid).setSourceUuid(sourceSensorValue.getSourceUuid())
 							.setSensorName(sourceSensorValue.getSensorName()).setSensorValue(sourceSensorValue.getSensorValue())
@@ -100,11 +99,11 @@ public class ServerSideSocketSourceSensorValue {
 					EntryPointServerSourceSensorValue.fromClientLoginSourceSensorValues.add(loginSourceSensorValue);
 				}
 			} catch (Exception e) {
-				log.info("Exception decoding SourceSensorValue, " + e);
+				logger.info("Exception decoding SourceSensorValue, " + e);
 			}
 
 		} else {
-			log.info("Invalid byte message, not logged in - need to force close the socket");
+			logger.info("Invalid byte message, not logged in - need to force close the socket");
 			// TODO: force close on socket
 		}
 	}
@@ -112,13 +111,13 @@ public class ServerSideSocketSourceSensorValue {
 	@OnClose
 	public void onWebSocketClose(CloseReason reason) {
 		boolean isRemove = EntryPointServerSourceSensorValue.serverSideSocketSourceSensorValues.remove(login_uuid, this);
-		log.info("Socket Closed: " + reason + ", isRemove=" + isRemove);
+		logger.info("Socket Closed: " + reason + ", isRemove=" + isRemove);
 	}
 
 	@OnError
 	public void onWebSocketError(Throwable cause) {
 		boolean isRemove = EntryPointServerSourceSensorValue.serverSideSocketSourceSensorValues.remove(login_uuid, this);
-		log.info("Socket Error: " + cause.getMessage() + ", isRemove=" + isRemove);
+		logger.info("Socket Error: " + cause.getMessage() + ", isRemove=" + isRemove);
 	}
 
 	public boolean isAuthenticated() {

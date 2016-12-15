@@ -4,53 +4,63 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
+import com.pzybrick.iote2e.common.utils.ArgMap;
+
 import consumer.kafka.MessageAndMetadata;
 import consumer.kafka.ReceiverLauncher;
 
 public class Iote2eRequestSparkConsumer {
-    private static final Log log = LogFactory.getLog(Iote2eRequestSparkConsumer.class);
+	private static final Logger logger = LogManager.getLogger(Iote2eRequestSparkConsumer.class.getName());
+	private ArgMap argMap;
 	
 	
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
     	Iote2eRequestSparkConsumer iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
     	iote2eRequestSparkConsumer.process(args);
     }
     	
-    public void process(String[] args) {
-		String zooKeeper = args[0];
-		String groupId = args[1];
-		String topic = args[2];
-		int numThreads = Integer.parseInt(args[3]);
+    public void process(String[] args) throws Exception {
+    	argMap = new ArgMap(args);
+    	logger.info("Starting, argMap: " + argMap.dump() );
+    	String appName = argMap.get("appName"); 
+    	String master = argMap.get("master"); 
+    	Integer numThreads = argMap.getInteger("numThreads", 3); 
+    	Integer durationMs = argMap.getInteger("durationMs", 1000); 
+    	String kafkaGroup = argMap.get("kafkaGroup"); 
+    	String kafkaTopic = argMap.get("kafkaTopic"); 
+    	String zookeeperHosts = argMap.get("zookeeperHosts"); 
+    	Integer zookeeperPort = argMap.getInteger("zookeeperPort", 2181);  
+    	String zookeeperBrokerPath = argMap.get("zookeeperBrokerPath"); 
+    	String kafkaConsumerId = argMap.get("kafkaConsumerId"); 
+    	String zookeeperConsumerConnection = argMap.get("zookeeperConsumerConnection"); 
+    	String zookeeperConsumerPath = argMap.get("zookeeperConsumerPath"); 
+
 
         SparkConf conf = new SparkConf()
-                .setAppName("kafka-sandbox")
-                .setMaster("local[*]");
-        //JavaSparkContext sc = new JavaSparkContext(conf);
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(250));
+                .setAppName(appName);
+        if( master != null ) conf.setMaster( master );
+        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(durationMs));
 
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put(topic, new Integer(numThreads));
+        topicCountMap.put(kafkaTopic, new Integer(numThreads));
         Properties kafkaProps = new Properties();
-        
-        //kafkaProps.put("zookeeper.connect", zooKeeper);
-        kafkaProps.put("group.id", "iote2e-group-sandbox");
+        kafkaProps.put("group.id", kafkaGroup);
         // Spark Kafka Consumer https://github.com/dibbhatt/kafka-spark-consumer
-        
-        kafkaProps.put("zookeeper.hosts", "hp-lt-ubuntu-1");
-        kafkaProps.put("zookeeper.port", "2181");
-        kafkaProps.put("zookeeper.broker.path", "/brokers");
-        kafkaProps.put("kafka.topic", "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox");
-        kafkaProps.put("kafka.consumer.id", "test-id");
-        kafkaProps.put("zookeeper.consumer.connection", "hp-lt-ubuntu-1");
-        kafkaProps.put("zookeeper.consumer.path", "/iote2erequest-sandbox");
+        kafkaProps.put("zookeeper.hosts", zookeeperHosts);
+        kafkaProps.put("zookeeper.port", String.valueOf(zookeeperPort) );
+        kafkaProps.put("zookeeper.broker.path", zookeeperBrokerPath );
+        kafkaProps.put("kafka.topic", kafkaTopic);
+        kafkaProps.put("kafka.consumer.id", kafkaConsumerId );
+        kafkaProps.put("zookeeper.consumer.connection", zookeeperConsumerConnection);
+        kafkaProps.put("zookeeper.consumer.path", zookeeperConsumerPath);
         // consumer optional 
         kafkaProps.put("consumer.forcefromstart", "false");
         kafkaProps.put("consumer.fetchsizebytes", "1048576");
@@ -72,20 +82,20 @@ public class Iote2eRequestSparkConsumer {
 		
 		unionStreams.foreachRDD(streamProcessor::processIote2eRequestRDD);
 		try {
-			log.info("Starting Iote2eRequestSparkConsumer");
+			logger.info("Starting Iote2eRequestSparkConsumer");
 			ssc.start();
 		} catch( Exception e ) {
-			log.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 			System.exit(8);
 		}
 
 		try {
-			log.info("Starting Iote2eRequestSparkConsumer");
+			logger.info("Starting Iote2eRequestSparkConsumer");
 			ssc.awaitTermination();
 		} catch( InterruptedException e1 ) {
-			log.warn(e1.getMessage());
+			logger.warn(e1.getMessage());
 		} catch( Exception e2 ) {
-			log.error(e2.getMessage(),e2);
+			logger.error(e2.getMessage(),e2);
 			System.exit(8);
 		}
 		

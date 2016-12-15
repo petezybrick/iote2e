@@ -13,6 +13,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spark.version>2.0.2</spark.version>
 		<scala.version>2.11.8</scala.version>
+		<log4j2.version>2.7</log4j2.version>
 	</properties>
 
 	<build>
@@ -108,14 +109,19 @@
 			<version>1.8.1</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j2.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+			<version>${log4j2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -205,18 +211,18 @@
 			<artifactId>kafka-spark-consumer</artifactId>
 			<version>1.0.8</version>
 		</dependency>
-	<dependency>
-        <groupId>org.scala-lang</groupId>
-        <artifactId>scala-library</artifactId>
-        <version>${scala.version}</version>
-        <scope>compile</scope>
-    </dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>${scala.version}</version>
+			<scope>compile</scope>
+		</dependency>
 
-    <dependency>
-        <groupId>org.scala-lang</groupId>
-        <artifactId>scala-compiler</artifactId>
-        <version>${scala.version}</version>
-    </dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-compiler</artifactId>
+			<version>${scala.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.pzybrick.iote2e</groupId>
 			<artifactId>iote2e-schema</artifactId>

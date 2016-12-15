@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,7 +17,7 @@ import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
 public class Iote2eRequestHandler extends Thread {
-	private static final Log log = LogFactory.getLog(Iote2eRequestHandler.class);
+	private static final Logger logger = LogManager.getLogger(Iote2eRequestHandler.class);
 	private ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests = null;
 	private RuleSvc ruleSvc;
 	private Iote2eSvc iote2eSvc;
@@ -27,7 +27,7 @@ public class Iote2eRequestHandler extends Thread {
 
 	public Iote2eRequestHandler(String pathNameExtSourceSensorConfig,
 			ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
-		log.debug("ctor");
+		logger.debug("ctor");
 		try {
 		this.iote2eRequests = iote2eRequests;
 		String rawJson = FileUtils.readFileToString(new File(pathNameExtSourceSensorConfig));
@@ -45,7 +45,7 @@ public class Iote2eRequestHandler extends Thread {
 		ruleSvc.init(ruleConfig);
 		iote2eSvc.init(ruleConfig);
 		} catch( Exception e ) {
-			log.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 			throw e;
 		}
 	}
@@ -57,10 +57,10 @@ public class Iote2eRequestHandler extends Thread {
 				while (!iote2eRequests.isEmpty()) {
 					Iote2eRequest iote2eRequest = iote2eRequests.poll();
 					if (iote2eRequest != null) {
-						log.debug(iote2eRequest.toString());
+						logger.debug(iote2eRequest.toString());
 						List<RuleEvalResult> ruleEvalResults = ruleSvc.process( iote2eRequest);
 						if (ruleEvalResults != null && ruleEvalResults.size() > 0 ) {
-							log.debug(ruleEvalResults);
+							logger.debug(ruleEvalResults);
 							iote2eSvc.processRuleEvalResults( iote2eRequest, ruleEvalResults);
 						}
 					}
@@ -70,17 +70,17 @@ public class Iote2eRequestHandler extends Thread {
 			} catch (InterruptedException e1) {
 
 			} catch (Exception e) {
-				log.error("Exception in run()", e);
+				logger.error("Exception in run()", e);
 			}
 			if (shutdown)
 				break;
 		}
-		if( shutdown ) log.info("shutdown complete");
+		if( shutdown ) logger.info("shutdown complete");
 	}
 
 
 	public void shutdown() {
-		log.info("shutdown initiated");
+		logger.info("shutdown initiated");
 		this.shutdown = true;
 		interrupt();
 	}

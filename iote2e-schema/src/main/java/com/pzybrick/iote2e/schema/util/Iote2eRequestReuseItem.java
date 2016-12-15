@@ -11,14 +11,13 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificDatumWriter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
 public class Iote2eRequestReuseItem implements Serializable {
 	private static final long serialVersionUID = 7618508500668288196L;
-	private static final Log log = LogFactory.getLog(Iote2eRequestReuseItem.class);	
+	private static final Logger logger = LogManager.getLogger(Iote2eRequestReuseItem.class);	
 	private Iote2eRequest iote2eRequest;
 	private BinaryDecoder binaryDecoder;
 	private DatumReader<Iote2eRequest> datumReaderIote2eRequest;
@@ -40,7 +39,7 @@ public class Iote2eRequestReuseItem implements Serializable {
 			this.iote2eRequest = this.datumReaderIote2eRequest.read (null, this.binaryDecoder );
 			return this.iote2eRequest;
 		} catch (Exception e) {
-			log.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 			throw e;
 		} finally {
 		}
@@ -58,7 +57,7 @@ public class Iote2eRequestReuseItem implements Serializable {
 			this.bytes = baos.toByteArray();
 			return this.bytes;
 		} catch (Exception e) {
-			log.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 			throw e;
 		} finally {
 			baos.close();

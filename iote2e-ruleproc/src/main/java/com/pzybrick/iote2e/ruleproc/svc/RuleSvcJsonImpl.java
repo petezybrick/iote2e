@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 public class RuleSvcJsonImpl extends RuleSvc {
-	private static final Log log = LogFactory.getLog(RuleSvcJsonImpl.class);
+	private static final Logger logger = LogManager.getLogger(RuleSvcJsonImpl.class);
 	private Map<String, Map<String, LoginSourceSensorActuator>> ssaByLoginSourceUuid;
 	private List<LoginSourceSensorActuator> loginSourceSensorActuators;	
 	private Map<String, Map<String, RuleLoginSourceSensor>> rssByLoginSourceUuid;

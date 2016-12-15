@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefCondItem.RuleComparator;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
 public abstract class RuleSvc {
-	private static final Log log = LogFactory.getLog(RuleSvc.class);
+	private static final Logger logger = LogManager.getLogger(RuleSvc.class);
 
 	public abstract void init(RuleConfig ruleConfig) throws Exception;
 
@@ -32,14 +32,14 @@ public abstract class RuleSvc {
 			String sensorName = entry.getKey().toString();
 			RuleLoginSourceSensor ruleSourceSensor = findRuleLoginSourceSensor( loginName, sourceName, sensorName );
 			if( ruleSourceSensor != null ) {
-				log.debug(ruleSourceSensor);
+				logger.debug(ruleSourceSensor);
 				RuleDefItem ruleDefItem = findRuleDefItem( ruleSourceSensor.getRuleName());
 				if( ruleDefItem == null ) throw new Exception ("Missing RuleDefItem for ruleUuid=" + ruleSourceSensor.getRuleName());
-				log.debug(ruleDefItem);
+				logger.debug(ruleDefItem);
 				String sensorValue = entry.getValue().toString();
 				ruleEvalResults = ruleEval( loginName, sourceName, sensorName, sensorValue, ruleDefItem, ruleEvalResults);
 			} else {
-				if( log.isDebugEnabled()) log.debug("ruleSourceSensor doesn't exist for sourceName=" + sourceName + ", sensorName=" + sensorName );
+				if( logger.isDebugEnabled()) logger.debug("ruleSourceSensor doesn't exist for sourceName=" + sourceName + ", sensorName=" + sensorName );
 			}
 		}
 		return ruleEvalResults;
@@ -48,16 +48,16 @@ public abstract class RuleSvc {
 	protected List<RuleEvalResult> ruleEval(String loginUuid, String sourceUuid, String sensorName, String sensorValue,
 			RuleDefItem ruleDefItem, List<RuleEvalResult> ruleEvalResults) throws Exception {
 		for (RuleDefCondItem ruleDefCondItem : ruleDefItem.getRuleDefCondItems()) {
-			log.debug(ruleDefCondItem);
+			logger.debug(ruleDefCondItem);
 			// two part rule evaluation: current sensor value and current
 			// actuator, i.e. don't turn actuator on if it is already on
 			// evaluate sensor value
 			boolean isSensorRuleHit = evalRuleSensor(sensorValue, ruleDefCondItem, ruleDefItem);
-			if( log.isDebugEnabled()) log.debug("isSensorRuleHit=" + isSensorRuleHit);
+			if( logger.isDebugEnabled()) logger.debug("isSensorRuleHit=" + isSensorRuleHit);
 			// only evaluate Actuator rule if the Sensor rule has hit
 			if (isSensorRuleHit) {
 				RuleEvalResult ruleEvalResult = ruleEvalActuator(loginUuid, sourceUuid, sensorName, ruleDefCondItem, ruleDefItem);
-				log.debug(ruleEvalResult);
+				logger.debug(ruleEvalResult);
 				ruleEvalResults.add(ruleEvalResult);
 				if (ruleEvalResult.isRuleActuatorHit()) {
 					ruleEvalResult.setActuatorTargetValue(ruleDefCondItem.getActuatorTargetValue());
@@ -66,7 +66,7 @@ public abstract class RuleSvc {
 				}
 			}
 		}
-		log.debug(ruleEvalResults);
+		logger.debug(ruleEvalResults);
 		return ruleEvalResults;
 	}
 
@@ -83,7 +83,7 @@ public abstract class RuleSvc {
 		if (sourceSensorActuator == null)
 			throw new Exception( String.format(
 					"Missing SourceSensorActuator, loginUuid=%s, sourceUuid=%s, sensorName=%s", loginName, sourceName, sensorName) );
-		log.debug(sourceSensorActuator);
+		logger.debug(sourceSensorActuator);
 
 		boolean ruleActuatorHit = false;
 		if( sourceSensorActuator.getActuatorValue() != null ) {
@@ -95,7 +95,7 @@ public abstract class RuleSvc {
 		} else {
 			// If the ActuatorValue is null it means it hasn't been initialized yet, so force the rule to fire
 			// so that an initial state will be set for the actuator
-			log.debug("actuator not initialized yet - value is null");
+			logger.debug("actuator not initialized yet - value is null");
 			ruleActuatorHit = true;
 		}
 		RuleEvalResult ruleEvalResult = new RuleEvalResult(sensorName, ruleActuatorHit, sourceSensorActuator);

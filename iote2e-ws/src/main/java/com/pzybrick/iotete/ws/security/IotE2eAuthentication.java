@@ -24,6 +24,7 @@ public class IotE2eAuthentication {
 	}
 	
 	public static class IotAuthenticationException extends Exception {
+		private static final long serialVersionUID = 1L;
 
 		public IotAuthenticationException() {
 			super();

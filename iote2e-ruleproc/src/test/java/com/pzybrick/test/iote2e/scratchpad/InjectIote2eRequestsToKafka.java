@@ -5,39 +5,49 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.avro.util.Utf8;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.common.utils.ArgMap;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 
 public class InjectIote2eRequestsToKafka {
-	private static final Log log = LogFactory.getLog(InjectIote2eRequestsToKafka.class);
-	protected KafkaProducer<String, byte[]> kafkaProducer;
-	protected Iote2eRequestReuseItem iote2eRequestReuseItem;
-	protected String kafkaTopic;
-	protected String kafkaGroup;
+	private static final Logger logger = LogManager.getLogger(InjectIote2eRequestsToKafka.class);
+	private KafkaProducer<String, byte[]> kafkaProducer;
+	private Iote2eRequestReuseItem iote2eRequestReuseItem;
+	private String kafkaTopic;
+	private String kafkaGroup;
+	private String bootstrapServers;
+	private ArgMap argMap;
 	
     public static void main(String[] args) throws Exception {
+    	logger.info(">>> Starting injector <<<");
     	InjectIote2eRequestsToKafka injectIote2eRequestsToKafka = new InjectIote2eRequestsToKafka();
-    	injectIote2eRequestsToKafka.process();
+    	injectIote2eRequestsToKafka.process(args);
     }
 
 	public InjectIote2eRequestsToKafka() {
 		super();
 	}
 
-	public void process() throws Exception {
+	public void process(String[] args) throws Exception {
+    	argMap = new ArgMap(args);
+    	logger.info("Starting, argMap: " + argMap.dump() );
+
+    	kafkaGroup = argMap.get("kafkaGroup"); 
+    	kafkaTopic = argMap.get("kafkaTopic"); 
+    	bootstrapServers = argMap.get("bootstrapServers");
+    	Integer numInjects = argMap.getInteger("numInjects", 1000);
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
-		
-		kafkaTopic = "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox";
-		kafkaGroup = "iote2e-group-sandbox";
+
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "hp-lt-ubuntu-1:9092,hp-lt-ubuntu-1:9093,hp-lt-ubuntu-1:9094" );
+		props.put("bootstrap.servers", bootstrapServers );
+		props.put("group.id", kafkaGroup);
 		//props.put("producer.type", "sync");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
@@ -45,11 +55,9 @@ public class InjectIote2eRequestsToKafka {
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 		props.put("partition.assignment.strategy", "RoundRobin");
 		props.put("request.required.acks", "1");
-		props.put("group.id", kafkaGroup);
-
 		kafkaProducer = new KafkaProducer<String, byte[]>(props);
 		
-		for( int i=1 ; i<1000 ; i++ ) {
+		for( int i=1 ; i<numInjects ; i++ ) {
 			String key = String.valueOf(System.currentTimeMillis());
 			
 			Map<CharSequence,CharSequence> metadata = new HashMap<CharSequence,CharSequence>();

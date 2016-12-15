@@ -8,10 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -20,7 +20,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
  
 public class KafkaStringDemo {
-	private static final Log log = LogFactory.getLog(KafkaStringDemo.class);
+	private static final Logger logger = LogManager.getLogger(KafkaStringDemo.class);
     private final ConsumerConnector consumer;
     private final String topic;
     private  ExecutorService executor;
@@ -131,7 +131,7 @@ public class KafkaStringDemo {
 		long msgOffset = 0;
 
 		for (int i = 0; i < numEvents; i++) {
-			log.info(">>> Producing: " + i);
+			logger.info(">>> Producing: " + i);
 			String key = String.valueOf(keyNum);
 			String value = "some data " + msgOffset++;
 			ProducerRecord<String, Object> data = new ProducerRecord<String, Object>(topic, key, value);
@@ -168,9 +168,9 @@ public class KafkaStringDemo {
 	        			", offset=" + messageAndMetadata.offset() + 
 	        			", timestamp=" + messageAndMetadata.timestamp() + 
 	        			", timestampType=" + messageAndMetadata.timestampType();
-	        	log.info(">>> Consumed: " + summary);
+	        	logger.info(">>> Consumed: " + summary);
 	        }
-	        log.info(">>> Shutting down Thread: " + threadNumber);
+	        logger.info(">>> Shutting down Thread: " + threadNumber);
 	    }
 	}
 }

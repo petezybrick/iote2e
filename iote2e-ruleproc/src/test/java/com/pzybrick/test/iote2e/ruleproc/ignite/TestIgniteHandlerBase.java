@@ -13,10 +13,10 @@ import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryUpdatedListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ignite.cache.query.ContinuousQuery;
 import org.apache.ignite.cache.query.QueryCursor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 
@@ -34,7 +34,7 @@ import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 public class TestIgniteHandlerBase {
-	private static final Log log = LogFactory.getLog(TestIgniteHandlerBase.class);
+	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
 	protected Iote2eRequestHandler iote2eRequestHandler;
@@ -56,12 +56,12 @@ public class TestIgniteHandlerBase {
 					iote2eRequests);
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getRuleConfig());
-			log.info(
+			logger.info(
 					"------------------------------------------------------------------------------------------------------");
-			log.info(">>> Cache name: " + iote2eRequestHandler.getRuleConfig().getSourceResponseIgniteCacheName());
+			logger.info(">>> Cache name: " + iote2eRequestHandler.getRuleConfig().getSourceResponseIgniteCacheName());
 			iote2eRequestHandler.start();
 		} catch (Exception e) {
-			log.error("Exception in before, " + e.getMessage(), e);
+			logger.error("Exception in before, " + e.getMessage(), e);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class TestIgniteHandlerBase {
 
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
 			String sensorValue, String igniteFilterKey) throws Exception {
-		log.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
+		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
 			startThreadSubscribe(iote2eRequestHandler.getRuleConfig(), igniteFilterKey);
@@ -95,7 +95,7 @@ public class TestIgniteHandlerBase {
 			iote2eRequestHandler.addIote2eRequest(iote2eRequest);
 
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -113,7 +113,7 @@ public class TestIgniteHandlerBase {
 					try {
 						iote2eResults.add( iote2eResultReuseItem.fromByteArray(bytes) );
 					} catch( IOException e ) {
-						log.error(e.getMessage(),e);
+						logger.error(e.getMessage(),e);
 						throw e;
 					}
 				}
@@ -168,7 +168,7 @@ public class TestIgniteHandlerBase {
 					@Override
 					public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends  byte[]>> evts) {
 						for (CacheEntryEvent<? extends String, ? extends  byte[]> e : evts) {
-							log.info("Updated entry [key=" + e.getKey() + ", val=" + e.getValue() + ']');
+							logger.info("Updated entry [key=" + e.getKey() + ", val=" + e.getValue() + ']');
 							subscribeResults.add(e.getValue());
 						}
 					}
@@ -204,7 +204,7 @@ public class TestIgniteHandlerBase {
 				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
 
 			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				logger.error(e.getMessage(), e);
 				return;
 
 			}

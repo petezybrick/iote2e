@@ -19,23 +19,23 @@ import com.pzybrick.iote2e.ws.socket.EntryPointServerSourceSensorValue;
 @ClientEndpoint
 @ServerEndpoint(value = "/iote2e/")
 public class ClientSocketAvro {
-	private static final Log log = LogFactory.getLog(EntryPointServerSourceSensorValue.class);
+	private static final Logger logger = LogManager.getLogger(EntryPointServerSourceSensorValue.class);
 	private Thread iotClientSocketThread;
 	private ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays;
 	
 	public ClientSocketAvro( ) {
-		log.debug("IotClientSocketAvro ctor empty");
+		logger.debug("IotClientSocketAvro ctor empty");
 	}
 	
 	public ClientSocketAvro( Thread iotClientSocketThread, ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays ) {
-		log.debug("IotClientSocketAvro ctor thread, queue");
+		logger.debug("IotClientSocketAvro ctor thread, queue");
 		this.iotClientSocketThread = iotClientSocketThread;
 		this.rcvdAvroByteArrays = rcvdAvroByteArrays;
 	}
 
 	@OnOpen
 	public void onWebSocketConnect(Session session) {
-		log.debug("Socket Connected: " + session.getId());
+		logger.debug("Socket Connected: " + session.getId());
 	}
 
 	@OnMessage
@@ -46,19 +46,19 @@ public class ClientSocketAvro {
 
 	@OnMessage
 	public void onWebSocketText(byte[] messageByte) {
-		log.debug("rcvd byte message");
+		logger.debug("rcvd byte message");
 		rcvdAvroByteArrays.add( messageByte );
 		iotClientSocketThread.interrupt();
 	}
 
 	@OnClose
 	public void onWebSocketClose(CloseReason reason) {
-		log.info("Socket Closed: " + reason);
+		logger.info("Socket Closed: " + reason);
 	}
 
 	@OnError
 	public void onWebSocketError(Throwable cause) {
-		log.error(cause);
+		logger.error(cause);
 	}
 
 	public ConcurrentLinkedQueue<byte[]> getRcvdAvroByteArrays() {

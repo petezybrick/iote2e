@@ -24,7 +24,7 @@ import com.pzybrick.iote2e.schema.util.AvroSchemaUtils;
 import com.pzybrick.iote2e.schema.util.SourceSensorValueToByteArrayReuseItem;
 
 public class ClientTestInjector {
-	private static final Log log = LogFactory.getLog(ClientTestInjector.class);
+	private static final Logger logger = LogManager.getLogger(ClientTestInjector.class);
 	private URI uri;
 	private WebSocketContainer container;
 	private static String testSourceUuid = "lo1so1";
@@ -37,7 +37,7 @@ public class ClientTestInjector {
 			ClientTestInjector clientTestInjector = new ClientTestInjector();
 			clientTestInjector.process(args[0]);
 		} catch (Exception e) {
-			log.info(e);
+			logger.info(e);
 			e.printStackTrace();
 		}
 	}
@@ -103,17 +103,17 @@ public class ClientTestInjector {
 						sleep(1000L);
 					} catch (InterruptedException e) { }
 				}
-				log.info("Rcvd Messages:");
+				logger.info("Rcvd Messages:");
 				while (!rcvdAvroByteArrays.isEmpty()) {
 					byte[] rcvdAvroByteArray = rcvdAvroByteArrays.poll();
 					AvroSchemaUtils.actuatorResponseFromByteArray(fromByteArrayReuseItem, rcvdAvroByteArray );
-					log.info(fromByteArrayReuseItem.getActuatorResponse().toString());
+					logger.info(fromByteArrayReuseItem.getActuatorResponse().toString());
 				}
 				try {
 					sleep(2000L);
 				} catch (InterruptedException e) { }
 			} catch (Exception e) {
-				log.error(e.getMessage(),e);
+				logger.error(e.getMessage(),e);
 			} finally {
 				if (session != null && session.isOpen()) {
 					try {

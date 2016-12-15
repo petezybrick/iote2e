@@ -9,10 +9,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 
@@ -31,7 +31,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
 
 public class TestKafkaHandlerBase {
-	private static final Log log = LogFactory.getLog(TestKafkaHandlerBase.class);
+	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvcKafkaImpl iote2eSvc;
@@ -48,7 +48,7 @@ public class TestKafkaHandlerBase {
 
 	@Before
 	public void before() throws Exception {
-		log.info(
+		logger.info(
 				"------------------------------------------------------------------------------------------------------");
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
@@ -91,7 +91,7 @@ public class TestKafkaHandlerBase {
 
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
 			String sensorValue) throws Exception {
-		log.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
+		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
@@ -106,7 +106,7 @@ public class TestKafkaHandlerBase {
 			kafkaProducer.send(data);
 
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -167,13 +167,13 @@ public class TestKafkaHandlerBase {
 				MessageAndMetadata<byte[], byte[]> messageAndMetadata = it.next();
 				try {
 					Iote2eRequest iote2eRequest = iote2eRequestReuseItem.fromByteArray(messageAndMetadata.message());
-					log.info(">>> Consumed: " + iote2eRequest.toString() );
+					logger.info(">>> Consumed: " + iote2eRequest.toString() );
 					iote2eRequestHandler.addIote2eRequest(iote2eRequest);
 				} catch( Exception e ) {
-					log.error(e.getMessage(), e);
+					logger.error(e.getMessage(), e);
 				}
 	        }
-	        log.info(">>> Shutting down Thread: " + threadNumber);
+	        logger.info(">>> Shutting down Thread: " + threadNumber);
 	    }
 	}
 }

@@ -1,16 +1,16 @@
 package com.pzybrick.iote2e.ruleproc.ignite;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.IgniteConfiguration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 
 public class IgniteSingleton {
-	private static final Log log = LogFactory.getLog(IgniteSingleton.class);
+	private static final Logger logger = LogManager.getLogger(IgniteSingleton.class);
 	private static IgniteSingleton igniteSingleton;
 	private Ignite ignite;
 	private IgniteCache<String, byte[]> cache;
@@ -25,12 +25,12 @@ public class IgniteSingleton {
 			try {
 				igniteSingleton.getCache().close();
 			} catch( Exception e ) {
-				log.warn(e.getMessage(),e);
+				logger.warn(e.getMessage(),e);
 			}			
 			try {
 				igniteSingleton.getIgnite().close();
 			} catch( Exception e ) {
-				log.warn(e.getMessage(),e);
+				logger.warn(e.getMessage(),e);
 			}
 			igniteSingleton = null;
 		}
@@ -40,17 +40,17 @@ public class IgniteSingleton {
 	public static synchronized IgniteSingleton getInstance( RuleConfig ruleConfig ) throws Exception {
 		if( igniteSingleton == null ) {
 			try {
-				log.info("Initializing Ignite, config file=" + ruleConfig.getSourceResponseIgniteConfigFile() + ", config name=" +  ruleConfig.getSourceResponseIgniteConfigName());
+				logger.info("Initializing Ignite, config file=" + ruleConfig.getSourceResponseIgniteConfigFile() + ", config name=" +  ruleConfig.getSourceResponseIgniteConfigName());
 				IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
 						ruleConfig.getSourceResponseIgniteConfigFile(), ruleConfig.getSourceResponseIgniteConfigName());
 				Ignition.setClientMode(ruleConfig.isIgniteClientMode());
 				Ignite ignite = Ignition.start(igniteConfiguration);
 				System.out.println(ignite.toString());
-				if (log.isDebugEnabled()) log.debug(ignite.toString());
+				if (logger.isDebugEnabled()) logger.debug(ignite.toString());
 				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(ruleConfig.getSourceResponseIgniteCacheName());
 				igniteSingleton = new IgniteSingleton( ignite, cache);
 			} catch (Throwable t ) {
-				log.error("Ignite initialization failure", t);
+				logger.error("Ignite initialization failure", t);
 				throw t;
 			}
 		}
