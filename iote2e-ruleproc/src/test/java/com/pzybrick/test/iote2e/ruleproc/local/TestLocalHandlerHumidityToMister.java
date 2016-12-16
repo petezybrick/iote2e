@@ -14,21 +14,17 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerHumidityToMister.class);
-	private static String testLoginName = "lo1";
-	private static String testSourceName = "lo1so1";
-	private static String testSourceType = "humidity";
-	private static String testSensorName = "humidity1";
 	
 	public TestLocalHandlerHumidityToMister() {
 		super();
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleFireFanOff() throws Exception {
+	public void testHumidityHumidityToMisterRuleFireFanOff() throws Exception {
 		logger.info("begins");
 
-		String testValue = "50";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
+		String testHumidityValue = "50";
+		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -36,10 +32,10 @@ public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleFireFanOn() throws Exception {
+	public void testHumidityHumidityToMisterRuleFireFanOn() throws Exception {
 		logger.info("begins");
-		String testValue = "100";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
+		String testHumidityValue = "100";
+		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -47,10 +43,10 @@ public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
 	}
 	
 	@Test
-	public void testHumidityToMisterRuleNotFire() throws Exception {
+	public void testHumidityHumidityToMisterRuleNotFire() throws Exception {
 		logger.info("begins");
-		String testValue = "87";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
+		String testHumidityValue = "87";
+		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNull("ruleEvalResults must be null", ruleEvalResults );
 	}

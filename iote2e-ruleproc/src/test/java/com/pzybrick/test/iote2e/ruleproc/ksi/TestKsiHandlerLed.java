@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ruleproc.local;
+package com.pzybrick.test.iote2e.ruleproc.ksi;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ import org.junit.runners.MethodSorters;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestLocalHandlerLed extends TestLocalHandlerBase {
-	private static final Logger logger = LogManager.getLogger(TestLocalHandlerLed.class);	
+public class TestKsiHandlerLed extends TestKsiHandlerBase {
+	private static final Logger logger = LogManager.getLogger(TestKsiHandlerLed.class);
 
-	public TestLocalHandlerLed() {
+	public TestKsiHandlerLed() {
 		super();
 	}
 	

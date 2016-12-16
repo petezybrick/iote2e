@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.scratchpad;
+package com.pzybrick.iote2e.ruleproc.kafka;
 
 import java.util.HashMap;
 import java.util.Map;

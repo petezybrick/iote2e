@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ruleproc.kafka;
+package com.pzybrick.test.iote2e.ruleproc.ksi;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ import org.junit.runners.MethodSorters;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TestKafkaHandlerHumidityToMister extends TestKafkaHandlerBase {
-	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerHumidityToMister.class);
+public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
+	private static final Logger logger = LogManager.getLogger(TestKsiHandlerHumidityToMister.class);
 	
-	public TestKafkaHandlerHumidityToMister() {
+	public TestKsiHandlerHumidityToMister() {
 		super();
 	}
 	

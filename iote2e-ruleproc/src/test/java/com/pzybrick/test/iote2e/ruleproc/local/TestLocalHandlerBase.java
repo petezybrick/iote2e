@@ -16,8 +16,9 @@ import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
+import com.pzybrick.test.iote2e.ruleproc.common.TestRuleProcCommon;
 
-public class TestLocalHandlerBase {
+public class TestLocalHandlerBase implements TestRuleProcCommon {
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected Iote2eRequestHandler iote2eRequestHandler;

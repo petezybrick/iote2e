@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ruleproc.kafka;
+package com.pzybrick.test.iote2e.ruleproc.ksi;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +31,8 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
 
-public class TestKafkaHandlerBase implements TestRuleProcCommon {
-	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerBase.class);
+public class TestKsiHandlerBase implements TestRuleProcCommon {
+	private static final Logger logger = LogManager.getLogger(TestKsiHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvcKafkaImpl iote2eSvc;
@@ -40,10 +40,9 @@ public class TestKafkaHandlerBase implements TestRuleProcCommon {
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem;
 	protected String kafkaTopic;
 	protected String kafkaGroup;
-	protected ConsumerConnector kafkaConsumerConnector;
-	protected ExecutorService executor;
+	protected Iote2eRequestPoller iote2eRequestPoller;
 
-	public TestKafkaHandlerBase() {
+	public TestKsiHandlerBase() {
 		super();
 	}
 
@@ -65,15 +64,11 @@ public class TestKafkaHandlerBase implements TestRuleProcCommon {
 		//props.put("producer.type", "sync");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
-		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 		props.put("partition.assignment.strategy", "RoundRobin");
 		props.put("request.required.acks", "1");
 		props.put("group.id", kafkaGroup);
 		kafkaProducer = new KafkaProducer<String, byte[]>(props);
-		kafkaConsumerConnector = kafka.consumer.Consumer.createJavaConsumerConnector(
-                createConsumerConfig(System.getenv("KAFKA_ZOOKEEPER_UNIT_TEST"),kafkaGroup));
-		startStreamConsumers(Integer.parseInt(System.getenv("KAFKA_STREAM_CONSUMER_NUM_THREADS_UNIT_TEST")));
+		iote2eRequestPoller = new Iote2eRequestPoller("testfolder");
 	}
 
 	@After
@@ -86,7 +81,8 @@ public class TestKafkaHandlerBase implements TestRuleProcCommon {
 		}
 		iote2eRequestHandler.shutdown();
 		iote2eRequestHandler.join();
-		kafkaConsumerConnector.shutdown();
+		iote2eRequestPoller.shutdown();
+		iote2eRequestPoller.join();
 		kafkaProducer.close();
 	}
 
@@ -125,56 +121,36 @@ public class TestKafkaHandlerBase implements TestRuleProcCommon {
 		}
 		return null;
 	}
-	
-	private static ConsumerConfig createConsumerConfig(String zookeeper, String groupId) {
-        Properties props = new Properties();
-        props.put("zookeeper.connect", zookeeper);
-        props.put("group.id", groupId);
-        props.put("zookeeper.session.timeout.ms", "400");
-        props.put("zookeeper.sync.time.ms", "200");
-        //props.put("autocommit.enable", "false");
- 
-        return new ConsumerConfig(props);
-    }
-	
-	 
-    public void startStreamConsumers(int numThreads) {
-        Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put(kafkaTopic, new Integer(numThreads));
-        Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = kafkaConsumerConnector.createMessageStreams(topicCountMap);
-        List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(kafkaTopic);
-        executor = Executors.newFixedThreadPool(numThreads);
-        int threadNumber = 0;
-        for (final KafkaStream<byte[], byte[]> stream : streams) {
-            executor.submit(new KafkaConsumerThread(stream, threadNumber));
-            threadNumber++;
-        }
-    }
     
 	
-	public class KafkaConsumerThread implements Runnable {
-	    private KafkaStream<byte[], byte[]> kafkaStream;
-	    private int threadNumber;
+	public class Iote2eRequestPoller extends Thread {
+	    private String folderTestOutput;
+	    private boolean shutdown;
 	 
-	    public KafkaConsumerThread(KafkaStream<byte[], byte[]> kafkaStream, int threadNumber ) {
-	        this.threadNumber = threadNumber;
-	        this.kafkaStream = kafkaStream;
+	    public Iote2eRequestPoller( String folderTestOutput ) {
+	        this.folderTestOutput = folderTestOutput;
 	    }
 	 
 	    public void run() {
-	    	Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
-	        ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
-	        while (it.hasNext()) {
-				MessageAndMetadata<byte[], byte[]> messageAndMetadata = it.next();
-				try {
-					Iote2eRequest iote2eRequest = iote2eRequestReuseItem.fromByteArray(messageAndMetadata.message());
-					logger.info(">>> Consumed: " + iote2eRequest.toString() );
-					iote2eRequestHandler.addIote2eRequest(iote2eRequest);
-				} catch( Exception e ) {
-					logger.error(e.getMessage(), e);
-				}
-	        }
-	        logger.info(">>> Shutting down Thread: " + threadNumber);
+	    	try {
+		    	long timeoutAt = System.currentTimeMillis() + 5000l;
+		    	while( System.currentTimeMillis() < timeoutAt ) {
+		    		// TODO: Poll folder for test data
+		    		try { 
+		    			sleep(500);
+		    		} catch(Exception e ) {}
+		    		if( shutdown ) break;
+		    	}
+	    		
+	    	} catch( Exception e ) {
+	    		logger.error(e.getMessage(), e);
+	    	}
+	        logger.info(">>> Shutting down");
+	    }
+	    
+	    public void shutdown() throws Exception {
+	    	shutdown = true;
+	    	this.interrupt();
 	    }
 	}
 }

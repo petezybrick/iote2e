@@ -14,21 +14,17 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKafkaHandlerTempToFan extends TestKafkaHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerTempToFan.class);
-	private static String testLoginName = "lo1";
-	private static String testSourceName = "lo1so1";
-	private static String testSourceType = "temp";
-	private static String testSensorName = "temp1";
 	
 	public TestKafkaHandlerTempToFan() {
 		super();
 	}
 	
 	@Test
-	public void testTempFanRuleFireFanOff() throws Exception {
+	public void testTempToFanTempFanRuleFireFanOff() throws Exception {
 		logger.info("begins");
 
-		String testValue = "50";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
+		String testTempToFanValue = "50";
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -36,10 +32,10 @@ public class TestKafkaHandlerTempToFan extends TestKafkaHandlerBase {
 	}
 	
 	@Test
-	public void testTempFanRuleFireFanOn() throws Exception {
+	public void testTempToFanTempFanRuleFireFanOn() throws Exception {
 		logger.info("begins");
-		String testValue = "100";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
+		String testTempToFanValue = "100";
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -47,10 +43,10 @@ public class TestKafkaHandlerTempToFan extends TestKafkaHandlerBase {
 	}
 	
 	@Test
-	public void testTempFanRuleNotFire() throws Exception {
+	public void testTempToFanTempFanRuleNotFire() throws Exception {
 		logger.info("begins");
-		String testValue = "78";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue);
+		String testTempToFanValue = "78";
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNull("ruleEvalResults is not null", ruleEvalResults );
 	}

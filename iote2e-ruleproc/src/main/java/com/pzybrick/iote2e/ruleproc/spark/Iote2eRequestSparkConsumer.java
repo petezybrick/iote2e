@@ -20,11 +20,42 @@ import consumer.kafka.ReceiverLauncher;
 public class Iote2eRequestSparkConsumer {
 	private static final Logger logger = LogManager.getLogger(Iote2eRequestSparkConsumer.class.getName());
 	private ArgMap argMap;
+    private SparkConf conf;
+    private JavaStreamingContext ssc;
 	
 	
     public static void main(String[] args) throws Exception {
+    	//Iote2eRequestSparkConsumer iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
+    	//iote2eRequestSparkConsumer.process(args);
+    	
     	Iote2eRequestSparkConsumer iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-    	iote2eRequestSparkConsumer.process(args);
+    	RunProcess runProcess = new RunProcess( iote2eRequestSparkConsumer, args);
+    	runProcess.start();
+    	try {
+    		Thread.sleep(5000);
+    	} catch( Exception e ) {}
+    	iote2eRequestSparkConsumer.stop();
+    	runProcess.join();
+
+    }
+    
+    private static class RunProcess extends Thread {
+    	private Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
+    	private String[] args;
+    	
+    	public RunProcess( Iote2eRequestSparkConsumer iote2eRequestSparkConsumer, String[] args ) {
+    		this.args = args;
+    		this.iote2eRequestSparkConsumer = iote2eRequestSparkConsumer;
+    	}
+		@Override
+		public void run() {
+			try {
+	    		iote2eRequestSparkConsumer.process(args);
+			} catch( Exception e ) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+    	
     }
     	
     public void process(String[] args) throws Exception {
@@ -44,10 +75,10 @@ public class Iote2eRequestSparkConsumer {
     	String zookeeperConsumerPath = argMap.get("zookeeperConsumerPath"); 
 
 
-        SparkConf conf = new SparkConf()
+        conf = new SparkConf()
                 .setAppName(appName);
         if( master != null ) conf.setMaster( master );
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(durationMs));
+        ssc = new JavaStreamingContext(conf, new Duration(durationMs));
 
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(kafkaTopic, new Integer(numThreads));
@@ -90,8 +121,9 @@ public class Iote2eRequestSparkConsumer {
 		}
 
 		try {
-			logger.info("Starting Iote2eRequestSparkConsumer");
+			logger.info("Started Iote2eRequestSparkConsumer");
 			ssc.awaitTermination();
+	    	logger.info("Stopped Spark");
 		} catch( InterruptedException e1 ) {
 			logger.warn(e1.getMessage());
 		} catch( Exception e2 ) {
@@ -99,5 +131,10 @@ public class Iote2eRequestSparkConsumer {
 			System.exit(8);
 		}
 		
+    }
+    
+    public void stop() throws Exception {
+    	logger.info("Stopping Spark...");
+    	ssc.stop(true);
     }
 }

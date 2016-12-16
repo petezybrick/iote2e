@@ -15,22 +15,16 @@ import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestIgniteHandlerTempToFan extends TestIgniteHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerTempToFan.class);
-	private static String testLoginName = "lo1";
-	private static String testSourceName = "lo1so1";
-	private static String testSourceType = "temp";
-	private static String testSensorName = "temp1";
-	private String filterKey;
 	
 	public TestIgniteHandlerTempToFan() {
 		super();
-		filterKey = testLoginName + "|" + testSourceName + "|" + testSensorName + "|";
 	}
 	
 	@Test
-	public void testTempFanRuleFireFanOff() throws Exception {
+	public void testTempToFanTempFanRuleFireFanOff() throws Exception {
 		logger.info("begins");
-		String testValue = "50";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue, filterKey);
+		String testTempToFanValue = "50";
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size());
@@ -39,10 +33,10 @@ public class TestIgniteHandlerTempToFan extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testTempFanRuleFireFanOn() throws Exception {
+	public void testTempToFanTempFanRuleFireFanOn() throws Exception {
 		logger.info("begins");
-		String testValue = "100";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue, filterKey);
+		String testTempToFanValue = "100";
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
@@ -51,10 +45,10 @@ public class TestIgniteHandlerTempToFan extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testTempFanRuleNotFire() throws Exception {
+	public void testTempToFanTempFanRuleNotFire() throws Exception {
 		logger.info("begins");
-		String testValue = "78";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorName, testValue, filterKey);
+		String testTempToFanValue = "78";
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 		Assert.assertEquals("iote2eResults must empty", 0, iote2eResults.size() );
 	}

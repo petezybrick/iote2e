@@ -32,8 +32,9 @@ import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.test.iote2e.ruleproc.common.TestRuleProcCommon;
 
-public class TestIgniteHandlerBase {
+public class TestIgniteHandlerBase implements TestRuleProcCommon {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected ConcurrentLinkedQueue<byte[]> subscribeResults;

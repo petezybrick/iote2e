@@ -15,24 +15,17 @@ import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerLed.class);
-	private static String testLoginName = "lo1";
-	private static String testSourceName = "lo1so2";
-	private static String testSourceType = "switch";
-	private static String testSensorNameGreen = "switch0";
-	private static String testSensorNameRed = "switch1";
-	private static String testSensorNameYellow = "switch2";
-	
 
 	public TestIgniteHandlerLed() {
 		super();
 	}
 	
 	@Test
-	public void testLedGreenOn() throws Exception {
+	public void testLedLedGreenOn() throws Exception {
 		logger.info("begins");
-		String filterKey = testLoginName + "|" + testSourceName + "|" + testSensorNameGreen + "|";
-		String testValue = "1";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorNameGreen, testValue, filterKey);
+		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
+		String testLedValue = "1";
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
@@ -41,11 +34,11 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedGreenOff() throws Exception {
+	public void testLedLedGreenOff() throws Exception {
 		logger.info("begins");
-		String filterKey = testLoginName + "|" + testSourceName + "|" + testSensorNameGreen + "|";
-		String testValue = "0";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorNameGreen, testValue, filterKey);
+		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
+		String testLedValue = "0";
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
@@ -55,11 +48,11 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedRedOn() throws Exception {
+	public void testLedLedRedOn() throws Exception {
 		logger.info("begins");
-		String filterKey = testLoginName + "|" + testSourceName + "|" + testSensorNameRed + "|";
-		String testValue = "1";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorNameRed, testValue, filterKey);
+		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed + "|";
+		String testLedValue = "1";
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
@@ -69,11 +62,11 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedRedOff() throws Exception {
+	public void testLedLedRedOff() throws Exception {
 		logger.info("begins");
-		String filterKey = testLoginName + "|" + testSourceName + "|" + testSensorNameRed + "|";
-		String testValue = "0";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorNameRed, testValue, filterKey);
+		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed + "|";
+		String testLedValue = "0";
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
@@ -83,11 +76,11 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedYellowOn() throws Exception {
+	public void testLedLedYellowOn() throws Exception {
 		logger.info("begins");
-		String filterKey = testLoginName + "|" + testSourceName + "|" + testSensorNameYellow + "|";
-		String testValue = "1";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorNameYellow, testValue, filterKey);
+		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
+		String testLedValue = "1";
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
@@ -97,11 +90,11 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedYellowOff() throws Exception {
+	public void testLedLedYellowOff() throws Exception {
 		logger.info("begins");
-		String filterKey = testLoginName + "|" + testSourceName + "|" + testSensorNameYellow + "|";
-		String testValue = "0";
-		commonRun( testLoginName, testSourceName, testSourceType, testSensorNameYellow, testValue, filterKey);
+		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
+		String testLedValue = "0";
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
 
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
