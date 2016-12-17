@@ -68,7 +68,6 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 		String testLedValue = "0";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, filterKey);
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000 );
-
 		Assert.assertNotNull("subscribeResults is null", subscribeResults == null );
 		Assert.assertEquals("subscribeResults must have size=1", 1, subscribeResults.size() );
 		Assert.assertEquals("subscribeResults getActuatorTargetValue", "off", 

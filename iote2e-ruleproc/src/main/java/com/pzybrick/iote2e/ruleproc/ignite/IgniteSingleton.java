@@ -45,7 +45,6 @@ public class IgniteSingleton {
 						ruleConfig.getSourceResponseIgniteConfigFile(), ruleConfig.getSourceResponseIgniteConfigName());
 				Ignition.setClientMode(ruleConfig.isIgniteClientMode());
 				Ignite ignite = Ignition.start(igniteConfiguration);
-				System.out.println(ignite.toString());
 				if (logger.isDebugEnabled()) logger.debug(ignite.toString());
 				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(ruleConfig.getSourceResponseIgniteCacheName());
 				igniteSingleton = new IgniteSingleton( ignite, cache);

@@ -8,13 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.cache.Cache;
-import javax.cache.configuration.Factory;
-import javax.cache.event.CacheEntryEvent;
-import javax.cache.event.CacheEntryUpdatedListener;
-
-import org.apache.ignite.cache.query.ContinuousQuery;
-import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
@@ -24,15 +17,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
-import com.pzybrick.iote2e.ruleproc.ignite.Iote2eIgniteCacheEntryEventFilter;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
-import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.test.iote2e.ruleproc.common.TestRuleProcCommon;
+import com.pzybrick.test.iote2e.ruleproc.common.ThreadIgniteSubscribe;
 
 public class TestIgniteHandlerBase implements TestRuleProcCommon {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerBase.class);
@@ -40,16 +32,21 @@ public class TestIgniteHandlerBase implements TestRuleProcCommon {
 	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvc iote2eSvc;
-	protected ThreadSubscribe threadSubscribe;
-	protected boolean subscribeUp;
+	protected ThreadIgniteSubscribe threadIgniteSubscribe;
 	protected IgniteSingleton igniteSingleton = null;
 	protected Gson gson;
 	protected Iote2eResultReuseItem iote2eResultReuseItem;
+	
+	public TestIgniteHandlerBase() {
+		super();
+		gson = new GsonBuilder().create();
+	}
 
 	@Before
 	public void before() throws Exception {
-		try {
-			gson = new GsonBuilder().create();
+		try {			
+			logger.info(
+					"------------------------------------------------------------------------------------------------------");
 			iote2eResultReuseItem = new Iote2eResultReuseItem();
 			subscribeResults = new ConcurrentLinkedQueue<byte[]>();
 			iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
@@ -57,8 +54,6 @@ public class TestIgniteHandlerBase implements TestRuleProcCommon {
 					iote2eRequests);
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getRuleConfig());
-			logger.info(
-					"------------------------------------------------------------------------------------------------------");
 			logger.info(">>> Cache name: " + iote2eRequestHandler.getRuleConfig().getSourceResponseIgniteCacheName());
 			iote2eRequestHandler.start();
 		} catch (Exception e) {
@@ -76,8 +71,8 @@ public class TestIgniteHandlerBase implements TestRuleProcCommon {
 		}
 		iote2eRequestHandler.shutdown();
 		iote2eRequestHandler.join();
-		threadSubscribe.shutdown();
-		threadSubscribe.join();
+		threadIgniteSubscribe.shutdown();
+		threadIgniteSubscribe.join();
 		IgniteSingleton.reset();
 	}
 
@@ -86,7 +81,7 @@ public class TestIgniteHandlerBase implements TestRuleProcCommon {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
-			startThreadSubscribe(iote2eRequestHandler.getRuleConfig(), igniteFilterKey);
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getRuleConfig(), igniteFilterKey, igniteSingleton, subscribeResults);
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);
 			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(loginName).setSourceName(sourceName)
@@ -128,97 +123,6 @@ public class TestIgniteHandlerBase implements TestRuleProcCommon {
 		return iote2eResults;
 	}
 
-	private void startThreadSubscribe(RuleConfig ruleConfig, String igniteFilterKey) throws Exception {
-		threadSubscribe = new ThreadSubscribe(ruleConfig, igniteFilterKey);
-		threadSubscribe.start();
-		long timeoutAt = System.currentTimeMillis() + 10000L;
-		while (System.currentTimeMillis() < timeoutAt && !subscribeUp) {
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-			}
-		}
-		if (!subscribeUp)
-			throw new Exception("Timeout starting ThreadSubscribe");
-	}
 
-	private class ThreadSubscribe extends Thread {
-		private RuleConfig ruleConfig;
-		private String remoteFilterKey;
-		private boolean shutdown;
-
-		public ThreadSubscribe(RuleConfig ruleConfig, String remoteFilterKey) {
-			this.ruleConfig = ruleConfig;
-			this.remoteFilterKey = remoteFilterKey;
-		}
-
-		public void shutdown() {
-			this.shutdown = true;
-			interrupt();
-		}
-
-		@Override
-		public void run() {
-			try {
-				// Create new continuous query.
-				ContinuousQuery<String,  byte[]> qry = new ContinuousQuery<>();
-
-				// Callback that is called locally when update notifications are
-				// received.
-				qry.setLocalListener(new CacheEntryUpdatedListener<String,  byte[]>() {
-					@Override
-					public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends  byte[]>> evts) {
-						for (CacheEntryEvent<? extends String, ? extends  byte[]> e : evts) {
-							logger.info("Updated entry [key=" + e.getKey() + ", val=" + e.getValue() + ']');
-							subscribeResults.add(e.getValue());
-						}
-					}
-				});
-
-				Iote2eIgniteCacheEntryEventFilter<String,byte[]> sourceSensorCacheEntryEventFilter = 
-						new Iote2eIgniteCacheEntryEventFilter<String, byte[]>(remoteFilterKey);
-				qry.setRemoteFilterFactory(new Factory<Iote2eIgniteCacheEntryEventFilter<String, byte[]>>() {
-					@Override
-					public Iote2eIgniteCacheEntryEventFilter<String, byte[]> create() {
-						return sourceSensorCacheEntryEventFilter;
-						//return new SourceSensorCacheEntryEventFilter<String, String>(remoteFilterKey);
-					}
-				});
-
-//				qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<String, String>>() {
-//					@Override
-//					public CacheEntryEventFilter<String, String> create() {
-//						return new CacheEntryEventFilter<String, String>() {
-//							@Override
-//							public boolean evaluate(CacheEntryEvent<? extends String, ? extends String> e) {
-//								final String remoteFilter = "lo1so1|lo1so1se1|";
-//								if (e.getKey().startsWith(remoteFilter))
-//									return true;
-//								else
-//									return false;
-//								// return false;
-//							}
-//						};
-//					}
-//				});
-				
-				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
-
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-				return;
-
-			}
-			subscribeUp = true;
-			while (true) {
-				if (shutdown)
-					break;
-				try {
-					sleep(60 * 60 * 5);
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-	}
 
 }
