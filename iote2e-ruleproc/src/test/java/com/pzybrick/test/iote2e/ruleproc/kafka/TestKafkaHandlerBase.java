@@ -23,7 +23,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
-import com.pzybrick.test.iote2e.ruleproc.common.TestRuleProcCommon;
+import com.pzybrick.test.iote2e.ruleproc.common.TestCommonHandler;
 
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -31,7 +31,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
 
-public class TestKafkaHandlerBase implements TestRuleProcCommon {
+public class TestKafkaHandlerBase extends TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected Iote2eRequestHandler iote2eRequestHandler;

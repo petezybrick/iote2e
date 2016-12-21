@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
@@ -24,30 +25,30 @@ public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
 		logger.info("begins");
 
 		String testHumidityValue = "50";
-		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
-		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "on", ruleEvalResults.get(0).getActuatorTargetValue() );
+		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue, testHumidityFilterKey);
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNotNull("iote2eResults must not be null", iote2eResults );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults getActuatorTargetValue", "on", iote2eResults.get(0).getActuatorTargetValue() );
 	}
 	
 	@Test
 	public void testHumidityHumidityToMisterRuleFireFanOn() throws Exception {
 		logger.info("begins");
 		String testHumidityValue = "100";
-		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults must not be null", ruleEvalResults );
-		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
+		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue, testHumidityFilterKey);
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNotNull("iote2eResults must not be null", iote2eResults );
+		Assert.assertEquals("iote2eResults must have size=1", iote2eResults.size(), 1 );
+		Assert.assertEquals("iote2eResults getActuatorTargetValue", "off", iote2eResults.get(0).getActuatorTargetValue() );
 	}
 	
 	@Test
 	public void testHumidityHumidityToMisterRuleNotFire() throws Exception {
 		logger.info("begins");
 		String testHumidityValue = "87";
-		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNull("ruleEvalResults must be null", ruleEvalResults );
+		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testHumidityValue, testHumidityFilterKey);
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNull("iote2eResults must be null", iote2eResults );
 	}
 }

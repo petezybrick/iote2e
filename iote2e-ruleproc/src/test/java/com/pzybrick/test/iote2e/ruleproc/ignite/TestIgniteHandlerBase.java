@@ -23,10 +23,10 @@ import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
-import com.pzybrick.test.iote2e.ruleproc.common.TestRuleProcCommon;
+import com.pzybrick.test.iote2e.ruleproc.common.TestCommonHandler;
 import com.pzybrick.test.iote2e.ruleproc.common.ThreadIgniteSubscribe;
 
-public class TestIgniteHandlerBase implements TestRuleProcCommon {
+public class TestIgniteHandlerBase extends TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
@@ -96,32 +96,6 @@ public class TestIgniteHandlerBase implements TestRuleProcCommon {
 		}
 	}
 
-	protected List<Iote2eResult> commonThreadSubscribeGetIote2eResults(long maxWaitMsecs) throws Exception {
-		List<Iote2eResult> iote2eResults = new ArrayList<Iote2eResult>();
-		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
-		while (System.currentTimeMillis() < wakeupAt) {
-			if (subscribeResults.size() > 0) {
-				try {
-					Thread.sleep(250);
-				} catch (Exception e) {
-				}
-				for( byte[] bytes : subscribeResults ) {
-					try {
-						iote2eResults.add( iote2eResultReuseItem.fromByteArray(bytes) );
-					} catch( IOException e ) {
-						logger.error(e.getMessage(),e);
-						throw e;
-					}
-				}
-				break;
-			}
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-			}
-		}
-		return iote2eResults;
-	}
 
 
 

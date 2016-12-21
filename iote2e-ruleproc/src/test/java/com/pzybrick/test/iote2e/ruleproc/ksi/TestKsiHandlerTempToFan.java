@@ -24,7 +24,7 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 		logger.info("begins");
 
 		String testTempToFanValue = "50";
-		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue);
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -35,7 +35,7 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 	public void testTempToFanTempFanRuleFireFanOn() throws Exception {
 		logger.info("begins");
 		String testTempToFanValue = "100";
-		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue);
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
@@ -46,7 +46,7 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 	public void testTempToFanTempFanRuleNotFire() throws Exception {
 		logger.info("begins");
 		String testTempToFanValue = "78";
-		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue);
+		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNull("ruleEvalResults is not null", ruleEvalResults );
 	}

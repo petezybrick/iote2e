@@ -22,9 +22,8 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	@Test
 	public void testLedLedGreenOn() throws Exception {
 		logger.info("begins");
-
 		String testLedValue = "1";
-		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue);
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue, testLedGreenFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -33,9 +32,8 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	@Test
 	public void testLedLedGreenOff() throws Exception {
 		logger.info("begins");
-
 		String testLedValue = "0";
-		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue);
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue, testLedGreenFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -45,9 +43,8 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	@Test
 	public void testLedLedRedOn() throws Exception {
 		logger.info("begins");
-
 		String testLedValue = "1";
-		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue);
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, testLedRedFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -56,9 +53,8 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	@Test
 	public void testLedLedRedOff() throws Exception {
 		logger.info("begins");
-
 		String testLedValue = "0";
-		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue);
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, testLedRedFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -68,9 +64,8 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	@Test
 	public void testLedLedYellowOn() throws Exception {
 		logger.info("begins");
-
 		String testLedValue = "1";
-		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue);
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue, testLedYellowFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
@@ -80,9 +75,8 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	@Test
 	public void testLedLedYellowOff() throws Exception {
 		logger.info("begins");
-
 		String testLedValue = "0";
-		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue);
+		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue, testLedYellowFilterKey);
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
 		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );

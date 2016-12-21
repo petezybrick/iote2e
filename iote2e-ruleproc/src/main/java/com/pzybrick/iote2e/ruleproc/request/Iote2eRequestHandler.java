@@ -29,21 +29,22 @@ public class Iote2eRequestHandler extends Thread {
 			ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
 		logger.debug("ctor");
 		try {
-		this.iote2eRequests = iote2eRequests;
-		String rawJson = FileUtils.readFileToString(new File(pathNameExtSourceSensorConfig));
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		iote2eRequestConfig = gson.fromJson(rawJson, Iote2eRequestConfig.class);
-
-		Class cls = Class.forName(iote2eRequestConfig.getRuleSvcClassName());
-		ruleSvc = (RuleSvc) cls.newInstance();
-		cls = Class.forName(iote2eRequestConfig.getRequestSvcClassName());
-		iote2eSvc = (Iote2eSvc) cls.newInstance();
-
-		rawJson = FileUtils.readFileToString(new File(iote2eRequestConfig.getPathNameExtRuleConfigFile()));
-		ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
-		
-		ruleSvc.init(ruleConfig);
-		iote2eSvc.init(ruleConfig);
+			this.iote2eRequests = iote2eRequests;
+			String rawJson = FileUtils.readFileToString(new File(pathNameExtSourceSensorConfig));
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			iote2eRequestConfig = gson.fromJson(rawJson, Iote2eRequestConfig.class);
+	
+			Class cls = Class.forName(iote2eRequestConfig.getRuleSvcClassName());
+			ruleSvc = (RuleSvc) cls.newInstance();
+			cls = Class.forName(iote2eRequestConfig.getRequestSvcClassName());
+	
+			rawJson = FileUtils.readFileToString(new File(iote2eRequestConfig.getPathNameExtRuleConfigFile()));
+			ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
+			// TODO: get via static instanceOf, or just wrap the iote2esvc calls in synchronized
+			iote2eSvc = (Iote2eSvc) cls.newInstance();
+			
+			ruleSvc.init(ruleConfig);
+			iote2eSvc.init(ruleConfig);
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);
 			throw e;

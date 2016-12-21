@@ -29,7 +29,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	}
 
 	@Override
-	public void processRuleEvalResults(Iote2eRequest iote2eRequest, List<RuleEvalResult> ruleEvalResults)
+	public synchronized void processRuleEvalResults(Iote2eRequest iote2eRequest, List<RuleEvalResult> ruleEvalResults)
 			throws Exception {
 		for (RuleEvalResult ruleEvalResult : ruleEvalResults) {
 			if( ruleEvalResult.isRuleActuatorHit() ) {
@@ -88,7 +88,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	}
 
 	@Override
-	public void init(RuleConfig ruleConfig) throws Exception {
+	public synchronized void init(RuleConfig ruleConfig) throws Exception {
 		try {
 			logger.info("Getting IgniteCache for: " + ruleConfig.getSourceResponseIgniteCacheName());
 			this.igniteSingleton = IgniteSingleton.getInstance(ruleConfig);
@@ -100,10 +100,13 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public synchronized void close() throws Exception {
 		try {
-			// Be careful - ignite is a singleton, only close after last usage
-			igniteSingleton.getIgnite().close();
+			if( igniteSingleton != null )  {
+				// Be careful - ignite is a singleton, only close after last usage
+				igniteSingleton.getIgnite().close();
+				igniteSingleton = null;
+			}
 		} catch (Exception e) {
 			logger.warn("Ignite close failure", e);
 		}

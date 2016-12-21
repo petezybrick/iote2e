@@ -19,24 +19,27 @@ import org.junit.BeforeClass;
 import com.google.gson.Gson;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
-import com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl;
+import com.pzybrick.iote2e.ruleproc.ignite.Iote2eSvcIgniteImpl;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
+import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
-import com.pzybrick.test.iote2e.ruleproc.common.TestRuleProcCommon;
+import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.test.iote2e.ruleproc.common.TestCommonHandler;
 import com.pzybrick.test.iote2e.ruleproc.common.ThreadIgniteSubscribe;
 import com.pzybrick.test.iote2e.ruleproc.common.ThreadSparkRun;
 
-public class TestKsiHandlerBase implements TestRuleProcCommon {
+public class TestKsiHandlerBase extends TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestKsiHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected Iote2eRequestHandler iote2eRequestHandler;
-	protected Iote2eSvcKafkaImpl iote2eSvc;
+	protected Iote2eSvc iote2eSvc;
 	protected KafkaProducer<String, byte[]> kafkaProducer;
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem;
+	protected Iote2eResultReuseItem iote2eResultReuseItem;
 	protected String kafkaTopic;
 	protected String kafkaGroup;
 	protected static Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
@@ -73,11 +76,11 @@ public class TestKsiHandlerBase implements TestRuleProcCommon {
 	public void before() throws Exception {
 		logger.info(
 				"------------------------------------------------------------------------------------------------------");
+		iote2eResultReuseItem = new Iote2eResultReuseItem();
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_KAFKA"), iote2eRequests);
-		iote2eSvc = (Iote2eSvcKafkaImpl) iote2eRequestHandler.getIote2eSvc();
-		iote2eSvc.setRuleEvalResults(null);
+		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_FILE_KSI"), iote2eRequests);
+		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 		iote2eRequestHandler.start();
 		
 		subscribeResults = new ConcurrentLinkedQueue<byte[]>();
@@ -114,10 +117,12 @@ public class TestKsiHandlerBase implements TestRuleProcCommon {
 	}
 
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
-			String sensorValue) throws Exception {
+			String sensorValue, String igniteFilterKey) throws Exception {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getRuleConfig(), igniteFilterKey, igniteSingleton, subscribeResults);
+
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);
 			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(loginName).setSourceName(sourceName)
@@ -133,20 +138,6 @@ public class TestKsiHandlerBase implements TestRuleProcCommon {
 			logger.error(e.getMessage(), e);
 			throw e;
 		}
-	}
-
-
-	protected List<RuleEvalResult> commonGetRuleEvalResults(long maxWaitMsecs) {
-		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
-		while (System.currentTimeMillis() < wakeupAt) {
-			if (iote2eSvc.getRuleEvalResults() != null)
-				return iote2eSvc.getRuleEvalResults();
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-			}
-		}
-		return null;
 	}
 
 }
