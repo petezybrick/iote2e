@@ -9,7 +9,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiHandlerLed extends TestKsiHandlerBase {
@@ -24,20 +25,25 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		logger.info("begins");
 		String testLedValue = "1";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue, testLedGreenFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "green", ruleEvalResults.get(0).getActuatorTargetValue() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameGreen, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledGreen1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "green", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
+
 	}
 	@Test
 	public void testLedLedGreenOff() throws Exception {
 		logger.info("begins");
 		String testLedValue = "0";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue, testLedGreenFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameGreen, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledGreen1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "off", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
 	}
 	
 	@Test
@@ -45,20 +51,25 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		logger.info("begins");
 		String testLedValue = "1";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, testLedRedFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "red", ruleEvalResults.get(0).getActuatorTargetValue() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameRed, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledRed1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "red", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
 	}
+	
 	@Test
 	public void testLedLedRedOff() throws Exception {
 		logger.info("begins");
 		String testLedValue = "0";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, testLedRedFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameRed, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledRed1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "off", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
 	}
 	
 	@Test
@@ -66,10 +77,12 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		logger.info("begins");
 		String testLedValue = "1";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue, testLedYellowFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "yellow", ruleEvalResults.get(0).getActuatorTargetValue() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameYellow, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledYellow1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "yellow", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
 	}
 	
 	@Test
@@ -77,10 +90,12 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		logger.info("begins");
 		String testLedValue = "0";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue, testLedYellowFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", 1, ruleEvalResults.size() );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameYellow, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledYellow1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "off", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
 	}
 	
 }

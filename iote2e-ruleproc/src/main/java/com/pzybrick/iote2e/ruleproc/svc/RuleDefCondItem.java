@@ -1,5 +1,7 @@
 package com.pzybrick.iote2e.ruleproc.svc;
 
+import java.io.Serializable;
+
 import javax.annotation.Generated;
 
 import com.google.gson.annotations.Expose;
@@ -8,7 +10,8 @@ import com.google.gson.annotations.Expose;
 //    AND <actuatorSourceValue> <actuatorComparator> <actuatorTypeValue>
 // THEN SendCmd <actuatorTargetCmd> <actuatorTargetValue>
 @Generated("org.jsonschema2pojo")
-public class RuleDefCondItem {
+public class RuleDefCondItem implements Serializable {
+	private static final long serialVersionUID = 8907426605716836373L;
 	@Expose
 	private String sensorComparator;
 	@Expose

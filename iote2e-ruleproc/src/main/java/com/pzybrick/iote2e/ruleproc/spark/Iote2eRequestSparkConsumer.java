@@ -22,6 +22,7 @@ public class Iote2eRequestSparkConsumer {
 	private ArgMap argMap;
     private SparkConf conf;
     private JavaStreamingContext ssc;
+    private boolean started = false;
 	
 	
     public static void main(String[] args) throws Exception {
@@ -122,6 +123,7 @@ public class Iote2eRequestSparkConsumer {
 
 		try {
 			logger.info("Started Iote2eRequestSparkConsumer");
+			started = true;
 			ssc.awaitTermination();
 	    	logger.info("Stopped Spark");
 		} catch( InterruptedException e1 ) {
@@ -137,4 +139,9 @@ public class Iote2eRequestSparkConsumer {
     	logger.info("Stopping Spark...");
     	ssc.stop(true);
     }
+
+	public boolean isStarted() {
+		return started;
+	}
+
 }

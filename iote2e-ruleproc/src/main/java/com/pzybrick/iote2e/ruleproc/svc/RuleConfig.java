@@ -1,11 +1,14 @@
 package com.pzybrick.iote2e.ruleproc.svc;
 
+import java.io.Serializable;
+
 import javax.annotation.Generated;
 
 import com.google.gson.annotations.Expose;
 
 @Generated("org.jsonschema2pojo")
-public class RuleConfig {
+public class RuleConfig implements Serializable {
+	private static final long serialVersionUID = -5229495159598744855L;
 	@Expose 
 	private String jsonFileLoginSourceSensorActuator;
 	@Expose 

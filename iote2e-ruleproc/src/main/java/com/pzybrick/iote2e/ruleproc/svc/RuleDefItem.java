@@ -1,5 +1,6 @@
 package com.pzybrick.iote2e.ruleproc.svc;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,7 +9,8 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 
 @Generated("org.jsonschema2pojo")
-public class RuleDefItem {
+public class RuleDefItem implements Serializable {
+	private static final long serialVersionUID = -8827304765202247822L;
 	@Expose
 	private String ruleUuid;
 	@Expose

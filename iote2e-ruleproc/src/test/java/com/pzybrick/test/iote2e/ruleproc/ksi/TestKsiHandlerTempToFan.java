@@ -2,6 +2,7 @@ package com.pzybrick.test.iote2e.ruleproc.ksi;
 
 import java.util.List;
 
+import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -9,7 +10,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
@@ -25,10 +27,12 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 
 		String testTempToFanValue = "50";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "off", ruleEvalResults.get(0).getActuatorTargetValue() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem ); 
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testTempToFanSensorName, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "fan1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "off", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
 	}
 	
 	@Test
@@ -36,10 +40,12 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 		logger.info("begins");
 		String testTempToFanValue = "100";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
-		Assert.assertEquals("ruleEvalResults must have size=1", ruleEvalResults.size(), 1 );
-		Assert.assertEquals("ruleEvalResults getActuatorTargetValue", "on", ruleEvalResults.get(0).getActuatorTargetValue() );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem ); 
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
+		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testTempToFanSensorName, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "fan1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
+		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "on", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
 	}
 	
 	@Test
@@ -47,7 +53,8 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 		logger.info("begins");
 		String testTempToFanValue = "78";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
-		Assert.assertNull("ruleEvalResults is not null", ruleEvalResults );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem ); 
+		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
+		Assert.assertEquals("iote2eResults must have size=0", 0, iote2eResults.size() );
 	}
 }

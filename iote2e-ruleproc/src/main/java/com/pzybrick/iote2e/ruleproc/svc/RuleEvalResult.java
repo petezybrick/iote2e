@@ -1,6 +1,9 @@
 package com.pzybrick.iote2e.ruleproc.svc;
 
-public class RuleEvalResult {
+import java.io.Serializable;
+
+public class RuleEvalResult implements Serializable {
+	private static final long serialVersionUID = -8181825861935306007L;
 	private String sensorName;
 	private boolean ruleActuatorHit;
 	private String actuatorTargetValue;

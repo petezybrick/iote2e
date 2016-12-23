@@ -8,10 +8,6 @@
 		<property name="componentVersion">${project.version}</property>
 	</properties>
 
-	<CustomLevels>
-		<CustomLevel name="STACK" intLevel="99" />
-	</CustomLevels>
-
 	<appenders>
 		<Console name="console" target="SYSTEM_OUT">
 			<PatternLayout
@@ -35,6 +31,10 @@
 	</appenders>
 
 	<loggers>
+		<logger name="com.pzybrick" level="debug" additivity="false">
+			<appender-ref ref="console" />
+			<appender-ref ref="file" />
+		</logger>
 		<logger name="consumer.kafka.ZkState" level="error" additivity="false">
 			<appender-ref ref="console" />
 			<appender-ref ref="file" />
@@ -62,7 +62,7 @@
 		<root level="info">
 			<appender-ref ref="console" level="info" />
 			<appender-ref ref="file" level="info" />
-			<appender-ref ref="errfile" level="STACK" />
+			<appender-ref ref="errfile" level="error" />
 		</root>
 	</loggers>
 </configuration>

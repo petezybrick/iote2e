@@ -14,6 +14,10 @@ public class ThreadSparkRun extends Thread {
 		this.args = args;
 		this.iote2eRequestSparkConsumer = iote2eRequestSparkConsumer;
 	}
+	
+	public boolean isStarted() {
+		return iote2eRequestSparkConsumer.isStarted();
+	}
 	@Override
 	public void run() {
 		try {

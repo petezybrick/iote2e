@@ -24,6 +24,12 @@ public class IgniteSingleton {
 		if( igniteSingleton != null ) {
 			try {
 				igniteSingleton.getCache().close();
+				long expiresAt = System.currentTimeMillis() + (10*1000);
+				while( expiresAt > System.currentTimeMillis()) {
+					if( igniteSingleton.getCache().isClosed() ) break;
+					Thread.sleep(250);
+				}
+				if( !igniteSingleton.getCache().isClosed() ) throw new Exception("Failed to close Ignite cache");
 			} catch( Exception e ) {
 				logger.warn(e.getMessage(),e);
 			}			

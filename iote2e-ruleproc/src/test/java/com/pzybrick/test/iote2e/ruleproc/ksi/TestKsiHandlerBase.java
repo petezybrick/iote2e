@@ -54,12 +54,20 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 	}
 	
 	@BeforeClass
-	public static void beforeClass() {
+	public static void beforeClass() throws Exception {
 		// spark
     	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
     	String[] sparkArgs = System.getenv("SPARK_ARGS_UNIT_TEST").split(" ");
     	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer, sparkArgs);
     	threadSparkRun.start();
+    	long expiredAt = System.currentTimeMillis() + (10*1000);
+    	while( expiredAt > System.currentTimeMillis() ) {
+    		if( threadSparkRun.isStarted() ) break;
+    		try {
+    			Thread.sleep(250);
+    		} catch( Exception e ) {}
+    	}
+    	if( !threadSparkRun.isStarted() ) throw new Exception("Timeout waiting for Spark to start");
 	}
 	
 	@AfterClass
@@ -67,6 +75,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		try {
 	    	iote2eRequestSparkConsumer.stop();
 			threadSparkRun.join();
+			IgniteSingleton.reset();
 		} catch( Exception e ) {
 			logger.error(e.getMessage(), e);
 		}
@@ -113,7 +122,6 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		kafkaProducer.close();
 		threadIgniteSubscribe.shutdown();
 		threadIgniteSubscribe.join();
-		IgniteSingleton.reset();
 	}
 
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
