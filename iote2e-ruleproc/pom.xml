@@ -236,6 +236,20 @@
 			<artifactId>iote2e-common</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core -->
+		<dependency>
+			<groupId>com.datastax.cassandra</groupId>
+			<artifactId>cassandra-driver-core</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>19.0</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<repositories>
