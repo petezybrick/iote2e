@@ -9,12 +9,16 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKsiHandlerLed.class);
+	private static final String pkActuatorStateGreen = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen;
+	private static final String pkActuatorStateYellow = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow;
+	private static final String pkActuatorStateRed = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed;
 
 	public TestKsiHandlerLed() {
 		super();
@@ -31,7 +35,7 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameGreen, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledGreen1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "green", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
-
+		Assert.assertEquals("Cassandra actuator_state Green LED value=green", "green", ActuatorStateDao.findActuatorValue(pkActuatorStateGreen));
 	}
 	@Test
 	public void testLedLedGreenOff() throws Exception {
@@ -44,6 +48,7 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameGreen, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledGreen1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "off", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
+		Assert.assertEquals("Cassandra actuator_state Green LED value=off", "off", ActuatorStateDao.findActuatorValue(pkActuatorStateGreen));
 	}
 	
 	@Test
@@ -57,6 +62,7 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameRed, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledRed1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "red", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
+		Assert.assertEquals("Cassandra actuator_state Red LED value=red", "red", ActuatorStateDao.findActuatorValue(pkActuatorStateRed));
 	}
 	
 	@Test
@@ -70,6 +76,7 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameRed, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledRed1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "off", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
+		Assert.assertEquals("Cassandra actuator_state Red LED value=off", "off", ActuatorStateDao.findActuatorValue(pkActuatorStateRed));
 	}
 	
 	@Test
@@ -83,6 +90,7 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameYellow, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledYellow1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "yellow", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
+		Assert.assertEquals("Cassandra actuator_state Yellow LED value=yellow", "yellow", ActuatorStateDao.findActuatorValue(pkActuatorStateYellow));
 	}
 	
 	@Test
@@ -96,6 +104,7 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testLedSensorNameYellow, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "ledYellow1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "off", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
+		Assert.assertEquals("Cassandra actuator_state Yellow LED value=off", "off", ActuatorStateDao.findActuatorValue(pkActuatorStateYellow));
 	}
 	
 }

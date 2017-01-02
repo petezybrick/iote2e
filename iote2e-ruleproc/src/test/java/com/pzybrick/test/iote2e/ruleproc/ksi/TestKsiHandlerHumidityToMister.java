@@ -10,6 +10,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
@@ -17,7 +18,8 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKsiHandlerHumidityToMister.class);
-	
+	private static final String pkActuatorState = testHumidityLoginName + "|" + testHumiditySourceName + "|" + testHumiditySensorName;
+
 	public TestKsiHandlerHumidityToMister() {
 		super();
 	}
@@ -34,6 +36,7 @@ public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testHumiditySensorName, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "mister1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "on", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
+		Assert.assertEquals("Cassandra actuator_state Humidity value=on", "on", ActuatorStateDao.findActuatorValue(pkActuatorState));
 	}
 	
 	@Test
@@ -47,6 +50,7 @@ public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testHumiditySensorName, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_NAME", "mister1", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME).toString());
 		Assert.assertEquals("iote2eResults PAIRNAME_ACTUATOR_VALUE", "off", iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE).toString());
+		Assert.assertEquals("Cassandra actuator_state Humidity value=off", "off", ActuatorStateDao.findActuatorValue(pkActuatorState));
 	}
 	
 	@Test
@@ -57,5 +61,6 @@ public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
 		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=0", 0, iote2eResults.size() );
+		Assert.assertEquals("Cassandra actuator_state Humidity value=null", null, ActuatorStateDao.findActuatorValue(pkActuatorState));
 	}
 }

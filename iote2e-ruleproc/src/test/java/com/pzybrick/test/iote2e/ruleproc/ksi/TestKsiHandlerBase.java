@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.ignite.Iote2eSvcIgniteImpl;
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
@@ -55,6 +56,8 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
+		// cassandra
+		ActuatorStateDao.useKeyspace( System.getenv("CASSANDRA_KEYSPACE_NAME"));
 		// spark
     	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
     	String[] sparkArgs = System.getenv("SPARK_ARGS_UNIT_TEST").split(" ");
@@ -76,6 +79,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 	    	iote2eRequestSparkConsumer.stop();
 			threadSparkRun.join();
 			IgniteSingleton.reset();
+			ActuatorStateDao.disconnect();
 		} catch( Exception e ) {
 			logger.error(e.getMessage(), e);
 		}

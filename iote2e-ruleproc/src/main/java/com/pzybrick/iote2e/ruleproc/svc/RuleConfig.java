@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
 public class RuleConfig implements Serializable {
 	private static final long serialVersionUID = -5229495159598744855L;
 	@Expose 
-	private String jsonFileLoginSourceSensorActuator;
+	private String jsonFileActuatorState;
 	@Expose 
 	private String jsonFileRuleLoginSourceSensor;
 	@Expose 
@@ -23,17 +23,21 @@ public class RuleConfig implements Serializable {
 	private String sourceResponseIgniteConfigName;
 	@Expose
 	private boolean igniteClientMode;
+	@Expose
+	private boolean forceRefreshActuatorState;
+	@Expose
+	private boolean forceResetActuatorState;
 	
 	public RuleConfig() {
 		
 	}
 
-	public String getJsonFileLoginSourceSensorActuator() {
-		return jsonFileLoginSourceSensorActuator;
+	public String getJsonFileActuatorState() {
+		return jsonFileActuatorState;
 	}
 
-	public RuleConfig setJsonFileLoginSourceSensorActuator(String jsonFilePathNameExt) {
-		this.jsonFileLoginSourceSensorActuator = jsonFilePathNameExt;
+	public RuleConfig setJsonFileActuatorState(String jsonFileActuatorState) {
+		this.jsonFileActuatorState = jsonFileActuatorState;
 		return this;
 	}
 
@@ -66,11 +70,13 @@ public class RuleConfig implements Serializable {
 
 	@Override
 	public String toString() {
-		return "RuleConfig [jsonFileSourceSensorActuator=" + jsonFileLoginSourceSensorActuator
-				+ ", jsonFileRuleSourceSensor=" + jsonFileRuleLoginSourceSensor + ", jsonFileRuleDefItem="
-				+ jsonFileRuleDefItem + ", sourceResponseIgniteCacheName=" + sourceResponseIgniteCacheName
+		return "RuleConfig [jsonFileActuatorState=" + jsonFileActuatorState + ", jsonFileRuleLoginSourceSensor="
+				+ jsonFileRuleLoginSourceSensor + ", jsonFileRuleDefItem=" + jsonFileRuleDefItem
+				+ ", sourceResponseIgniteCacheName=" + sourceResponseIgniteCacheName
 				+ ", sourceResponseIgniteConfigFile=" + sourceResponseIgniteConfigFile
-				+ ", sourceResponseIgniteConfigName=" + sourceResponseIgniteConfigName + "]";
+				+ ", sourceResponseIgniteConfigName=" + sourceResponseIgniteConfigName + ", igniteClientMode="
+				+ igniteClientMode + ", forceRefreshActuatorState=" + forceRefreshActuatorState
+				+ ", forceResetActuatorState=" + forceResetActuatorState + "]";
 	}
 
 	public String getSourceResponseIgniteConfigName() {
@@ -97,6 +103,24 @@ public class RuleConfig implements Serializable {
 
 	public RuleConfig setIgniteClientMode(boolean igniteClientMode) {
 		this.igniteClientMode = igniteClientMode;
+		return this;
+	}
+
+	public boolean isForceRefreshActuatorState() {
+		return forceRefreshActuatorState;
+	}
+
+	public RuleConfig setForceRefreshActuatorState(boolean forceRefreshActuatorState) {
+		this.forceRefreshActuatorState = forceRefreshActuatorState;
+		return this;
+	}
+
+	public boolean isForceResetActuatorState() {
+		return forceResetActuatorState;
+	}
+
+	public RuleConfig setForceResetActuatorState(boolean forceResetActuatorState) {
+		this.forceResetActuatorState = forceResetActuatorState;
 		return this;
 	}
 

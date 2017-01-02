@@ -5,7 +5,7 @@
     "sourceType": "temp",
     "sensorName": "temp1",
     "actuatorName": "fan1",
-    "desc": "TempToFan"
+    "actuatorDesc": "TempToFan"
   },
   {
     "loginName": "lo1",
@@ -13,7 +13,7 @@
     "sourceType": "humidity",
     "sensorName": "humidity1",
     "actuatorName": "mister1",
-    "desc": "HumidityToMister"
+    "actuatorDesc": "HumidityToMister"
   },
   {
     "loginName": "lo1",
@@ -21,7 +21,7 @@
     "sourceType": "switch",
     "sensorName": "switch0",
     "actuatorName": "ledGreen1",
-    "desc": "Switch0ToLedGreen"
+    "actuatorDesc": "Switch0ToLedGreen"
   },
   {
     "loginName": "lo1",
@@ -29,7 +29,7 @@
     "sourceType": "switch",
     "sensorName": "switch1",
     "actuatorName": "ledRed1",
-    "desc": "Switch1ToLedRed"
+    "actuatorDesc": "Switch1ToLedRed"
   },
   {
     "loginName": "lo1",
@@ -37,6 +37,6 @@
     "sourceType": "switch",
     "sensorName": "switch2",
     "actuatorName": "ledYellow1",
-    "desc": "Switch2ToLedYellow"
+    "actuatorDesc": "Switch2ToLedYellow"
   }
 ]

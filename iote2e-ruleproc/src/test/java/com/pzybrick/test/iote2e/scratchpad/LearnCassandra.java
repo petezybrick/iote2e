@@ -15,6 +15,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
+import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
 import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
 
 public class LearnCassandra {
@@ -194,12 +195,12 @@ public class LearnCassandra {
 	}
 
 	
-	public void insertActuatorState( LoginSourceSensorActuator loginSourceSensorActuator) throws Exception {
+	public void insertActuatorState( ActuatorState actuatorState) throws Exception {
 		try {
-			logger.debug("loginSourceSensorActuator={}",loginSourceSensorActuator.toString());
-			String insert = convertLoginSourceSensorActuatorToInsert( loginSourceSensorActuator );
+			logger.debug("loginSourceSensorActuator={}",actuatorState.toString());
+			String insert = createInsertActuatorState( actuatorState );
 			logger.debug("insert={}",insert);
-			execute(insert);		
+			session.execute(insert);		
 
 		} catch( Exception e ) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -208,34 +209,33 @@ public class LearnCassandra {
 	}
 	
 	
-	public void insertActuatorStateBatch( List<LoginSourceSensorActuator> loginSourceSensorActuators ) throws Exception {
+	public void insertActuatorStateBatch( List<ActuatorState> actuatorStates ) throws Exception {
 		try {
-			logger.debug( "inserting {} batch rows", loginSourceSensorActuators.size());
+			logger.debug( "inserting {} batch rows", actuatorStates.size());
 			StringBuilder sb = new StringBuilder("BEGIN BATCH\n");
-			for( LoginSourceSensorActuator loginSourceSensorActuator : loginSourceSensorActuators ) {
-				sb.append( convertLoginSourceSensorActuatorToInsert( loginSourceSensorActuator )).append("\n");
+			for( ActuatorState actuatorState : actuatorStates ) {
+				sb.append( createInsertActuatorState( actuatorState )).append("\n");
 			}
 			sb.append("APPLY BATCH;");
 			logger.debug("insert batch={}", sb.toString());
-			execute(sb.toString());
+			session.execute(sb.toString());
 			
 		} catch( Exception e ) {
 			logger.error(e.getLocalizedMessage(), e);
 			throw e;
 		}
-
 	}
+
 	
-	
-	public static String convertLoginSourceSensorActuatorToInsert( LoginSourceSensorActuator loginSourceSensorActuator ) {
-		String key = loginSourceSensorActuator.getLoginName() + "|" +
-				loginSourceSensorActuator.getSourceName() + "|" +
-				loginSourceSensorActuator.getSensorName();
+	public static String createInsertActuatorState( ActuatorState actuatorState ) {
+		String key = actuatorState.getLoginName() + "|" +
+				actuatorState.getSourceName() + "|" +
+				actuatorState.getSensorName();
 		String insert = String.format("INSERT INTO actuator_state " + 
 			"(login_source_sensor,actuator_name,actuator_value,actuator_desc,actuator_value_updated_at) " + 
 			"values('%s','%s','%s','%s',toTimestamp(now()));",
-			key, loginSourceSensorActuator.getActuatorName(), loginSourceSensorActuator.getActuatorValue(),
-			loginSourceSensorActuator.getDesc() );
+			key, actuatorState.getActuatorName(), actuatorState.getActuatorValue(),
+			actuatorState.getActuatorDesc() );
 		return insert;
 	}
 
@@ -303,20 +303,20 @@ public class LearnCassandra {
 		logger.debug("closed session and cluster");
 	}
 	
-	private static LoginSourceSensorActuator createActuatorStateSingle() {
-		return new LoginSourceSensorActuator().setLoginName("lo1").setSourceName("lo1_so1").setSensorName("lo1_so1_se1")
-				.setActuatorName("fan1").setActuatorValue("off").setDesc("fan in greenhouse");
+	private static ActuatorState createActuatorStateSingle() {
+		return new ActuatorState().setLoginName("lo1").setSourceName("lo1_so1").setSensorName("lo1_so1_se1")
+				.setActuatorName("fan1").setActuatorValue("off").setActuatorDesc("fan in greenhouse");
 	}
 	
-	private static List<LoginSourceSensorActuator> createActuatorStateBatch() {
-		List<LoginSourceSensorActuator> loginSourceSensorActuators = new ArrayList<LoginSourceSensorActuator>();
-		loginSourceSensorActuators.add( new LoginSourceSensorActuator().setLoginName("lo2").setSourceName("lo2_so2").setSensorName("lo2_so2_se2")
-				.setActuatorName("ledGreen").setActuatorValue("off").setDesc("Green LED") );
-		loginSourceSensorActuators.add( new LoginSourceSensorActuator().setLoginName("lo3").setSourceName("lo3_so3").setSensorName("lo3_so3_se3")
-				.setActuatorName("ledYellow").setActuatorValue("off").setDesc("Yellow LED") );
-		loginSourceSensorActuators.add( new LoginSourceSensorActuator().setLoginName("lo4").setSourceName("lo4_so4").setSensorName("lo4_so4_se4")
-				.setActuatorName("ledRed").setActuatorValue("off").setDesc("Red LED") );
-		return loginSourceSensorActuators;
+	private static List<ActuatorState> createActuatorStateBatch() {
+		List<ActuatorState> actuatorStates = new ArrayList<ActuatorState>();
+		actuatorStates.add( new ActuatorState().setLoginName("lo2").setSourceName("lo2_so2").setSensorName("lo2_so2_se2")
+				.setActuatorName("ledGreen").setActuatorValue("off").setActuatorDesc("Green LED") );
+		actuatorStates.add( new ActuatorState().setLoginName("lo3").setSourceName("lo3_so3").setSensorName("lo3_so3_se3")
+				.setActuatorName("ledYellow").setActuatorValue("off").setActuatorDesc("Yellow LED") );
+		actuatorStates.add( new ActuatorState().setLoginName("lo4").setSourceName("lo4_so4").setSensorName("lo4_so4_se4")
+				.setActuatorName("ledRed").setActuatorValue("off").setActuatorDesc("Red LED") );
+		return actuatorStates;
 	}
 
 }

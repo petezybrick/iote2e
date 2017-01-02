@@ -30,7 +30,13 @@ public class TestActuatorStateDao {
 			Iote2eCommonDao.dropKeyspace(TEST_KEYSPACE_NAME);
 			Iote2eCommonDao.createKeyspace(TEST_KEYSPACE_NAME, TEST_KEYSPACE_REPLICATION_STRATEGY, TEST_KEYSPACE_REPLICATION_FACTOR);
 			Iote2eCommonDao.useKeyspace(TEST_KEYSPACE_NAME);
-			ActuatorStateDao.createTableActuatorState();
+			
+			
+			ActuatorStateDao.dropTable();
+			ActuatorStateDao.isTableExists(TEST_KEYSPACE_NAME);
+			
+			
+			ActuatorStateDao.createTable();
 
 			ActuatorStateDao.insertActuatorState( createActuatorStateSingle());
 			ActuatorStateDao.insertActuatorStateBatch( createActuatorStateBatch());
@@ -43,12 +49,12 @@ public class TestActuatorStateDao {
 			Assert.assertEquals("actuatorState sensor", "lo2_so2_se2", actuatorState.getSensorName());
 			Assert.assertEquals("actuatorState name", "ledGreen", actuatorState.getActuatorName());
 			Assert.assertEquals("actuatorState actuatorValue", "off", actuatorState.getActuatorValue());
-			Assert.assertEquals("actuatorState desc", "Green LED", actuatorState.getDesc());
+			Assert.assertEquals("actuatorState desc", "Green LED", actuatorState.getActuatorDesc());
 			
-			String value = ActuatorStateDao.findValue(pk);
+			String value = ActuatorStateDao.findActuatorValue(pk);
 			logger.info("value - before update {}", value );
-			ActuatorStateDao.updateValue(pk,"on");
-			value = ActuatorStateDao.findValue(pk);
+			ActuatorStateDao.updateActuatorValue(pk,"on");
+			value = ActuatorStateDao.findActuatorValue(pk);
 			logger.info("value - after update {}", value );
 			Assert.assertEquals("value after update", "on", value);
 			
@@ -83,20 +89,20 @@ public class TestActuatorStateDao {
 	}
 
 	
-	private static LoginSourceSensorActuator createActuatorStateSingle() {
-		return new LoginSourceSensorActuator().setLoginName("lo1").setSourceName("lo1_so1").setSensorName("lo1_so1_se1")
-				.setActuatorName("fan1").setActuatorValue("off").setDesc("fan in greenhouse");
+	private static ActuatorState createActuatorStateSingle() {
+		return new ActuatorState().setLoginName("lo1").setSourceName("lo1_so1").setSensorName("lo1_so1_se1")
+				.setActuatorName("fan1").setActuatorValue("off").setActuatorDesc("fan in greenhouse");
 	}
 	
-	private static List<LoginSourceSensorActuator> createActuatorStateBatch() {
-		List<LoginSourceSensorActuator> loginSourceSensorActuators = new ArrayList<LoginSourceSensorActuator>();
-		loginSourceSensorActuators.add( new LoginSourceSensorActuator().setLoginName("lo2").setSourceName("lo2_so2").setSensorName("lo2_so2_se2")
-				.setActuatorName("ledGreen").setActuatorValue("off").setDesc("Green LED") );
-		loginSourceSensorActuators.add( new LoginSourceSensorActuator().setLoginName("lo3").setSourceName("lo3_so3").setSensorName("lo3_so3_se3")
-				.setActuatorName("ledYellow").setActuatorValue("off").setDesc("Yellow LED") );
-		loginSourceSensorActuators.add( new LoginSourceSensorActuator().setLoginName("lo4").setSourceName("lo4_so4").setSensorName("lo4_so4_se4")
-				.setActuatorName("ledRed").setActuatorValue("off").setDesc("Red LED") );
-		return loginSourceSensorActuators;
+	private static List<ActuatorState> createActuatorStateBatch() {
+		List<ActuatorState> actuatorStates = new ArrayList<ActuatorState>();
+		actuatorStates.add( new ActuatorState().setLoginName("lo2").setSourceName("lo2_so2").setSensorName("lo2_so2_se2")
+				.setActuatorName("ledGreen").setActuatorValue("off").setActuatorDesc("Green LED") );
+		actuatorStates.add( new ActuatorState().setLoginName("lo3").setSourceName("lo3_so3").setSensorName("lo3_so3_se3")
+				.setActuatorName("ledYellow").setActuatorValue("off").setActuatorDesc("Yellow LED") );
+		actuatorStates.add( new ActuatorState().setLoginName("lo4").setSourceName("lo4_so4").setSensorName("lo4_so4_se4")
+				.setActuatorName("ledRed").setActuatorValue("off").setActuatorDesc("Red LED") );
+		return actuatorStates;
 	}
 
 }

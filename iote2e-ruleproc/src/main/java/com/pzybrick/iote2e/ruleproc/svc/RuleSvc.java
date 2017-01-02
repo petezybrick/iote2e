@@ -17,10 +17,10 @@ public abstract class RuleSvc {
 
 	protected abstract RuleDefItem findRuleDefItem(String ruleUuid) throws Exception;
 
-	protected abstract LoginSourceSensorActuator findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorName)
+	protected abstract ActuatorState findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorName)
 			throws Exception;
 
-	protected abstract void updateActuatorValue(LoginSourceSensorActuator loginSourceSensorActuator) throws Exception;
+	protected abstract void updateActuatorValue(ActuatorState loginSourceSensorActuator) throws Exception;
 
 	protected abstract RuleLoginSourceSensor findRuleLoginSourceSensor(String loginUuid, String sourceUuid, String sensorName) throws Exception;
 
@@ -79,15 +79,15 @@ public abstract class RuleSvc {
 
 	private RuleEvalResult ruleEvalActuator(String loginName, String sourceName, String sensorName, RuleDefCondItem ruleDefCondItem,
 			RuleDefItem ruleDefItem) throws Exception {
-		LoginSourceSensorActuator sourceSensorActuator = findSourceSensorActuator(loginName, sourceName, sensorName);
-		if (sourceSensorActuator == null)
+		ActuatorState actuatorState = findSourceSensorActuator(loginName, sourceName, sensorName);
+		if (actuatorState == null)
 			throw new Exception( String.format(
 					"Missing SourceSensorActuator, loginUuid=%s, sourceUuid=%s, sensorName=%s", loginName, sourceName, sensorName) );
-		logger.debug(sourceSensorActuator);
+		logger.debug(actuatorState);
 
 		boolean ruleActuatorHit = false;
-		if( sourceSensorActuator.getActuatorValue() != null ) {
-			ruleActuatorHit = ruleEvalCommon(sourceSensorActuator.getActuatorValue(),
+		if( actuatorState.getActuatorValue() != null ) {
+			ruleActuatorHit = ruleEvalCommon(actuatorState.getActuatorValue(),
 					ruleDefCondItem.getActuatorTypeValue(), ruleDefCondItem.getActuatorCompareValue(),
 					ruleDefCondItem.getIntActuatorCompareValue(), ruleDefCondItem.getDblActuatorCompareValue(),
 					ruleDefCondItem.getRuleComparatorActuator(), ruleDefItem);
@@ -98,7 +98,7 @@ public abstract class RuleSvc {
 			logger.debug("actuator not initialized yet - value is null");
 			ruleActuatorHit = true;
 		}
-		RuleEvalResult ruleEvalResult = new RuleEvalResult(sensorName, ruleActuatorHit, sourceSensorActuator);
+		RuleEvalResult ruleEvalResult = new RuleEvalResult(sensorName, ruleActuatorHit, actuatorState);
 		return ruleEvalResult;
 	}
 

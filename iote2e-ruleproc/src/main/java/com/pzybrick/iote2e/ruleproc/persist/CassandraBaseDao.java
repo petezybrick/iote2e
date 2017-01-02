@@ -4,9 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
 
 public class CassandraBaseDao {
@@ -54,7 +56,7 @@ public class CassandraBaseDao {
 	public static long count( String tableName ) throws Exception {
 		long cnt = -1;
 		try {
-			String selectCount = String.format("SELECT COUNT(*) FROM %s", tableName);
+			String selectCount = String.format("SELECT COUNT(*) FROM %s; ", tableName);
 			logger.debug("selectCount={}",selectCount);
 			ResultSet rs = execute(selectCount);
 			Row row = rs.one();
@@ -71,7 +73,7 @@ public class CassandraBaseDao {
 	
 	public static void truncate( String tableName ) throws Exception {
 		try {
-			String truncate = String.format("TRUNCATE %s", tableName );
+			String truncate = String.format("TRUNCATE %s; ", tableName );
 			logger.debug("truncate={}",truncate);
 			execute(truncate);
 
@@ -81,8 +83,29 @@ public class CassandraBaseDao {
 		}
 	}
 	
+	public static boolean isTableExists( String keyspaceName, String tableName ) throws Exception {
+		try {
+			TableMetadata tableMetadata = findTableMetadata( keyspaceName, tableName );
+			if( tableMetadata != null ) return true;
+			else return false;
+		} catch( Exception e ) {
+			logger.error(e.getLocalizedMessage(), e);
+			throw e;
+		}
+	}
 	
-	protected synchronized static Session getSession() throws Exception {
+	public static TableMetadata findTableMetadata( String keyspaceName, String tableName ) throws Exception {
+		KeyspaceMetadata keyspaceMetadata = cluster.getMetadata().getKeyspace(keyspaceName);
+		return keyspaceMetadata.getTable(tableName);
+	}
+
+	
+	public static void useKeyspace( String keyspaceName ) throws Exception {
+		logger.debug("keyspaceName={}",keyspaceName);
+		execute( String.format("USE %s; ", keyspaceName) );
+	}
+	
+	protected static Session getSession() throws Exception {
 		try {
 			logger.debug("getSession");
 			if( session == null ) connect();

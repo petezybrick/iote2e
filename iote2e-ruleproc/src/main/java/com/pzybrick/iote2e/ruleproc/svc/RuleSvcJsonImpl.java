@@ -12,41 +12,45 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 
 public class RuleSvcJsonImpl extends RuleSvc {
 	private static final Logger logger = LogManager.getLogger(RuleSvcJsonImpl.class);
-	private Map<String, Map<String, LoginSourceSensorActuator>> ssaByLoginSourceUuid;
-	private List<LoginSourceSensorActuator> loginSourceSensorActuators;	
 	private Map<String, Map<String, RuleLoginSourceSensor>> rssByLoginSourceUuid;
 	private List<RuleLoginSourceSensor> ruleLoginSourceSensors;
 	private Map<String, RuleDefItem> rdiByRuleUuid;
 	private List<RuleDefItem> ruleDefItems;
+	private String keyspaceName;
 
 	public RuleSvcJsonImpl() {
-		this.ssaByLoginSourceUuid = new HashMap<String, Map<String, LoginSourceSensorActuator>>();
 		this.rssByLoginSourceUuid = new HashMap<String, Map<String, RuleLoginSourceSensor>>();
 		this.rdiByRuleUuid = new HashMap<String, RuleDefItem>();
+		this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
 	}
 
 
 	public void init(RuleConfig ruleConfig) throws Exception {
+		logger.info(ruleConfig.toString());
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileLoginSourceSensorActuator()));
-		loginSourceSensorActuators = gson.fromJson(rawJson,
-				new TypeToken<List<LoginSourceSensorActuator>>() {
-				}.getType());
-		for (LoginSourceSensorActuator loginSourceSensorActuator : loginSourceSensorActuators) {
-			String key = loginSourceSensorActuator.getLoginName() + "|" + loginSourceSensorActuator.getSourceName();
-			Map<String, LoginSourceSensorActuator> mapByLoginSensorName = ssaByLoginSourceUuid
-					.get(key);
-			if (mapByLoginSensorName == null) {
-				mapByLoginSensorName = new HashMap<String, LoginSourceSensorActuator>();
-				ssaByLoginSourceUuid.put(key, mapByLoginSensorName);
-			}
-			mapByLoginSensorName.put(loginSourceSensorActuator.getSensorName(), loginSourceSensorActuator);
+		// If ActuatorState table doesn't exist or force flag is set then drop/create and populate table
+		ActuatorStateDao.useKeyspace(keyspaceName);
+		if( ruleConfig.isForceRefreshActuatorState() || !ActuatorStateDao.isTableExists(keyspaceName) ) {
+			ActuatorStateDao.dropTable();
+			ActuatorStateDao.createTable();
+			String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileActuatorState()));
+			List<ActuatorState> actuatorStates = gson.fromJson(rawJson,
+					new TypeToken<List<ActuatorState>>() {
+					}.getType());
+			ActuatorStateDao.insertActuatorStateBatch(actuatorStates);
+		} else if( ruleConfig.isForceResetActuatorState()) {
+			String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileActuatorState()));
+			List<ActuatorState> actuatorStates = gson.fromJson(rawJson,
+					new TypeToken<List<ActuatorState>>() {
+					}.getType());
+			ActuatorStateDao.resetActuatorStateBatch(actuatorStates);
 		}
-		
-		rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileRuleLoginSourceSensor()));
+
+		String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileRuleLoginSourceSensor()));
 		ruleLoginSourceSensors = gson.fromJson(rawJson,
 				new TypeToken<List<RuleLoginSourceSensor>>() {
 				}.getType());
@@ -90,12 +94,9 @@ public class RuleSvcJsonImpl extends RuleSvc {
 		}
 	}
 
-	protected LoginSourceSensorActuator findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorName) throws Exception {
-		String key = loginUuid + "|" + sourceUuid;
-		if( ssaByLoginSourceUuid.containsKey(key)
-				&& ssaByLoginSourceUuid.get(key).containsKey(sensorName) )
-				return ssaByLoginSourceUuid.get(key).get(sensorName);
-		else return null;
+	protected ActuatorState findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorName) throws Exception {
+		String pk = String.format("%s|%s|%s", loginUuid, sourceUuid,sensorName);
+		return ActuatorStateDao.findActuatorState(pk);
 	}
 
 	protected RuleDefItem findRuleDefItem(String ruleUuid) throws Exception {
@@ -103,9 +104,8 @@ public class RuleSvcJsonImpl extends RuleSvc {
 	}
 
 
-	protected void updateActuatorValue(LoginSourceSensorActuator sourceSensorActuator) throws Exception {
-		// TODO phase 1- show value, phase 2 write value to ignite
-		
+	protected void updateActuatorValue(ActuatorState actuatorState) throws Exception {
+		ActuatorStateDao.updateActuatorValue(actuatorState.getPk(), actuatorState.getActuatorValue() );
 	}
 
 	protected RuleLoginSourceSensor findRuleLoginSourceSensor(String loginUuid, String sourceUuid, String sensorName) throws Exception {

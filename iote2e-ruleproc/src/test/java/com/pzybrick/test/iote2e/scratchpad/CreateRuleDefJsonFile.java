@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
 import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefCondItem;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefItem;
@@ -27,9 +28,9 @@ public class CreateRuleDefJsonFile {
 			String nameExtRuleSourceSensors = args[0] + "/rule_source_sensor.json";
 			File fileNameExtRuleSourceSensors = new File(nameExtRuleSourceSensors);
 			fileNameExtRuleSourceSensors.delete();
-			String nameExtSourceSensorActuator = args[0] + "/source_sensor_actuator.json";
-			File fileNameExtSourceSensorActuator = new File(nameExtSourceSensorActuator);
-			fileNameExtSourceSensorActuator.delete();
+			String nameExtActuatorState = args[0] + "/actuator_state.json";
+			File fileNameExtActuatorState = new File(nameExtActuatorState);
+			fileNameExtActuatorState.delete();
 			
 			RuleDefItem fanRuleDefItem = createTempRuleDefItem();
 			RuleDefItem misterRuleDefItem = createHumidityRuleDefItem();
@@ -76,27 +77,27 @@ public class CreateRuleDefJsonFile {
 			ruleSourceSensors.add( new RuleLoginSourceSensor().setSourceName(sourceUuidLights).setSensorName(sensorNameSwitch2)
 					.setRuleName(ledYellowRuleDefItem.getRuleName()).setDesc("Switch2ToLedYellow"));
 
-			List<LoginSourceSensorActuator> sourceSensorActuators = new ArrayList<LoginSourceSensorActuator>();
-			sourceSensorActuators
-			.add(new LoginSourceSensorActuator().setSourceName(sourceUuidFanMister).setSensorName(sensorNameTemp)
-					.setActuatorName(actuatorNameFan).setActuatorValue(null).setDesc("TempToFan"));
-			sourceSensorActuators
-			.add(new LoginSourceSensorActuator().setSourceName(sourceUuidFanMister).setSensorName(sensorNameHumidity)
-					.setActuatorName(actuatorNameMister).setActuatorValue(null).setDesc("HumidityToMister"));
-			sourceSensorActuators
-			.add(new LoginSourceSensorActuator().setSourceName(sourceUuidLights).setSensorName(sensorNameSwitch0)
-					.setActuatorName(actuatorNameLedGreen).setActuatorValue(null).setDesc("Switch0ToLedGreen"));
-			sourceSensorActuators
-			.add(new LoginSourceSensorActuator().setSourceName(sourceUuidLights).setSensorName(sensorNameSwitch1)
-					.setActuatorName(actuatorNameLedRed).setActuatorValue(null).setDesc("Switch1ToLedRed"));
-			sourceSensorActuators
-			.add(new LoginSourceSensorActuator().setSourceName(sourceUuidLights).setSensorName(sensorNameSwitch2)
-					.setActuatorName(actuatorNameLedYellow).setActuatorValue(null).setDesc("Switch2ToLedYellow"));
+			List<ActuatorState> actuatorStates = new ArrayList<ActuatorState>();
+			actuatorStates
+			.add(new ActuatorState().setSourceName(sourceUuidFanMister).setSensorName(sensorNameTemp)
+					.setActuatorName(actuatorNameFan).setActuatorValue(null).setActuatorDesc("TempToFan"));
+			actuatorStates
+			.add(new ActuatorState().setSourceName(sourceUuidFanMister).setSensorName(sensorNameHumidity)
+					.setActuatorName(actuatorNameMister).setActuatorValue(null).setActuatorDesc("HumidityToMister"));
+			actuatorStates
+			.add(new ActuatorState().setSourceName(sourceUuidLights).setSensorName(sensorNameSwitch0)
+					.setActuatorName(actuatorNameLedGreen).setActuatorValue(null).setActuatorDesc("Switch0ToLedGreen"));
+			actuatorStates
+			.add(new ActuatorState().setSourceName(sourceUuidLights).setSensorName(sensorNameSwitch1)
+					.setActuatorName(actuatorNameLedRed).setActuatorValue(null).setActuatorDesc("Switch1ToLedRed"));
+			actuatorStates
+			.add(new ActuatorState().setSourceName(sourceUuidLights).setSensorName(sensorNameSwitch2)
+					.setActuatorName(actuatorNameLedYellow).setActuatorValue(null).setActuatorDesc("Switch2ToLedYellow"));
 
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			FileUtils.writeStringToFile(fileNameExtRuleItems, gson.toJson(ruleDefItems));
 			FileUtils.writeStringToFile(fileNameExtRuleSourceSensors, gson.toJson(ruleSourceSensors));
-			FileUtils.writeStringToFile(fileNameExtSourceSensorActuator, gson.toJson(sourceSensorActuators));
+			FileUtils.writeStringToFile(fileNameExtActuatorState, gson.toJson(actuatorStates));
 
 		} catch (Exception e) {
 			logger.error(e);

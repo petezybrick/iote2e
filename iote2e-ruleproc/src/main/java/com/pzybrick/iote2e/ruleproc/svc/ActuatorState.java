@@ -20,12 +20,20 @@ public class ActuatorState implements Serializable {
 	@Expose
 	private String actuatorValue;
 	@Expose
-	private String desc;
+	private String actuatorDesc;
 	@Expose
 	private String actuatorValueUpdatedAt;
+	
+	private String pk;
 
 	public ActuatorState() {
 		
+	}
+	
+	public String getPk() {
+		if( pk != null ) return pk;
+		pk = String.format( "%s|%s|%s", loginName,sourceName,sensorName);
+		return pk;
 	}
 
 	public String getSourceName() {
@@ -44,8 +52,8 @@ public class ActuatorState implements Serializable {
 		return actuatorValue;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getActuatorDesc() {
+		return actuatorDesc;
 	}
 
 	public ActuatorState setSourceName(String sourceName) {
@@ -68,8 +76,8 @@ public class ActuatorState implements Serializable {
 		return this;
 	}
 
-	public ActuatorState setDesc(String desc) {
-		this.desc = desc;
+	public ActuatorState setActuatorDesc(String actuatorDesc) {
+		this.actuatorDesc = actuatorDesc;
 		return this;
 	}
 
@@ -85,7 +93,7 @@ public class ActuatorState implements Serializable {
 	@Override
 	public String toString() {
 		return "ActuatorState [loginName=" + loginName + ", sourceName=" + sourceName + ", sensorName=" + sensorName
-				+ ", actuatorName=" + actuatorName + ", actuatorValue=" + actuatorValue + ", desc=" + desc
+				+ ", actuatorName=" + actuatorName + ", actuatorValue=" + actuatorValue + ", desc=" + actuatorDesc
 				+ ", actuatorValueUpdatedAt=" + actuatorValueUpdatedAt + "]";
 	}
 
