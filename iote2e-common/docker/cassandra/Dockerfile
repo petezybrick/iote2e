@@ -6,17 +6,6 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-#RUN apt-get update \
-# && apt-get install -y locales \
-# && dpkg-reconfigure -f noninteractive locales \
-# && locale-gen C.UTF-8 \
-# && /usr/sbin/update-locale LANG=C.UTF-8 \
-# && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
-# && locale-gen \
-# && apt-get clean \
-# && rm -rf /var/lib/apt/lists/*
-
-
 # Users with other locales should set this in their derivative image
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -51,17 +40,7 @@ RUN curl -sL --retry 3 --insecure \
   && ln -s $JAVA_HOME /usr/java \
   && rm -rf $JAVA_HOME/man
 
-copy spark-2.0.2-bin-hadoop2.7.tgz spark-2.0.2-bin-hadoop2.7.tgz
+copy apache-cassandra-3.9-bin.tar.gz apache-cassandra-3.9-bin.tar.gz
 
-# SPARK
-ENV SPARK_VERSION 2.0.2
-ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-hadoop2.7
-ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
-ENV PATH $PATH:${SPARK_HOME}/bin
-RUN tar -xzvf ${SPARK_PACKAGE}.tgz -C /usr/ 
-
-RUN mv /usr/$SPARK_PACKAGE $SPARK_HOME \
-   && chown -R root:root $SPARK_HOME
-
-WORKDIR $SPARK_HOME
-CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master"]
+# WORKDIR $SPARK_HOME
+# CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master"]
