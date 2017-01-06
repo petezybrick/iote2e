@@ -1,190 +1,90 @@
 version: '2'
 
 services:
-  iote2e-spark-master:
-    image: spark:2.0.2
-    command: bin/spark-class org.apache.spark.deploy.master.Master -h iote2e-spark-master
-    hostname: iote2e-spark-master
-    container_name: iote2e-spark-master
+  iote2e-cassandra1:
+    image: cassandra:3.9
+    command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra1.yaml
+    hostname: iote2e-cassandra1
+    container_name: iote2e-cassandra1
     mem_limit: 16g
     memswap_limit: 16g
     networks:
       default:
-        ipv4_address: 192.168.21.20
-    environment:
-      MASTER: spark://iote2e-spark-master:7077
-      SPARK_CONF_DIR: /conf
-      SPARK_PUBLIC_DNS: localhost
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 8g
-      SPARK_DRIVER_MEMORY: 8G
-      SPARK_DAEMON_MEMORY: 8G
+        ipv4_address: 192.168.21.91
     expose:
+      - 7000
       - 7001
-      - 7002
-      - 7003
-      - 7004
-      - 7005
-      - 7006
-      - 7077
-      - 6066
+      - 9042
+      - 9160
     ports:
-      - 4040:4040
-      - 6066:6066
-      - 7077:7077
-      - 8080:8080
+      - 9041:9042
     volumes:
-      - ./conf/master:/conf
+      - ./conf:/conf
+      - ./data:/tmp/data
+      
+  iote2e-cassandra2:
+    image: cassandra:3.9
+    command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra2.yaml
+    hostname: iote2e-cassandra2
+    container_name: iote2e-cassandra2
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.92
+    expose:
+      - 7000
+      - 7001
+      - 9042
+      - 9160
+    ports:
+      - 9042:9042
+    volumes:
+      - ./conf:/conf
+      - ./data:/tmp/data
+    
+  iote2e-cassandra3:
+    image: cassandra:3.9
+    command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra3.yaml
+    hostname: iote2e-cassandra3
+    container_name: iote2e-cassandra3
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.93
+    expose:
+      - 7000
+      - 7001
+      - 9042
+      - 9160
+    ports:
+     - 9043:9042
+    volumes:
+      - ./conf:/conf
+      - ./data:/tmp/data
+      
+  iote2e-cassandra4:
+    image: cassandra:3.9
+    command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra4.yaml
+    hostname: iote2e-cassandra4
+    container_name: iote2e-cassandra4
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.21.94
+    expose:
+      - 7000
+      - 7001
+      - 9042
+      - 9160
+    ports:
+      - 9044:9042
+    volumes:
+      - ./conf:/conf
       - ./data:/tmp/data
   
-  iote2e-spark-worker1:
-    image: spark:2.0.2
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
-    hostname: iote2e-spark-worker1
-    container_name: iote2e-spark-worker1
-    mem_limit: 16g
-    memswap_limit: 16g
-    networks:
-      default:
-        ipv4_address: 192.168.21.21
-    environment:
-      SPARK_CONF_DIR: /conf
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 8g
-      SPARK_WORKER_PORT: 8881
-      SPARK_WORKER_WEBUI_PORT: 8181
-      SPARK_PUBLIC_DNS: localhost
-      SPARK_EXECUTOR_INSTANCES: 2
-      SPARK_EXECUTOR_CORES: 2
-      SPARK_EXECUTOR_MEMORY: 8G
-      SPARK_DRIVER_MEMORY: 8G
-      SPARK_DAEMON_MEMORY: 8G
-    links:
-      - iote2e-spark-master
-    expose:
-      - 7012
-      - 7013
-      - 7014
-      - 7015
-      - 7016
-      - 8881
-    ports:
-      - 8181:8181
-    volumes:
-      - ./conf/worker:/conf
-      - ./data:/tmp/data
-      
-  iote2e-spark-worker2:
-    image: spark:2.0.2
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
-    hostname: iote2e-spark-worker2
-    container_name: iote2e-spark-worker2
-    mem_limit: 16g
-    memswap_limit: 16g
-    networks:
-      default:
-        ipv4_address: 192.168.21.22
-    environment:
-      SPARK_CONF_DIR: /conf
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 8g
-      SPARK_WORKER_PORT: 8881
-      SPARK_WORKER_WEBUI_PORT: 8182
-      SPARK_PUBLIC_DNS: localhost
-      SPARK_EXECUTOR_INSTANCES: 2
-      SPARK_EXECUTOR_CORES: 2
-      SPARK_EXECUTOR_MEMORY: 8G
-      SPARK_DRIVER_MEMORY: 8G
-      SPARK_DAEMON_MEMORY: 8G
-    links:
-      - iote2e-spark-master
-    expose:
-      - 7012
-      - 7013
-      - 7014
-      - 7015
-      - 7016
-      - 8881
-    ports:
-      - 8182:8182
-    volumes:
-      - ./conf/worker:/conf
-      - ./data:/tmp/data
-     
-  iote2e-spark-worker3:
-    image: spark:2.0.2
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
-    hostname: iote2e-spark-worker3
-    container_name: iote2e-spark-worker3
-    mem_limit: 16g
-    memswap_limit: 16g
-    networks:
-      default:
-        ipv4_address: 192.168.21.23
-    environment:
-      SPARK_CONF_DIR: /conf
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 8g
-      SPARK_WORKER_PORT: 8881
-      SPARK_WORKER_WEBUI_PORT: 8183
-      SPARK_PUBLIC_DNS: localhost
-      SPARK_EXECUTOR_INSTANCES: 2
-      SPARK_EXECUTOR_CORES: 2
-      SPARK_EXECUTOR_MEMORY: 8G
-      SPARK_DRIVER_MEMORY: 8G
-      SPARK_DAEMON_MEMORY: 8G
-    links:
-      - iote2e-spark-master
-    expose:
-      - 7012
-      - 7013
-      - 7014
-      - 7015
-      - 7016
-      - 8881
-    ports:
-      - 8183:8183
-    volumes:
-      - ./conf/worker:/conf
-      - ./data:/tmp/data
-      
-  iote2e-spark-worker4:
-    image: spark:2.0.2
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
-    hostname: iote2e-spark-worker4
-    container_name: iote2e-spark-worker4
-    mem_limit: 16g
-    memswap_limit: 16g
-    networks:
-      default:
-        ipv4_address: 192.168.21.24
-    environment:
-      SPARK_CONF_DIR: /conf
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 8g
-      SPARK_WORKER_PORT: 8881
-      SPARK_WORKER_WEBUI_PORT: 8184
-      SPARK_PUBLIC_DNS: localhost
-      SPARK_EXECUTOR_INSTANCES: 2
-      SPARK_EXECUTOR_CORES: 2
-      SPARK_EXECUTOR_MEMORY: 8G
-      SPARK_DRIVER_MEMORY: 8G
-      SPARK_DAEMON_MEMORY: 8G
-    links:
-      - iote2e-spark-master
-    expose:
-      - 7012
-      - 7013
-      - 7014
-      - 7015
-      - 7016
-      - 8881
-    ports:
-      - 8184:8184
-    volumes:
-      - ./conf/worker:/conf
-      - ./data:/tmp/data
-
 networks:
   default:
     external:

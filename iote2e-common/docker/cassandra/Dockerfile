@@ -1,7 +1,5 @@
 FROM ubuntu:14.04.5
 MAINTAINER Pete Zybrick <pzybrick@gmail.com>
-# Thanks to GettyImages for the original base dockerfile
-
 RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
@@ -42,5 +40,9 @@ RUN curl -sL --retry 3 --insecure \
 
 copy apache-cassandra-3.9-bin.tar.gz apache-cassandra-3.9-bin.tar.gz
 
-# WORKDIR $SPARK_HOME
-# CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master"]
+ 
+RUN tar -xzvf apache-cassandra-3.9-bin.tar.gz -C /usr/ \
+ && export PATH=$PATH:/usr/apache-cassandra-3.9/bin
+ENV PATH $PATH:/usr/apache-cassandra-3.9/bin
+
+CMD ["cassandra", "-f", "-R"]
