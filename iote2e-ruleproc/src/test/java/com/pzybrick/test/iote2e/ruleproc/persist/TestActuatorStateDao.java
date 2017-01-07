@@ -11,9 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
-import com.pzybrick.iote2e.ruleproc.persist.Iote2eCommonDao;
 import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
-import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
 
 
 
@@ -27,9 +25,9 @@ public class TestActuatorStateDao {
 	@Test
 	public void testSequence() {
 		try {
-			Iote2eCommonDao.dropKeyspace(TEST_KEYSPACE_NAME);
-			Iote2eCommonDao.createKeyspace(TEST_KEYSPACE_NAME, TEST_KEYSPACE_REPLICATION_STRATEGY, TEST_KEYSPACE_REPLICATION_FACTOR);
-			Iote2eCommonDao.useKeyspace(TEST_KEYSPACE_NAME);
+			ActuatorStateDao.dropKeyspace(TEST_KEYSPACE_NAME);
+			ActuatorStateDao.createKeyspace(TEST_KEYSPACE_NAME, TEST_KEYSPACE_REPLICATION_STRATEGY, TEST_KEYSPACE_REPLICATION_FACTOR);
+			ActuatorStateDao.useKeyspace(TEST_KEYSPACE_NAME);
 			
 			
 			ActuatorStateDao.dropTable();
@@ -74,7 +72,6 @@ public class TestActuatorStateDao {
 		} catch( Exception e ) {
 			logger.error(e.getLocalizedMessage());			
 		} finally {
-			Iote2eCommonDao.disconnect();
 			ActuatorStateDao.disconnect();
 		}
 	}

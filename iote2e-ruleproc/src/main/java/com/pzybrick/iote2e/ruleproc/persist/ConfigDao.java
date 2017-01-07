@@ -62,7 +62,7 @@ public class ConfigDao extends CassandraBaseDao {
 			logger.debug("select={}",select);
 			ResultSet rs = execute(select);
 			Row row = rs.one();
-			return row.getString("actuator_value");
+			return row != null ? row.getString("config_json") : null;
 
 		} catch( Exception e ) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -134,7 +134,7 @@ public class ConfigDao extends CassandraBaseDao {
 	
 	private static String createConfigJsonCql( String pk, String configJson  ) {
 		if( configJson != null ) configJson = "'" + configJson + "'";
-		return String.format("UPDATE %s SET config_json=%s where login_source_sensor='%s'; ", 
+		return String.format("UPDATE %s SET config_json=%s where config_name='%s'; ", 
 				TABLE_NAME, configJson, pk);
 	}
 	

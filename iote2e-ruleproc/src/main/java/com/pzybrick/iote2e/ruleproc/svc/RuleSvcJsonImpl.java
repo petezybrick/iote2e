@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 
 public class RuleSvcJsonImpl extends RuleSvc {
 	private static final Logger logger = LogManager.getLogger(RuleSvcJsonImpl.class);
@@ -31,26 +32,28 @@ public class RuleSvcJsonImpl extends RuleSvc {
 
 	public void init(RuleConfig ruleConfig) throws Exception {
 		logger.info(ruleConfig.toString());
+		ActuatorStateDao.useKeyspace(keyspaceName);
+		ConfigDao.useKeyspace(keyspaceName);
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		// If ActuatorState table doesn't exist or force flag is set then drop/create and populate table
 		ActuatorStateDao.useKeyspace(keyspaceName);
 		if( ruleConfig.isForceRefreshActuatorState() || !ActuatorStateDao.isTableExists(keyspaceName) ) {
 			ActuatorStateDao.dropTable();
 			ActuatorStateDao.createTable();
-			String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileActuatorState()));
+			String rawJson = ConfigDao.findConfigJson(ruleConfig.getActuatorStateKey());
 			List<ActuatorState> actuatorStates = gson.fromJson(rawJson,
 					new TypeToken<List<ActuatorState>>() {
 					}.getType());
 			ActuatorStateDao.insertActuatorStateBatch(actuatorStates);
 		} else if( ruleConfig.isForceResetActuatorState()) {
-			String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileActuatorState()));
+			String rawJson = ConfigDao.findConfigJson(ruleConfig.getActuatorStateKey());
 			List<ActuatorState> actuatorStates = gson.fromJson(rawJson,
 					new TypeToken<List<ActuatorState>>() {
 					}.getType());
 			ActuatorStateDao.resetActuatorStateBatch(actuatorStates);
 		}
 
-		String rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileRuleLoginSourceSensor()));
+		String rawJson = ConfigDao.findConfigJson(ruleConfig.getRuleLoginSourceSensorKey());
 		ruleLoginSourceSensors = gson.fromJson(rawJson,
 				new TypeToken<List<RuleLoginSourceSensor>>() {
 				}.getType());
@@ -65,7 +68,7 @@ public class RuleSvcJsonImpl extends RuleSvc {
 			mapBySensorName.put(ruleLoginSourceSensor.getSensorName(), ruleLoginSourceSensor);
 		}
 		
-		rawJson = FileUtils.readFileToString(new File(ruleConfig.getJsonFileRuleDefItem()));
+		rawJson = ConfigDao.findConfigJson(ruleConfig.getRuleDefItemKey());
 		ruleDefItems = gson.fromJson(rawJson,
 				new TypeToken<List<RuleDefItem>>() {
 				}.getType());

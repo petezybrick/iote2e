@@ -10,11 +10,11 @@ import com.google.gson.annotations.Expose;
 public class RuleConfig implements Serializable {
 	private static final long serialVersionUID = -5229495159598744855L;
 	@Expose 
-	private String jsonFileActuatorState;
+	private String actuatorStateKey;
 	@Expose 
-	private String jsonFileRuleLoginSourceSensor;
+	private String ruleLoginSourceSensorKey;
 	@Expose 
-	private String jsonFileRuleDefItem;
+	private String ruleDefItemKey;
 	@Expose
 	private String sourceResponseIgniteCacheName;
 	@Expose
@@ -32,30 +32,30 @@ public class RuleConfig implements Serializable {
 		
 	}
 
-	public String getJsonFileActuatorState() {
-		return jsonFileActuatorState;
+	public String getActuatorStateKey() {
+		return actuatorStateKey;
 	}
 
-	public RuleConfig setJsonFileActuatorState(String jsonFileActuatorState) {
-		this.jsonFileActuatorState = jsonFileActuatorState;
+	public RuleConfig setActuatorStateKey(String actuatorStateKey) {
+		this.actuatorStateKey = actuatorStateKey;
 		return this;
 	}
 
-	public String getJsonFileRuleLoginSourceSensor() {
-		return jsonFileRuleLoginSourceSensor;
+	public String getRuleLoginSourceSensorKey() {
+		return ruleLoginSourceSensorKey;
 	}
 
-	public String getJsonFileRuleDefItem() {
-		return jsonFileRuleDefItem;
+	public String getRuleDefItemKey() {
+		return ruleDefItemKey;
 	}
 
-	public RuleConfig setJsonFileRuleLoginSourceSensor(String jsonFileRuleSourceSensor) {
-		this.jsonFileRuleLoginSourceSensor = jsonFileRuleSourceSensor;
+	public RuleConfig setRuleLoginSourceSensorKey(String jsonFileRuleSourceSensor) {
+		this.ruleLoginSourceSensorKey = jsonFileRuleSourceSensor;
 		return this;
 	}
 
-	public RuleConfig setJsonFileRuleDefItem(String jsonFileRuleDefItem) {
-		this.jsonFileRuleDefItem = jsonFileRuleDefItem;
+	public RuleConfig setRuleDefItemKey(String ruleDefItemKey) {
+		this.ruleDefItemKey = ruleDefItemKey;
 		return this;
 	}
 
@@ -70,8 +70,8 @@ public class RuleConfig implements Serializable {
 
 	@Override
 	public String toString() {
-		return "RuleConfig [jsonFileActuatorState=" + jsonFileActuatorState + ", jsonFileRuleLoginSourceSensor="
-				+ jsonFileRuleLoginSourceSensor + ", jsonFileRuleDefItem=" + jsonFileRuleDefItem
+		return "RuleConfig [jsonFileActuatorState=" + actuatorStateKey + ", jsonFileRuleLoginSourceSensor="
+				+ ruleLoginSourceSensorKey + ", jsonFileRuleDefItem=" + ruleDefItemKey
 				+ ", sourceResponseIgniteCacheName=" + sourceResponseIgniteCacheName
 				+ ", sourceResponseIgniteConfigFile=" + sourceResponseIgniteConfigFile
 				+ ", sourceResponseIgniteConfigName=" + sourceResponseIgniteConfigName + ", igniteClientMode="

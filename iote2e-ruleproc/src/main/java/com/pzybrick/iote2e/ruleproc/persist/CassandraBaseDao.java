@@ -99,9 +99,16 @@ public class CassandraBaseDao {
 		return keyspaceMetadata.getTable(tableName);
 	}
 
+	public static void createKeyspace( String keyspaceName, String replicationStrategy, int replicationFactor ) throws Exception {
+		execute( String.format("CREATE KEYSPACE %s WITH replication = {'class':'%s','replication_factor':%d}; ", 
+				keyspaceName, replicationStrategy, replicationFactor) );
+	}	
+	
+	public static void dropKeyspace( String keyspaceName ) throws Exception {
+		execute( String.format("DROP KEYSPACE IF EXISTS %s; ", keyspaceName) );
+	}
 	
 	public static void useKeyspace( String keyspaceName ) throws Exception {
-		logger.debug("keyspaceName={}",keyspaceName);
 		execute( String.format("USE %s; ", keyspaceName) );
 	}
 	
