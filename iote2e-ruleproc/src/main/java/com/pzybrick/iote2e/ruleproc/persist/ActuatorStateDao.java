@@ -64,7 +64,7 @@ public class ActuatorStateDao extends CassandraBaseDao {
 	
 	public static String findActuatorValue( String pk ) throws Exception {
 		try {
-			String select = String.format("SELECT actuator_value FROM actuator_state where login_source_sensor='%s'; ", pk);
+			String select = String.format("SELECT actuator_value FROM %s where login_source_sensor='%s'; ", TABLE_NAME, pk);
 			logger.debug("select={}",select);
 			ResultSet rs = execute(select);
 			Row row = rs.one();
@@ -79,7 +79,7 @@ public class ActuatorStateDao extends CassandraBaseDao {
 	
 	public static ActuatorState findActuatorState( String pk ) throws Exception {
 		try {
-			String select = String.format("SELECT * FROM actuator_state where login_source_sensor='%s'; ", pk);
+			String select = String.format("SELECT * FROM %s where login_source_sensor='%s'; ", TABLE_NAME, pk);
 			logger.debug("select={}",select);
 			ResultSet rs = execute(select);
 			Row row = rs.one();
@@ -106,7 +106,7 @@ public class ActuatorStateDao extends CassandraBaseDao {
 	
 	public static void deleteRow( String pk ) throws Exception {
 		try {
-			String delete = String.format("DELETE FROM actuator_state where login_source_sensor='%s'; ", pk);
+			String delete = String.format("DELETE FROM %s where login_source_sensor='%s'; ", TABLE_NAME, pk);
 			logger.debug("delete={}",delete);
 			execute(delete);
 
@@ -184,18 +184,18 @@ public class ActuatorStateDao extends CassandraBaseDao {
 		String key = actuatorState.getLoginName() + "|" +
 				actuatorState.getSourceName() + "|" +
 				actuatorState.getSensorName();
-		String insert = String.format("INSERT INTO actuator_state " + 
+		String insert = String.format("INSERT INTO %s " + 
 			"(login_source_sensor,actuator_name,actuator_value,actuator_desc,actuator_value_updated_at) " + 
 			"values('%s','%s','%s','%s',toTimestamp(now())); ",
-			key, actuatorState.getActuatorName(), actuatorState.getActuatorValue(),
+			TABLE_NAME, key, actuatorState.getActuatorName(), actuatorState.getActuatorValue(),
 			actuatorState.getActuatorDesc() );
 		return insert;
 	}
 	
 	private static String createUpdateValueCql( String pk, String newValue  ) {
 		if( newValue != null ) newValue = "'" + newValue + "'";
-		return String.format("UPDATE actuator_state SET actuator_value=%s,actuator_value_updated_at=toTimestamp(now()) where login_source_sensor='%s'; ", 
-				newValue, pk);
+		return String.format("UPDATE %s SET actuator_value=%s,actuator_value_updated_at=toTimestamp(now()) where login_source_sensor='%s'; ", 
+				TABLE_NAME, newValue, pk);
 	}
 	
 }

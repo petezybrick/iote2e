@@ -1,0 +1,5 @@
+{
+	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
+	"requestSvcClassName": "com.pzybrick.test.iote2e.ruleproc.local.Iote2eSvcLocalTestImpl",
+	"pathNameExtRuleConfigFile": "config/rule/rule_local_config.json"
+}

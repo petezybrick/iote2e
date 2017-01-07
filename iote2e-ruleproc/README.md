@@ -44,6 +44,12 @@ xx. env vars
 5. Injector will exit upon completion
 6. Terminate Spark in Eclipse
 
-
+Create jar with all test classes so they tests can be run from within Docker network
+http://stackoverflow.com/questions/10307652/how-to-include-test-classes-in-jar-created-by-maven-shade-plugin
+critical: 
+  mvn clean compile test-compile assembly:single
+  	>>> creates shaded/uber jar with test classes
+  to run: java -cp <PATH>/iote2e/iote2e-ruleproc/target/iote2e-ruleproc-1.0.0-all-tests.jar org.junit.runner.JUnitCore <TEST_PKG>.<TEST_CLASS>
+  
 
 

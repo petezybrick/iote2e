@@ -32,10 +32,33 @@
 		</pluginManagement>
 
 		<plugins>
+		     <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <descriptor>src/main/assembly/assembly.xml</descriptor>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>com.sample.TestMain</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+ <!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version>	<!-- 1.7.1 -->
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 				</configuration>
@@ -48,9 +71,6 @@
 						<configuration>
 							<finalName>${project.artifactId}-${project.version}</finalName>
 							<filters>
-								<!-- <filter> <artifact>*:*</artifact> <excludes> <exclude>META-INF/*.SF</exclude> 
-									<exclude>META-INF/*.DSA</exclude> <exclude>META-INF/*.RSA</exclude> </excludes> 
-									</filter> -->
 							</filters>
 							<transformers>
 								<transformer
@@ -63,7 +83,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
+ -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>

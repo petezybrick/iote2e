@@ -1,0 +1,37 @@
+[
+  {
+    "loginName": "lo1",
+    "sourceName": "lo1so1",
+    "sensorName": "temp1",
+    "ruleUuid": "lo1so1se1ru1",
+    "desc": "TempToFan"
+  },
+  {
+    "loginName": "lo1",
+    "sourceName": "lo1so1",
+    "sensorName": "humidity1",
+    "ruleUuid": "lo1so1se2ru1",
+    "desc": "HumidityToMister"
+  },
+  {
+    "loginName": "lo1",
+    "sourceName": "lo1so2",
+    "sensorName": "switch0",
+    "ruleUuid": "lo1so2se1ru1",
+    "desc": "Switch0ToLedGreen"
+  },
+  {
+    "loginName": "lo1",
+    "sourceName": "lo1so2",
+    "sensorName": "switch1",
+    "ruleUuid": "lo1so2se2ru1",
+    "desc": "Switch1ToLedRed"
+  },
+  {
+    "loginName": "lo1",
+    "sourceName": "lo1so2",
+    "sensorName": "switch2",
+    "ruleUuid": "lo1so2se3ru1",
+    "desc": "Switch2ToLedYellow"
+  }
+]
