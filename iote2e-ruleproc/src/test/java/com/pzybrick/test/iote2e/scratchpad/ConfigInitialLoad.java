@@ -40,6 +40,7 @@ public class ConfigInitialLoad {
 	}
 	
 	public void initialLoad() throws Exception {
+		try {
 		List<ConfigVo> configVos = new ArrayList<ConfigVo>();
 		ConfigDao.useKeyspace("iote2e");
 		ConfigDao.dropTable();
@@ -53,6 +54,11 @@ public class ConfigInitialLoad {
 			configVos.add( new ConfigVo(configName, configJson));
 		}
 		ConfigDao.insertConfigBatch(configVos);
+		} catch( Exception e ) {
+			throw e;
+		} finally {
+			ConfigDao.disconnect();
+		}
 	}
 	
 	private static String getStringFromInputStream(InputStream is) {

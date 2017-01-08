@@ -70,10 +70,9 @@ public class RuleConfig implements Serializable {
 
 	@Override
 	public String toString() {
-		return "RuleConfig [jsonFileActuatorState=" + actuatorStateKey + ", jsonFileRuleLoginSourceSensor="
-				+ ruleLoginSourceSensorKey + ", jsonFileRuleDefItem=" + ruleDefItemKey
-				+ ", sourceResponseIgniteCacheName=" + sourceResponseIgniteCacheName
-				+ ", sourceResponseIgniteConfigFile=" + sourceResponseIgniteConfigFile
+		return "RuleConfig [actuatorStateKey=" + actuatorStateKey + ", ruleLoginSourceSensorKey="
+				+ ruleLoginSourceSensorKey + ", ruleDefItemKey=" + ruleDefItemKey + ", sourceResponseIgniteCacheName="
+				+ sourceResponseIgniteCacheName + ", sourceResponseIgniteConfigFile=" + sourceResponseIgniteConfigFile
 				+ ", sourceResponseIgniteConfigName=" + sourceResponseIgniteConfigName + ", igniteClientMode="
 				+ igniteClientMode + ", forceRefreshActuatorState=" + forceRefreshActuatorState
 				+ ", forceResetActuatorState=" + forceResetActuatorState + "]";

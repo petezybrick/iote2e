@@ -1,20 +1,17 @@
 package com.pzybrick.iote2e.ruleproc.request;
 
-import java.io.File;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.ruleproc.svc.RuleSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
-import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
 public class Iote2eRequestSparkHandler {
 	private static final Logger logger = LogManager.getLogger(Iote2eRequestSparkHandler.class);
@@ -22,12 +19,14 @@ public class Iote2eRequestSparkHandler {
 	private Iote2eSvc iote2eSvc;
 	private Iote2eRequestConfig iote2eRequestConfig;
 	private RuleConfig ruleConfig;
+	private String keyspaceName;
 
 	public Iote2eRequestSparkHandler() throws Exception {
-
 		try {
-			String pathNameExtSourceSensorConfig = System.getenv("REQUEST_CONFIG_JSON_FILE_KSI");
-			String rawJson = FileUtils.readFileToString(new File(pathNameExtSourceSensorConfig));
+			this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
+			ConfigDao.useKeyspace(keyspaceName);
+			String sourceSensorConfigKey = System.getenv("REQUEST_CONFIG_JSON_KEY_KSI");
+			String rawJson = ConfigDao.findConfigJson(sourceSensorConfigKey);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			iote2eRequestConfig = gson.fromJson(rawJson, Iote2eRequestConfig.class);
 	
@@ -35,7 +34,7 @@ public class Iote2eRequestSparkHandler {
 			ruleSvc = (RuleSvc) cls.newInstance();
 			cls = Class.forName(iote2eRequestConfig.getRequestSvcClassName());
 	
-			rawJson = FileUtils.readFileToString(new File(iote2eRequestConfig.getPathNameExtRuleConfigFile()));
+			rawJson = ConfigDao.findConfigJson(iote2eRequestConfig.getRuleConfigKey());
 			ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
 			iote2eSvc = (Iote2eSvc) cls.newInstance();
 			

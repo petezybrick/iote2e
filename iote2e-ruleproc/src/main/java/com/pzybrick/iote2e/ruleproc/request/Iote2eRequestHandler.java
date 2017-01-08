@@ -1,15 +1,14 @@
 package com.pzybrick.iote2e.ruleproc.request;
 
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.ruleproc.svc.RuleSvc;
@@ -24,13 +23,16 @@ public class Iote2eRequestHandler extends Thread {
 	private boolean shutdown;
 	private Iote2eRequestConfig iote2eRequestConfig;
 	private RuleConfig ruleConfig;
+	private String keyspaceName;
 
-	public Iote2eRequestHandler(String pathNameExtSourceSensorConfig,
+	public Iote2eRequestHandler(String sourceSensorConfigKey,
 			ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
 		logger.debug("ctor");
 		try {
+			this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
+			ConfigDao.useKeyspace(keyspaceName);
 			this.iote2eRequests = iote2eRequests;
-			String rawJson = FileUtils.readFileToString(new File(pathNameExtSourceSensorConfig));
+			String rawJson = ConfigDao.findConfigJson(sourceSensorConfigKey);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			iote2eRequestConfig = gson.fromJson(rawJson, Iote2eRequestConfig.class);
 	
@@ -38,7 +40,7 @@ public class Iote2eRequestHandler extends Thread {
 			ruleSvc = (RuleSvc) cls.newInstance();
 			cls = Class.forName(iote2eRequestConfig.getRequestSvcClassName());
 	
-			rawJson = FileUtils.readFileToString(new File(iote2eRequestConfig.getPathNameExtRuleConfigFile()));
+			rawJson = ConfigDao.findConfigJson(iote2eRequestConfig.getRuleConfigKey());
 			ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
 			// TODO: get via static instanceOf, or just wrap the iote2esvc calls in synchronized
 			iote2eSvc = (Iote2eSvc) cls.newInstance();

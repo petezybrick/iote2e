@@ -11,7 +11,7 @@ public class Iote2eRequestConfig {
 	@Expose
 	private String requestSvcClassName;
 	@Expose
-	private String pathNameExtRuleConfigFile;
+	private String ruleConfigKey;
 
 	public String getRuleSvcClassName() {
 		return ruleSvcClassName;
@@ -34,15 +34,15 @@ public class Iote2eRequestConfig {
 	@Override
 	public String toString() {
 		return "Iote2eRequestConfig [ruleSvcClassName=" + ruleSvcClassName + ", requestSvcClassName="
-				+ requestSvcClassName + ", pathNameExtRuleConfigFile=" + pathNameExtRuleConfigFile + "]";
+				+ requestSvcClassName + ", ruleConfigKey=" + ruleConfigKey + "]";
 	}
 
-	public String getPathNameExtRuleConfigFile() {
-		return pathNameExtRuleConfigFile;
+	public String getRuleConfigKey() {
+		return ruleConfigKey;
 	}
 
-	public Iote2eRequestConfig setPathNameExtRuleConfigFile(String pathNameExtRuleConfigFile) {
-		this.pathNameExtRuleConfigFile = pathNameExtRuleConfigFile;
+	public Iote2eRequestConfig setRuleConfigKey(String ruleConfigKey) {
+		this.ruleConfigKey = ruleConfigKey;
 		return this;
 	}
 
