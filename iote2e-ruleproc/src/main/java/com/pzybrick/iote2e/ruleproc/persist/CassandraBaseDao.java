@@ -109,6 +109,7 @@ public class CassandraBaseDao {
 	}
 	
 	public static void useKeyspace( String keyspaceName ) throws Exception {
+		if( keyspaceName == null ) throw new Exception("Missing required keyspace name, try setting env var CASSANDRA_KEYSPACE_NAME=\"iote2e\"");
 		execute( String.format("USE %s; ", keyspaceName) );
 	}
 	
@@ -127,12 +128,13 @@ public class CassandraBaseDao {
 	public synchronized static void connect() throws Exception {
 		try {
 			if( contactPoint == null ) contactPoint = System.getenv("CASSANDRA_CONTACT_POINT");
+			if( contactPoint == null ) throw new Exception("Missing required env var CASSANDRA_CONTACT_POINT, for local testing set to 127.0.0.1");
 			logger.debug("contactPoint={}",contactPoint);
 			cluster = Cluster.builder().addContactPoint(contactPoint).build();
 			session = cluster.connect( );
 		} catch( Exception e ) {
 			logger.error(e.getLocalizedMessage(), e);
-			disconnect();
+			if( contactPoint != null ) disconnect();
 			throw e;			
 		}
 	}

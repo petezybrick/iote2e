@@ -50,7 +50,7 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			iote2eResultReuseItem = new Iote2eResultReuseItem();
 			subscribeResults = new ConcurrentLinkedQueue<byte[]>();
 			iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-			iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_KEY_IGNITE"),
+			iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_KEY"),
 					iote2eRequests);
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getRuleConfig());

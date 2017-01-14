@@ -25,7 +25,7 @@ public class Iote2eRequestSparkHandler {
 		try {
 			this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
 			ConfigDao.useKeyspace(keyspaceName);
-			String sourceSensorConfigKey = System.getenv("REQUEST_CONFIG_JSON_KEY_KSI");
+			String sourceSensorConfigKey = System.getenv("REQUEST_CONFIG_JSON_KEY");
 			String rawJson = ConfigDao.findConfigJson(sourceSensorConfigKey);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			iote2eRequestConfig = gson.fromJson(rawJson, Iote2eRequestConfig.class);

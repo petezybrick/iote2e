@@ -35,7 +35,7 @@
         <property name="user" value="sa" />
     </bean>
 
-    <bean abstract="true" id="ignite.cfg" name="cfgpz" class="org.apache.ignite.configuration.IgniteConfiguration">
+    <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
         <!-- Set to true to enable distributed class loading for examples, default is false. -->
         <property name="peerClassLoadingEnabled" value="true"/>
 

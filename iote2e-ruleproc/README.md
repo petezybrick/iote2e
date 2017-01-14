@@ -4,20 +4,25 @@ java -cp iote2e-ruleproc-1.0.0.jar com.pzybrick.iote2e.ruleproc.kafkademo.KafkaS
 java -cp iote2e-ruleproc-1.0.0.jar com.pzybrick.iote2e.ruleproc.kafkademo.KafkaAvroDemo 1000 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
 
 Setup to run unit tests with Iote2eRequests inbound from Kafka
-Note: can't use Kafka under Docker to run jUnit tests, the hostname returned is based on the hostname in the docker
+Note: can't use Kafka under Docker to run jUnit tests, the hostname returned is based on the hostname in docker
 Here is a solid writeup: http://www.michael-noll.com/blog/2013/03/13/running-a-multi-broker-apache-kafka-cluster-on-a-single-node/ 
 Create the 3x server-n.properties files as per the above link
 Start local Zookeeper and Kafka w/ 3 brokers
-cd to the Kafka folder
+cd to the Kafka folder: cd /home/pete/development/server/kafka_2.10-0.10.0.0
+create 4x tabs in terminal
 ./bin/zookeeper-server-start.sh config/zookeeper.properties
 Start each server in separate console/process
 Note: must create the properties files ahead of time as per the above URL
 env JMX_PORT=9999 ./bin/kafka-server-start.sh config/server-0.properties
 env JMX_PORT=10000 ./bin/kafka-server-start.sh config/server-1.properties
 env JMX_PORT=10001 ./bin/kafka-server-start.sh config/server-2.properties
+Start Cassandra single node local
+start another terminal tab or session
+cd to cassandra folder: cd bin/cassandra -f
+./bin/cassandra -f
 
 
-jUnit environment vars
+jUnit environment vars - localhost (not under docker)
 KAFKA_GROUP_UNIT_TEST iote2e-group-sandbox
 KAFKA_TOPIC_UNIT_TEST com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox
 KAFKA_BOOTSTRAP_SERVERS_UNIT_TEST localhost:9091,localhost:9092,localhost:9093

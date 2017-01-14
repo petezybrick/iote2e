@@ -33,7 +33,7 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 		logger.info(
 				"------------------------------------------------------------------------------------------------------");
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_KEY_LOCAL"), iote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_KEY"), iote2eRequests);
 		iote2eSvc = (Iote2eSvcLocalTestImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();
@@ -47,8 +47,11 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 			} catch (Exception e) {
 			}
 		}
-		iote2eRequestHandler.shutdown();
-		iote2eRequestHandler.join();
+		// if Before failed, the iote2eRequestHandler might not exist
+		if( iote2eRequestHandler != null ) {
+			iote2eRequestHandler.shutdown();
+			iote2eRequestHandler.join();
+		}
 	}
 
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,

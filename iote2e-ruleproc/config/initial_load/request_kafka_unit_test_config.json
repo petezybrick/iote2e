@@ -1,5 +1,5 @@
 {
 	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
 	"requestSvcClassName": "com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl",
-	"pathNameExtRuleConfigFile": "config/rule/rule_config_json.json"
+	"ruleConfigKey": "rule_local_config"
 }
