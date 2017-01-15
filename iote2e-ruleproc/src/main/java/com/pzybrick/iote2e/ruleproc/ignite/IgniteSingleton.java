@@ -46,9 +46,13 @@ public class IgniteSingleton {
 	public static synchronized IgniteSingleton getInstance( RuleConfig ruleConfig ) throws Exception {
 		if( igniteSingleton == null ) {
 			try {
-				logger.info("Initializing Ignite, config file=" + ruleConfig.getSourceResponseIgniteConfigFile() + ", config name=" +  ruleConfig.getSourceResponseIgniteConfigName());
+				String igniteConfigPath = System.getenv("IGNITE_CONFIG_PATH");
+				if( igniteConfigPath == null ) throw new Exception("Required env var IGNITE_CONFIG_PATH is not set, try setting to location of ignite-iote2e.xml");
+				if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
+				String igniteConfigPathNameExt = igniteConfigPath + ruleConfig.getSourceResponseIgniteConfigFile();
+				logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  ruleConfig.getSourceResponseIgniteConfigName());
 				IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
-						ruleConfig.getSourceResponseIgniteConfigFile(), ruleConfig.getSourceResponseIgniteConfigName());
+						igniteConfigPathNameExt, ruleConfig.getSourceResponseIgniteConfigName());
 				Ignition.setClientMode(ruleConfig.isIgniteClientMode());
 				Ignite ignite = Ignition.start(igniteConfiguration);
 				if (logger.isDebugEnabled()) logger.debug(ignite.toString());

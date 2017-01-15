@@ -1,12 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<!-- Separate test project for iote2e, based on this maven best practice: https://maven.apache.org/plugins/maven-jar-plugin/examples/create-test-jar.html -->
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.pzybrick.iote2e</groupId>
-	<artifactId>iote2e-ruleproc</artifactId>
+	<artifactId>iote2e-tests</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>iote2e-ruleproc</name>
+	<name>iote2e-tests</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -156,7 +157,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
-			<scope>test</scope>
+			<!-- <scope>test</scope> -->
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
@@ -215,20 +216,20 @@
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-core_2.11</artifactId>
 			<version>${spark.version}</version>
-			<scope>provided</scope>
+			<!-- <scope>provided</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-streaming_2.11</artifactId>
 			<version>${spark.version}</version>
-			<scope>provided</scope>
+			<!-- <scope>provided</scope> -->
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-streaming-kafka_2.10 -->
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-streaming-kafka_2.11</artifactId>
 			<version>1.6.3</version>
-			<scope>provided</scope>
+			<!-- <scope>provided</scope>  -->
 		</dependency>
 		<dependency>
 			<groupId>kafka.spark.consumer</groupId>
@@ -239,7 +240,7 @@
 			<groupId>org.scala-lang</groupId>
 			<artifactId>scala-library</artifactId>
 			<version>${scala.version}</version>
-			<scope>compile</scope>
+			<!-- <scope>compile</scope>  -->
 		</dependency>
 
 		<dependency>
@@ -268,6 +269,12 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.pzybrick.iote2e</groupId>
+			<artifactId>iote2e-ruleproc</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 	</dependencies>

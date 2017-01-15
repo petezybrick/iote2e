@@ -3,7 +3,7 @@
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
 	"ruleDefItemKey": "rule_def_item",
 	"sourceResponseIgniteCacheName": "test-iote2e-sourceresponse-cache",
-	"sourceResponseIgniteConfigFile": "/home/pete/development/gitrepo/iote2e/iote2e-ruleproc/config/ignite/ignite-iote2e.xml",
+	"sourceResponseIgniteConfigFile": "ignite-iote2e.xml",
 	"sourceResponseIgniteConfigName": "ignite.cfg",
 	"igniteClientMode":false,
 	"forceRefreshActuatorState":false,

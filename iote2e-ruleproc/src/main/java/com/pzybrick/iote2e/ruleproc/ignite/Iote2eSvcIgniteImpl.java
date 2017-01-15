@@ -144,6 +144,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 				igniteSingleton.getIgnite().close();
 				igniteSingleton = null;
 			}
+			ActuatorStateDao.disconnect();
 		} catch (Exception e) {
 			logger.warn("Ignite close failure", e);
 		}

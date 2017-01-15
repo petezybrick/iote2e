@@ -1,7 +1,6 @@
 package com.pzybrick.test.iote2e.ruleproc.ksi;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -19,12 +18,11 @@ import org.junit.BeforeClass;
 import com.google.gson.Gson;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
-import com.pzybrick.iote2e.ruleproc.ignite.Iote2eSvcIgniteImpl;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
-import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
@@ -79,6 +77,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 	    	iote2eRequestSparkConsumer.stop();
 			threadSparkRun.join();
 			IgniteSingleton.reset();
+			ConfigDao.disconnect();
 			ActuatorStateDao.disconnect();
 		} catch( Exception e ) {
 			logger.error(e.getMessage(), e);
@@ -144,6 +143,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 
 			String key = String.valueOf(System.currentTimeMillis());
 			ProducerRecord<String, byte[]> data = new ProducerRecord<String, byte[]>(kafkaTopic, key, iote2eRequestReuseItem.toByteArray(iote2eRequest));
+			logger.info("Sending to kafka: {}", iote2eRequest.toString());
 			kafkaProducer.send(data);
 
 		} catch (Exception e) {
