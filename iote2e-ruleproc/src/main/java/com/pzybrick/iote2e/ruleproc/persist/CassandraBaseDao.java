@@ -22,7 +22,7 @@ public class CassandraBaseDao {
 	 * execute with built in retry - cassandra will retry the connection automatically, we just need to keep checking if it succeeded
 	 */
 	protected static ResultSet execute( String cql ) throws Exception {
-		logger.info("cql: {}",  cql);
+		logger.debug("cql: {}",  cql);
 		Exception lastException = null;
 		long sleepMs = 1000;
 		long maxAttempts = 10;
@@ -109,13 +109,6 @@ public class CassandraBaseDao {
 	}
 	
 	public static void useKeyspace( String keyspaceName ) throws Exception {
-		try {
-			String xxx = "aa".substring(5);
-		} catch( Exception e ) {
-			logger.error(e.getLocalizedMessage(), e);
-		}
-		
-		
 		if( keyspaceName == null ) throw new Exception("Missing required keyspace name, try setting env var CASSANDRA_KEYSPACE_NAME=\"iote2e\"");
 		execute( String.format("USE %s; ", keyspaceName) );
 	}
@@ -147,25 +140,22 @@ public class CassandraBaseDao {
 	}
 	
 	public synchronized static void disconnect() {
-		synchronized(session) {
-			logger.debug("closing session and cluster");
-			if( session != null ) {
-				try {
-					session.close();
-					session = null;
-				} catch( Exception eSession ) {
-					logger.error(eSession.getLocalizedMessage());
-				}
-			}			
-			if( cluster != null ) {
-				try {
-					cluster.close();
-					cluster = null;
-				} catch( Exception eCluster ) {
-					logger.error(eCluster.getLocalizedMessage());
-				}
+		logger.debug("closing session and cluster");
+		if( session != null ) {
+			try {
+				session.close();
+				session = null;
+			} catch( Exception eSession ) {
+				logger.error(eSession.getLocalizedMessage());
 			}
-			logger.debug("closed session and cluster");
+		}			
+		if( cluster != null ) {
+			try {
+				cluster.close();
+				cluster = null;
+			} catch( Exception eCluster ) {
+				logger.error(eCluster.getLocalizedMessage());
+			}
 		}
 	}
 	
