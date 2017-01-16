@@ -13,7 +13,7 @@ sudo docker network ls
 - All servers are created in clusters with fixed address blocks for easy identification of server groups
 - All servers have a VOLUME specifying /tmp/iote2e. This is mapped against the local systems /tmp folder when the container is created in the Docker Compose, this helps to copy any files for configuration and/or experimentation
 - The addresses start on .10 divisible boundaries, i.e. 192.168.21.10, 192.168.21.20, etc.
-- Configuration database cluster: start address 192.168.21.10
+- Demo Manager instances: start address 192.168.21.10
 - Spark cluster: start address 192.168.21.20
 - Ignite cluster: start address 192.168.21.30
 - Kafka cluster: start address 192.168.21.40 (zoo1-zoo3 .41-.43, Kafka starts .44)
@@ -21,6 +21,7 @@ sudo docker network ls
 - RealtimeWebsocket Server cluster: start address 192.168.21.60
 - MySQL database cluster: start address 192.168.21.70
 - RiakTS database cluster: start address 192.168.21.80
+- Cassandra cluster: start address 192.168.21.90
 
 
 ### Zookeeper

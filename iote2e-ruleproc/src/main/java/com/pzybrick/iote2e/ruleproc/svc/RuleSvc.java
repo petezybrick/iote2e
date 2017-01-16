@@ -7,13 +7,14 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefCondItem.RuleComparator;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
 public abstract class RuleSvc {
 	private static final Logger logger = LogManager.getLogger(RuleSvc.class);
 
-	public abstract void init(RuleConfig ruleConfig) throws Exception;
+	public abstract void init(MasterConfig masterConfig) throws Exception;
 
 	protected abstract RuleDefItem findRuleDefItem(String ruleUuid) throws Exception;
 

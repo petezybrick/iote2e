@@ -12,9 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
-import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
@@ -125,10 +125,10 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	}
 
 	@Override
-	public synchronized void init(RuleConfig ruleConfig) throws Exception {
+	public synchronized void init(MasterConfig masterConfig) throws Exception {
 		try {
-			logger.info("Getting IgniteCache for: " + ruleConfig.getSourceResponseIgniteCacheName());
-			this.igniteSingleton = IgniteSingleton.getInstance(ruleConfig);
+			logger.info("Getting IgniteCache for: " + masterConfig.getSourceResponseIgniteCacheName());
+			this.igniteSingleton = IgniteSingleton.getInstance(masterConfig);
 		} catch (Exception e) {
 			logger.error("Ignite create cache failure", e);
 			throw e;

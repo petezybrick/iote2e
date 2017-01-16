@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
@@ -17,29 +18,25 @@ public class Iote2eRequestSparkHandler {
 	private static final Logger logger = LogManager.getLogger(Iote2eRequestSparkHandler.class);
 	private RuleSvc ruleSvc;
 	private Iote2eSvc iote2eSvc;
-	private Iote2eRequestConfig iote2eRequestConfig;
-	private RuleConfig ruleConfig;
+	private MasterConfig masterConfig;
 	private String keyspaceName;
 
 	public Iote2eRequestSparkHandler() throws Exception {
 		try {
 			this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
 			ConfigDao.useKeyspace(keyspaceName);
-			String sourceSensorConfigKey = System.getenv("REQUEST_CONFIG_JSON_KEY");
+			String sourceSensorConfigKey = System.getenv("MASTER_CONFIG_JSON_KEY");
 			String rawJson = ConfigDao.findConfigJson(sourceSensorConfigKey);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			iote2eRequestConfig = gson.fromJson(rawJson, Iote2eRequestConfig.class);
+			masterConfig = gson.fromJson(rawJson, MasterConfig.class);
 	
-			Class cls = Class.forName(iote2eRequestConfig.getRuleSvcClassName());
+			Class cls = Class.forName(masterConfig.getRuleSvcClassName());
 			ruleSvc = (RuleSvc) cls.newInstance();
-			cls = Class.forName(iote2eRequestConfig.getRequestSvcClassName());
-	
-			rawJson = ConfigDao.findConfigJson(iote2eRequestConfig.getRuleConfigKey());
-			ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
+			cls = Class.forName(masterConfig.getRequestSvcClassName());
 			iote2eSvc = (Iote2eSvc) cls.newInstance();
 			
-			ruleSvc.init(ruleConfig);
-			iote2eSvc.init(ruleConfig);
+			ruleSvc.init(masterConfig);
+			iote2eSvc.init(masterConfig);
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);
 			throw e;

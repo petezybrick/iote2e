@@ -7,7 +7,7 @@ import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 
 public class IgniteSingleton {
 	private static final Logger logger = LogManager.getLogger(IgniteSingleton.class);
@@ -43,20 +43,20 @@ public class IgniteSingleton {
 		
 	}
 		
-	public static synchronized IgniteSingleton getInstance( RuleConfig ruleConfig ) throws Exception {
+	public static synchronized IgniteSingleton getInstance( MasterConfig masterConfig ) throws Exception {
 		if( igniteSingleton == null ) {
 			try {
 				String igniteConfigPath = System.getenv("IGNITE_CONFIG_PATH");
 				if( igniteConfigPath == null ) throw new Exception("Required env var IGNITE_CONFIG_PATH is not set, try setting to location of ignite-iote2e.xml");
 				if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
-				String igniteConfigPathNameExt = igniteConfigPath + ruleConfig.getSourceResponseIgniteConfigFile();
-				logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  ruleConfig.getSourceResponseIgniteConfigName());
+				String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getSourceResponseIgniteConfigFile();
+				logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getSourceResponseIgniteConfigName());
 				IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
-						igniteConfigPathNameExt, ruleConfig.getSourceResponseIgniteConfigName());
-				Ignition.setClientMode(ruleConfig.isIgniteClientMode());
+						igniteConfigPathNameExt, masterConfig.getSourceResponseIgniteConfigName());
+				Ignition.setClientMode(masterConfig.isIgniteClientMode());
 				Ignite ignite = Ignition.start(igniteConfiguration);
 				if (logger.isDebugEnabled()) logger.debug(ignite.toString());
-				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(ruleConfig.getSourceResponseIgniteCacheName());
+				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(masterConfig.getSourceResponseIgniteCacheName());
 				igniteSingleton = new IgniteSingleton( ignite, cache);
 			} catch (Throwable t ) {
 				logger.error("Ignite initialization failure", t);

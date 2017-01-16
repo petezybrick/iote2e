@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
@@ -21,32 +22,29 @@ public class Iote2eRequestHandler extends Thread {
 	private RuleSvc ruleSvc;
 	private Iote2eSvc iote2eSvc;
 	private boolean shutdown;
-	private Iote2eRequestConfig iote2eRequestConfig;
-	private RuleConfig ruleConfig;
+//	private Iote2eRequestConfig iote2eRequestConfig;
+//	private RuleConfig ruleConfig;
+	private MasterConfig masterConfig;
 	private String keyspaceName;
 
-	public Iote2eRequestHandler(String sourceSensorConfigKey,
+	public Iote2eRequestHandler(String masterSensorConfigKey,
 			ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
 		logger.debug("ctor");
 		try {
 			this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
 			ConfigDao.useKeyspace(keyspaceName);
 			this.iote2eRequests = iote2eRequests;
-			String rawJson = ConfigDao.findConfigJson(sourceSensorConfigKey);
+			String rawJson = ConfigDao.findConfigJson(masterSensorConfigKey);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			iote2eRequestConfig = gson.fromJson(rawJson, Iote2eRequestConfig.class);
+			masterConfig = gson.fromJson(rawJson, MasterConfig.class);
 	
-			Class cls = Class.forName(iote2eRequestConfig.getRuleSvcClassName());
+			Class cls = Class.forName(masterConfig.getRuleSvcClassName());
 			ruleSvc = (RuleSvc) cls.newInstance();
-			cls = Class.forName(iote2eRequestConfig.getRequestSvcClassName());
-	
-			rawJson = ConfigDao.findConfigJson(iote2eRequestConfig.getRuleConfigKey());
-			ruleConfig = gson.fromJson(rawJson, RuleConfig.class);
-			// TODO: get via static instanceOf, or just wrap the iote2esvc calls in synchronized
+			cls = Class.forName(masterConfig.getRequestSvcClassName());
 			iote2eSvc = (Iote2eSvc) cls.newInstance();
 			
-			ruleSvc.init(ruleConfig);
-			iote2eSvc.init(ruleConfig);
+			ruleSvc.init(masterConfig);
+			iote2eSvc.init(masterConfig);
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);
 			throw e;
@@ -96,14 +94,6 @@ public class Iote2eRequestHandler extends Thread {
 		return iote2eSvc;
 	}
 
-	public Iote2eRequestConfig getIote2eRequestConfig() {
-		return iote2eRequestConfig;
-	}
-
-	public RuleConfig getRuleConfig() {
-		return ruleConfig;
-	}
-
 	public ConcurrentLinkedQueue<Iote2eRequest> getIote2eRequests() {
 		return iote2eRequests;
 	}
@@ -122,6 +112,43 @@ public class Iote2eRequestHandler extends Thread {
 	public void addIote2eRequest(List<Iote2eResult> iote2eRequests) {
 		iote2eRequests.addAll(iote2eRequests);
 		interrupt();
+	}
+
+	public boolean isShutdown() {
+		return shutdown;
+	}
+
+	public MasterConfig getMasterConfig() {
+		return masterConfig;
+	}
+
+	public String getKeyspaceName() {
+		return keyspaceName;
+	}
+
+	public Iote2eRequestHandler setRuleSvc(RuleSvc ruleSvc) {
+		this.ruleSvc = ruleSvc;
+		return this;
+	}
+
+	public Iote2eRequestHandler setIote2eSvc(Iote2eSvc iote2eSvc) {
+		this.iote2eSvc = iote2eSvc;
+		return this;
+	}
+
+	public Iote2eRequestHandler setShutdown(boolean shutdown) {
+		this.shutdown = shutdown;
+		return this;
+	}
+
+	public Iote2eRequestHandler setMasterConfig(MasterConfig masterConfig) {
+		this.masterConfig = masterConfig;
+		return this;
+	}
+
+	public Iote2eRequestHandler setKeyspaceName(String keyspaceName) {
+		this.keyspaceName = keyspaceName;
+		return this;
 	}
 
 }

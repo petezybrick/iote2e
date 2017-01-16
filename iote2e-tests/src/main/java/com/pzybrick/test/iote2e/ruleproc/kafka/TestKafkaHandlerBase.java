@@ -53,7 +53,7 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 				"------------------------------------------------------------------------------------------------------");
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_KEY"), iote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("MASTER_CONFIG_JSON_KEY"), iote2eRequests);
 		iote2eSvc = (Iote2eSvcKafkaImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();

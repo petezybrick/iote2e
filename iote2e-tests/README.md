@@ -25,18 +25,31 @@ start another terminal tab or session
 cd to cassandra folder: cd /home/pete/development/server/apache-cassandra-3.9
 ./bin/cassandra -f
 
-./unit-test-env-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9
-./unit-test-env-stop.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9
+Start/stop environment for standalone jUnit tests
+Start
+	open terminal session
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-scripts
+	run start script: ./unit-test-env-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9
+	open another terminal session/tab
+	cd to scripts folder
+Run
+	run tests, i.e. ./run-junit-tests-ksi.sh
+Stop
+	open terminal session
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-scripts
+	run stop script: ./unit-test-env-stop.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9
 
-/home/pete/development/server/kafka_2.10-0.10.0.0/bin/kafka-server-stop.sh /home/pete/development/server/kafka_2.10-0.10.0.0/config/server-0.properties
-/home/pete/development/server/kafka_2.10-0.10.0.0/bin/kafka-server-stop.sh /home/pete/development/server/kafka_2.10-0.10.0.0/config/server-1.properties
-/home/pete/development/server/kafka_2.10-0.10.0.0/bin/kafka-server-stop.sh /home/pete/development/server/kafka_2.10-0.10.0.0/config/server-2.properties
-/home/pete/development/server/kafka_2.10-0.10.0.0/bin/zookeeper-server-stop.sh /home/pete/development/server/kafka_2.10-0.10.0.0/config/zookeeper.properties
+Start/Stop/Update Docker Environment
+Start
+	open terminal session
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-scripts
+	run the start script: ./docker-env-start.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
+Stop
+	open terminal session
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-scripts
+	run the stop script: ./docker-env-stop.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
 
-/home/pete/development/server/kafka_2.10-0.10.0.0/bin/zookeeper-server-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0/config/zookeeper.properties &
-/home/pete/development/server/kafka_2.10-0.10.0.0/bin/kafka-server-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0/config/server-0.properties &
-/home/pete/development/server/kafka_2.10-0.10.0.0/bin/kafka-server-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0/config/server-1.properties &
-/home/pete/development/server/kafka_2.10-0.10.0.0/bin/kafka-server-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0/config/server-2.properties &
+/home/pete/development/gitrepo/iote2e/iote2e-common/docker
 
 
 jUnit environment vars - localhost (not under docker)

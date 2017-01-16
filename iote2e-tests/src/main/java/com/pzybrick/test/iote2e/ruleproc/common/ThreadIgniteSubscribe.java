@@ -12,9 +12,9 @@ import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.ignite.Iote2eIgniteCacheEntryEventFilter;
-import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 
 
 public class ThreadIgniteSubscribe extends Thread {
@@ -28,7 +28,7 @@ public class ThreadIgniteSubscribe extends Thread {
 	public ThreadIgniteSubscribe() {
 	}
 
-	public static ThreadIgniteSubscribe startThreadSubscribe(RuleConfig ruleConfig, String igniteFilterKey,
+	public static ThreadIgniteSubscribe startThreadSubscribe(MasterConfig masterConfig, String igniteFilterKey,
 			IgniteSingleton igniteSingleton, ConcurrentLinkedQueue<byte[]> subscribeResults ) throws Exception {
 		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe().setIgniteFilterKey(igniteFilterKey).setIgniteSingleton(igniteSingleton).setSubscribeResults(subscribeResults) ;
 		threadIgniteSubscribe.start();

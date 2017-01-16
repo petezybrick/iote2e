@@ -91,13 +91,13 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		iote2eResultReuseItem = new Iote2eResultReuseItem();
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_KEY"), iote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("MASTER_CONFIG_JSON_KEY"), iote2eRequests);
 		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 		iote2eRequestHandler.start();
 		
 		subscribeResults = new ConcurrentLinkedQueue<byte[]>();
-		igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getRuleConfig());
-		logger.info(">>> Cache name: " + iote2eRequestHandler.getRuleConfig().getSourceResponseIgniteCacheName());
+		igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
+		logger.info(">>> Cache name: " + iote2eRequestHandler.getMasterConfig().getSourceResponseIgniteCacheName());
 
 		kafkaTopic = System.getenv("KAFKA_TOPIC_UNIT_TEST");
 		kafkaGroup = System.getenv("KAFKA_GROUP_UNIT_TEST");
@@ -132,7 +132,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getRuleConfig(), igniteFilterKey, igniteSingleton, subscribeResults);
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(), igniteFilterKey, igniteSingleton, subscribeResults);
 
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);

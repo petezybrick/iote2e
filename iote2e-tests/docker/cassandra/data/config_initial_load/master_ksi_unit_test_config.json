@@ -1,0 +1,13 @@
+{
+	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
+	"requestSvcClassName": "com.pzybrick.iote2e.ruleproc.ignite.Iote2eSvcIgniteImpl",
+	"actuatorStateKey": "actuator_state",
+	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
+	"ruleDefItemKey": "rule_def_item",
+	"sourceResponseIgniteCacheName": "test-iote2e-sourceresponse-cache",
+	"sourceResponseIgniteConfigFile": "ignite-iote2e-local.xml",
+	"sourceResponseIgniteConfigName": "ignite.cfg",
+	"igniteClientMode":false,
+	"forceRefreshActuatorState":false,
+	"forceResetActuatorState":true
+}

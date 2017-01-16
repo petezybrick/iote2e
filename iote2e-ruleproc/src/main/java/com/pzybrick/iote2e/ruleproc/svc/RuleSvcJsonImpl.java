@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 
@@ -30,30 +31,30 @@ public class RuleSvcJsonImpl extends RuleSvc {
 	}
 
 
-	public void init(RuleConfig ruleConfig) throws Exception {
-		logger.info(ruleConfig.toString());
+	public void init(MasterConfig masterConfig) throws Exception {
+		logger.info(masterConfig.toString());
 		ActuatorStateDao.useKeyspace(keyspaceName);
 		ConfigDao.useKeyspace(keyspaceName);
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		// If ActuatorState table doesn't exist or force flag is set then drop/create and populate table
 		ActuatorStateDao.useKeyspace(keyspaceName);
-		if( ruleConfig.isForceRefreshActuatorState() || !ActuatorStateDao.isTableExists(keyspaceName) ) {
+		if( masterConfig.isForceRefreshActuatorState() || !ActuatorStateDao.isTableExists(keyspaceName) ) {
 			ActuatorStateDao.dropTable();
 			ActuatorStateDao.createTable();
-			String rawJson = ConfigDao.findConfigJson(ruleConfig.getActuatorStateKey());
+			String rawJson = ConfigDao.findConfigJson(masterConfig.getActuatorStateKey());
 			List<ActuatorState> actuatorStates = gson.fromJson(rawJson,
 					new TypeToken<List<ActuatorState>>() {
 					}.getType());
 			ActuatorStateDao.insertActuatorStateBatch(actuatorStates);
-		} else if( ruleConfig.isForceResetActuatorState()) {
-			String rawJson = ConfigDao.findConfigJson(ruleConfig.getActuatorStateKey());
+		} else if( masterConfig.isForceResetActuatorState()) {
+			String rawJson = ConfigDao.findConfigJson(masterConfig.getActuatorStateKey());
 			List<ActuatorState> actuatorStates = gson.fromJson(rawJson,
 					new TypeToken<List<ActuatorState>>() {
 					}.getType());
 			ActuatorStateDao.resetActuatorStateBatch(actuatorStates);
 		}
 
-		String rawJson = ConfigDao.findConfigJson(ruleConfig.getRuleLoginSourceSensorKey());
+		String rawJson = ConfigDao.findConfigJson(masterConfig.getRuleLoginSourceSensorKey());
 		ruleLoginSourceSensors = gson.fromJson(rawJson,
 				new TypeToken<List<RuleLoginSourceSensor>>() {
 				}.getType());
@@ -68,7 +69,7 @@ public class RuleSvcJsonImpl extends RuleSvc {
 			mapBySensorName.put(ruleLoginSourceSensor.getSensorName(), ruleLoginSourceSensor);
 		}
 		
-		rawJson = ConfigDao.findConfigJson(ruleConfig.getRuleDefItemKey());
+		rawJson = ConfigDao.findConfigJson(masterConfig.getRuleDefItemKey());
 		ruleDefItems = gson.fromJson(rawJson,
 				new TypeToken<List<RuleDefItem>>() {
 				}.getType());

@@ -50,11 +50,11 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			iote2eResultReuseItem = new Iote2eResultReuseItem();
 			subscribeResults = new ConcurrentLinkedQueue<byte[]>();
 			iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-			iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("REQUEST_CONFIG_JSON_KEY"),
+			iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("MASTER_CONFIG_JSON_KEY"),
 					iote2eRequests);
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
-			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getRuleConfig());
-			logger.info("Cache name: " + iote2eRequestHandler.getRuleConfig().getSourceResponseIgniteCacheName());
+			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
+			logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getSourceResponseIgniteCacheName());
 			iote2eRequestHandler.start();
 		} catch (Exception e) {
 			logger.error("Exception in before, " + e.getMessage(), e);
@@ -81,7 +81,7 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getRuleConfig(), igniteFilterKey, igniteSingleton, subscribeResults);
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(), igniteFilterKey, igniteSingleton, subscribeResults);
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);
 			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(loginName).setSourceName(sourceName)
