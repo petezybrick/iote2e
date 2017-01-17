@@ -46,8 +46,8 @@ public class IgniteSingleton {
 	public static synchronized IgniteSingleton getInstance( MasterConfig masterConfig ) throws Exception {
 		if( igniteSingleton == null ) {
 			try {
-				String igniteConfigPath = System.getenv("IGNITE_CONFIG_PATH");
-				if( igniteConfigPath == null ) throw new Exception("Required env var IGNITE_CONFIG_PATH is not set, try setting to location of ignite-iote2e.xml");
+				String igniteConfigPath = masterConfig.getIgniteConfigPath();
+				if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
 				if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
 				String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getSourceResponseIgniteConfigFile();
 				logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getSourceResponseIgniteConfigName());

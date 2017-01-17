@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
@@ -53,15 +54,16 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 				"------------------------------------------------------------------------------------------------------");
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("MASTER_CONFIG_JSON_KEY"), iote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler(iote2eRequests);
 		iote2eSvc = (Iote2eSvcKafkaImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();
 		
-		kafkaTopic = System.getenv("KAFKA_TOPIC_UNIT_TEST");
-		kafkaGroup = System.getenv("KAFKA_GROUP_UNIT_TEST");
+		MasterConfig masterConfig = MasterConfig.getInstance();
+		kafkaTopic = masterConfig.getKafkaTopic();
+		kafkaGroup = masterConfig.getKafkaGroup();
 		Properties props = new Properties();
-		props.put("bootstrap.servers", System.getenv("KAFKA_BOOTSTRAP_SERVERS_UNIT_TEST") );
+		props.put("bootstrap.servers", masterConfig.getKafkaBootstrapServers() );
 		//props.put("producer.type", "sync");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
@@ -72,8 +74,8 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 		props.put("group.id", kafkaGroup);
 		kafkaProducer = new KafkaProducer<String, byte[]>(props);
 		kafkaConsumerConnector = kafka.consumer.Consumer.createJavaConsumerConnector(
-                createConsumerConfig(System.getenv("KAFKA_ZOOKEEPER_UNIT_TEST"),kafkaGroup));
-		startStreamConsumers(Integer.parseInt(System.getenv("KAFKA_STREAM_CONSUMER_NUM_THREADS_UNIT_TEST")));
+                createConsumerConfig( masterConfig.getKafkaZookeeper(),kafkaGroup));
+		startStreamConsumers(masterConfig.getKafkaStreamConsumerNumThreads());
 	}
 
 	@After

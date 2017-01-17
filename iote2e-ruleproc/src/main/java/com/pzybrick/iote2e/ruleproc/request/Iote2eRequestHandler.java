@@ -27,17 +27,11 @@ public class Iote2eRequestHandler extends Thread {
 	private MasterConfig masterConfig;
 	private String keyspaceName;
 
-	public Iote2eRequestHandler(String masterSensorConfigKey,
-			ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
+	public Iote2eRequestHandler(ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
 		logger.debug("ctor");
 		try {
-			this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
-			ConfigDao.useKeyspace(keyspaceName);
+			masterConfig = MasterConfig.getInstance();
 			this.iote2eRequests = iote2eRequests;
-			String rawJson = ConfigDao.findConfigJson(masterSensorConfigKey);
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			masterConfig = gson.fromJson(rawJson, MasterConfig.class);
-	
 			Class cls = Class.forName(masterConfig.getRuleSvcClassName());
 			ruleSvc = (RuleSvc) cls.newInstance();
 			cls = Class.forName(masterConfig.getRequestSvcClassName());

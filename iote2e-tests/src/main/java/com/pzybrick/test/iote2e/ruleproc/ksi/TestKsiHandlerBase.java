@@ -17,6 +17,7 @@ import org.junit.BeforeClass;
 
 import com.google.gson.Gson;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
@@ -91,7 +92,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		iote2eResultReuseItem = new Iote2eResultReuseItem();
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(System.getenv("MASTER_CONFIG_JSON_KEY"), iote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler(iote2eRequests);
 		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 		iote2eRequestHandler.start();
 		
@@ -99,10 +100,11 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
 		logger.info(">>> Cache name: " + iote2eRequestHandler.getMasterConfig().getSourceResponseIgniteCacheName());
 
-		kafkaTopic = System.getenv("KAFKA_TOPIC_UNIT_TEST");
-		kafkaGroup = System.getenv("KAFKA_GROUP_UNIT_TEST");
+		MasterConfig masterConfig = MasterConfig.getInstance();
+		kafkaTopic = masterConfig.getKafkaTopic();
+		kafkaGroup = masterConfig.getKafkaGroup();
 		Properties props = new Properties();
-		props.put("bootstrap.servers", System.getenv("KAFKA_BOOTSTRAP_SERVERS_UNIT_TEST") );
+		props.put("bootstrap.servers", masterConfig.getKafkaBootstrapServers() );
 		//props.put("producer.type", "sync");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");

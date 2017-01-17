@@ -1,5 +1,0 @@
-{
-	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
-	"requestSvcClassName": "com.pzybrick.iote2e.ruleproc.ignite.Iote2eSvcIgniteImpl",
-	"ruleConfigKey": "rule_ksi_config"
-}

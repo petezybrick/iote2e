@@ -5,11 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
-import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
-import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.ruleproc.svc.RuleSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
@@ -19,17 +15,10 @@ public class Iote2eRequestSparkHandler {
 	private RuleSvc ruleSvc;
 	private Iote2eSvc iote2eSvc;
 	private MasterConfig masterConfig;
-	private String keyspaceName;
 
 	public Iote2eRequestSparkHandler() throws Exception {
 		try {
-			this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
-			ConfigDao.useKeyspace(keyspaceName);
-			String sourceSensorConfigKey = System.getenv("MASTER_CONFIG_JSON_KEY");
-			String rawJson = ConfigDao.findConfigJson(sourceSensorConfigKey);
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			masterConfig = gson.fromJson(rawJson, MasterConfig.class);
-	
+			masterConfig = MasterConfig.getInstance();
 			Class cls = Class.forName(masterConfig.getRuleSvcClassName());
 			ruleSvc = (RuleSvc) cls.newInstance();
 			cls = Class.forName(masterConfig.getRequestSvcClassName());
