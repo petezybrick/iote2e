@@ -12,7 +12,9 @@ import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
+import com.google.gson.annotations.Expose;
 import com.pzybrick.iote2e.common.utils.ArgMap;
+import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 
 import consumer.kafka.MessageAndMetadata;
 import consumer.kafka.ReceiverLauncher;
@@ -30,7 +32,7 @@ public class Iote2eRequestSparkConsumer {
     	//iote2eRequestSparkConsumer.process(args);
     	
     	Iote2eRequestSparkConsumer iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-    	RunProcess runProcess = new RunProcess( iote2eRequestSparkConsumer, args);
+    	RunProcess runProcess = new RunProcess( iote2eRequestSparkConsumer);
     	runProcess.start();
     	try {
     		Thread.sleep(5000);
@@ -42,57 +44,53 @@ public class Iote2eRequestSparkConsumer {
     
     private static class RunProcess extends Thread {
     	private Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
-    	private String[] args;
     	
-    	public RunProcess( Iote2eRequestSparkConsumer iote2eRequestSparkConsumer, String[] args ) {
-    		this.args = args;
+    	public RunProcess( Iote2eRequestSparkConsumer iote2eRequestSparkConsumer ) {
     		this.iote2eRequestSparkConsumer = iote2eRequestSparkConsumer;
     	}
 		@Override
 		public void run() {
 			try {
-	    		iote2eRequestSparkConsumer.process(args);
+	    		iote2eRequestSparkConsumer.process();
 			} catch( Exception e ) {
 				logger.error(e.getMessage(), e);
 			}
 		}
-    	
     }
     	
-    public void process(String[] args) throws Exception {
-    	argMap = new ArgMap(args);
-    	logger.info("Starting, argMap: " + argMap.dump() );
-    	String appName = argMap.get("appName"); 
-    	String master = argMap.get("master"); 
-    	Integer numThreads = argMap.getInteger("numThreads", 3); 
-    	Integer durationMs = argMap.getInteger("durationMs", 1000); 
-    	String kafkaGroup = argMap.get("kafkaGroup"); 
-    	String kafkaTopic = argMap.get("kafkaTopic"); 
-    	String zookeeperHosts = argMap.get("zookeeperHosts"); 
-    	Integer zookeeperPort = argMap.getInteger("zookeeperPort", 2181);  
-    	String zookeeperBrokerPath = argMap.get("zookeeperBrokerPath"); 
-    	String kafkaConsumerId = argMap.get("kafkaConsumerId"); 
-    	String zookeeperConsumerConnection = argMap.get("zookeeperConsumerConnection"); 
-    	String zookeeperConsumerPath = argMap.get("zookeeperConsumerPath"); 
-
+    public void process() throws Exception {
+    	MasterConfig masterConfig = MasterConfig.getInstance();
+    	logger.info(masterConfig.toString());
+    	String sparkAppName = masterConfig.getSparkAppName();
+    	String sparkMaster = masterConfig.getSparkMaster();
+    	Integer kafkaConsumerNumThreads = masterConfig.getKafkaConsumerNumThreads();
+    	Integer sparkStreamDurationMs = masterConfig.getSparkStreamDurationMs();
+    	String kafkaGroup = masterConfig.getKafkaGroup();
+    	String kafkaTopic = masterConfig.getKafkaTopic();
+    	String kafkaZookeeperHosts = masterConfig.getKafkaZookeeperHosts();
+    	Integer kafkaZookeeperPort = masterConfig.getKafkaZookeeperPort();
+    	String kafkaZookeeperBrokerPath = masterConfig.getKafkaZookeeperBrokerPath();
+    	String kafkaConsumerId = masterConfig.getKafkaConsumerId();
+    	String kafkaZookeeperConsumerConnection = masterConfig.getKafkaZookeeperConsumerConnection();
+    	String kafkaZookeeperConsumerPath = masterConfig.getKafkaZookeeperConsumerPath();
 
         conf = new SparkConf()
-                .setAppName(appName);
-        if( master != null ) conf.setMaster( master );
-        ssc = new JavaStreamingContext(conf, new Duration(durationMs));
+                .setAppName(sparkAppName);
+        if( sparkMaster != null ) conf.setMaster( sparkMaster );
+        ssc = new JavaStreamingContext(conf, new Duration(sparkStreamDurationMs));
 
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put(kafkaTopic, new Integer(numThreads));
+        topicCountMap.put(kafkaTopic, new Integer(kafkaConsumerNumThreads));
         Properties kafkaProps = new Properties();
         kafkaProps.put("group.id", kafkaGroup);
         // Spark Kafka Consumer https://github.com/dibbhatt/kafka-spark-consumer
-        kafkaProps.put("zookeeper.hosts", zookeeperHosts);
-        kafkaProps.put("zookeeper.port", String.valueOf(zookeeperPort) );
-        kafkaProps.put("zookeeper.broker.path", zookeeperBrokerPath );
+        kafkaProps.put("zookeeper.hosts", kafkaZookeeperHosts);
+        kafkaProps.put("zookeeper.port", String.valueOf(kafkaZookeeperPort) );
+        kafkaProps.put("zookeeper.broker.path", kafkaZookeeperBrokerPath );
         kafkaProps.put("kafka.topic", kafkaTopic);
         kafkaProps.put("kafka.consumer.id", kafkaConsumerId );
-        kafkaProps.put("zookeeper.consumer.connection", zookeeperConsumerConnection);
-        kafkaProps.put("zookeeper.consumer.path", zookeeperConsumerPath);
+        kafkaProps.put("zookeeper.consumer.connection", kafkaZookeeperConsumerConnection);
+        kafkaProps.put("zookeeper.consumer.path", kafkaZookeeperConsumerPath);
         // consumer optional 
         kafkaProps.put("consumer.forcefromstart", "false");
         kafkaProps.put("consumer.fetchsizebytes", "1048576");

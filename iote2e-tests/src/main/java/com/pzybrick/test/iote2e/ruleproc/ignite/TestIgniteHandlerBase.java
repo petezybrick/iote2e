@@ -53,7 +53,7 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			iote2eRequestHandler = new Iote2eRequestHandler(iote2eRequests);
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
-			logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getSourceResponseIgniteCacheName());
+			logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
 			iote2eRequestHandler.start();
 		} catch (Exception e) {
 			logger.error("Exception in before, " + e.getMessage(), e);

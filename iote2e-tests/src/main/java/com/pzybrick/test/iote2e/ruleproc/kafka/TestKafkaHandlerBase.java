@@ -74,8 +74,8 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 		props.put("group.id", kafkaGroup);
 		kafkaProducer = new KafkaProducer<String, byte[]>(props);
 		kafkaConsumerConnector = kafka.consumer.Consumer.createJavaConsumerConnector(
-                createConsumerConfig( masterConfig.getKafkaZookeeper(),kafkaGroup));
-		startStreamConsumers(masterConfig.getKafkaStreamConsumerNumThreads());
+                createConsumerConfig( masterConfig.createKafkaZookeeperHostPortPairs(),kafkaGroup));
+		startStreamConsumers(masterConfig.getKafkaConsumerNumThreads());
 	}
 
 	@After

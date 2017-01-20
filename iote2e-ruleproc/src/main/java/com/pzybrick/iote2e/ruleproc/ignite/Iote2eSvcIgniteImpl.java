@@ -127,7 +127,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	@Override
 	public synchronized void init(MasterConfig masterConfig) throws Exception {
 		try {
-			logger.info("Getting IgniteCache for: " + masterConfig.getSourceResponseIgniteCacheName());
+			logger.info("Getting IgniteCache for: " + masterConfig.getIgniteCacheName());
 			this.igniteSingleton = IgniteSingleton.getInstance(masterConfig);
 		} catch (Exception e) {
 			logger.error("Ignite create cache failure", e);

@@ -49,14 +49,14 @@ public class IgniteSingleton {
 				String igniteConfigPath = masterConfig.getIgniteConfigPath();
 				if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
 				if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
-				String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getSourceResponseIgniteConfigFile();
-				logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getSourceResponseIgniteConfigName());
+				String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getIgniteConfigFile();
+				logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getIgniteConfigName());
 				IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
-						igniteConfigPathNameExt, masterConfig.getSourceResponseIgniteConfigName());
+						igniteConfigPathNameExt, masterConfig.getIgniteConfigName());
 				Ignition.setClientMode(masterConfig.isIgniteClientMode());
 				Ignite ignite = Ignition.start(igniteConfiguration);
 				if (logger.isDebugEnabled()) logger.debug(ignite.toString());
-				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(masterConfig.getSourceResponseIgniteCacheName());
+				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(masterConfig.getIgniteCacheName());
 				igniteSingleton = new IgniteSingleton( ignite, cache);
 			} catch (Throwable t ) {
 				logger.error("Ignite initialization failure", t);

@@ -26,13 +26,15 @@ public class MasterConfig {
 	@Expose 
 	private String ruleDefItemKey;
 	@Expose
-	private String sourceResponseIgniteCacheName;
+	private String igniteCacheName;
 	@Expose
-	private String sourceResponseIgniteConfigFile;
+	private String igniteConfigFile;
 	@Expose
-	private String sourceResponseIgniteConfigName;
+	private String igniteConfigName;
 	@Expose
 	private boolean igniteClientMode;
+	@Expose
+	private String igniteConfigPath;
 	@Expose
 	private boolean forceRefreshActuatorState;
 	@Expose
@@ -44,11 +46,25 @@ public class MasterConfig {
 	@Expose
 	private String kafkaBootstrapServers;
 	@Expose
-	private String kafkaZookeeper;
+	private String kafkaZookeeperHosts;
 	@Expose
-	private Integer kafkaStreamConsumerNumThreads;
+	private Integer kafkaZookeeperPort;
 	@Expose
-	private String igniteConfigPath;
+	private Integer kafkaConsumerNumThreads;
+	@Expose
+	private String kafkaZookeeperBrokerPath;
+	@Expose
+	private String kafkaConsumerId;
+	@Expose
+	private String kafkaZookeeperConsumerConnection;
+	@Expose
+	private String kafkaZookeeperConsumerPath;
+	@Expose
+	private String sparkAppName;
+	@Expose
+	private String sparkMaster;
+	@Expose
+	private Integer sparkStreamDurationMs;
 	
 
 	private MasterConfig() {
@@ -89,14 +105,14 @@ public class MasterConfig {
 	public String getRuleDefItemKey() {
 		return ruleDefItemKey;
 	}
-	public String getSourceResponseIgniteCacheName() {
-		return sourceResponseIgniteCacheName;
+	public String getIgniteCacheName() {
+		return igniteCacheName;
 	}
-	public String getSourceResponseIgniteConfigFile() {
-		return sourceResponseIgniteConfigFile;
+	public String getIgniteConfigFile() {
+		return igniteConfigFile;
 	}
-	public String getSourceResponseIgniteConfigName() {
-		return sourceResponseIgniteConfigName;
+	public String getIgniteConfigName() {
+		return igniteConfigName;
 	}
 	public boolean isIgniteClientMode() {
 		return igniteClientMode;
@@ -127,16 +143,16 @@ public class MasterConfig {
 		this.ruleDefItemKey = ruleDefItemKey;
 		return this;
 	}
-	public MasterConfig setSourceResponseIgniteCacheName(String sourceResponseIgniteCacheName) {
-		this.sourceResponseIgniteCacheName = sourceResponseIgniteCacheName;
+	public MasterConfig setIgniteCacheName(String igniteCacheName) {
+		this.igniteCacheName = igniteCacheName;
 		return this;
 	}
-	public MasterConfig setSourceResponseIgniteConfigFile(String sourceResponseIgniteConfigFile) {
-		this.sourceResponseIgniteConfigFile = sourceResponseIgniteConfigFile;
+	public MasterConfig setIgniteConfigFile(String igniteConfigFile) {
+		this.igniteConfigFile = igniteConfigFile;
 		return this;
 	}
-	public MasterConfig setSourceResponseIgniteConfigName(String sourceResponseIgniteConfigName) {
-		this.sourceResponseIgniteConfigName = sourceResponseIgniteConfigName;
+	public MasterConfig setIgniteConfigName(String igniteConfigName) {
+		this.igniteConfigName = igniteConfigName;
 		return this;
 	}
 	public MasterConfig setIgniteClientMode(boolean igniteClientMode) {
@@ -164,12 +180,16 @@ public class MasterConfig {
 		return kafkaBootstrapServers;
 	}
 
-	public String getKafkaZookeeper() {
-		return kafkaZookeeper;
+	public String getKafkaZookeeperHosts() {
+		return kafkaZookeeperHosts;
 	}
 
-	public Integer getKafkaStreamConsumerNumThreads() {
-		return kafkaStreamConsumerNumThreads;
+	public Integer getKafkaZookeeperPort() {
+		return kafkaZookeeperPort;
+	}
+
+	public Integer getKafkaConsumerNumThreads() {
+		return kafkaConsumerNumThreads;
 	}
 
 	public String getIgniteConfigPath() {
@@ -191,13 +211,18 @@ public class MasterConfig {
 		return this;
 	}
 
-	public MasterConfig setKafkaZookeeper(String kafkaZookeeper) {
-		this.kafkaZookeeper = kafkaZookeeper;
+	public MasterConfig setKafkaZookeeperHosts(String kafkaZookeeperHosts) {
+		this.kafkaZookeeperHosts = kafkaZookeeperHosts;
 		return this;
 	}
 
-	public MasterConfig setKafkaStreamConsumerNumThreads(Integer kafkaStreamConsumerNumThreads) {
-		this.kafkaStreamConsumerNumThreads = kafkaStreamConsumerNumThreads;
+	public MasterConfig setKafkaZookeeper(Integer kafkaZookeeperPort) {
+		this.kafkaZookeeperPort = kafkaZookeeperPort;
+		return this;
+	}
+
+	public MasterConfig setKafkaConsumerNumThreads(Integer kafkaConsumerNumThreads) {
+		this.kafkaConsumerNumThreads = kafkaConsumerNumThreads;
 		return this;
 	}
 
@@ -205,19 +230,100 @@ public class MasterConfig {
 		this.igniteConfigPath = igniteConfigPath;
 		return this;
 	}
+	
+	public String createKafkaZookeeperHostPortPairs( ) {
+		StringBuilder sb = new StringBuilder();
+		String[] hosts = kafkaZookeeperHosts.split("[,]");
+		for( String host : hosts ) {
+			if( sb.length() > 0 ) sb.append(",");
+			sb.append(host).append(":").append(kafkaZookeeperPort);
+		}
+		return sb.toString();
+	}
 
 	@Override
 	public String toString() {
 		return "MasterConfig [ruleSvcClassName=" + ruleSvcClassName + ", requestSvcClassName=" + requestSvcClassName
 				+ ", actuatorStateKey=" + actuatorStateKey + ", ruleLoginSourceSensorKey=" + ruleLoginSourceSensorKey
-				+ ", ruleDefItemKey=" + ruleDefItemKey + ", sourceResponseIgniteCacheName="
-				+ sourceResponseIgniteCacheName + ", sourceResponseIgniteConfigFile=" + sourceResponseIgniteConfigFile
-				+ ", sourceResponseIgniteConfigName=" + sourceResponseIgniteConfigName + ", igniteClientMode="
-				+ igniteClientMode + ", forceRefreshActuatorState=" + forceRefreshActuatorState
+				+ ", ruleDefItemKey=" + ruleDefItemKey + ", igniteCacheName=" + igniteCacheName + ", igniteConfigFile="
+				+ igniteConfigFile + ", igniteConfigName=" + igniteConfigName + ", igniteClientMode=" + igniteClientMode
+				+ ", igniteConfigPath=" + igniteConfigPath + ", forceRefreshActuatorState=" + forceRefreshActuatorState
 				+ ", forceResetActuatorState=" + forceResetActuatorState + ", kafkaGroup=" + kafkaGroup
 				+ ", kafkaTopic=" + kafkaTopic + ", kafkaBootstrapServers=" + kafkaBootstrapServers
-				+ ", kafkaZookeeper=" + kafkaZookeeper + ", kafkaStreamConsumerNumThreads="
-				+ kafkaStreamConsumerNumThreads + ", igniteConfigPath=" + igniteConfigPath + "]";
+				+ ", kafkaZookeeperHosts=" + kafkaZookeeperHosts + ", kafkaZookeeperPort=" + kafkaZookeeperPort
+				+ ", kafkaConsumerNumThreads=" + kafkaConsumerNumThreads + ", kafkaZookeeperBrokerPath="
+				+ kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
+				+ ", kafkaZookeeperConsumerConnection=" + kafkaZookeeperConsumerConnection
+				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", sparkAppName=" + sparkAppName
+				+ ", sparkMaster=" + sparkMaster + ", sparkStreamDurationMs=" + sparkStreamDurationMs + "]";
+	}
+
+	public String getKafkaZookeeperBrokerPath() {
+		return kafkaZookeeperBrokerPath;
+	}
+
+	public String getKafkaConsumerId() {
+		return kafkaConsumerId;
+	}
+
+	public String getKafkaZookeeperConsumerConnection() {
+		return kafkaZookeeperConsumerConnection;
+	}
+
+	public String getKafkaZookeeperConsumerPath() {
+		return kafkaZookeeperConsumerPath;
+	}
+
+	public String getSparkAppName() {
+		return sparkAppName;
+	}
+
+	public String getSparkMaster() {
+		return sparkMaster;
+	}
+
+	public Integer getSparkStreamDurationMs() {
+		return sparkStreamDurationMs;
+	}
+
+	public MasterConfig setKafkaZookeeperPort(Integer kafkaZookeeperPort) {
+		this.kafkaZookeeperPort = kafkaZookeeperPort;
+		return this;
+	}
+
+	public MasterConfig setKafkaZookeeperBrokerPath(String kafkaZookeeperBrokerPath) {
+		this.kafkaZookeeperBrokerPath = kafkaZookeeperBrokerPath;
+		return this;
+	}
+
+	public MasterConfig setKafkaConsumerId(String kafkaConsumerId) {
+		this.kafkaConsumerId = kafkaConsumerId;
+		return this;
+	}
+
+	public MasterConfig setKafkaZookeeperConsumerConnection(String kafkaZookeeperConsumerConnection) {
+		this.kafkaZookeeperConsumerConnection = kafkaZookeeperConsumerConnection;
+		return this;
+	}
+
+	public MasterConfig setKafkaZookeeperConsumerPath(String kafkaZookeeperConsumerPath) {
+		this.kafkaZookeeperConsumerPath = kafkaZookeeperConsumerPath;
+		return this;
+	}
+
+	public MasterConfig setSparkAppName(String sparkAppName) {
+		this.sparkAppName = sparkAppName;
+		return this;
+	}
+
+	public MasterConfig setSparkMaster(String sparkMaster) {
+		this.sparkMaster = sparkMaster;
+		return this;
+	}
+
+	public MasterConfig setSparkStreamDurationMs(Integer sparkStreamDurationMs) {
+		this.sparkStreamDurationMs = sparkStreamDurationMs;
+		return this;
 	}
 
 }

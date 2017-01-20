@@ -59,8 +59,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		ActuatorStateDao.useKeyspace( System.getenv("CASSANDRA_KEYSPACE_NAME"));
 		// spark
     	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-    	String[] sparkArgs = System.getenv("SPARK_ARGS_UNIT_TEST").split(" ");
-    	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer, sparkArgs);
+    	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer);
     	threadSparkRun.start();
     	long expiredAt = System.currentTimeMillis() + (10*1000);
     	while( expiredAt > System.currentTimeMillis() ) {
@@ -98,7 +97,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		
 		subscribeResults = new ConcurrentLinkedQueue<byte[]>();
 		igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
-		logger.info(">>> Cache name: " + iote2eRequestHandler.getMasterConfig().getSourceResponseIgniteCacheName());
+		logger.info(">>> Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
 
 		MasterConfig masterConfig = MasterConfig.getInstance();
 		kafkaTopic = masterConfig.getKafkaTopic();
