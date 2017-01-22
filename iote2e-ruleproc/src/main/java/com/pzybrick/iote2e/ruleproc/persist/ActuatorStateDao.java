@@ -184,10 +184,11 @@ public class ActuatorStateDao extends CassandraBaseDao {
 		String key = actuatorState.getLoginName() + "|" +
 				actuatorState.getSourceName() + "|" +
 				actuatorState.getSensorName();
+		String insActuatorValue = actuatorState.getActuatorValue() != null ? "'"+actuatorState.getActuatorValue()+"'" : "null";
 		String insert = String.format("INSERT INTO %s " + 
 			"(login_source_sensor,actuator_name,actuator_value,actuator_desc,actuator_value_updated_at) " + 
-			"values('%s','%s','%s','%s',toTimestamp(now())); ",
-			TABLE_NAME, key, actuatorState.getActuatorName(), actuatorState.getActuatorValue(),
+			"values('%s','%s',%s,'%s',toTimestamp(now())); ",
+			TABLE_NAME, key, actuatorState.getActuatorName(), insActuatorValue,
 			actuatorState.getActuatorDesc() );
 		return insert;
 	}

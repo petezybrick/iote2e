@@ -121,6 +121,10 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 			} catch (Exception e) {
 			}
 		}
+		try {
+			Thread.sleep(2000L);
+		} catch (Exception e) {
+		}		
 		iote2eRequestHandler.shutdown();
 		iote2eRequestHandler.join();
 		kafkaProducer.close();

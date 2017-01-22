@@ -36,10 +36,10 @@ public class Iote2eRequestSparkHandler {
 		try {
 			for( Iote2eRequest iote2eRequest : iote2eRequests ) {
 				if (iote2eRequest != null) {
-					logger.debug(iote2eRequest.toString());
+					logger.debug( ">>>>>>>>>>>>>>>>>>>>>aaa " + iote2eRequest.toString());
 					List<RuleEvalResult> ruleEvalResults = ruleSvc.process( iote2eRequest);
 					if (ruleEvalResults != null && ruleEvalResults.size() > 0 ) {
-						logger.debug(ruleEvalResults);
+						logger.debug(">>>>>>>>>>>>>>>>>>>>>bbb " + ruleEvalResults);
 						iote2eSvc.processRuleEvalResults( iote2eRequest, ruleEvalResults);
 					}
 				}
