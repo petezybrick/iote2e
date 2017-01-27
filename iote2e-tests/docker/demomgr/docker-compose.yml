@@ -7,14 +7,14 @@ services:
     command: tail -F -n0 /etc/hosts
     hostname: iote2e-demomgr1
     container_name: iote2e-demomgr1
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.11
     volumes:
-      - ../../iote2e-scripts:/tmp/iote2e-scripts
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
  
   iote2e-demomgr2:
     image: demomgr:1.0.0
@@ -22,14 +22,14 @@ services:
     command: tail -F -n0 /etc/hosts
     hostname: iote2e-demomgr2
     container_name: iote2e-demomgr2
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.12
     volumes:
-      - ../../iote2e-scripts:/tmp/iote2e-scripts
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
   
 networks:
   default:

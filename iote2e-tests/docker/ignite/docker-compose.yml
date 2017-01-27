@@ -6,8 +6,8 @@ services:
     command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
     hostname: iote2e-ignite0
     container_name: iote2e-ignite0
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.30
@@ -20,6 +20,7 @@ services:
       - 47500-47509
     volumes:
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
       
   iote2e-ignite1:
     image: ignite:1.7.0
@@ -27,8 +28,8 @@ services:
     command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
     hostname: iote2e-ignite1
     container_name: iote2e-ignite1
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.31
@@ -41,6 +42,7 @@ services:
       - 47500-47509
     volumes:
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
       
   iote2e-ignite2:
     image: ignite:1.7.0
@@ -48,8 +50,8 @@ services:
     command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
     hostname: iote2e-ignite2
     container_name: iote2e-ignite2
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.32
@@ -62,6 +64,7 @@ services:
       - 47500-47509
     volumes:
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
 
 networks:
   default:

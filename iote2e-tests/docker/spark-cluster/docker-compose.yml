@@ -6,8 +6,8 @@ services:
     command: bin/spark-class org.apache.spark.deploy.master.Master -h iote2e-spark-master
     hostname: iote2e-spark-master
     container_name: iote2e-spark-master
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.20
@@ -36,14 +36,15 @@ services:
     volumes:
       - ./conf/master:/conf
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
   
   iote2e-spark-worker1:
     image: spark:2.0.2
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
     hostname: iote2e-spark-worker1
     container_name: iote2e-spark-worker1
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.21
@@ -73,14 +74,15 @@ services:
     volumes:
       - ./conf/worker:/conf
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
       
   iote2e-spark-worker2:
     image: spark:2.0.2
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
     hostname: iote2e-spark-worker2
     container_name: iote2e-spark-worker2
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.22
@@ -110,14 +112,15 @@ services:
     volumes:
       - ./conf/worker:/conf
       - ./data:/tmp/data
-     
+      - ../../iote2e-shared:/tmp/iote2e-shared
+    
   iote2e-spark-worker3:
     image: spark:2.0.2
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
     hostname: iote2e-spark-worker3
     container_name: iote2e-spark-worker3
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.23
@@ -147,14 +150,15 @@ services:
     volumes:
       - ./conf/worker:/conf
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
       
   iote2e-spark-worker4:
     image: spark:2.0.2
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
     hostname: iote2e-spark-worker4
     container_name: iote2e-spark-worker4
-    mem_limit: 16g
-    memswap_limit: 16g
+    mem_limit: 8g
+    memswap_limit: 8g
     networks:
       default:
         ipv4_address: 192.168.21.24
@@ -184,6 +188,7 @@ services:
     volumes:
       - ./conf/worker:/conf
       - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
 
 networks:
   default:
