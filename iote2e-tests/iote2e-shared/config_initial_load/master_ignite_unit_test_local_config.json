@@ -16,5 +16,5 @@
 	"kafkaZookeeperHosts": "hp-lt-ubuntu-1",
 	"kafkaZookeeperPort": "2181",
 	"kafkaConsumerNumThreads": "3",
-	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/config_ignite/"
+	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite"
 }

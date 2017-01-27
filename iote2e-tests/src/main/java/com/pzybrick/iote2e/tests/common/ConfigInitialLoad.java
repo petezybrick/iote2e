@@ -19,10 +19,11 @@ public class ConfigInitialLoad {
 	private static final Logger logger = LogManager.getLogger(ConfigInitialLoad.class);
 	private static final String[] CONFIG_FILES_TO_LOAD = {
 			"actuator_state.json",
-			"master_local_unit_test_config.json",
+			"master_basic_unit_test_local_config.json",
 			"master_ignite_unit_test_local_config.json",
 			"master_kafka_unit_test_local_config.json",
 			"master_ksi_unit_test_local_config.json",
+			"master_basic_unit_test_docker_config.json",
 			"master_ignite_unit_test_docker_config.json",
 			"master_kafka_unit_test_docker_config.json",
 			"master_ksi_unit_test_docker_config.json",

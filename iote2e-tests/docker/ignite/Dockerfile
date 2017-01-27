@@ -26,7 +26,7 @@ RUN curl -sL --retry 3 --insecure \
   && rm -rf $JAVA_HOME/man
 	
 # Ignite
-ENV IGNITE_VERSION 1.7.0
+ENV IGNITE_VERSION 1.8.0
 RUN mkdir /opt/ignite && \
 	wget -q http://apache.osuosl.org//ignite/"$IGNITE_VERSION"/apache-ignite-fabric-"$IGNITE_VERSION"-bin.zip -O /tmp/apache-ignite-fabric-"$IGNITE_VERSION"-bin.zip && \
     unzip /tmp/apache-ignite-fabric-"$IGNITE_VERSION"-bin.zip -d /opt/ignite/ && \

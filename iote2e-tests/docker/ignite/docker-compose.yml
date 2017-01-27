@@ -1,9 +1,9 @@
 version: '2'
 services:
   iote2e-ignite0:
-    image: ignite:1.7.0
+    image: ignite:1.8.0
     entrypoint: /bin/sh
-    command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
+    command: -c /opt/ignite/apache-ignite-fabric-1.8.0-bin/bin/ignite.sh
     hostname: iote2e-ignite0
     container_name: iote2e-ignite0
     mem_limit: 8g
@@ -12,8 +12,8 @@ services:
       default:
         ipv4_address: 192.168.21.30
     environment:     
-      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.7.0-bin
-      IGNITE_VERSION: 1.7.0
+      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
+      IGNITE_VERSION: 1.8.0
       DEFAULT_CONFIG: config/iote2e-ignite.xml
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:
@@ -23,9 +23,9 @@ services:
       - ../../iote2e-shared:/tmp/iote2e-shared
       
   iote2e-ignite1:
-    image: ignite:1.7.0
+    image: ignite:1.8.0
     entrypoint: /bin/sh
-    command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
+    command: -c /opt/ignite/apache-ignite-fabric-1.8.0-bin/bin/ignite.sh
     hostname: iote2e-ignite1
     container_name: iote2e-ignite1
     mem_limit: 8g
@@ -34,8 +34,8 @@ services:
       default:
         ipv4_address: 192.168.21.31
     environment:     
-      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.7.0-bin
-      IGNITE_VERSION: 1.7.0
+      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
+      IGNITE_VERSION: 1.8.0
       DEFAULT_CONFIG: config/iote2e-ignite.xml
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:
@@ -45,9 +45,9 @@ services:
       - ../../iote2e-shared:/tmp/iote2e-shared
       
   iote2e-ignite2:
-    image: ignite:1.7.0
+    image: ignite:1.8.0
     entrypoint: /bin/sh
-    command: -c /opt/ignite/apache-ignite-fabric-1.7.0-bin/bin/ignite.sh
+    command: -c /opt/ignite/apache-ignite-fabric-1.8.0-bin/bin/ignite.sh
     hostname: iote2e-ignite2
     container_name: iote2e-ignite2
     mem_limit: 8g
@@ -56,8 +56,8 @@ services:
       default:
         ipv4_address: 192.168.21.32
     environment:     
-      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.7.0-bin
-      IGNITE_VERSION: 1.7.0
+      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
+      IGNITE_VERSION: 1.8.0
       DEFAULT_CONFIG: config/iote2e-ignite.xml
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:

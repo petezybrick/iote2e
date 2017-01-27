@@ -42,25 +42,31 @@ Stop
 Start/Stop/Update Docker Environment
 Start
 	open terminal session
-	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/scripts
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
 	run the start script: ./docker-env-start.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
 Stop
 	open terminal session
-	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/scripts
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
 	run the stop script: ./docker-env-stop.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
 Update
 	open terminal session
-	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/scripts
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
 	run the stop script: ./docker-env-up.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
 Remove
 	open terminal session
-	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/scripts
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
 	run the stop script: ./docker-env-rm.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
 
+rebuild iote2e-tests, copy to iote2e-tests/iote2e-shared/jars
+docker exec -it iote2e-demomgr1 /bin/bash
 export CASSANDRA_CONTACT_POINT=iote2e-cassandra1
 export CASSANDRA_KEYSPACE_NAME=iote2e
-java -cp jars/iote2e-tests-1.0.0.jar com.pzybrick.iote2e.tests.common.ConfigInitialLoad ../config_initial_load
-
+cd /tmp/iote2e-shared
+java -cp jars/iote2e-tests-1.0.0.jar com.pzybrick.iote2e.tests.common.ConfigInitialLoad config_initial_load
++ Verify
+docker exec -it iote2e-cassandra1 /bin/bash
+csqlsh
+select config_name from config;
 
 jUnit environment vars - localhost (not under docker)
 KAFKA_GROUP_UNIT_TEST iote2e-group-sandbox

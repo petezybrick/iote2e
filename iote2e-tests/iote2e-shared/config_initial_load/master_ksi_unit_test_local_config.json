@@ -8,7 +8,7 @@
 	"igniteConfigFile": "ignite-iote2e-local.xml",
 	"igniteConfigName": "ignite.cfg",
 	"igniteClientMode": false,
-	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/config_ignite/",
+	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite",
 	"forceRefreshActuatorState": false,
 	"forceResetActuatorState": true,
 	"kafkaGroup": "iote2e-group-sandbox",

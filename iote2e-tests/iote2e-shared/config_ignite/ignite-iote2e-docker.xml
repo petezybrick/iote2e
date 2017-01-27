@@ -71,7 +71,6 @@
                     <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder">
                         <property name="addresses">
                             <list>
-                                <!-- In distributed environment, replace with actual host IP address. -->
                                 <value>192.168.21.30:47500..47509</value>
                                 <value>192.168.21.31:47500..47509</value>
                                 <value>192.168.21.32:47500..47509</value>

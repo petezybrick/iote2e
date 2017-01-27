@@ -1,6 +1,6 @@
 {
 	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
-	"requestSvcClassName": "com.pzybrick.test.iote2e.ruleproc.local.Iote2eSvcLocalTestImpl",
+	"requestSvcClassName": "com.pzybrick.iote2e.tests.local.Iote2eSvcLocalTestImpl",
 	"actuatorStateKey": "actuator_state",
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
 	"ruleDefItemKey": "rule_def_item",

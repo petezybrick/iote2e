@@ -2,7 +2,7 @@
 # args: commonProperties testSpecificProperties uberJar testClassName
 set -o allexport
 source $1
-source $2
+# source $2
 set +o allexport
 
-java -cp $3 org.junit.runner.JUnitCore $4
+java -cp $2 org.junit.runner.JUnitCore $3
