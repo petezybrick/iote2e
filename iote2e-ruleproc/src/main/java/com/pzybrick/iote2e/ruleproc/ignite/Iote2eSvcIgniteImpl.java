@@ -82,7 +82,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 					try {
 						igniteSingleton.getCache().put(pkIgnite, iote2eResultReuseItem.toByteArray(iote2eResult));
 						isSuccess = true;
-						logger.debug("cache.put successful, pk={}, value={}", pkIgnite, ruleEvalResult.getActuatorState().getActuatorValue());
+						logger.debug("cache.put successful, cache name={}, pk={}, value={}", igniteSingleton.getCache().getName(), pkIgnite, ruleEvalResult.getActuatorState().getActuatorValue());
 						break;
 					} catch( CacheException cacheException ) {
 						lastException = cacheException;

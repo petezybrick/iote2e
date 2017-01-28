@@ -7,7 +7,8 @@
 	"igniteCacheName": "test-iote2e-sourceresponse-cache",
 	"igniteConfigFile": "ignite-iote2e-local.xml",
 	"igniteConfigName": "ignite.cfg",
-	"igniteClientMode": false,
+	"igniteClientMode": true,
+	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/",
 	"forceRefreshActuatorState": false,
 	"forceResetActuatorState": true,
 	"kafkaGroup": "iote2e-group-sandbox",
@@ -15,6 +16,5 @@
 	"kafkaBootstrapServers": "hp-lt-ubuntu-1:9092,hp-lt-ubuntu-1:9093,hp-lt-ubuntu-1:9094",
 	"kafkaZookeeperHosts": "hp-lt-ubuntu-1",
 	"kafkaZookeeperPort": "2181",
-	"kafkaConsumerNumThreads": "3",
-	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite"
+	"kafkaConsumerNumThreads": "3"
 }

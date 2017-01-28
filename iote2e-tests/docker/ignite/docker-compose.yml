@@ -18,6 +18,9 @@ services:
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:
       - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
@@ -40,6 +43,9 @@ services:
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:
       - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
@@ -62,6 +68,9 @@ services:
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:
       - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared

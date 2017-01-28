@@ -12,6 +12,11 @@ services:
     networks:
       default:
         ipv4_address: 192.168.21.11
+    expose:
+      - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
@@ -27,6 +32,11 @@ services:
     networks:
       default:
         ipv4_address: 192.168.21.12
+    expose:
+      - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared

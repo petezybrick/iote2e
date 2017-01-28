@@ -33,8 +33,8 @@ RUN mkdir /opt/ignite && \
     rm /tmp/apache-ignite-fabric-"$IGNITE_VERSION"-bin.zip
 
 COPY iote2e-ignite.xml /opt/ignite/apache-ignite-fabric-"$IGNITE_VERSION"-bin/config/iote2e-ignite.xml
-ENV IGNITE_HOME=/opt/ignite/apache-ignite-fabric-1.7.0-bin
-ENV IGNITE_VERSION=1.7.0
+ENV IGNITE_HOME=/opt/ignite/apache-ignite-fabric-"$IGNITE_VERSION"-bin
+ENV IGNITE_VERSION="$IGNITE_VERSION"
 ENV DEFAULT_CONFIG=config/iote2e-ignite.xml
 ENV JVM_OPTS="-Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m"
 ENTRYPOINT ["/bin/sh"]

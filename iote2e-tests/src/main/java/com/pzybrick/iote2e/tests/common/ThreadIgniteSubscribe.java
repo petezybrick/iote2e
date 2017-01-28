@@ -24,13 +24,15 @@ public class ThreadIgniteSubscribe extends Thread {
 	private boolean shutdown;
 	private boolean subscribeUp;
 	private ConcurrentLinkedQueue<byte[]> subscribeResults;
+	private MasterConfig masterConfig;
 
-	public ThreadIgniteSubscribe() {
+	public ThreadIgniteSubscribe(MasterConfig masterConfig) {
+		this.masterConfig = masterConfig;
 	}
 
 	public static ThreadIgniteSubscribe startThreadSubscribe(MasterConfig masterConfig, String igniteFilterKey,
 			IgniteSingleton igniteSingleton, ConcurrentLinkedQueue<byte[]> subscribeResults ) throws Exception {
-		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe().setIgniteFilterKey(igniteFilterKey).setIgniteSingleton(igniteSingleton).setSubscribeResults(subscribeResults) ;
+		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe(masterConfig).setIgniteFilterKey(igniteFilterKey).setIgniteSingleton(igniteSingleton).setSubscribeResults(subscribeResults) ;
 		threadIgniteSubscribe.start();
 		long timeoutAt = System.currentTimeMillis() + 10000L;
 		while (System.currentTimeMillis() < timeoutAt && !threadIgniteSubscribe.isSubscribeUp() ) {
@@ -71,21 +73,25 @@ public class ThreadIgniteSubscribe extends Thread {
 					//return new SourceSensorCacheEntryEventFilter<String, String>(remoteFilterKey);
 				}
 			});
-			QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
+			
+			subscribeUp = true;
+			while( true ) {
+				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
+				try {
+					Thread.sleep(500);
+				} catch( java.lang.InterruptedException e ) {
+					break;
+				}
+			}
 
+		} catch (javax.cache.CacheException e) {
+			if( e.getCause() instanceof org.apache.ignite.IgniteInterruptedException )
+				logger.info("Stopping thread due to Ignite shutdown");
+			else logger.error(e.getMessage(), e);
+			return;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return;
-
-		}
-		subscribeUp = true;
-		while (true) {
-			if (shutdown)
-				break;
-			try {
-				sleep(60 * 60 * 5);
-			} catch (InterruptedException e) {
-			}
 		}
 	}
 

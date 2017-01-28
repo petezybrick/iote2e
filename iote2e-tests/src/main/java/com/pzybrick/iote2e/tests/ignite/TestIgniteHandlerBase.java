@@ -1,7 +1,5 @@
 package com.pzybrick.iote2e.tests.ignite;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,16 +9,20 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
+import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
-import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
@@ -54,6 +56,14 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
 			logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
+			// reset to same default ActuatorState=null every time
+			if( iote2eRequestHandler.getMasterConfig().isForceResetActuatorState()) {
+				String rawJson = ConfigDao.findConfigJson(iote2eRequestHandler.getMasterConfig().getActuatorStateKey());
+				List<ActuatorState> actuatorStates = gson.fromJson(rawJson,
+						new TypeToken<List<ActuatorState>>() {
+						}.getType());
+				ActuatorStateDao.resetActuatorStateBatch(actuatorStates);
+			}
 			iote2eRequestHandler.start();
 		} catch (Exception e) {
 			logger.error("Exception in before, " + e.getMessage(), e);
@@ -68,11 +78,27 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			} catch (Exception e) {
 			}
 		}
-		iote2eRequestHandler.shutdown();
-		iote2eRequestHandler.join();
-		threadIgniteSubscribe.shutdown();
-		threadIgniteSubscribe.join();
-		IgniteSingleton.reset();
+		try {
+			Thread.sleep(2000);
+			iote2eRequestHandler.shutdown();
+			iote2eRequestHandler.join();
+			threadIgniteSubscribe.shutdown();
+			threadIgniteSubscribe.join();
+			//IgniteSingleton.reset();
+		} finally {
+			ConfigDao.disconnect();
+			ActuatorStateDao.disconnect();
+		}
+	}
+	
+	@AfterClass
+	public static void afterClass() throws Exception {
+		try {
+			IgniteSingleton.reset();
+		} finally {
+			ConfigDao.disconnect();
+			ActuatorStateDao.disconnect();
+		}
 	}
 
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,

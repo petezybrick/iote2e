@@ -51,13 +51,13 @@ Stop
 Update
 	open terminal session
 	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
-	run the stop script: ./docker-env-up.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
+	run the update script: ./docker-env-up.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
 Remove
 	open terminal session
 	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
-	run the stop script: ./docker-env-rm.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
+	run the remove script: ./docker-env-rm.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
 
-rebuild iote2e-tests, copy to iote2e-tests/iote2e-shared/jars
+rebuild iote2e-tests, which will also copy to iote2e-tests/iote2e-shared/jars
 docker exec -it iote2e-demomgr1 /bin/bash
 export CASSANDRA_CONTACT_POINT=iote2e-cassandra1
 export CASSANDRA_KEYSPACE_NAME=iote2e
