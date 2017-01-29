@@ -9,12 +9,16 @@ import javax.cache.event.CacheEntryUpdatedListener;
 
 import org.apache.ignite.cache.query.ContinuousQuery;
 import org.apache.ignite.cache.query.QueryCursor;
+import org.apache.ignite.cache.query.ScanQuery;
+import org.apache.ignite.lang.IgniteBiPredicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.ignite.Iote2eIgniteCacheEntryEventFilter;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 
 public class ThreadIgniteSubscribe extends Thread {
@@ -48,17 +52,15 @@ public class ThreadIgniteSubscribe extends Thread {
 	
 	@Override
 	public void run() {
+		// Create new continuous query.
+		ContinuousQuery<String,  byte[]> qry = new ContinuousQuery<>();
 		try {
-			// Create new continuous query.
-			ContinuousQuery<String,  byte[]> qry = new ContinuousQuery<>();
-
 			// Callback that is called locally when update notifications are
 			// received.
 			qry.setLocalListener(new CacheEntryUpdatedListener<String,  byte[]>() {
 				@Override
 				public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends  byte[]>> evts) {
 					for (CacheEntryEvent<? extends String, ? extends  byte[]> e : evts) {
-						logger.info("Updated entry [key=" + e.getKey() + ", val=" + e.getValue() + ']');
 						subscribeResults.add(e.getValue());
 					}
 				}
@@ -74,7 +76,14 @@ public class ThreadIgniteSubscribe extends Thread {
 				}
 			});
 			
-			subscribeUp = true;
+            qry.setInitialQuery(new ScanQuery<>(new IgniteBiPredicate<String, byte[]>() {
+                @Override public boolean apply(String key, byte[] val) {
+                	// TODO: recover forward from checkpoint
+                    return false;
+                }
+            }));
+			
+			subscribeUp = true;			
 			while( true ) {
 				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
 				try {
@@ -92,6 +101,8 @@ public class ThreadIgniteSubscribe extends Thread {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return;
+		} finally {
+			
 		}
 	}
 

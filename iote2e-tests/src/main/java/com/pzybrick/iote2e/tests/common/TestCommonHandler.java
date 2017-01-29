@@ -43,10 +43,17 @@ public abstract class TestCommonHandler {
 		while (System.currentTimeMillis() < wakeupAt) {
 			if (subscribeResults.size() > 0) {
 				try {
-					Thread.sleep(250);
+					Thread.sleep(500);
 				} catch (Exception e) {
 				}
-				for( byte[] bytes : subscribeResults ) {
+				logger.debug("subscribeResults.size() {}", subscribeResults.size());
+				while( true ) {
+					byte[] bytes = subscribeResults.poll();
+					if( bytes == null ) {
+						logger.debug("subscribeResults poll empty");
+						break;					
+					}
+					logger.debug("add to iote2eResults from subscribeResults");
 					try {
 						iote2eResults.add( iote2eResultReuseItem.fromByteArray(bytes) );
 					} catch( IOException e ) {
@@ -54,7 +61,6 @@ public abstract class TestCommonHandler {
 						throw e;
 					}
 				}
-				break;
 			}
 			try {
 				Thread.sleep(100);
