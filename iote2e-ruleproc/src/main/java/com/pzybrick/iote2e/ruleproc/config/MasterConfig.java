@@ -83,7 +83,7 @@ public class MasterConfig {
 				masterConfig = gson.fromJson(rawJson, MasterConfig.class);
 				
 			} catch (Throwable t ) {
-				logger.error("Ignite initialization failure", t);
+				logger.error("Cassandra initialization failure", t);
 				throw t;
 			}
 		}

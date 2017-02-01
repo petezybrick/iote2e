@@ -19,6 +19,9 @@ services:
       SPARK_WORKER_MEMORY: 8g
       SPARK_DRIVER_MEMORY: 8G
       SPARK_DAEMON_MEMORY: 8G
+      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
+      CASSANDRA_KEYSPACE_NAME: iote2e
+      MASTER_CONFIG_JSON_KEY: master_ksi_unit_test_docker_config
     expose:
       - 7001
       - 7002
@@ -60,6 +63,9 @@ services:
       SPARK_EXECUTOR_MEMORY: 8G
       SPARK_DRIVER_MEMORY: 8G
       SPARK_DAEMON_MEMORY: 8G
+      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
+      CASSANDRA_KEYSPACE_NAME: iote2e
+      MASTER_CONFIG_JSON_KEY: master_ksi_unit_test_docker_config
     links:
       - iote2e-spark-master
     expose:
@@ -98,6 +104,9 @@ services:
       SPARK_EXECUTOR_MEMORY: 8G
       SPARK_DRIVER_MEMORY: 8G
       SPARK_DAEMON_MEMORY: 8G
+      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
+      CASSANDRA_KEYSPACE_NAME: iote2e
+      MASTER_CONFIG_JSON_KEY: master_ksi_unit_test_docker_config
     links:
       - iote2e-spark-master
     expose:
@@ -136,6 +145,9 @@ services:
       SPARK_EXECUTOR_MEMORY: 8G
       SPARK_DRIVER_MEMORY: 8G
       SPARK_DAEMON_MEMORY: 8G
+      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
+      CASSANDRA_KEYSPACE_NAME: iote2e
+      MASTER_CONFIG_JSON_KEY: master_ksi_unit_test_docker_config
     links:
       - iote2e-spark-master
     expose:
@@ -174,6 +186,9 @@ services:
       SPARK_EXECUTOR_MEMORY: 8G
       SPARK_DRIVER_MEMORY: 8G
       SPARK_DAEMON_MEMORY: 8G
+      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
+      CASSANDRA_KEYSPACE_NAME: iote2e
+      MASTER_CONFIG_JSON_KEY: master_ksi_unit_test_docker_config
     links:
       - iote2e-spark-master
     expose:

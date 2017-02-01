@@ -21,7 +21,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedLedGreenOn() throws Exception {
+	public void testLedGreenOn() throws Exception {
 		logger.info("begins");
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
 		String testLedValue = "1";
@@ -34,7 +34,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedLedGreenOff() throws Exception {
+	public void testLedGreenOff() throws Exception {
 		logger.info("begins");
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
 		String testLedValue = "0";
@@ -48,7 +48,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedLedRedOn() throws Exception {
+	public void testLedRedOn() throws Exception {
 		logger.info("begins");
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed + "|";
 		String testLedValue = "1";
@@ -62,7 +62,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedLedRedOff() throws Exception {
+	public void testLedRedOff() throws Exception {
 		logger.info("begins");
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed + "|";
 		String testLedValue = "0";
@@ -75,7 +75,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedLedYellowOn() throws Exception {
+	public void testLedYellowOn() throws Exception {
 		logger.info("begins");
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
 		String testLedValue = "1";
@@ -89,7 +89,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	}
 	
 	@Test
-	public void testLedLedYellowOff() throws Exception {
+	public void testLedYellowOff() throws Exception {
 		logger.info("begins");
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
 		String testLedValue = "0";
