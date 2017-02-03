@@ -17,8 +17,6 @@ import org.apache.logging.log4j.Logger;
 import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.ignite.Iote2eIgniteCacheEntryEventFilter;
-import com.pzybrick.iote2e.schema.avro.Iote2eResult;
-import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 
 public class ThreadIgniteSubscribe extends Thread {
@@ -85,12 +83,20 @@ public class ThreadIgniteSubscribe extends Thread {
 			
 			subscribeUp = true;			
 			while( true ) {
-				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
-				try {
-					Thread.sleep(500);
-				} catch( java.lang.InterruptedException e ) {
-					break;
-				}
+                try (QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry)) {
+                    // Iterate through existing data.
+                    for (Cache.Entry<String, byte[]> e : cur)
+                        logger.info("******************* Queried existing entry [key=" + e.getKey()+ ']');
+				
+	//				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
+	//				List<Cache.Entry<String, byte[]>> list = cur.getAll();
+	//				logger.info("************************* getAll size {}", list.size() );
+					try {
+						Thread.sleep(500);
+					} catch( java.lang.InterruptedException e ) {
+						break;
+					}
+                }
 			}
 
 		} catch (javax.cache.CacheException e) {

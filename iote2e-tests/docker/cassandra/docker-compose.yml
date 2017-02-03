@@ -6,8 +6,11 @@ services:
     command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra1.yaml
     hostname: iote2e-cassandra1
     container_name: iote2e-cassandra1
-    mem_limit: 8g
-    memswap_limit: 8g
+    mem_limit: 4g
+    memswap_limit: 4g
+    environment:
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 200M
     networks:
       default:
         ipv4_address: 192.168.21.91
@@ -28,8 +31,11 @@ services:
     command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra2.yaml
     hostname: iote2e-cassandra2
     container_name: iote2e-cassandra2
-    mem_limit: 8g
-    memswap_limit: 8g
+    mem_limit: 4g
+    memswap_limit: 4g
+    environment:
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 200M
     networks:
       default:
         ipv4_address: 192.168.21.92
@@ -50,8 +56,11 @@ services:
     command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra3.yaml
     hostname: iote2e-cassandra3
     container_name: iote2e-cassandra3
-    mem_limit: 8g
-    memswap_limit: 8g
+    mem_limit: 4g
+    memswap_limit: 4g
+    environment:
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 200M
     networks:
       default:
         ipv4_address: 192.168.21.93
@@ -67,27 +76,30 @@ services:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
       
-  iote2e-cassandra4:
-    image: cassandra:3.9
-    command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra4.yaml
-    hostname: iote2e-cassandra4
-    container_name: iote2e-cassandra4
-    mem_limit: 8g
-    memswap_limit: 8g
-    networks:
-      default:
-        ipv4_address: 192.168.21.94
-    expose:
-      - 7000
-      - 7001
-      - 9442
-      - 9160
-    ports:
-      - 9044:9042
-    volumes:
-      - ./conf:/conf
-      - ./data:/tmp/data
-      - ../../iote2e-shared:/tmp/iote2e-shared
+#  iote2e-cassandra4:
+#    image: cassandra:3.9
+#    command: cassandra -f -R -Dcassandra.config=file:///conf/cassandra4.yaml
+#    hostname: iote2e-cassandra4
+#    container_name: iote2e-cassandra4
+#    mem_limit: 4g
+#    memswap_limit: 4g
+#    environment:
+#      MAX_HEAP_SIZE: 1G
+#      HEAP_NEWSIZE: 200M
+#    networks:
+#      default:
+#        ipv4_address: 192.168.21.94
+#    expose:
+#      - 7000
+#      - 7001
+#      - 9442
+#      - 9160
+#    ports:
+#      - 9044:9042
+#    volumes:
+#      - ./conf:/conf
+#      - ./data:/tmp/data
+#      - ../../iote2e-shared:/tmp/iote2e-shared
   
 networks:
   default:

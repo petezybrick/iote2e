@@ -16,29 +16,27 @@ import com.google.gson.annotations.Expose;
 import com.pzybrick.iote2e.common.utils.ArgMap;
 import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 
+import consumer.kafka.Config;
 import consumer.kafka.MessageAndMetadata;
 import consumer.kafka.ReceiverLauncher;
 
 public class Iote2eRequestSparkConsumer {
 	private static final Logger logger = LogManager.getLogger(Iote2eRequestSparkConsumer.class.getName());
-	private ArgMap argMap;
     private SparkConf conf;
     private JavaStreamingContext ssc;
     private boolean started = false;
 	
 	
     public static void main(String[] args) throws Exception {
-    	//Iote2eRequestSparkConsumer iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-    	//iote2eRequestSparkConsumer.process(args);
-    	
     	Iote2eRequestSparkConsumer iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-    	RunProcess runProcess = new RunProcess( iote2eRequestSparkConsumer);
-    	runProcess.start();
-    	try {
-    		Thread.sleep(5000);
-    	} catch( Exception e ) {}
-    	iote2eRequestSparkConsumer.stop();
-    	runProcess.join();
+    	iote2eRequestSparkConsumer.process();
+//    	RunProcess runProcess = new RunProcess( iote2eRequestSparkConsumer);
+//    	runProcess.start();
+//    	try {
+//    		Thread.sleep(5000);
+//    	} catch( Exception e ) {}
+//    	iote2eRequestSparkConsumer.stop();
+//    	runProcess.join();
 
     }
     
@@ -76,7 +74,7 @@ public class Iote2eRequestSparkConsumer {
 
         conf = new SparkConf()
                 .setAppName(sparkAppName);
-        if( sparkMaster != null ) conf.setMaster( sparkMaster );
+        //if( sparkMaster != null ) conf.setMaster( sparkMaster );
         ssc = new JavaStreamingContext(conf, new Duration(sparkStreamDurationMs));
 
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
@@ -97,21 +95,21 @@ public class Iote2eRequestSparkConsumer {
         kafkaProps.put("consumer.fillfreqms", "250");
         kafkaProps.put("consumer.backpressure.enabled", "true");
         
+        kafkaProps.put( Config.KAFKA_PARTITIONS_NUMBER, 3 );
+        
         kafkaProps.put("zookeeper.session.timeout.ms", "400");
         kafkaProps.put("zookeeper.sync.time.ms", "200");
         kafkaProps.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         kafkaProps.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 
-        
         Iote2eRequestSparkProcessor streamProcessor = new Iote2eRequestSparkProcessor();
         
-        int numberOfReceivers = 3;
-
-		JavaDStream<MessageAndMetadata> unionStreams = ReceiverLauncher.launch(
-				ssc, kafkaProps, numberOfReceivers, StorageLevel.MEMORY_ONLY());
-		
-		unionStreams.foreachRDD(streamProcessor::processIote2eRequestRDD);
+        int numberOfReceivers = 6;	
+        
 		try {
+			JavaDStream<MessageAndMetadata> unionStreams = ReceiverLauncher.launch(
+					ssc, kafkaProps, numberOfReceivers, StorageLevel.MEMORY_ONLY());		
+			unionStreams.foreachRDD(streamProcessor::processIote2eRequestRDD);
 			logger.info("Starting Iote2eRequestSparkConsumer");
 			ssc.start();
 		} catch( Exception e ) {

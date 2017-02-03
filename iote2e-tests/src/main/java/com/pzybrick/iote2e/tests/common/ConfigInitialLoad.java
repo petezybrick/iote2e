@@ -1,6 +1,7 @@
 package com.pzybrick.iote2e.tests.common;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,29 +12,15 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.datastax.driver.core.exceptions.AlreadyExistsException;
 import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.persist.ConfigVo;
 
 public class ConfigInitialLoad {
 	private static final Logger logger = LogManager.getLogger(ConfigInitialLoad.class);
-	private static final String[] CONFIG_FILES_TO_LOAD = {
-			"actuator_state.json",
-			"master_basic_unit_test_local_config.json",
-			"master_ignite_unit_test_local_config.json",
-			"master_kafka_unit_test_local_config.json",
-			"master_ksi_unit_test_local_config.json",
-			"master_basic_unit_test_docker_config.json",
-			"master_ignite_unit_test_docker_config.json",
-			"master_kafka_unit_test_docker_config.json",
-			"master_ksi_unit_test_docker_config.json",
-			"rule_def_item.json",
-			"rule_login_source_sensor.json",
-			};
+
 
 	public static void main(String[] args) {
 		try {
-			int x = org.apache.ignite.events.EventType.EVT_TASK_STARTED;
 			ConfigInitialLoad configInitialLoad = new ConfigInitialLoad();
 			configInitialLoad.initialLoad( args[0] );
 		} catch( Exception e ) {
@@ -57,12 +44,16 @@ public class ConfigInitialLoad {
 			ConfigDao.useKeyspace("iote2e");
 			ConfigDao.dropTable();
 			ConfigDao.createTable();
-			for( String configFileName : CONFIG_FILES_TO_LOAD ) {
-				InputStream inputStream = new FileInputStream(pathToConfigFiles + configFileName );
-				String configJson = getStringFromInputStream(inputStream);
-				inputStream.close();
-				String configName = configFileName.substring( 0, configFileName.indexOf("."));
-				configVos.add( new ConfigVo(configName, configJson));
+			File path = new File( pathToConfigFiles);
+			File[] files = path.listFiles();
+			for( File file : files ) {
+				if( file.isFile() ) {
+					InputStream inputStream = new FileInputStream(file);
+					String configJson = getStringFromInputStream(inputStream);
+					inputStream.close();
+					String configName = file.getName().substring( 0, file.getName().indexOf("."));
+					configVos.add( new ConfigVo(configName, configJson));
+				}
 			}
 			ConfigDao.insertConfigBatch(configVos);
 		} catch( Exception e ) {

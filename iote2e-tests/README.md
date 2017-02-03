@@ -56,7 +56,23 @@ Remove
 	open terminal session
 	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
 	run the remove script: ./docker-env-rm.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
+	
+Run Spark unit tests under Docker
+- start docker environment as per above
+- bring up the Spark console - open browser, http://localhost:8080
+- ensure that the iote2e-ruleproc application has been rebuilt via maven
+	- copy based on install will copy iote2e-ruleproc-1.0.0.jar to folder `iote2e/iote2e-tests/iote2e-shared/jars` which is shared between local and docker
+- cd to local spark folder, i.e. `cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7`
+- submit iote2e-ruleproc spark job	
 
+./bin/spark-submit \
+  --class com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer \
+  --deploy-mode cluster \
+  --master spark://localhost:6066 \
+  /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar
+
+
+** ConfigInitialLoad on Cassandra Docker instance
 rebuild iote2e-tests, which will also copy to iote2e-tests/iote2e-shared/jars
 docker exec -it iote2e-demomgr1 /bin/bash
 export CASSANDRA_CONTACT_POINT=iote2e-cassandra1
@@ -65,17 +81,11 @@ cd /tmp/iote2e-shared
 java -cp jars/iote2e-tests-1.0.0.jar com.pzybrick.iote2e.tests.common.ConfigInitialLoad config_initial_load
 + Verify
 docker exec -it iote2e-cassandra1 /bin/bash
-csqlsh
+csqlsh iote2e-cassandra1
 select config_name from config;
 
-jUnit environment vars - localhost (not under docker)
-KAFKA_GROUP_UNIT_TEST iote2e-group-sandbox
-KAFKA_TOPIC_UNIT_TEST com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox
-KAFKA_BOOTSTRAP_SERVERS_UNIT_TEST localhost:9091,localhost:9092,localhost:9093
-KAFKA_ZOOKEEPER_UNIT_TEST localhost:2182
-KAFKA_STREAM_CONSUMER_NUM_THREADS_UNIT_TEST 3
 
-REQUEST_CONFIG_JSON_FILE_KAFKA
+
 
 
 Spark Kafka Consumer

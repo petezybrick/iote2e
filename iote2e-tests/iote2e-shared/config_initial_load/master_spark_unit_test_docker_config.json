@@ -21,7 +21,7 @@
 	"kafkaConsumerId": "test-id",
 	"kafkaZookeeperConsumerConnection": "iote2e-zoo1,iote2e-zoo2,iote2e-zoo3",
 	"kafkaZookeeperConsumerPath": "/iote2erequest-sandbox",
-	"sparkAppName": "kafka-sandbox",
+	"sparkAppName": "iote2e-sandbox",
 	"sparkMaster": "spark://iote2e-spark-master:7077",
 	"sparkStreamDurationMs": "1250"
 }
