@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.tests.spark;
+package com.pzybrick.iote2e.tests.ksi;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,15 +23,17 @@ import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
+import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 import com.pzybrick.iote2e.tests.common.ThreadIgniteSubscribe;
+import com.pzybrick.iote2e.tests.common.ThreadSparkRun;
 
-public class TestSparkHandlerBase extends TestCommonHandler {
-	private static final Logger logger = LogManager.getLogger(TestSparkHandlerBase.class);
+public class TestKsiHandlerBase extends TestCommonHandler {
+	private static final Logger logger = LogManager.getLogger(TestKsiHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvc iote2eSvc;
@@ -40,12 +42,14 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 	protected Iote2eResultReuseItem iote2eResultReuseItem;
 	protected String kafkaTopic;
 	protected String kafkaGroup;
+	protected static Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
+	protected static ThreadSparkRun threadSparkRun;
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
 	protected IgniteSingleton igniteSingleton = null;
 	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
 	protected Gson gson;
 
-	public TestSparkHandlerBase() {
+	public TestKsiHandlerBase() {
 		super();
 	}
 	
@@ -53,12 +57,25 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 	public static void beforeClass() throws Exception {
 		// cassandra
 		ActuatorStateDao.useKeyspace( System.getenv("CASSANDRA_KEYSPACE_NAME"));
-
+		// spark
+    	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
+    	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer);
+    	threadSparkRun.start();
+    	long expiredAt = System.currentTimeMillis() + (10*1000);
+    	while( expiredAt > System.currentTimeMillis() ) {
+    		if( threadSparkRun.isStarted() ) break;
+    		try {
+    			Thread.sleep(250);
+    		} catch( Exception e ) {}
+    	}
+    	if( !threadSparkRun.isStarted() ) throw new Exception("Timeout waiting for Spark to start");
 	}
 	
 	@AfterClass
 	public static void afterClass() {
 		try {
+	    	iote2eRequestSparkConsumer.stop();
+			threadSparkRun.join();
 			IgniteSingleton.reset();
 			ConfigDao.disconnect();
 			ActuatorStateDao.disconnect();

@@ -25,12 +25,12 @@ public class Iote2eRequestSparkProcessor implements Serializable {
 	}
 
     public void processIote2eRequestRDD(JavaRDD<MessageAndMetadata> rdd) {
-        logger.info("-------------------  Processing Iote2eRequestRDD " + Thread.currentThread().getId() + ", rdd=" + rdd.toString() );
+        logger.debug("Processing Iote2eRequestRDD {}, rdd={}", Thread.currentThread().getId(), rdd.toString() );
         rdd.foreachPartition(partition -> processPartition(partition));
     }
 
     public void processPartition(Iterator<MessageAndMetadata> partition) throws Exception {
-        logger.info("-------------------  Starting to process partition");
+        logger.debug("Starting to process partition");
         try (Router router = new RouterIote2eRequestImpl(); ) {
             partition.forEachRemaining(messageAndMetadata -> processIote2eRequestRecord(messageAndMetadata, router));
         } catch(Exception e ) {
@@ -41,7 +41,7 @@ public class Iote2eRequestSparkProcessor implements Serializable {
 
     public void processIote2eRequestRecord(MessageAndMetadata messageAndMetadata, Router router) {
         try {
-        	logger.info("-------------------  Processing message with key:" + new String(messageAndMetadata.getKey()) );
+        	logger.debug("Processing message with key: {}", new String(messageAndMetadata.getKey()) );
         	Iote2eRequest iote2eRequest = iote2eRequestReuseItem.fromByteArray(messageAndMetadata.getPayload() );
             router.add(iote2eRequest);
         } catch (Exception e) {

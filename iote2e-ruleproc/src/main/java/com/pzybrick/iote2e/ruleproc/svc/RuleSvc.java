@@ -54,7 +54,7 @@ public abstract class RuleSvc {
 			// actuator, i.e. don't turn actuator on if it is already on
 			// evaluate sensor value
 			boolean isSensorRuleHit = evalRuleSensor(sensorValue, ruleDefCondItem, ruleDefItem);
-			if( logger.isDebugEnabled()) logger.debug("isSensorRuleHit=" + isSensorRuleHit);
+			logger.info("isSensorRuleHit={}", isSensorRuleHit);
 			// only evaluate Actuator rule if the Sensor rule has hit
 			if (isSensorRuleHit) {
 				RuleEvalResult ruleEvalResult = ruleEvalActuator(loginUuid, sourceUuid, sensorName, ruleDefCondItem, ruleDefItem);

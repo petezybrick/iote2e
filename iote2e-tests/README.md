@@ -23,6 +23,9 @@ env JMX_PORT=10001 ./bin/kafka-server-start.sh config/server-2.properties
 Start Cassandra single node local
 start another terminal tab or session
 cd to cassandra folder: cd /home/pete/development/server/apache-cassandra-3.9
+Settings to minimize Cassandra memory usage for development - if not set, Cassandra will use memory as if your machine is only running Cassandra
+export MAX_HEAP_SIZE=1G
+export HEAP_NEWSIZE=200M
 ./bin/cassandra -f
 
 Start/stop environment for standalone jUnit tests

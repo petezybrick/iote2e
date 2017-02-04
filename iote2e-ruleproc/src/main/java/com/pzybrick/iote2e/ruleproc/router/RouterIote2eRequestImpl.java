@@ -37,10 +37,12 @@ public class RouterIote2eRequestImpl implements Router {
     }
 
     public void flush() throws Exception {
-        logger.info("------------------- Flush Start iote2eRequests.size()={}", iote2eRequests.size() );
-        // evaluate each rule and if it hits, then push the Iote2eResult back out to the originator via Ignite
-    	iote2eRequestSparkHandler.processRequests(iote2eRequests);
-        logger.info("------------------- Flush End");
+    	if( iote2eRequests.size() > 0 ) {
+	        logger.info("Flush Start iote2eRequests.size()={}", iote2eRequests.size() );
+	        // evaluate each rule and if it hits, then push the Iote2eResult back out to the originator via Ignite
+	    	iote2eRequestSparkHandler.processRequests(iote2eRequests);
+	        logger.info("Flush End");
+    	}
     }
 
     @Override

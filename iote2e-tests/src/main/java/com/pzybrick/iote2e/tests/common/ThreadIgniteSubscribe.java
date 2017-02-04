@@ -27,14 +27,19 @@ public class ThreadIgniteSubscribe extends Thread {
 	private boolean subscribeUp;
 	private ConcurrentLinkedQueue<byte[]> subscribeResults;
 	private MasterConfig masterConfig;
+	private Thread threadPoller;
 
 	public ThreadIgniteSubscribe(MasterConfig masterConfig) {
 		this.masterConfig = masterConfig;
 	}
 
 	public static ThreadIgniteSubscribe startThreadSubscribe(MasterConfig masterConfig, String igniteFilterKey,
-			IgniteSingleton igniteSingleton, ConcurrentLinkedQueue<byte[]> subscribeResults ) throws Exception {
-		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe(masterConfig).setIgniteFilterKey(igniteFilterKey).setIgniteSingleton(igniteSingleton).setSubscribeResults(subscribeResults) ;
+			IgniteSingleton igniteSingleton, ConcurrentLinkedQueue<byte[]> subscribeResults, Thread threadPoller ) throws Exception {
+		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe(masterConfig)
+				.setIgniteFilterKey(igniteFilterKey)
+				.setIgniteSingleton(igniteSingleton)
+				.setSubscribeResults(subscribeResults)
+				.setThreadPoller(threadPoller);
 		threadIgniteSubscribe.start();
 		long timeoutAt = System.currentTimeMillis() + 10000L;
 		while (System.currentTimeMillis() < timeoutAt && !threadIgniteSubscribe.isSubscribeUp() ) {
@@ -60,6 +65,7 @@ public class ThreadIgniteSubscribe extends Thread {
 				public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends  byte[]>> evts) {
 					for (CacheEntryEvent<? extends String, ? extends  byte[]> e : evts) {
 						subscribeResults.add(e.getValue());
+						if( threadPoller != null ) threadPoller.interrupt(); // if subscriber is waiting then wake up
 					}
 				}
 			});
@@ -159,6 +165,15 @@ public class ThreadIgniteSubscribe extends Thread {
 
 	public ThreadIgniteSubscribe setSubscribeResults(ConcurrentLinkedQueue<byte[]> subscribeResults) {
 		this.subscribeResults = subscribeResults;
+		return this;
+	}
+
+	public Thread getThreadPoller() {
+		return threadPoller;
+	}
+
+	public ThreadIgniteSubscribe setThreadPoller(Thread threadPoller) {
+		this.threadPoller = threadPoller;
 		return this;
 	}
 }

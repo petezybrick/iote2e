@@ -74,7 +74,7 @@ public class Iote2eRequestSparkConsumer {
 
         conf = new SparkConf()
                 .setAppName(sparkAppName);
-        //if( sparkMaster != null ) conf.setMaster( sparkMaster );
+        if( sparkMaster != null && sparkMaster.length() > 0 ) conf.setMaster( sparkMaster );
         ssc = new JavaStreamingContext(conf, new Duration(sparkStreamDurationMs));
 
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();

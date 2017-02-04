@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.test.ksi;
+package com.pzybrick.iote2e.tests.ksi;
 
 import java.util.List;
 
