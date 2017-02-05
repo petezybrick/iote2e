@@ -42,8 +42,11 @@ public class CassandraBaseDao {
 				} catch(Exception e) {}
 			} catch( Exception e ) {
 				lastException = e;
-				logger.error(e.getLocalizedMessage());
-				break;
+				logger.warn(e.getLocalizedMessage());
+				try {
+					Thread.sleep(sleepMs);
+					sleepMs = 2*sleepMs;
+				} catch(Exception e2) {}
 			}
 
 		}

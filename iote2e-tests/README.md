@@ -63,8 +63,7 @@ Remove
 Run Spark unit tests under Docker
 - start docker environment as per above
 - bring up the Spark console - open browser, http://localhost:8080
-- ensure that the iote2e-ruleproc application has been rebuilt via maven
-	- copy based on install will copy iote2e-ruleproc-1.0.0.jar to folder `iote2e/iote2e-tests/iote2e-shared/jars` which is shared between local and docker
+- ensure that the iote2e-ruleproc application has been rebuilt via maven, which will copy to docker shared jars folder
 - cd to local spark folder, i.e. `cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7`
 - submit iote2e-ruleproc spark job	
 
@@ -73,7 +72,28 @@ Run Spark unit tests under Docker
   --deploy-mode cluster \
   --master spark://localhost:6066 \
   /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar
+  
+  - review the returned json for "success":true
+		17/02/04 12:41:01 INFO RestSubmissionClient: Server responded with CreateSubmissionResponse:
+		{
+		  "action" : "CreateSubmissionResponse",
+		  "message" : "Driver successfully submitted as driver-20170204174101-0000",
+		  "serverSparkVersion" : "2.0.2",
+		  "submissionId" : "driver-20170204174101-0000",
+		  "success" : true
+		}
 
+- at this point the iote2e-ruleproc spark streaming job is running and reading from the stream that is connected to kafka, but no messages are being sent yet
+- run SimTempToFan
+	- this should turn the fan on at 80 degrees, and start the temperature decreasing
+	- when the temp hits 77 degrees, it should turn the fan off and start the temperature increasing
+	- connect to demomgr1: docker exec -it iote2e-demomgr1 /bin/bash
+	- set env vars for Cassandra:
+		export CASSANDRA_CONTACT_POINT=iote2e-cassandra1
+		export CASSANDRA_KEYSPACE_NAME=iote2e
+	- cd to shared scripts folder: cd /tmp/iote2e-shared/scripts
+	- if any MasterConfig settings have changed, then reload: ./initialload_cassandra_docker.sh
+	- run SimTempToFan: ./run-junit-tests-sim-temptofan-docker.sh
 
 ** ConfigInitialLoad on Cassandra Docker instance
 rebuild iote2e-tests, which will also copy to iote2e-tests/iote2e-shared/jars

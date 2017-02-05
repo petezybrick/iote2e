@@ -31,7 +31,7 @@
 	</appenders>
 
 	<loggers>
-		<logger name="com.pzybrick" level="info" additivity="false">
+		<logger name="com.pzybrick" level="debug" additivity="false">
 			<appender-ref ref="console" />
 			<appender-ref ref="file" />
 		</logger>

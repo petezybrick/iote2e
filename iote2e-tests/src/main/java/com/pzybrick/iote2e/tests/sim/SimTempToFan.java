@@ -51,11 +51,17 @@ public class SimTempToFan extends SimBase {
 				// TEST TEST TEST
 				//if( tempNow == TEMP_MAX ) tempDirectionIncrease = false;
 				//else if( tempNow == TEMP_MIN ) tempDirectionIncrease = true;
+				if( tempNow >= 82 || tempNow <= 75) {
+					logger.error("Temperature Exceeded");
+					after();
+					break;
+				}
 			}			
 			
 		} catch( Exception e ) {
 			logger.error(e.getMessage(), e);
 		}
+		
 	}
 	
 	private class PollResult extends Thread {
@@ -80,7 +86,7 @@ public class SimTempToFan extends SimBase {
 						String actuatorValue = iote2eResult.getPairs().get( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE)).toString();
 						if( "off".equals(actuatorValue)) tempDirectionIncrease = true;
 						else if( "on".equals(actuatorValue)) tempDirectionIncrease = false;
-						logger.info("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ {}", actuatorValue);
+						logger.info("actuatorValue {}", actuatorValue);
 					} catch(Exception e ) {
 						logger.error(e.getMessage(), e);
 					}
@@ -106,8 +112,9 @@ public class SimTempToFan extends SimBase {
 		@Override
 		public void run() {
 			try {
-				logger.info(">>>>>>>>>>>>>>>>> processing shutdownhook");
+				logger.info("Shutdownhook - Start");
 				after();
+				logger.info("Shutdownhook - Complete");
 			} catch( Exception e ) {
 				logger.error(e.getMessage(), e );
 			}

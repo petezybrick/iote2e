@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.ignite.Iote2eIgniteCacheEntryEventFilter;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 
 public class ThreadIgniteSubscribe extends Thread {
@@ -57,13 +59,20 @@ public class ThreadIgniteSubscribe extends Thread {
 	public void run() {
 		// Create new continuous query.
 		ContinuousQuery<String,  byte[]> qry = new ContinuousQuery<>();
+		qry.setTimeInterval(100);
 		try {
 			// Callback that is called locally when update notifications are
 			// received.
 			qry.setLocalListener(new CacheEntryUpdatedListener<String,  byte[]>() {
+				Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 				@Override
-				public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends  byte[]>> evts) {
+				public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends byte[]>> evts) {
 					for (CacheEntryEvent<? extends String, ? extends  byte[]> e : evts) {
+						Iote2eResult iote2eResult = null;
+						try {
+							iote2eResult = iote2eResultReuseItem.fromByteArray(e.getValue());
+						} catch( Exception e2 ) {}
+						logger.info("ignite - adding to subscribeResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
 						subscribeResults.add(e.getValue());
 						if( threadPoller != null ) threadPoller.interrupt(); // if subscriber is waiting then wake up
 					}
@@ -83,22 +92,24 @@ public class ThreadIgniteSubscribe extends Thread {
             qry.setInitialQuery(new ScanQuery<>(new IgniteBiPredicate<String, byte[]>() {
                 @Override public boolean apply(String key, byte[] val) {
                 	// TODO: recover forward from checkpoint
-                    return false;
+                    return true;
                 }
             }));
 			
-			subscribeUp = true;			
+			subscribeUp = true;
+			Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 			while( true ) {
                 try (QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry)) {
                     // Iterate through existing data.
-                    for (Cache.Entry<String, byte[]> e : cur)
-                        logger.info("******************* Queried existing entry [key=" + e.getKey()+ ']');
-				
+                    for (Cache.Entry<String, byte[]> e : cur) {
+                    	Iote2eResult iote2eResult = iote2eResultReuseItem.fromByteArray(e.getValue());
+                        logger.info("******************* Queried existing entry [key={}, value={}]", e.getKey(), iote2eResult.toString());
+                    }
 	//				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
 	//				List<Cache.Entry<String, byte[]>> list = cur.getAll();
 	//				logger.info("************************* getAll size {}", list.size() );
 					try {
-						Thread.sleep(500);
+						Thread.sleep(5000);
 					} catch( java.lang.InterruptedException e ) {
 						break;
 					}

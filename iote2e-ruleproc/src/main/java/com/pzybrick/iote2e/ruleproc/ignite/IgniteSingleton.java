@@ -21,6 +21,7 @@ public class IgniteSingleton {
 	}
 	
 	public static synchronized void reset( ) throws Exception {
+		logger.info("reset called");
 		if( igniteSingleton != null ) {
 			try {
 				igniteSingleton.getCache().close();
@@ -35,6 +36,9 @@ public class IgniteSingleton {
 			}			
 			try {
 				igniteSingleton.getIgnite().close();
+				logger.info("reset: before Ignition.kill");
+				//Ignition.kill(false);
+				logger.info("reset: before Ignition.kill");
 			} catch( Exception e ) {
 				logger.warn(e.getMessage(),e);
 			}
@@ -45,23 +49,36 @@ public class IgniteSingleton {
 		
 	public static synchronized IgniteSingleton getInstance( MasterConfig masterConfig ) throws Exception {
 		if( igniteSingleton == null ) {
-			try {
-				String igniteConfigPath = masterConfig.getIgniteConfigPath();
-				if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
-				if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
-				String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getIgniteConfigFile();
-				logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getIgniteConfigName());
-				IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
-						igniteConfigPathNameExt, masterConfig.getIgniteConfigName());
-				Ignition.setClientMode(masterConfig.isIgniteClientMode());
-				Ignite ignite = Ignition.start(igniteConfiguration);
-				if (logger.isDebugEnabled()) logger.debug(ignite.toString());
-				IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(masterConfig.getIgniteCacheName());
-				igniteSingleton = new IgniteSingleton( ignite, cache);
-			} catch (Throwable t ) {
-				logger.error("Ignite initialization failure", t);
-				throw t;
+			Throwable lastThrowable = null;
+			long retryMs = 1000;
+			for( int i=0 ; i<10 ; i++ ) {
+				try {
+					logger.info("attempting getInstance, attempt number: {}", i);
+					String igniteConfigPath = masterConfig.getIgniteConfigPath();
+					if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
+					if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
+					String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getIgniteConfigFile();
+					logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getIgniteConfigName());
+					IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
+							igniteConfigPathNameExt, masterConfig.getIgniteConfigName());
+					Ignition.setClientMode(masterConfig.isIgniteClientMode());
+					Ignite ignite = Ignition.start(igniteConfiguration);
+					if (logger.isDebugEnabled()) logger.debug(ignite.toString());
+					IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(masterConfig.getIgniteCacheName());
+					igniteSingleton = new IgniteSingleton( ignite, cache);
+					logger.info("successful getInstance, attempt number: {}", i);
+					break;
+				} catch (Throwable t ) {
+					logger.warn("Ignite initialization failure", t);
+					lastThrowable = t;
+					logger.info("getInstance: before Ignition.kill");
+					//Ignition.kill(false);
+					logger.info("getInstance: after Ignition.kill");
+				}
+				try { Thread.sleep(retryMs); } catch(Exception e ) {}
+				retryMs = retryMs*2;
 			}
+			if( lastThrowable != null ) throw new Exception(lastThrowable);
 		}
 		return igniteSingleton;
 	}

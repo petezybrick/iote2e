@@ -9,7 +9,7 @@ docker rmi ignite:1.8.0
 
 docker build -t ignite:1.8.0 .
 
-logging: /opt/ignite/apache-ignite-fabric-1.8.0-bin/work/log/ignite-xxx.log
+logging: cd /opt/ignite/apache-ignite-fabric-1.8.0-bin/work/log/ignite-xxx.log
 
 
 
