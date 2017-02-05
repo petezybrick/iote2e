@@ -9,49 +9,49 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 import com.pzybrick.iote2e.tests.common.ThreadIgniteSubscribe;
 
-public class SimTempToFan extends SimBase {
-	private static final Logger logger = LogManager.getLogger(SimTempToFan.class);
-	private static final double TEMP_MIN = 74.0;
-	private static final double TEMP_MAX = 83.0;
-	private static final double TEMP_START = 79.0;
-	private static final double TEMP_INCR = .5;
-	private static final long TEMP_PUT_FREQ_MS = 2000;
-	private boolean tempDirectionIncrease = true;
+public class SimHumidityToMister extends SimBase {
+	private static final Logger logger = LogManager.getLogger(SimHumidityToMister.class);
+	private static final double HUMIDITY_MIN = 82.0;
+	private static final double HUMIDITY_MAX = 93.0;
+	private static final double HUMIDITY_START = 92.0;
+	private static final double HUMIDITY_INCR = .5;
+	private static final long HUMIDITY_PUT_FREQ_MS = 2000;
+	private boolean humidityDirectionIncrease = true;
 	private PollResult pollResult;
 
 	public static void main(String[] args) {
-		SimTempToFan simTempToFan = new SimTempToFan();
-		simTempToFan.process();
+		SimHumidityToMister simHumidityToMister = new SimHumidityToMister();
+		simHumidityToMister.process();
 	}
 
 	public void process() {
 		try {
-			Runtime.getRuntime().addShutdownHook(new SimTempToFanShutdownHook());
+			Runtime.getRuntime().addShutdownHook(new SimHumidityToMisterShutdownHook());
 			before();
 			pollResult = new PollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),
-					TestCommonHandler.testTempToFanFilterKey, igniteSingleton, iote2eResultsBytes, pollResult);
-			double tempNow = TEMP_START;
-			tempDirectionIncrease = true;
+					TestCommonHandler.testHumidityFilterKey, igniteSingleton, iote2eResultsBytes, pollResult);
+			double humidityNow = HUMIDITY_START;
+			humidityDirectionIncrease = false;
 			while( true ) {
-				if( tempDirectionIncrease && tempNow < TEMP_MAX ) {
-					tempNow += TEMP_INCR;
-				} else if( !tempDirectionIncrease && tempNow > TEMP_MIN) {
-					tempNow -= TEMP_INCR;
+				if( humidityDirectionIncrease && humidityNow < HUMIDITY_MAX ) {
+					humidityNow += HUMIDITY_INCR;
+				} else if( !humidityDirectionIncrease && humidityNow > HUMIDITY_MIN) {
+					humidityNow -= HUMIDITY_INCR;
 				}
-				logger.info( "tempNow: {}",tempNow);
-				kafkaSend( TestCommonHandler.testTempToFanLoginName, TestCommonHandler.testTempToFanSourceName, 
-						TestCommonHandler.testTempToFanSourceType, TestCommonHandler.testTempToFanSensorName,
-						String.valueOf(tempNow));
+				logger.info( "humidityNow: {}",humidityNow);
+				kafkaSend( TestCommonHandler.testHumidityLoginName, TestCommonHandler.testHumiditySourceName, 
+						TestCommonHandler.testHumiditySourceType, TestCommonHandler.testHumiditySensorName,
+						String.valueOf(humidityNow));
 				try {
-					Thread.sleep(TEMP_PUT_FREQ_MS);
+					Thread.sleep(HUMIDITY_PUT_FREQ_MS);
 				} catch( InterruptedException e) {}	
 				// TEST TEST TEST
-				//if( tempNow == TEMP_MAX ) tempDirectionIncrease = false;
-				//else if( tempNow == TEMP_MIN ) tempDirectionIncrease = true;
-				if( tempNow >= 82 || tempNow <= 75) {
-					logger.error("Temperature Exceeded");
+				//if( tempNow == HUMIDITY_MAX ) tempDirectionIncrease = false;
+				//else if( tempNow == HUMIDITY_MIN ) tempDirectionIncrease = true;
+				if( humidityNow >= HUMIDITY_MAX || humidityNow <= HUMIDITY_MIN) {
+					logger.error("Humidity Exceeded");
 					after();
 					break;
 				}
@@ -84,8 +84,8 @@ public class SimTempToFan extends SimBase {
 						Iote2eResult iote2eResult = iote2eResultReuseItem.fromByteArray(iote2eResultsByte);
 						String actuatorValue = iote2eResult.getPairs().get( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE)).toString();
 						logger.info("actuatorValue {}", actuatorValue);
-						if( "off".equals(actuatorValue)) tempDirectionIncrease = true;
-						else if( "on".equals(actuatorValue)) tempDirectionIncrease = false;
+						if( "off".equals(actuatorValue)) humidityDirectionIncrease = false;
+						else if( "on".equals(actuatorValue)) humidityDirectionIncrease = true;
 					} catch(Exception e ) {
 						logger.error(e.getMessage(), e);
 					}
@@ -106,7 +106,7 @@ public class SimTempToFan extends SimBase {
 	
 	
 
-	private class SimTempToFanShutdownHook extends Thread {
+	private class SimHumidityToMisterShutdownHook extends Thread {
 		
 		@Override
 		public void run() {

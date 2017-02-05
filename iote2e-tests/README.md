@@ -94,6 +94,7 @@ Run Spark unit tests under Docker
 	- cd to shared scripts folder: cd /tmp/iote2e-shared/scripts
 	- if any MasterConfig settings have changed, then reload: ./initialload_cassandra_docker.sh
 	- run SimTempToFan: ./run-junit-tests-sim-temptofan-docker.sh
+	- run SimHumidityToMister: ./run-junit-tests-sim-humiditytomister-docker.sh
 
 ** ConfigInitialLoad on Cassandra Docker instance
 rebuild iote2e-tests, which will also copy to iote2e-tests/iote2e-shared/jars

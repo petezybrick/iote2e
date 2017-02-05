@@ -85,7 +85,7 @@
   },
   {
     "ruleUuid": "lo1so2se2ru1",
-    "ruleName": "LedGreenOnOff",
+    "ruleName": "LedRedOnOff",
     "ruleDefCondItems": [
       {
         "sensorComparator": "EQ",
@@ -113,7 +113,7 @@
   },
   {
     "ruleUuid": "lo1so2se3ru1",
-    "ruleName": "LedGreenOnOff",
+    "ruleName": "LedYellowOnOff",
     "ruleDefCondItems": [
       {
         "sensorComparator": "EQ",

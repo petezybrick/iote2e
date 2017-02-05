@@ -9,52 +9,34 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 import com.pzybrick.iote2e.tests.common.ThreadIgniteSubscribe;
 
-public class SimTempToFan extends SimBase {
-	private static final Logger logger = LogManager.getLogger(SimTempToFan.class);
-	private static final double TEMP_MIN = 74.0;
-	private static final double TEMP_MAX = 83.0;
-	private static final double TEMP_START = 79.0;
-	private static final double TEMP_INCR = .5;
-	private static final long TEMP_PUT_FREQ_MS = 2000;
-	private boolean tempDirectionIncrease = true;
+public class SimLedGreen extends SimBase {
+	private static final Logger logger = LogManager.getLogger(SimLedGreen.class);
+	private static final long LEDGREEN_PUT_FREQ_MS = 3000;
 	private PollResult pollResult;
+	private String ledGreenState = "0";
 
 	public static void main(String[] args) {
-		SimTempToFan simTempToFan = new SimTempToFan();
-		simTempToFan.process();
+		SimLedGreen simLedGreen = new SimLedGreen();
+		simLedGreen.process();
 	}
 
 	public void process() {
 		try {
-			Runtime.getRuntime().addShutdownHook(new SimTempToFanShutdownHook());
+			Runtime.getRuntime().addShutdownHook(new SimLedGreenShutdownHook());
 			before();
 			pollResult = new PollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),
-					TestCommonHandler.testTempToFanFilterKey, igniteSingleton, iote2eResultsBytes, pollResult);
-			double tempNow = TEMP_START;
-			tempDirectionIncrease = true;
+					TestCommonHandler.testLedGreenFilterKey, igniteSingleton, iote2eResultsBytes, pollResult);
+
 			while( true ) {
-				if( tempDirectionIncrease && tempNow < TEMP_MAX ) {
-					tempNow += TEMP_INCR;
-				} else if( !tempDirectionIncrease && tempNow > TEMP_MIN) {
-					tempNow -= TEMP_INCR;
-				}
-				logger.info( "tempNow: {}",tempNow);
-				kafkaSend( TestCommonHandler.testTempToFanLoginName, TestCommonHandler.testTempToFanSourceName, 
-						TestCommonHandler.testTempToFanSourceType, TestCommonHandler.testTempToFanSensorName,
-						String.valueOf(tempNow));
+				logger.info( "ledGreenState: {}", getLedGreenState());
+				kafkaSend( TestCommonHandler.testLedLoginName, TestCommonHandler.testLedSourceName, 
+						TestCommonHandler.testLedSourceType, TestCommonHandler.testLedSensorNameGreen,
+						String.valueOf( getLedGreenState() ));
 				try {
-					Thread.sleep(TEMP_PUT_FREQ_MS);
+					Thread.sleep(LEDGREEN_PUT_FREQ_MS);
 				} catch( InterruptedException e) {}	
-				// TEST TEST TEST
-				//if( tempNow == TEMP_MAX ) tempDirectionIncrease = false;
-				//else if( tempNow == TEMP_MIN ) tempDirectionIncrease = true;
-				if( tempNow >= 82 || tempNow <= 75) {
-					logger.error("Temperature Exceeded");
-					after();
-					break;
-				}
 			}			
 			
 		} catch( Exception e ) {
@@ -84,8 +66,8 @@ public class SimTempToFan extends SimBase {
 						Iote2eResult iote2eResult = iote2eResultReuseItem.fromByteArray(iote2eResultsByte);
 						String actuatorValue = iote2eResult.getPairs().get( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE)).toString();
 						logger.info("actuatorValue {}", actuatorValue);
-						if( "off".equals(actuatorValue)) tempDirectionIncrease = true;
-						else if( "on".equals(actuatorValue)) tempDirectionIncrease = false;
+						if( "off".equals(actuatorValue)) setLedGreenState("1");
+						else if( "green".equals(actuatorValue)) setLedGreenState("0");
 					} catch(Exception e ) {
 						logger.error(e.getMessage(), e);
 					}
@@ -106,7 +88,7 @@ public class SimTempToFan extends SimBase {
 	
 	
 
-	private class SimTempToFanShutdownHook extends Thread {
+	private class SimLedGreenShutdownHook extends Thread {
 		
 		@Override
 		public void run() {
@@ -117,6 +99,19 @@ public class SimTempToFan extends SimBase {
 			} catch( Exception e ) {
 				logger.error(e.getMessage(), e );
 			}
+		}
+	}
+
+	public String getLedGreenState() {
+		synchronized(ledGreenState ) {
+			return ledGreenState;
+		}
+	}
+
+	public SimLedGreen setLedGreenState(String ledGreenState) {
+		synchronized(ledGreenState ) {
+			this.ledGreenState = ledGreenState;
+			return this;
 		}
 	}
 
