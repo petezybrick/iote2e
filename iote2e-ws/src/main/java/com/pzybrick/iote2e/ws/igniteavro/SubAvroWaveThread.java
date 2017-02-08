@@ -29,14 +29,16 @@ import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.query.ContinuousQuery;
 import org.apache.ignite.configuration.IgniteConfiguration;
 
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+
 
 public class SubAvroWaveThread extends Thread {
-	private ConcurrentLinkedQueue<String> messagesToSend;
+	private ConcurrentLinkedQueue<Iote2eResult> iote2eResults;
 	private Exception exception = null;
 	private boolean shutdown;
 
-	public SubAvroWaveThread(ConcurrentLinkedQueue<String> messagesToSend) {
-		this.messagesToSend = messagesToSend;
+	public SubAvroWaveThread(ConcurrentLinkedQueue<Iote2eResult> iote2eResults) {
+		this.iote2eResults = iote2eResults;
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class SubAvroWaveThread extends Thread {
 
 			// Create new continuous query.
 			ContinuousQuery<Integer, byte[]> qry = new ContinuousQuery<>();
-			qry.setLocalListener(new CacheEntryUpdatedListenerActuatorResponse(messagesToSend) );
+			qry.setLocalListener(new CacheEntryUpdatedListenerIote2eResult(iote2eResults) );
             qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<Integer, byte[]>>() {
                 @Override public CacheEntryEventFilter<Integer, byte[]> create() {
                     return new CacheEntryEventFilter<Integer, byte[]>() {

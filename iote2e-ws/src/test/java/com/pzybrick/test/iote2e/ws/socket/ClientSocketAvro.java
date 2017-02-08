@@ -11,26 +11,26 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.ws.socket.EntryPointServerSourceSensorValue;
+import com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest;
 
 @ClientEndpoint
 @ServerEndpoint(value = "/iote2e/")
 public class ClientSocketAvro {
-	private static final Logger logger = LogManager.getLogger(EntryPointServerSourceSensorValue.class);
+	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
 	private Thread iotClientSocketThread;
-	private ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays;
+	private ConcurrentLinkedQueue<byte[]> iote2eResultBytes;
 	
 	public ClientSocketAvro( ) {
 		logger.debug("IotClientSocketAvro ctor empty");
 	}
 	
-	public ClientSocketAvro( Thread iotClientSocketThread, ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays ) {
+	public ClientSocketAvro( Thread iotClientSocketThread, ConcurrentLinkedQueue<byte[]> iote2eResultBytes ) {
 		logger.debug("IotClientSocketAvro ctor thread, queue");
 		this.iotClientSocketThread = iotClientSocketThread;
-		this.rcvdAvroByteArrays = rcvdAvroByteArrays;
+		this.iote2eResultBytes = iote2eResultBytes;
 	}
 
 	@OnOpen
@@ -40,14 +40,14 @@ public class ClientSocketAvro {
 
 	@OnMessage
 	public void onWebSocketText(String message) {
-		//rcvdAvroByteArrays.add(message);
+		//iote2eResultBytes.add(message);
 		//iotClientSocketThread.interrupt();
 	}
 
 	@OnMessage
 	public void onWebSocketText(byte[] messageByte) {
 		logger.debug("rcvd byte message");
-		rcvdAvroByteArrays.add( messageByte );
+		iote2eResultBytes.add( messageByte );
 		iotClientSocketThread.interrupt();
 	}
 
@@ -62,10 +62,10 @@ public class ClientSocketAvro {
 	}
 
 	public ConcurrentLinkedQueue<byte[]> getRcvdAvroByteArrays() {
-		return rcvdAvroByteArrays;
+		return iote2eResultBytes;
 	}
 
-	public void setRcvdAvroByteArrays(ConcurrentLinkedQueue<byte[]> rcvdAvroByteArrays) {
-		this.rcvdAvroByteArrays = rcvdAvroByteArrays;
+	public void setIote2eResultBytes(ConcurrentLinkedQueue<byte[]> iote2eResultBytes) {
+		this.iote2eResultBytes = iote2eResultBytes;
 	}
 }

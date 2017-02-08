@@ -1,6 +1,6 @@
 [
   {
-    "ruleUuid": "lo1so1se1ru1",
+    "ruleUuid": "rule_temp_to_fan",
     "ruleName": "TempFan",
     "ruleDefCondItems": [
       {
@@ -28,7 +28,7 @@
     ]
   },
   {
-    "ruleUuid": "lo1so1se2ru1",
+    "ruleUuid": "rule_humidity_to_mister",
     "ruleName": "HumidityMister",
     "ruleDefCondItems": [
       {
@@ -56,7 +56,7 @@
     ]
   },
   {
-    "ruleUuid": "lo1so2se1ru1",
+    "ruleUuid": "rule_led_green",
     "ruleName": "LedGreenOnOff",
     "ruleDefCondItems": [
       {
@@ -84,7 +84,7 @@
     ]
   },
   {
-    "ruleUuid": "lo1so2se2ru1",
+    "ruleUuid": "rule_led_red",
     "ruleName": "LedRedOnOff",
     "ruleDefCondItems": [
       {
@@ -112,7 +112,7 @@
     ]
   },
   {
-    "ruleUuid": "lo1so2se3ru1",
+    "ruleUuid": "rule_led_yellow",
     "ruleName": "LedYellowOnOff",
     "ruleDefCondItems": [
       {

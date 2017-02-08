@@ -89,11 +89,13 @@ Run Spark unit tests under Docker
 	- when the temp hits 77 degrees, it should turn the fan off and start the temperature increasing
 	- connect to demomgr1: docker exec -it iote2e-demomgr1 /bin/bash
 	- set env vars for Cassandra:
-		export CASSANDRA_CONTACT_POINT=iote2e-cassandra1
-		export CASSANDRA_KEYSPACE_NAME=iote2e
-	- cd to shared scripts folder: cd /tmp/iote2e-shared/scripts
+export CASSANDRA_CONTACT_POINT=iote2e-cassandra1
+export CASSANDRA_KEYSPACE_NAME=iote2e
+	- cd to shared scripts folder: 
+cd /tmp/iote2e-shared/scripts
 	- if any MasterConfig settings have changed, then reload: ./initialload_cassandra_docker.sh
-	- run SimTempToFan: ./run-junit-tests-sim-temptofan-docker.sh
+	- run SimTempToFan: 
+./run-junit-tests-sim-temptofan-docker.sh
 	- run SimHumidityToMister: ./run-junit-tests-sim-humiditytomister-docker.sh
 
 ** ConfigInitialLoad on Cassandra Docker instance

@@ -14,14 +14,14 @@ import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 public abstract class TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestCommonHandler.class);
 
-	public static final String testHumidityLoginName = "lo1";
-	public static final String testHumiditySourceName = "lo1so1";
+	public static final String testHumidityLoginName = "pzybrick1";
+	public static final String testHumiditySourceName = "rpi_999";
 	public static final String testHumiditySourceType = "humidity";
 	public static final String testHumiditySensorName = "humidity1";
 	public static final String testHumidityFilterKey = testHumidityLoginName + "|" + testHumiditySourceName + "|" + testHumiditySensorName + "|";
 
-	public static final String testLedLoginName = "lo1";
-	public static final String testLedSourceName = "lo1so2";
+	public static final String testLedLoginName = "pzybrick1";
+	public static final String testLedSourceName = "rpi_999";
 	public static final String testLedSourceType = "switch";
 	public static final String testLedSensorNameGreen = "switch0";
 	public static final String testLedGreenFilterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
@@ -30,8 +30,8 @@ public abstract class TestCommonHandler {
 	public static final String testLedSensorNameYellow = "switch2";
 	public static final String testLedYellowFilterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
 	
-	public static final String testTempToFanLoginName = "lo1";
-	public static final String testTempToFanSourceName = "lo1so1";
+	public static final String testTempToFanLoginName = "pzybrick1";
+	public static final String testTempToFanSourceName = "rpi_999";
 	public static final String testTempToFanSourceType = "temp";
 	public static final String testTempToFanSensorName = "temp1";
 	public static final String testTempToFanFilterKey = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName + "|";

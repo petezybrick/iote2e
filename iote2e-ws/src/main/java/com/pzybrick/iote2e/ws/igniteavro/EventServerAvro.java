@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.websocket.server.ServerContainer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -15,12 +17,12 @@ import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainer
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pzybrick.learnjetty.jsr.EventServerSocket;
-import com.pzybrick.learnjetty.jsr.WaveItem;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
 public class EventServerAvro {
+	private static final Logger logger = LogManager.getLogger(CacheEntryUpdatedListenerIote2eResult.class);
 	public static final Map<String, EventServerSocketAvro> eventServerSocketAvros = new ConcurrentHashMap<String, EventServerSocketAvro>();
-	public static final ConcurrentLinkedQueue<String> messagesToSend = new ConcurrentLinkedQueue<String>();
+	public static final ConcurrentLinkedQueue<Iote2eResult> iote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 
 
 	public static void main(String[] args) {
@@ -43,7 +45,7 @@ public class EventServerAvro {
 		server.setHandler(context);
 
 		try {
-			subAvroWaveThread = new SubAvroWaveThread( messagesToSend );
+			subAvroWaveThread = new SubAvroWaveThread( iote2eResults );
 			subAvroWaveThread.start();
 			
 			// Initialize javax.websocket layer
@@ -54,7 +56,7 @@ public class EventServerAvro {
 
 			server.start();
 			//server.dump(System.err);
-			SendMessagesToClients sendMessagesToClients = new SendMessagesToClients();
+			SendIote2eResultsToClients sendMessagesToClients = new SendIote2eResultsToClients();
 			sendMessagesToClients.start();
 			//new PollForMessages(sendMessagesToClients).start();
 			server.join();
@@ -66,14 +68,14 @@ public class EventServerAvro {
 	}
 
 	
-	public static class SendMessagesToClients extends Thread {
+	public static class SendIote2eResultsToClients extends Thread {
 		@Override
 		public void run() {
 			List<String> messages = new ArrayList<String>();
 			try {
 				while (true) {
-					while (!messagesToSend.isEmpty()) {
-						messages.add(messagesToSend.poll());
+					while (!iote2eResults.isEmpty()) {
+						messages.add(iote2eResults.poll());
 					}
 					//System.out.println("found messages: " + messages.size());
 					if (!eventServerSocketAvros.isEmpty()) {
@@ -100,11 +102,11 @@ public class EventServerAvro {
 
 	public static class PollForMessages extends Thread {
 		private static final int NUM_TEST_SENSORS = 7;
-		private SendMessagesToClients sendMessagesToClients;
+		private SendIote2eResultsToClients sendMessagesToClients;
 	    private Gson gson;
 	    private List<String> testUuids;
 
-		public PollForMessages(SendMessagesToClients sendMessagesToClients) {
+		public PollForMessages(SendIote2eResultsToClients sendMessagesToClients) {
 			super();
 			this.sendMessagesToClients = sendMessagesToClients;
 			this.gson = new GsonBuilder().create();
@@ -138,7 +140,7 @@ public class EventServerAvro {
 						waveItem.setSensorName(testUuids.get(i));
 						waveItem.setWaveValue( waveItem.getWaveValue()+i);
 						String testMessage = gson.toJson(waveItem);
-						messagesToSend.add(testMessage);
+						iote2eResults.add(testMessage);
 					}
 					sendMessagesToClients.interrupt();
 					sleep(250L);
@@ -160,7 +162,7 @@ public class EventServerAvro {
 						waveItem.setSensorName(testUuids.get(i));
 						waveItem.setWaveValue( waveItem.getWaveValue()+i);
 						String testMessage = gson.toJson(waveItem);
-						messagesToSend.add(testMessage);
+						iote2eResults.add(testMessage);
 					}
 					sendMessagesToClients.interrupt();
 					sleep(500L);

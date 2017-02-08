@@ -11,10 +11,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<scala.version>2.10.4</scala.version>
-		<scalatest.version>2.2.0</scalatest.version>
-		<spark.version>1.6.1</spark.version>
 		<actor.version>2.3.6</actor.version>
+		<log4j2.version>2.7</log4j2.version>
 	</properties>
 
 	<build>
