@@ -33,14 +33,8 @@ public class ConfigInitialLoad {
 		try {
 			List<ConfigVo> configVos = new ArrayList<ConfigVo>();
 			if( !pathToConfigFiles.endsWith("/" ) ) pathToConfigFiles = pathToConfigFiles + "/";
-			try {
-				ConfigDao.createKeyspace("iote2e", "SimpleStrategy", 3);
-			} catch( Exception e ) {
-				if( e.getCause() instanceof com.datastax.driver.core.exceptions.AlreadyExistsException )
-					logger.warn("Keyspace iote2e already exists");
-				else throw e;
-			}
-			
+			ConfigDao.dropKeyspace("iote2e");
+			ConfigDao.createKeyspace("iote2e", "SimpleStrategy", 3);			
 			ConfigDao.useKeyspace("iote2e");
 			ConfigDao.dropTable();
 			ConfigDao.createTable();

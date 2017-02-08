@@ -4,6 +4,7 @@ import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
@@ -28,11 +29,12 @@ public class SimHumidityToMister extends SimBase {
 		try {
 			Runtime.getRuntime().addShutdownHook(new SimHumidityToMisterShutdownHook());
 			before();
+			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
 			pollResult = new PollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),
 					TestCommonHandler.testHumidityFilterKey, igniteSingleton, iote2eResultsBytes, pollResult);
-			double humidityNow = HUMIDITY_START;
+			double humidityNow = HUMIDITY_MAX;
 			humidityDirectionIncrease = false;
 			while( true ) {
 				if( humidityDirectionIncrease && humidityNow < HUMIDITY_MAX ) {

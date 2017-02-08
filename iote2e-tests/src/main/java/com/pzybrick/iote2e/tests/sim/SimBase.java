@@ -76,9 +76,6 @@ public class SimBase {
 		//props.put("producer.type", "sync");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
-		props.put("partition.assignment.strategy", "RoundRobin");
-		props.put("request.required.acks", "1");
-		props.put("group.id", kafkaGroup);
 		kafkaProducer = new KafkaProducer<String, byte[]>(props);
 		// Start Spark locally if the simulation is running locally, otherwise assume SparkStreaming already up and running under Docker
 		// spark

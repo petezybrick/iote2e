@@ -4,6 +4,7 @@ import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
@@ -24,6 +25,7 @@ public class SimLedGreen extends SimBase {
 		try {
 			Runtime.getRuntime().addShutdownHook(new SimLedGreenShutdownHook());
 			before();
+			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
 			pollResult = new PollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),

@@ -4,6 +4,7 @@ import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
@@ -28,11 +29,12 @@ public class SimTempToFan extends SimBase {
 		try {
 			Runtime.getRuntime().addShutdownHook(new SimTempToFanShutdownHook());
 			before();
+			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
 			pollResult = new PollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),
 					TestCommonHandler.testTempToFanFilterKey, igniteSingleton, iote2eResultsBytes, pollResult);
-			double tempNow = TEMP_START;
+			double tempNow = TEMP_MIN;
 			tempDirectionIncrease = true;
 			while( true ) {
 				if( tempDirectionIncrease && tempNow < TEMP_MAX ) {
@@ -47,16 +49,12 @@ public class SimTempToFan extends SimBase {
 				try {
 					Thread.sleep(TEMP_PUT_FREQ_MS);
 				} catch( InterruptedException e) {}	
-				// TEST TEST TEST
-				//if( tempNow == TEMP_MAX ) tempDirectionIncrease = false;
-				//else if( tempNow == TEMP_MIN ) tempDirectionIncrease = true;
-				if( tempNow >= 82 || tempNow <= 75) {
+				if( tempNow >= 83.0 || tempNow <= 74.0) {
 					logger.error("Temperature Exceeded");
 					after();
 					break;
 				}
-			}			
-			
+			}
 		} catch( Exception e ) {
 			logger.error(e.getMessage(), e);
 		}

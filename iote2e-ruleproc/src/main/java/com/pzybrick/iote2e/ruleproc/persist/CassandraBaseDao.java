@@ -41,6 +41,7 @@ public class CassandraBaseDao {
 					sleepMs = 2*sleepMs;
 				} catch(Exception e) {}
 			} catch( Exception e ) {
+				if( e.getCause() instanceof com.datastax.driver.core.exceptions.AlreadyExistsException ) break;
 				lastException = e;
 				logger.warn(e.getLocalizedMessage());
 				try {

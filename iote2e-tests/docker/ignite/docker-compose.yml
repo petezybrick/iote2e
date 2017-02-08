@@ -14,7 +14,7 @@ services:
     environment:     
       IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
       IGNITE_VERSION: 1.8.0
-      DEFAULT_CONFIG: config/iote2e-ignite.xml
+      DEFAULT_CONFIG: /tmp/iote2e-shared/config_ignite/ignite-iote2e-docker.xml
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:
       - 47500-47509
@@ -24,6 +24,7 @@ services:
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
+      - ../../iote2e-shared/jars:/opt/ignite/apache-ignite-fabric-1.8.0-bin/libs/iote2e
       
   iote2e-ignite1:
     image: ignite:1.8.0
@@ -39,7 +40,7 @@ services:
     environment:     
       IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
       IGNITE_VERSION: 1.8.0
-      DEFAULT_CONFIG: config/iote2e-ignite.xml
+      DEFAULT_CONFIG: /tmp/iote2e-shared/config_ignite/ignite-iote2e-docker.xml
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:
       - 47500-47509
@@ -49,6 +50,7 @@ services:
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
+      - ../../iote2e-shared/jars:/opt/ignite/apache-ignite-fabric-1.8.0-bin/libs/iote2e
       
   iote2e-ignite2:
     image: ignite:1.8.0
@@ -64,7 +66,7 @@ services:
     environment:     
       IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
       IGNITE_VERSION: 1.8.0
-      DEFAULT_CONFIG: config/iote2e-ignite.xml
+      DEFAULT_CONFIG: /tmp/iote2e-shared/config_ignite/ignite-iote2e-docker.xml
       JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
     expose:
       - 47500-47509
@@ -74,6 +76,7 @@ services:
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
+      - ../../iote2e-shared/jars:/opt/ignite/apache-ignite-fabric-1.8.0-bin/libs/iote2e
 
 networks:
   default:

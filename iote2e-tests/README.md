@@ -73,7 +73,7 @@ Run Spark unit tests under Docker
   --master spark://localhost:6066 \
   /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar
   
-  - review the returned json for "success":true
+- review the returned json for "success":true
 		17/02/04 12:41:01 INFO RestSubmissionClient: Server responded with CreateSubmissionResponse:
 		{
 		  "action" : "CreateSubmissionResponse",

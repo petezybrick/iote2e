@@ -10,7 +10,7 @@
 	"igniteConfigName": "ignite.cfg",
 	"igniteConfigPath": "/tmp/iote2e-shared/config_ignite/",
 	"forceRefreshActuatorState": false,
-	"forceResetActuatorState": true,
+	"forceResetActuatorState": false,
 	"kafkaGroup": "iote2e-group-sandbox",
 	"kafkaTopic": "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox",
 	"kafkaBootstrapServers": "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092",

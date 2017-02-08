@@ -80,7 +80,7 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 		
 		subscribeResults = new ConcurrentLinkedQueue<byte[]>();
 		igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
-		logger.info(">>> Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
+		logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
 
 		MasterConfig masterConfig = MasterConfig.getInstance();
 		kafkaTopic = masterConfig.getKafkaTopic();
@@ -90,9 +90,6 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 		//props.put("producer.type", "sync");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
-		props.put("partition.assignment.strategy", "RoundRobin");
-		props.put("request.required.acks", "1");
-		props.put("group.id", kafkaGroup);
 		kafkaProducer = new KafkaProducer<String, byte[]>(props);
 	}
 

@@ -72,7 +72,7 @@ public class ThreadIgniteSubscribe extends Thread {
 						try {
 							iote2eResult = iote2eResultReuseItem.fromByteArray(e.getValue());
 						} catch( Exception e2 ) {}
-						logger.info("ignite - adding to subscribeResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
+						logger.info("**************** ignite - adding to subscribeResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
 						subscribeResults.add(e.getValue());
 						if( threadPoller != null ) threadPoller.interrupt(); // if subscriber is waiting then wake up
 					}
@@ -101,15 +101,12 @@ public class ThreadIgniteSubscribe extends Thread {
 			while( true ) {
                 try (QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry)) {
                     // Iterate through existing data.
-                    for (Cache.Entry<String, byte[]> e : cur) {
-                    	Iote2eResult iote2eResult = iote2eResultReuseItem.fromByteArray(e.getValue());
-                        logger.info("******************* Queried existing entry [key={}, value={}]", e.getKey(), iote2eResult.toString());
-                    }
-	//				QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry);
-	//				List<Cache.Entry<String, byte[]>> list = cur.getAll();
-	//				logger.info("************************* getAll size {}", list.size() );
+//                    for (Cache.Entry<String, byte[]> e : cur) {
+//                    	Iote2eResult iote2eResult = iote2eResultReuseItem.fromByteArray(e.getValue());
+//                        logger.info("******************* Queried existing entry [key={}, value={}]", e.getKey(), iote2eResult.toString());
+//                    }
 					try {
-						Thread.sleep(5000);
+						Thread.sleep(500000);
 					} catch( java.lang.InterruptedException e ) {
 						break;
 					}

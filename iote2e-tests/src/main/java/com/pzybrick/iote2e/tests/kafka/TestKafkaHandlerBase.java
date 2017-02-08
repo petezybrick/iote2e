@@ -69,9 +69,6 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 		props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
-		props.put("partition.assignment.strategy", "RoundRobin");
-		props.put("request.required.acks", "1");
-		props.put("group.id", kafkaGroup);
 		kafkaProducer = new KafkaProducer<String, byte[]>(props);
 		kafkaConsumerConnector = kafka.consumer.Consumer.createJavaConsumerConnector(
                 createConsumerConfig( masterConfig.createKafkaZookeeperHostPortPairs(),kafkaGroup));
