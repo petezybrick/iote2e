@@ -1,15 +1,12 @@
-package com.pzybrick.iote2e.ruleproc.persist;
+package com.pzybrick.iote2e.common.persist;
 
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
-import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
 
 public class ConfigDao extends CassandraBaseDao {
 	private static final Logger logger = LogManager.getLogger(ConfigDao.class);

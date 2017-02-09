@@ -11,8 +11,9 @@ import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;

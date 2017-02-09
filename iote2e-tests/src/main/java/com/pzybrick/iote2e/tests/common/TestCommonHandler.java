@@ -36,30 +36,24 @@ public abstract class TestCommonHandler {
 	public static final String testTempToFanSensorName = "temp1";
 	public static final String testTempToFanFilterKey = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName + "|";
 	
-	public static List<Iote2eResult> commonThreadSubscribeGetIote2eResults(long maxWaitMsecs, ConcurrentLinkedQueue<byte[]> subscribeResults,
-			Iote2eResultReuseItem iote2eResultReuseItem) throws Exception {
+	public static List<Iote2eResult> commonThreadSubscribeGetIote2eResults(long maxWaitMsecs, ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults ) throws Exception {
 		List<Iote2eResult> iote2eResults = new ArrayList<Iote2eResult>();
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {
-			if (subscribeResults.size() > 0) {
+			if (queueIote2eResults.size() > 0) {
 				try {
 					Thread.sleep(500);
 				} catch (Exception e) {
 				}
-				logger.debug("subscribeResults.size() {}", subscribeResults.size());
+				logger.debug("queueIote2eResults.size() {}", queueIote2eResults.size());
 				while( true ) {
-					byte[] bytes = subscribeResults.poll();
-					if( bytes == null ) {
-						logger.debug("subscribeResults poll empty");
+					Iote2eResult iote2eResult = queueIote2eResults.poll();
+					if( iote2eResult == null ) {
+						logger.debug("queueIote2eResults poll empty");
 						break;					
 					}
 					logger.debug("add to iote2eResults from subscribeResults");
-					try {
-						iote2eResults.add( iote2eResultReuseItem.fromByteArray(bytes) );
-					} catch( IOException e ) {
-						logger.error(e.getMessage(),e);
-						throw e;
-					}
+					iote2eResults.add( iote2eResult );
 				}
 			}
 			try {

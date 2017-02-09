@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefCondItem.RuleComparator;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 

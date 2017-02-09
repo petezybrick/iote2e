@@ -132,11 +132,7 @@
 			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.pzybrick.iote2e</groupId>
-			<artifactId>iote2e-common</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+
 	</dependencies>
 
 	<repositories>

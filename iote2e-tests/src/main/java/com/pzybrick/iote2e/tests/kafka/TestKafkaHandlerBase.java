@@ -16,12 +16,13 @@ import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
@@ -34,11 +35,12 @@ import kafka.message.MessageAndMetadata;
 
 public class TestKafkaHandlerBase extends TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerBase.class);
-	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
+	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
+	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
+	protected Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvcKafkaImpl iote2eSvc;
 	protected KafkaProducer<String, byte[]> kafkaProducer;
-	protected Iote2eRequestReuseItem iote2eRequestReuseItem;
 	protected String kafkaTopic;
 	protected String kafkaGroup;
 	protected ConsumerConnector kafkaConsumerConnector;
@@ -52,9 +54,9 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 	public void before() throws Exception {
 		logger.info(
 				"------------------------------------------------------------------------------------------------------");
-		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
-		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(iote2eRequests);
+		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
+		queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
+		iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
 		iote2eSvc = (Iote2eSvcKafkaImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();
@@ -77,7 +79,7 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 
 	@After
 	public void after() throws Exception {
-		while (!iote2eRequests.isEmpty()) {
+		while (!queueIote2eRequests.isEmpty()) {
 			try {
 				Thread.sleep(2000L);
 			} catch (Exception e) {

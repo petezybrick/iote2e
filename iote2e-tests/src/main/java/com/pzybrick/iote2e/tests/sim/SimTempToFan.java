@@ -4,11 +4,11 @@ import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
-import com.pzybrick.iote2e.tests.common.ThreadIgniteSubscribe;
 
 public class SimTempToFan extends SimBase {
 	private static final Logger logger = LogManager.getLogger(SimTempToFan.class);
@@ -33,7 +33,7 @@ public class SimTempToFan extends SimBase {
 			pollResult = new PollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),
-					TestCommonHandler.testTempToFanFilterKey, igniteSingleton, iote2eResultsBytes, pollResult);
+					TestCommonHandler.testTempToFanFilterKey, igniteSingleton, queueIote2eResults, pollResult);
 			double tempNow = TEMP_MIN;
 			tempDirectionIncrease = true;
 			while( true ) {
@@ -76,10 +76,9 @@ public class SimTempToFan extends SimBase {
 		@Override
 		public void run() {
 			while( true ) {
-				byte[] iote2eResultsByte = iote2eResultsBytes.poll();
-				if( iote2eResultsByte != null ) {
+				Iote2eResult iote2eResult = queueIote2eResults.poll();
+				if( iote2eResult != null ) {
 					try {
-						Iote2eResult iote2eResult = iote2eResultReuseItem.fromByteArray(iote2eResultsByte);
 						String actuatorValue = iote2eResult.getPairs().get( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE)).toString();
 						logger.info("actuatorValue {}", actuatorValue);
 						if( "off".equals(actuatorValue)) tempDirectionIncrease = true;

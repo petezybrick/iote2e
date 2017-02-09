@@ -25,7 +25,7 @@ public class TestIgniteHandlerTempToFan extends TestIgniteHandlerBase {
 		logger.info("begins");
 		String testTempToFanValue = "50";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size());
 		Assert.assertEquals("iote2eResults getActuatorValue", "off", 
@@ -37,7 +37,7 @@ public class TestIgniteHandlerTempToFan extends TestIgniteHandlerBase {
 		logger.info("begins");
 		String testTempToFanValue = "100";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
 		Assert.assertEquals("iote2eResults getActuatorTargetValue", "on", 
@@ -49,7 +49,7 @@ public class TestIgniteHandlerTempToFan extends TestIgniteHandlerBase {
 		logger.info("begins");
 		String testTempToFanValue = "78";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
 		Assert.assertEquals("iote2eResults must empty", 0, iote2eResults.size() );
 	}
 }

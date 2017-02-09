@@ -26,7 +26,7 @@ import com.pzybrick.iote2e.ws.route.RouteIote2eRequestLoopbackImpl;
 
 public class EntryPointIote2eRequest {
 	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
-	public static final Map<String, ServerSideSocketSourceSensorValue> serverSideSocketSourceSensorValues = new ConcurrentHashMap<String, ServerSideSocketSourceSensorValue>();
+	public static final Map<String, ServerSideSocketIote2eRequest> serverSideSocketSourceSensorValues = new ConcurrentHashMap<String, ServerSideSocketIote2eRequest>();
 	public static final ConcurrentLinkedQueue<Iote2eResult> toClientIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 	public static final ConcurrentLinkedQueue<Iote2eRequest> fromClientIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 	private RouteIote2eRequest routeIote2eRequest;
@@ -59,7 +59,7 @@ public class EntryPointIote2eRequest {
 
 		try {
 			ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);
-			wscontainer.addEndpoint(ServerSideSocketSourceSensorValue.class);
+			wscontainer.addEndpoint(ServerSideSocketIote2eRequest.class);
 			ThreadFromClientIote2eRequest threadFromClientIote2eRequest = new ThreadFromClientIote2eRequest(
 					routeIote2eRequest);
 			threadFromClientIote2eRequest.start();
@@ -156,7 +156,7 @@ public class EntryPointIote2eRequest {
 					//       will have to group by LoginName and SourceName.
 					Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 					for( Map.Entry<String,List<Iote2eResult>> entry : iote2eResultsByLoginName.entrySet()) {
-						ServerSideSocketSourceSensorValue socket = serverSideSocketSourceSensorValues.get(entry.getKey());
+						ServerSideSocketIote2eRequest socket = serverSideSocketSourceSensorValues.get(entry.getKey());
 						ByteArrayOutputStream baos = new ByteArrayOutputStream();
 						byte[] bytes = null;
 						try {

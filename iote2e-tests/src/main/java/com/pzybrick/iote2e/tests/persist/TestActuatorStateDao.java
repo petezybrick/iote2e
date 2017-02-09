@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ruleproc.persist;
+package com.pzybrick.iote2e.tests.persist;
 
 import java.util.ArrayList;
 import java.util.List;

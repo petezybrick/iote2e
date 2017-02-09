@@ -12,8 +12,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
-import com.pzybrick.iote2e.ruleproc.persist.ConfigVo;
+import com.pzybrick.iote2e.common.persist.ConfigDao;
+import com.pzybrick.iote2e.common.persist.ConfigVo;
 
 public class ConfigInitialLoad {
 	private static final Logger logger = LogManager.getLogger(ConfigInitialLoad.class);

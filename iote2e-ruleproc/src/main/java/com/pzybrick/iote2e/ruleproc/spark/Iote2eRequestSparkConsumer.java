@@ -13,8 +13,8 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
 import com.google.gson.annotations.Expose;
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.utils.ArgMap;
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
 
 import consumer.kafka.Config;
 import consumer.kafka.MessageAndMetadata;

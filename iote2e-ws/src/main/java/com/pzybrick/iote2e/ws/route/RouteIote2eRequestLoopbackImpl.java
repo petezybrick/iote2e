@@ -16,8 +16,14 @@ import com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest;
 public class RouteIote2eRequestLoopbackImpl implements RouteIote2eRequest {
 
 	public void routeToTarget( Iote2eRequest iote2eRequest ) throws Exception {
+		String actuatorValue = "testActuatorValuea";
+		if( !iote2eRequest.getPairs().values().isEmpty()) {
+			Iterator<CharSequence> it = iote2eRequest.getPairs().values().iterator();
+			String sensorValue = it.next().toString();
+			actuatorValue = actuatorValue + sensorValue;
+		}
 		Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
-		pairs.put( new Utf8("testActuatorNamea"),  new Utf8("testActuatorValuea"));
+		pairs.put( new Utf8("testActuatorNamea"),  new Utf8(actuatorValue));
 		String resultTimestamp = Iote2eUtils.getDateNowUtc8601();
 		String resultUuid = UUID.randomUUID().toString();
 		Iote2eResult iote2eResult = Iote2eResult.newBuilder()

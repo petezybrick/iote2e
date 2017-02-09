@@ -20,7 +20,7 @@ import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
 public class TestLocalHandlerBase extends TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerBase.class);
-	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
+	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvcLocalTestImpl iote2eSvc;
 
@@ -32,8 +32,8 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 	public void before() throws Exception {
 		logger.info(
 				"------------------------------------------------------------------------------------------------------");
-		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(iote2eRequests);
+		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
+		iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
 		iote2eSvc = (Iote2eSvcLocalTestImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();
@@ -41,7 +41,7 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 
 	@After
 	public void after() throws Exception {
-		while (!iote2eRequests.isEmpty()) {
+		while (!queueIote2eRequests.isEmpty()) {
 			try {
 				Thread.sleep(2000L);
 			} catch (Exception e) {

@@ -16,23 +16,25 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.google.gson.Gson;
+import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
+import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
+import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
-import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
-import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
-import com.pzybrick.iote2e.tests.common.ThreadIgniteSubscribe;
 
 public class TestSparkHandlerBase extends TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestSparkHandlerBase.class);
-	protected ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests;
+	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
+	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvc iote2eSvc;
 	protected KafkaProducer<String, byte[]> kafkaProducer;
@@ -42,7 +44,6 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 	protected String kafkaGroup;
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
 	protected IgniteSingleton igniteSingleton = null;
-	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
 	protected Gson gson;
 
 	public TestSparkHandlerBase() {
@@ -73,12 +74,11 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 				"------------------------------------------------------------------------------------------------------");
 		iote2eResultReuseItem = new Iote2eResultReuseItem();
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
-		iote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(iote2eRequests);
+		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
+		iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
 		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
-		iote2eRequestHandler.start();
-		
-		subscribeResults = new ConcurrentLinkedQueue<byte[]>();
+		iote2eRequestHandler.start();		
+		queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 		igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
 		logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
 
@@ -95,7 +95,7 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 
 	@After
 	public void after() throws Exception {
-		while (!iote2eRequests.isEmpty()) {
+		while (!queueIote2eRequests.isEmpty()) {
 			try {
 				Thread.sleep(2000L);
 			} catch (Exception e) {
@@ -118,7 +118,7 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(), 
-					igniteFilterKey, igniteSingleton, subscribeResults, (Thread)null);
+					igniteFilterKey, igniteSingleton, queueIote2eResults, (Thread)null);
 
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);

@@ -10,18 +10,11 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.google.gson.Gson;
-import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
-import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
-import com.pzybrick.iote2e.tests.common.ThreadIgniteSubscribe;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerHumidityToMister.class);
-
 
 	public TestIgniteHandlerHumidityToMister() {
 		super();
@@ -32,7 +25,7 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 		logger.info("begins");
 		String testValue = "50";
 		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testValue, testHumidityFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
 		Assert.assertNotNull("iote2eResults must not be null", iote2eResults );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
 		System.out.println(iote2eResults.get(0).getPairs());
@@ -45,7 +38,7 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 		logger.info("begins");
 		String testValue = "100";
 		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testValue, testHumidityFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
 		Assert.assertNotNull("iote2eResults must not be null", iote2eResults );
 		Assert.assertEquals("iote2eResults must have size=1", iote2eResults.size(), 1 );
 		Assert.assertEquals("iote2eResults getActuatorTargetValue", "off", 
@@ -57,7 +50,7 @@ public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 		logger.info("begins");
 		String testValue = "87";
 		commonRun( testHumidityLoginName, testHumiditySourceName, testHumiditySourceType, testHumiditySensorName, testValue, testHumidityFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem  );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
 		Assert.assertEquals("iote2eResults must be empty", 0, iote2eResults.size() );
 	}
 }

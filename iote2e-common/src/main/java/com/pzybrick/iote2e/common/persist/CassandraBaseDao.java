@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ruleproc.persist;
+package com.pzybrick.iote2e.common.persist;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

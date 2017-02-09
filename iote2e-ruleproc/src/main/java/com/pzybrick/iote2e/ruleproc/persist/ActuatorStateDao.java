@@ -9,6 +9,7 @@ import org.joda.time.DateTimeZone;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
+import com.pzybrick.iote2e.common.persist.CassandraBaseDao;
 import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
 
 public class ActuatorStateDao extends CassandraBaseDao {

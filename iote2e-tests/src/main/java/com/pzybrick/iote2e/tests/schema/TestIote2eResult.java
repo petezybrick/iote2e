@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.schema.avro;
+package com.pzybrick.iote2e.tests.schema;
 
 import java.util.HashMap;
 import java.util.Map;

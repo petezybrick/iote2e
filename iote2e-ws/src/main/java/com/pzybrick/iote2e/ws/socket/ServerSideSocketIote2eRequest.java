@@ -11,28 +11,24 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import org.apache.avro.io.BinaryDecoder;
-import org.apache.avro.io.DatumReader;
-import org.apache.avro.io.DecoderFactory;
-import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.pzybrick.iote2e.common.utils.Iote2eConstants;
-import com.pzybrick.iote2e.schema.avro.LoginSourceSensorValue;
-import com.pzybrick.iote2e.schema.avro.SourceSensorValue;
+import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
+import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iotete.ws.security.IotE2eAuthentication;
 import com.pzybrick.iotete.ws.security.IotE2eAuthentication.IotAuthenticationException;
 
 @ClientEndpoint
 @ServerEndpoint(value = "/iote2e/")
-public class ServerSideSocketSourceSensorValue {
-	private static final Logger logger = LogManager.getLogger(ServerSideSocketSourceSensorValue.class);
+public class ServerSideSocketIote2eRequest {
+	private static final Logger logger = LogManager.getLogger(ServerSideSocketIote2eRequest.class);
 	private Session session;
 	private boolean authenticated;
-	private String login_uuid;
-	private BinaryDecoder binaryDecoder = null;
-	// private SourceSensorValue sourceSensorValue = null;
-	private DatumReader<SourceSensorValue> datumReaderSourceSensorValue = new SpecificDatumReader<SourceSensorValue>(SourceSensorValue.getClassSchema());
+	private String loginUuid;
+	private String loginName;
+	private Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 
 	public Session getSession() {
 		return session;
@@ -42,7 +38,7 @@ public class ServerSideSocketSourceSensorValue {
 		this.session = session;
 	}
 
-	public ServerSideSocketSourceSensorValue() {
+	public ServerSideSocketIote2eRequest() {
 
 	}
 
@@ -61,10 +57,10 @@ public class ServerSideSocketSourceSensorValue {
 
 		} else if (message.startsWith(Iote2eConstants.LOGIN_HDR)) {
 			try {
-				String login = message.substring(Iote2eConstants.LOGIN_HDR_LEN);
-				login_uuid = IotE2eAuthentication.authenticate(login);
+				loginName = message.substring(Iote2eConstants.LOGIN_HDR_LEN);
+				loginUuid = IotE2eAuthentication.authenticate(loginName);
 				authenticated = true;
-				EntryPointServerSourceSensorValue.serverSideSocketSourceSensorValues.put(login_uuid, this);
+				EntryPointIote2eRequest.serverSideSocketSourceSensorValues.put(loginName, this);
 			} catch (IotAuthenticationException e) {
 				logger.error(e.getMessage());
 				// TODO: force close on socket
@@ -79,27 +75,23 @@ public class ServerSideSocketSourceSensorValue {
 	}
 
 	@OnMessage
-	public void onWebSocketByte(byte[] messageByte) {
-		logger.debug("onWebSocketByte len=" + messageByte.length);
+	public void onWebSocketByte(byte[] bytes) {
+		logger.debug("onWebSocketByte len=" + bytes.length);
 		if (authenticated) {
 			try {
-				binaryDecoder = DecoderFactory.get().binaryDecoder(messageByte, binaryDecoder);
 				while (true) {
-					SourceSensorValue sourceSensorValue = null;
+					Iote2eRequest iote2eRequest = null;
 					try {
-						sourceSensorValue = datumReaderSourceSensorValue.read(null, binaryDecoder);
+						iote2eRequest = iote2eRequestReuseItem.fromByteArray(bytes);
 					} catch (EOFException e) {
 						break; 
 					}
-					logger.debug("sourceSensorValue: " + sourceSensorValue.toString());
-					LoginSourceSensorValue loginSourceSensorValue = LoginSourceSensorValue.newBuilder()
-							.setLoginUuid(login_uuid).setSourceUuid(sourceSensorValue.getSourceUuid())
-							.setSensorName(sourceSensorValue.getSensorName()).setSensorValue(sourceSensorValue.getSensorValue())
-							.build();
-					EntryPointServerSourceSensorValue.fromClientLoginSourceSensorValues.add(loginSourceSensorValue);
+					logger.debug("iote2eRequest: " + iote2eRequest.toString());
+					EntryPointIote2eRequest.fromClientIote2eRequests.add(iote2eRequest);
+					break;
 				}
 			} catch (Exception e) {
-				logger.info("Exception decoding SourceSensorValue, " + e);
+				logger.error("Exception decoding Iote2eRequest: {}", e.getMessage(), e);
 			}
 
 		} else {
@@ -110,13 +102,13 @@ public class ServerSideSocketSourceSensorValue {
 
 	@OnClose
 	public void onWebSocketClose(CloseReason reason) {
-		boolean isRemove = EntryPointServerSourceSensorValue.serverSideSocketSourceSensorValues.remove(login_uuid, this);
+		boolean isRemove = EntryPointIote2eRequest.serverSideSocketSourceSensorValues.remove(loginUuid, this);
 		logger.info("Socket Closed: " + reason + ", isRemove=" + isRemove);
 	}
 
 	@OnError
 	public void onWebSocketError(Throwable cause) {
-		boolean isRemove = EntryPointServerSourceSensorValue.serverSideSocketSourceSensorValues.remove(login_uuid, this);
+		boolean isRemove = EntryPointIote2eRequest.serverSideSocketSourceSensorValues.remove(loginUuid, this);
 		logger.info("Socket Error: " + cause.getMessage() + ", isRemove=" + isRemove);
 	}
 
@@ -128,11 +120,11 @@ public class ServerSideSocketSourceSensorValue {
 		this.authenticated = authenticated;
 	}
 
-	public String getLogin_uuid() {
-		return login_uuid;
+	public String getLoginUuid() {
+		return loginUuid;
 	}
 
-	public void setLogin_uuid(String uuid) {
-		this.login_uuid = uuid;
+	public void setLoginUuid(String uuid) {
+		this.loginUuid = uuid;
 	}
 }

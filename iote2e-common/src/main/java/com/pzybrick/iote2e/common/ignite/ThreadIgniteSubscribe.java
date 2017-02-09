@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.tests.common;
+package com.pzybrick.iote2e.common.ignite;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -14,9 +14,7 @@ import org.apache.ignite.lang.IgniteBiPredicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
-import com.pzybrick.iote2e.ruleproc.ignite.IgniteSingleton;
-import com.pzybrick.iote2e.ruleproc.ignite.Iote2eIgniteCacheEntryEventFilter;
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
@@ -27,7 +25,7 @@ public class ThreadIgniteSubscribe extends Thread {
 	private IgniteSingleton igniteSingleton;
 	private boolean shutdown;
 	private boolean subscribeUp;
-	private ConcurrentLinkedQueue<byte[]> subscribeResults;
+	private ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
 	private MasterConfig masterConfig;
 	private Thread threadPoller;
 
@@ -36,11 +34,11 @@ public class ThreadIgniteSubscribe extends Thread {
 	}
 
 	public static ThreadIgniteSubscribe startThreadSubscribe(MasterConfig masterConfig, String igniteFilterKey,
-			IgniteSingleton igniteSingleton, ConcurrentLinkedQueue<byte[]> subscribeResults, Thread threadPoller ) throws Exception {
+			IgniteSingleton igniteSingleton, ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults, Thread threadPoller ) throws Exception {
 		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe(masterConfig)
 				.setIgniteFilterKey(igniteFilterKey)
 				.setIgniteSingleton(igniteSingleton)
-				.setSubscribeResults(subscribeResults)
+				.setQueueIote2eResults(queueIote2eResults)
 				.setThreadPoller(threadPoller);
 		threadIgniteSubscribe.start();
 		long timeoutAt = System.currentTimeMillis() + 10000L;
@@ -71,10 +69,12 @@ public class ThreadIgniteSubscribe extends Thread {
 						Iote2eResult iote2eResult = null;
 						try {
 							iote2eResult = iote2eResultReuseItem.fromByteArray(e.getValue());
-						} catch( Exception e2 ) {}
-						logger.info("**************** ignite - adding to subscribeResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
-						subscribeResults.add(e.getValue());
-						if( threadPoller != null ) threadPoller.interrupt(); // if subscriber is waiting then wake up
+							logger.info("**************** ignite - adding to subscribeResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
+							queueIote2eResults.add(iote2eResult);
+							if( threadPoller != null ) threadPoller.interrupt(); // if subscriber is waiting then wake up
+						} catch( Exception e2 ) {
+							logger.error(e2.getMessage(),e );
+						}
 					}
 				}
 			});
@@ -147,8 +147,8 @@ public class ThreadIgniteSubscribe extends Thread {
 		return subscribeUp;
 	}
 
-	public ConcurrentLinkedQueue<byte[]> getSubscribeResults() {
-		return subscribeResults;
+	public ConcurrentLinkedQueue<Iote2eResult> getQueueIote2eResults() {
+		return queueIote2eResults;
 	}
 
 	public ThreadIgniteSubscribe setIgniteFilterKey(String igniteFilterKey) {
@@ -171,8 +171,8 @@ public class ThreadIgniteSubscribe extends Thread {
 		return this;
 	}
 
-	public ThreadIgniteSubscribe setSubscribeResults(ConcurrentLinkedQueue<byte[]> subscribeResults) {
-		this.subscribeResults = subscribeResults;
+	public ThreadIgniteSubscribe setQueueIote2eResults(ConcurrentLinkedQueue<Iote2eResult> iote2eResults) {
+		this.queueIote2eResults = iote2eResults;
 		return this;
 	}
 

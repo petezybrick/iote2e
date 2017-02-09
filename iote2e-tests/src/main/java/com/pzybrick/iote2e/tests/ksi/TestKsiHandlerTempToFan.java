@@ -28,7 +28,7 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 
 		String testTempToFanValue = "50";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem ); 
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults); 
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testTempToFanSensorName, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
@@ -42,7 +42,7 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 		logger.info("begins");
 		String testTempToFanValue = "100";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem ); 
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults); 
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
 		Assert.assertEquals("iote2eResults PAIRNAME_SENSOR_NAME", testTempToFanSensorName, iote2eResults.get(0).getPairs().get(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME).toString());
@@ -56,7 +56,7 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 		logger.info("begins");
 		String testTempToFanValue = "78";
 		commonRun( testTempToFanLoginName, testTempToFanSourceName, testTempToFanSourceType, testTempToFanSensorName, testTempToFanValue, testTempToFanFilterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, subscribeResults, iote2eResultReuseItem ); 
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults); 
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=0", 0, iote2eResults.size() );
 		Assert.assertEquals("Cassandra actuator_state value=null", null, ActuatorStateDao.findActuatorValue(pkActuatorState));

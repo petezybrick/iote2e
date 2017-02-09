@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ruleproc.ignite;
+package com.pzybrick.iote2e.common.ignite;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
@@ -7,7 +7,7 @@ import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
+import com.pzybrick.iote2e.common.config.MasterConfig;
 
 public class IgniteSingleton {
 	private static final Logger logger = LogManager.getLogger(IgniteSingleton.class);

@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ruleproc.persist;
+package com.pzybrick.iote2e.common.persist;
 
 public class ConfigVo {
 	private String configName;

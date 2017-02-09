@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ruleproc.config;
+package com.pzybrick.iote2e.common.config;
 
 import javax.annotation.Generated;
 
@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
+import com.pzybrick.iote2e.common.persist.ConfigDao;
 
 @Generated("org.jsonschema2pojo")
 public class MasterConfig {

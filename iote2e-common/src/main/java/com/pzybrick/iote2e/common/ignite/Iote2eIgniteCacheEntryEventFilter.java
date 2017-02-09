@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ruleproc.ignite;
+package com.pzybrick.iote2e.common.ignite;
 
 import java.io.Serializable;
 

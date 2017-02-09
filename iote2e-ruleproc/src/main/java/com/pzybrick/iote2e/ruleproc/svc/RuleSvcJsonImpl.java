@@ -1,20 +1,18 @@
 package com.pzybrick.iote2e.ruleproc.svc;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
+import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
-import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
 
 public class RuleSvcJsonImpl extends RuleSvc {
 	private static final Logger logger = LogManager.getLogger(RuleSvcJsonImpl.class);

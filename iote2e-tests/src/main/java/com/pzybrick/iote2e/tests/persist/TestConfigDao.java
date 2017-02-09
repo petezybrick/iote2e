@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ruleproc.persist;
+package com.pzybrick.iote2e.tests.persist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
-import com.pzybrick.iote2e.ruleproc.persist.ConfigVo;
-import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
+import com.pzybrick.iote2e.common.persist.ConfigDao;
+import com.pzybrick.iote2e.common.persist.ConfigVo;
 
 
 

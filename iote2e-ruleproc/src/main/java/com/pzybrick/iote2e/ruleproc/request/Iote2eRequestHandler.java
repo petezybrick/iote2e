@@ -6,11 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.pzybrick.iote2e.ruleproc.config.MasterConfig;
-import com.pzybrick.iote2e.ruleproc.persist.ConfigDao;
-import com.pzybrick.iote2e.ruleproc.svc.RuleConfig;
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.ruleproc.svc.RuleSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
