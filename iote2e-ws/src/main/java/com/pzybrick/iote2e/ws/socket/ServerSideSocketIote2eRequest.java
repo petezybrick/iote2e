@@ -93,7 +93,7 @@ public class ServerSideSocketIote2eRequest {
 					//			not need to look at the sensor name in each Iote2eResult because it will always be temp1
 					//		2.3 This key structure is used when the attribute LoginVo.optionalFilterSensorName is not null and not an empty string
 					createkey();
-					EntryPointIote2eRequest.serverSideSocketSourceSensorValues.put(keyCommon, this);
+					EntryPointIote2eRequest.serverSideSocketIote2eRequest.put(keyCommon, this);
 					threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(keyCommon,
 							EntryPointIote2eRequest.igniteSingleton, EntryPointIote2eRequest.toClientIote2eResults, (Thread)null );
 
@@ -139,14 +139,14 @@ public class ServerSideSocketIote2eRequest {
 
 	@OnClose
 	public void onWebSocketClose(CloseReason reason) {
-		boolean isRemove = EntryPointIote2eRequest.serverSideSocketSourceSensorValues.remove(keyCommon, this);
+		boolean isRemove = EntryPointIote2eRequest.serverSideSocketIote2eRequest.remove(keyCommon, this);
 		logger.info("Socket Closed: " + reason + ", isRemove=" + isRemove);
 		shutdownThreadIgniteSubscribe();
 	}
 
 	@OnError
 	public void onWebSocketError(Throwable cause) {
-		boolean isRemove = EntryPointIote2eRequest.serverSideSocketSourceSensorValues.remove(keyCommon, this);
+		boolean isRemove = EntryPointIote2eRequest.serverSideSocketIote2eRequest.remove(keyCommon, this);
 		logger.info("Socket Error: " + cause.getMessage() + ", isRemove=" + isRemove);
 		shutdownThreadIgniteSubscribe();
 	}
@@ -163,9 +163,9 @@ public class ServerSideSocketIote2eRequest {
 	}
 
 	private void createkey() {
-		StringBuilder sb = new StringBuilder(loginVo.getLogin()).append("|").append(loginVo.getSourceName());
+		StringBuilder sb = new StringBuilder(loginVo.getLogin()).append("|").append(loginVo.getSourceName()).append("|");
 		if( null != loginVo.getOptionalFilterSensorName() && loginVo.getOptionalFilterSensorName().length() > 0 )
-			 sb.append("|").append(loginVo.getOptionalFilterSensorName());
+			 sb.append(loginVo.getOptionalFilterSensorName()).append("|");
 		keyCommon = sb.toString();
 		logger.debug("keyCommon {}", keyCommon );
 	}

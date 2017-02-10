@@ -66,7 +66,7 @@ public class ThreadIgniteSubscribe extends Thread {
 						Iote2eResult iote2eResult = null;
 						try {
 							iote2eResult = iote2eResultReuseItem.fromByteArray(e.getValue());
-							logger.info("ignite - adding to queueIote2eResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
+							logger.info("******************** ignite - adding to queueIote2eResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
 							queueIote2eResults.add(iote2eResult);
 							if( threadPoller != null ) threadPoller.interrupt(); // if subscriber is waiting then wake up
 						} catch( Exception e2 ) {

@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.tests.ws;
+package com.pzybrick.iote2e.ws.socket;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -14,22 +14,20 @@ import javax.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest;
-
 @ClientEndpoint
 @ServerEndpoint(value = "/iote2e/")
 public class ClientSocketAvro {
 	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
-	private Thread iotClientSocketThread;
+	private Thread iote2eRequestReceiveThread;
 	private ConcurrentLinkedQueue<byte[]> iote2eResultBytes;
 	
 	public ClientSocketAvro( ) {
 		logger.debug("IotClientSocketAvro ctor empty");
 	}
 	
-	public ClientSocketAvro( Thread iotClientSocketThread, ConcurrentLinkedQueue<byte[]> iote2eResultBytes ) {
+	public ClientSocketAvro( Thread iote2eRequestReceiveThread, ConcurrentLinkedQueue<byte[]> iote2eResultBytes ) {
 		logger.debug("IotClientSocketAvro ctor thread, queue");
-		this.iotClientSocketThread = iotClientSocketThread;
+		this.iote2eRequestReceiveThread = iote2eRequestReceiveThread;
 		this.iote2eResultBytes = iote2eResultBytes;
 	}
 
@@ -48,7 +46,7 @@ public class ClientSocketAvro {
 	public void onWebSocketText(byte[] messageByte) {
 		logger.debug("rcvd byte message");
 		iote2eResultBytes.add( messageByte );
-		iotClientSocketThread.interrupt();
+		iote2eRequestReceiveThread.interrupt();
 	}
 
 	@OnClose

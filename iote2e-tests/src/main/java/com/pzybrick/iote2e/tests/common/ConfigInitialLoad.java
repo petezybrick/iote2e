@@ -12,8 +12,12 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.reflect.TypeToken;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.persist.ConfigVo;
+import com.pzybrick.iote2e.common.utils.Iote2eUtils;
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
 
 public class ConfigInitialLoad {
 	private static final Logger logger = LogManager.getLogger(ConfigInitialLoad.class);
@@ -50,6 +54,13 @@ public class ConfigInitialLoad {
 				}
 			}
 			ConfigDao.insertConfigBatch(configVos);
+			ActuatorStateDao.dropTable();
+			ActuatorStateDao.createTable();
+			String rawJson = ConfigDao.findConfigJson("actuator_state");
+			List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
+					new TypeToken<List<ActuatorState>>() {
+					}.getType());
+			ActuatorStateDao.insertActuatorStateBatch(actuatorStates);
 		} catch( Exception e ) {
 			throw e;
 		} finally {

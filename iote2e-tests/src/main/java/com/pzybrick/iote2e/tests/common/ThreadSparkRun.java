@@ -13,6 +13,14 @@ public class ThreadSparkRun extends Thread {
 		this.iote2eRequestSparkConsumer = iote2eRequestSparkConsumer;
 	}
 	
+	public void shutdown() {
+		try {
+		iote2eRequestSparkConsumer.stop();
+		} catch( Exception e ) {
+			logger.warn(e.getMessage());
+		}
+	}
+	
 	public boolean isStarted() {
 		return iote2eRequestSparkConsumer.isStarted();
 	}

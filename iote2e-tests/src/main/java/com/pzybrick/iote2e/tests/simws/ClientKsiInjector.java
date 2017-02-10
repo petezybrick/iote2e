@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.tests.ws;
+package com.pzybrick.iote2e.tests.simws;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -33,6 +33,7 @@ import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 import com.pzybrick.iote2e.tests.common.ThreadSparkRun;
 import com.pzybrick.iote2e.ws.security.LoginVo;
+import com.pzybrick.iote2e.ws.socket.ClientSocketAvro;
 
 public class ClientKsiInjector {
 	private static final Logger logger = LogManager.getLogger(ClientKsiInjector.class);
@@ -46,15 +47,12 @@ public class ClientKsiInjector {
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 	protected Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
 	protected ThreadSparkRun threadSparkRun;
-	protected List<IotClientSocketThread> iotClientSocketThreads = null;
-
-
+	protected IotClientSocketThread iotClientSocketThread;
 	private static Utf8 TEST_SOURCE_LOGIN = new Utf8("pzybrick1");
-	private static Utf8 TEST_SOURCE_NAME = new Utf8("local_t001");
-	private static Utf8 TEST_SOURCE_TYPE = new Utf8("testSourceType");
-	private static Utf8 TEST_SENSOR_NAME = new Utf8("testSensorName");	// fan
-
-
+	private static Utf8 TEST_SOURCE_NAME = new Utf8("rpi_999");
+	private static Utf8 TEST_SOURCE_TYPE = new Utf8("temp");
+	private static Utf8 TEST_SENSOR_NAME = new Utf8("temp1");	// fan
+    
 	public static void main(String[] args) {
 		// "ws://localhost:8090/iote2e/"
 		try {
@@ -74,17 +72,10 @@ public class ClientKsiInjector {
 			container = ContainerProvider.getWebSocketContainer();
 
 			try {
-				iotClientSocketThreads = new ArrayList<IotClientSocketThread>();
-				for (int i = 1; i < 2; i++) {
-					IotClientSocketThread iotClientSocketThread = new IotClientSocketThread().setLogin( TEST_SOURCE_LOGIN.toString() )
+					iotClientSocketThread = new IotClientSocketThread().setLogin( TEST_SOURCE_LOGIN.toString() )
 							.setUri(uri).setContainer(container);
-					iotClientSocketThreads.add(iotClientSocketThread);
 					iotClientSocketThread.start();
-				}
-
-				for (IotClientSocketThread iotClientSocketThread : iotClientSocketThreads) {
 					iotClientSocketThread.join();
-				}
 
 			} finally {
 				// Force lifecycle stop when done with container.
@@ -126,10 +117,8 @@ public class ClientKsiInjector {
 	
 	private void stopKsiThreads() {
 		try {
-			for( IotClientSocketThread iotClientSocketThread : iotClientSocketThreads ) {
+			if( iotClientSocketThread != null ) {
 				iotClientSocketThread.shutdown();
-			}			
-			for( IotClientSocketThread iotClientSocketThread : iotClientSocketThreads ) {
 				iotClientSocketThread.join();
 			}
 			

@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.tests.ws;
+package com.pzybrick.iote2e.tests.simws;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -25,6 +25,7 @@ import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.ws.security.LoginVo;
+import com.pzybrick.iote2e.ws.socket.ClientSocketAvro;
 
 public class ClientBasicInjector {
 	private static final Logger logger = LogManager.getLogger(ClientBasicInjector.class);

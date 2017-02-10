@@ -30,7 +30,7 @@ import com.pzybrick.iote2e.ws.route.RouteIote2eRequest;
 
 public class EntryPointIote2eRequest {
 	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
-	public static final Map<String, ServerSideSocketIote2eRequest> serverSideSocketSourceSensorValues = new ConcurrentHashMap<String, ServerSideSocketIote2eRequest>();
+	public static final Map<String, ServerSideSocketIote2eRequest> serverSideSocketIote2eRequest = new ConcurrentHashMap<String, ServerSideSocketIote2eRequest>();
 	public static final ConcurrentLinkedQueue<Iote2eResult> toClientIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 	public static final ConcurrentLinkedQueue<Iote2eRequest> fromClientIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 	public static IgniteSingleton igniteSingleton;
@@ -164,12 +164,12 @@ public class EntryPointIote2eRequest {
 							ServerSideSocketIote2eRequest socket = null;
 							String key = null;
 							if( sensorName != null ) {
-								key = iote2eResult.getLoginName() + "|" + iote2eResult.getSourceName() + "|" + sensorName;
-								socket = serverSideSocketSourceSensorValues.get(key);
+								key = iote2eResult.getLoginName() + "|" + iote2eResult.getSourceName() + "|" + sensorName + "|";
+								socket = serverSideSocketIote2eRequest.get(key);
 							}
 							if( socket == null ) {
-								key = iote2eResult.getLoginName() + "|" + iote2eResult.getSourceName();
-								socket = serverSideSocketSourceSensorValues.get(key);
+								key = iote2eResult.getLoginName() + "|" + iote2eResult.getSourceName() + "|";
+								socket = serverSideSocketIote2eRequest.get(key);
 							}
 							if( socket != null ) {
 								ByteArrayOutputStream baos = new ByteArrayOutputStream();

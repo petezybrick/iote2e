@@ -19,6 +19,7 @@ import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 
@@ -65,9 +66,8 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 					.setSourceType(iote2eRequest.getSourceType())
 					.setRequestUuid(iote2eRequest.getRequestUuid())
 					.setRequestTimestamp(iote2eRequest.getRequestTimestamp())
-					.setOperation(iote2eRequest.getOperation())
-					.setResultCode(8)
-					.setResultErrorMessage( new Utf8("testErrorMessage"))
+					.setOperation(OPERATION.ACTUATOR_VALUES)
+					.setResultCode(0)
 					.setResultTimestamp( new Utf8(Iote2eUtils.getDateNowUtc8601()))
 					.setResultUuid(  new Utf8(UUID.randomUUID().toString()))
 					.build();
