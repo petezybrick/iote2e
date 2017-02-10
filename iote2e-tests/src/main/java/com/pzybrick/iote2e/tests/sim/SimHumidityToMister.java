@@ -18,7 +18,7 @@ public class SimHumidityToMister extends SimBase {
 	private static final double HUMIDITY_INCR = .5;
 	private static final long HUMIDITY_PUT_FREQ_MS = 2000;
 	private boolean humidityDirectionIncrease = true;
-	private PollResult pollResult;
+	private ThreadPollResult pollResult;
 
 	public static void main(String[] args) {
 		SimHumidityToMister simHumidityToMister = new SimHumidityToMister();
@@ -30,9 +30,9 @@ public class SimHumidityToMister extends SimBase {
 			Runtime.getRuntime().addShutdownHook(new SimHumidityToMisterShutdownHook());
 			before();
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
-			pollResult = new PollResult();
+			pollResult = new ThreadPollResult();
 			pollResult.start();
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
 					TestCommonHandler.testHumidityFilterKey, igniteSingleton, queueIote2eResults, pollResult);
 			double humidityNow = HUMIDITY_MAX;
 			humidityDirectionIncrease = false;
@@ -65,10 +65,10 @@ public class SimHumidityToMister extends SimBase {
 		
 	}
 	
-	private class PollResult extends Thread {
+	private class ThreadPollResult extends Thread {
 		private boolean shutdown;
 
-		public PollResult( ) {
+		public ThreadPollResult( ) {
 			super();
 		}
 		

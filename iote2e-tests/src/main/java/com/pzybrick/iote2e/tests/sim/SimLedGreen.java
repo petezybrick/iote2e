@@ -13,7 +13,7 @@ import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 public class SimLedGreen extends SimBase {
 	private static final Logger logger = LogManager.getLogger(SimLedGreen.class);
 	private static final long LEDGREEN_PUT_FREQ_MS = 3000;
-	private PollResult pollResult;
+	private ThreadPollResult pollResult;
 	private String ledGreenState = "0";
 
 	public static void main(String[] args) {
@@ -26,9 +26,9 @@ public class SimLedGreen extends SimBase {
 			Runtime.getRuntime().addShutdownHook(new SimLedGreenShutdownHook());
 			before();
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
-			pollResult = new PollResult();
+			pollResult = new ThreadPollResult();
 			pollResult.start();
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
 					TestCommonHandler.testLedGreenFilterKey, igniteSingleton, queueIote2eResults, pollResult);
 
 			while( true ) {
@@ -47,10 +47,10 @@ public class SimLedGreen extends SimBase {
 		
 	}
 	
-	private class PollResult extends Thread {
+	private class ThreadPollResult extends Thread {
 		private boolean shutdown;
 
-		public PollResult( ) {
+		public ThreadPollResult( ) {
 			super();
 		}
 		

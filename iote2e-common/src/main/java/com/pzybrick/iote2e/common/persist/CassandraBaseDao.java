@@ -148,13 +148,18 @@ public class CassandraBaseDao {
 		if( session != null ) {
 			try {
 				session.close();
-				session = null;
 			} catch( Exception eSession ) {
 				logger.error(eSession.getLocalizedMessage());
 			}
 		}			
 		if( cluster != null ) {
 			try {
+				if( session != null ) {
+					while( !session.isClosed() ) {
+						Thread.sleep(500);
+					}
+					session = null;
+				}
 				cluster.close();
 				cluster = null;
 			} catch( Exception eCluster ) {

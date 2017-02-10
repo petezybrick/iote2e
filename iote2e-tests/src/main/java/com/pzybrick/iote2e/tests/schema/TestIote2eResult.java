@@ -9,10 +9,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.pzybrick.iote2e.common.utils.Iote2eConstants;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 
 public class TestIote2eResult {
 
@@ -50,8 +52,11 @@ public class TestIote2eResult {
 		metadata.put( new Utf8("testMetadataNamea"), new Utf8("testMetadataValuea"));
 		metadata.put( new Utf8("testMetadataNameb"), new Utf8("testMetadataValueb"));
 		Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
-		pairs.put( new Utf8("testActuatorNamea"),  new Utf8("testActuatorValuea"));
-		pairs.put( new Utf8("testActuatorNameb"),  new Utf8("testActuatorValueb"));
+		pairs.put( Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME, new Utf8("testSensorNamea"));
+		pairs.put( Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME, new Utf8("testActuatorNamea"));
+		pairs.put( Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE, new Utf8("testActuatorValuea"));
+		pairs.put( Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE_UPDATED_AT, new Utf8("2017-01-02T03:04:05.678" ));
+		
 		Iote2eResult iote2eResult = Iote2eResult.newBuilder()
 				.setLoginName("testLoginName")
 				.setSourceName("testSourceName")

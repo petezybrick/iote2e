@@ -18,7 +18,7 @@ public class SimTempToFan extends SimBase {
 	private static final double TEMP_INCR = .5;
 	private static final long TEMP_PUT_FREQ_MS = 2000;
 	private boolean tempDirectionIncrease = true;
-	private PollResult pollResult;
+	private ThreadPollResult pollResult;
 
 	public static void main(String[] args) {
 		SimTempToFan simTempToFan = new SimTempToFan();
@@ -30,9 +30,9 @@ public class SimTempToFan extends SimBase {
 			Runtime.getRuntime().addShutdownHook(new SimTempToFanShutdownHook());
 			before();
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
-			pollResult = new PollResult();
+			pollResult = new ThreadPollResult();
 			pollResult.start();
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(),
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
 					TestCommonHandler.testTempToFanFilterKey, igniteSingleton, queueIote2eResults, pollResult);
 			double tempNow = TEMP_MIN;
 			tempDirectionIncrease = true;
@@ -61,10 +61,10 @@ public class SimTempToFan extends SimBase {
 		
 	}
 	
-	private class PollResult extends Thread {
+	private class ThreadPollResult extends Thread {
 		private boolean shutdown;
 
-		public PollResult( ) {
+		public ThreadPollResult( ) {
 			super();
 		}
 		

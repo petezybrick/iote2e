@@ -12,8 +12,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
@@ -37,12 +35,10 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 	protected Iote2eSvc iote2eSvc;
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
 	protected IgniteSingleton igniteSingleton = null;
-	protected Gson gson;
 	protected Iote2eResultReuseItem iote2eResultReuseItem;
 	
 	public TestIgniteHandlerBase() {
 		super();
-		gson = new GsonBuilder().create();
 	}
 
 	@Before
@@ -60,7 +56,7 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			// reset to same default ActuatorState=null every time
 			if( iote2eRequestHandler.getMasterConfig().isForceResetActuatorState()) {
 				String rawJson = ConfigDao.findConfigJson(iote2eRequestHandler.getMasterConfig().getActuatorStateKey());
-				List<ActuatorState> actuatorStates = gson.fromJson(rawJson,
+				List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
 						new TypeToken<List<ActuatorState>>() {
 						}.getType());
 				ActuatorStateDao.resetActuatorStateBatch(actuatorStates);
@@ -107,7 +103,7 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(iote2eRequestHandler.getMasterConfig(), 
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( 
 					igniteFilterKey, igniteSingleton, queueIote2eResults, (Thread)null);
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);

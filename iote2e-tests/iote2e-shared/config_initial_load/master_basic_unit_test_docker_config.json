@@ -1,13 +1,15 @@
 {
-	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
-	"requestSvcClassName": "com.pzybrick.iote2e.tests.local.Iote2eSvcLocalTestImpl",
 	"actuatorStateKey": "actuator_state",
-	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
-	"ruleDefItemKey": "rule_def_item",
+	"forceRefreshActuatorState": false,
+	"forceResetActuatorState": true,
 	"igniteCacheName": "iote2e-sourceresponse-cache",
+	"igniteClientMode": true,
 	"igniteConfigFile": "ignite-iote2e-local.xml",
 	"igniteConfigName": "ignite.cfg",
-	"igniteClientMode": true,
-	"forceRefreshActuatorState": false,
-	"forceResetActuatorState": true
+	"requestSvcClassName": "com.pzybrick.iote2e.tests.local.Iote2eSvcLocalTestImpl",
+	"ruleDefItemKey": "rule_def_item",
+	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
+	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
+	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestLoopbackImpl",
+	"wsServerListenPort": "8090"
 }

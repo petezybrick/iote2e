@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ws.socket;
+package com.pzybrick.iote2e.tests.ws;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -18,18 +18,37 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.util.component.LifeCycle;
 
-import com.pzybrick.iote2e.common.utils.Iote2eConstants;
+import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
+import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
+import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
+import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.iote2e.tests.common.TestCommonHandler;
+import com.pzybrick.iote2e.tests.common.ThreadSparkRun;
+import com.pzybrick.iote2e.ws.security.LoginVo;
 
-public class ClientTestInjector {
-	private static final Logger logger = LogManager.getLogger(ClientTestInjector.class);
+public class ClientKsiInjector {
+	private static final Logger logger = LogManager.getLogger(ClientKsiInjector.class);
 	private URI uri;
 	private WebSocketContainer container;
+	private MasterConfig masterConfig;
+	private IgniteSingleton igniteSingleton;
+	private ThreadIgniteSubscribe threadIgniteSubscribe;
+	private ThreadPollResult threadPollResult;
+	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
+	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
+	protected Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
+	protected ThreadSparkRun threadSparkRun;
+	protected List<IotClientSocketThread> iotClientSocketThreads = null;
+
+
 	private static Utf8 TEST_SOURCE_LOGIN = new Utf8("pzybrick1");
 	private static Utf8 TEST_SOURCE_NAME = new Utf8("local_t001");
 	private static Utf8 TEST_SOURCE_TYPE = new Utf8("testSourceType");
@@ -39,8 +58,8 @@ public class ClientTestInjector {
 	public static void main(String[] args) {
 		// "ws://localhost:8090/iote2e/"
 		try {
-			ClientTestInjector clientTestInjector = new ClientTestInjector();
-			clientTestInjector.process(args[0]);
+			ClientKsiInjector clientBasicInjector = new ClientKsiInjector();
+			clientBasicInjector.process(args[0]);
 		} catch (Exception e) {
 			logger.info(e);
 			e.printStackTrace();
@@ -49,11 +68,13 @@ public class ClientTestInjector {
 
 	public void process(String url) throws Exception {
 		try {
+			masterConfig = MasterConfig.getInstance();
+			startKsiThreads();
 			uri = URI.create(url);
 			container = ContainerProvider.getWebSocketContainer();
 
 			try {
-				List<IotClientSocketThread> iotClientSocketThreads = new ArrayList<IotClientSocketThread>();
+				iotClientSocketThreads = new ArrayList<IotClientSocketThread>();
 				for (int i = 1; i < 2; i++) {
 					IotClientSocketThread iotClientSocketThread = new IotClientSocketThread().setLogin( TEST_SOURCE_LOGIN.toString() )
 							.setUri(uri).setContainer(container);
@@ -73,10 +94,59 @@ public class ClientTestInjector {
 				if (container instanceof LifeCycle) {
 					((LifeCycle) container).stop();
 				}
+				stopKsiThreads();
 			}
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 		}
+	}
+	
+	
+	private void startKsiThreads() throws Exception {
+		igniteSingleton = IgniteSingleton.getInstance(masterConfig);
+		threadPollResult.start();
+		threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
+			TestCommonHandler.testTempToFanFilterKey, igniteSingleton, queueIote2eResults, threadPollResult);
+		// if Spark not running standalone then start
+		if( masterConfig.getSparkMaster().startsWith("local")) {
+	    	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
+	    	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer);
+	    	threadSparkRun.start();
+	    	long expiredAt = System.currentTimeMillis() + (10*1000);
+	    	while( expiredAt > System.currentTimeMillis() ) {
+	    		if( threadSparkRun.isStarted() ) break;
+	    		try {
+	    			Thread.sleep(250);
+	    		} catch( Exception e ) {}
+	    	}
+	    	if( !threadSparkRun.isStarted() ) throw new Exception("Timeout waiting for Spark to start");
+		}
+
+	}
+	
+	private void stopKsiThreads() {
+		try {
+			for( IotClientSocketThread iotClientSocketThread : iotClientSocketThreads ) {
+				iotClientSocketThread.shutdown();
+			}			
+			for( IotClientSocketThread iotClientSocketThread : iotClientSocketThreads ) {
+				iotClientSocketThread.join();
+			}
+			
+			if( MasterConfig.getInstance().getSparkMaster().startsWith("local")) {
+		    	iote2eRequestSparkConsumer.stop();
+				threadSparkRun.join();
+			}
+
+			threadIgniteSubscribe.shutdown();
+			threadIgniteSubscribe.join();
+			IgniteSingleton.reset();
+			ConfigDao.disconnect();
+			ActuatorStateDao.disconnect();
+		} catch( Exception e ) {
+			logger.error(e.getMessage(), e);
+		}
+
 	}
 	
 	private static class IotClientSocketThread extends Thread {
@@ -95,10 +165,12 @@ public class ClientTestInjector {
 		public void run() {
 			Session session = null;
 			try {
+				LoginVo loginVo = new LoginVo().setLogin(TEST_SOURCE_LOGIN.toString()).setSourceName(TEST_SOURCE_NAME.toString()).setOptionalFilterSensorName(TEST_SENSOR_NAME.toString());
 				ConcurrentLinkedQueue<byte[]> iote2eResultBytes = new ConcurrentLinkedQueue<byte[]>();
 				ClientSocketAvro iotClientSocketAvro = new ClientSocketAvro(this,iote2eResultBytes);
 				session = container.connectToServer(iotClientSocketAvro, uri);
-				session.getBasicRemote().sendText(Iote2eConstants.LOGIN_HDR + login);
+				session.getBasicRemote().sendText( Iote2eUtils.getGsonInstance().toJson(loginVo));
+				// TODO: send a single test message, then work on sim
 				for (int i = 45; i < 56; i++) {
 					Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 					pairs.put( TEST_SENSOR_NAME, new Utf8(String.valueOf(i)));
@@ -166,6 +238,38 @@ public class ClientTestInjector {
 		public IotClientSocketThread setContainer(WebSocketContainer container) {
 			this.container = container;
 			return this;
+		}
+	}
+	
+	
+	private class ThreadPollResult extends Thread {
+		private boolean shutdown;
+
+		public ThreadPollResult( ) {
+			super();
+		}
+		
+		public void shutdown() {
+			this.shutdown = true;
+			interrupt();
+		}
+
+		@Override
+		public void run() {
+			while( true ) {
+				Iote2eResult iote2eResult = queueIote2eResults.poll();
+				if( iote2eResult != null ) {
+					try {
+						logger.info("iote2eResult {}", iote2eResult);
+					} catch(Exception e ) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+				try {
+					sleep(5000);
+				} catch( InterruptedException e ) {}
+				if( this.shutdown ) break;
+			}
 		}
 	}
 }

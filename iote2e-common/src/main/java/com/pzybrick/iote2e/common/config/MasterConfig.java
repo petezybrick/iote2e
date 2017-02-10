@@ -65,6 +65,10 @@ public class MasterConfig {
 	private String sparkMaster;
 	@Expose
 	private Integer sparkStreamDurationMs;
+	@Expose
+	private String wsRouterImplClassName;
+	@Expose
+	private Integer wsServerListenPort;
 	
 
 	private MasterConfig() {
@@ -255,7 +259,9 @@ public class MasterConfig {
 				+ kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
 				+ ", kafkaZookeeperConsumerConnection=" + kafkaZookeeperConsumerConnection
 				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", sparkAppName=" + sparkAppName
-				+ ", sparkMaster=" + sparkMaster + ", sparkStreamDurationMs=" + sparkStreamDurationMs + "]";
+				+ ", sparkMaster=" + sparkMaster + ", sparkStreamDurationMs=" + sparkStreamDurationMs
+				+ ", wsRouterImplClassName=" + wsRouterImplClassName + ", wsServerListenPort=" + wsServerListenPort
+				+ "]";
 	}
 
 	public String getKafkaZookeeperBrokerPath() {
@@ -323,6 +329,24 @@ public class MasterConfig {
 
 	public MasterConfig setSparkStreamDurationMs(Integer sparkStreamDurationMs) {
 		this.sparkStreamDurationMs = sparkStreamDurationMs;
+		return this;
+	}
+
+	public Integer getWsServerListenPort() {
+		return wsServerListenPort;
+	}
+
+	public MasterConfig setWsServerListenPort(Integer wsServerListenPort) {
+		this.wsServerListenPort = wsServerListenPort;
+		return this;
+	}
+
+	public String getWsRouterImplClassName() {
+		return wsRouterImplClassName;
+	}
+
+	public MasterConfig setWsRouterImplClassName(String wsRouterImplClassName) {
+		this.wsRouterImplClassName = wsRouterImplClassName;
 		return this;
 	}
 

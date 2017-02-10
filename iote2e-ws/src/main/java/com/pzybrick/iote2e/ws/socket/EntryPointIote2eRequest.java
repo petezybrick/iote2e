@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.websocket.server.ServerContainer;
 
+import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -18,39 +19,49 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
+import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.ws.route.RouteIote2eRequest;
-import com.pzybrick.iote2e.ws.route.RouteIote2eRequestLoopbackImpl;
 
 public class EntryPointIote2eRequest {
 	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
 	public static final Map<String, ServerSideSocketIote2eRequest> serverSideSocketSourceSensorValues = new ConcurrentHashMap<String, ServerSideSocketIote2eRequest>();
 	public static final ConcurrentLinkedQueue<Iote2eResult> toClientIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 	public static final ConcurrentLinkedQueue<Iote2eRequest> fromClientIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
+	public static IgniteSingleton igniteSingleton;
 	private RouteIote2eRequest routeIote2eRequest;
 	private Server server;
 	private ServerConnector connector;
+	private MasterConfig masterConfig;
+	
 
 	public static void main(String[] args) {
 		logger.info("Starting");
 		try {
 			EntryPointIote2eRequest entryPointIote2eRequest = new EntryPointIote2eRequest();
-			entryPointIote2eRequest.setRouteIote2eRequest( new RouteIote2eRequestLoopbackImpl() );
-			int port = 8090;
-			if( args.length > 0 ) port = Integer.parseInt(args[0]);
-			entryPointIote2eRequest.process( port );
+			entryPointIote2eRequest.process( );
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);
 		}
 	}
 
-	public void process(int port) throws Exception {
-		if( routeIote2eRequest == null ) throw new Exception("routeIote2eRequest is required but is null");
+	public void process( ) throws Exception {
+		masterConfig = MasterConfig.getInstance();
+		logger.info(masterConfig.toString());
+		igniteSingleton = IgniteSingleton.getInstance(masterConfig);
+		String routerImplClassName = masterConfig.getWsRouterImplClassName();
+		if( null == routerImplClassName || routerImplClassName.length() == 0 ) 
+			throw new Exception("routerImplClassName is required entry in MasterConfig but is null");
+		Class clazz = Class.forName(routerImplClassName);
+		routeIote2eRequest = (RouteIote2eRequest)clazz.newInstance();
 		server = new Server();
 		connector = new ServerConnector(server);
-		connector.setPort(port);
+		connector.setPort(masterConfig.getWsServerListenPort());
 		server.addConnector(connector);
 
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -136,6 +147,7 @@ public class EntryPointIote2eRequest {
 		@Override
 		public void run() {
 			logger.info("Run");
+			Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 			Map<String,List<Iote2eResult>> iote2eResultsByLoginName = new HashMap<String,List<Iote2eResult>>();
 			try {
 				while (true) {
@@ -143,42 +155,42 @@ public class EntryPointIote2eRequest {
 					while (!toClientIote2eResults.isEmpty()) {
 						Iote2eResult iote2eResult = toClientIote2eResults.poll();
 						if( iote2eResult != null ) {
-							List<Iote2eResult> iote2eResults = iote2eResultsByLoginName.get(iote2eResult.getLoginName());
-							if( iote2eResults == null ) {
-								iote2eResults = new ArrayList<Iote2eResult>();
-								iote2eResultsByLoginName.put(iote2eResult.getLoginName().toString(),iote2eResults);
+							// First try to find login|sourceName|sensorName, if not exists then login|sourceName
+							String sensorName = null;
+							if( iote2eResult.getOperation() == OPERATION.ACTUATOR_VALUES ) {
+								if( iote2eResult.getPairs().containsKey( Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME ) ) 
+									sensorName = iote2eResult.getPairs().get( Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME ).toString();
 							}
-							iote2eResults.add(iote2eResult);
-						}
-					}
-					// Block up by target LoginName so multiple Avro instances can go on a single send to a single LoginName
-					// TODO: this assumes a single login/single device.  To support single login/multiple device, 
-					//       will have to group by LoginName and SourceName.
-					Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
-					for( Map.Entry<String,List<Iote2eResult>> entry : iote2eResultsByLoginName.entrySet()) {
-						ServerSideSocketIote2eRequest socket = serverSideSocketSourceSensorValues.get(entry.getKey());
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-						byte[] bytes = null;
-						try {
-							for (Iote2eResult iote2eResult : entry.getValue() ) {
-								baos.write( iote2eResultReuseItem.toByteArray(iote2eResult));
-								// ? need to flush? binaryEncoder.flush();
+							ServerSideSocketIote2eRequest socket = null;
+							String key = null;
+							if( sensorName != null ) {
+								key = iote2eResult.getLoginName() + "|" + iote2eResult.getSourceName() + "|" + sensorName;
+								socket = serverSideSocketSourceSensorValues.get(key);
 							}
-							bytes = baos.toByteArray();
-							socket.getSession().getBasicRemote().sendBinary(ByteBuffer.wrap(bytes));
-
-						} catch (Exception e) {
-							logger.error("Exception sending byte message",e);
-							break;
-						} finally {
-							baos.close();
+							if( socket == null ) {
+								key = iote2eResult.getLoginName() + "|" + iote2eResult.getSourceName();
+								socket = serverSideSocketSourceSensorValues.get(key);
+							}
+							if( socket != null ) {
+								ByteArrayOutputStream baos = new ByteArrayOutputStream();
+								byte[] bytes = null;
+								try {
+									baos.write( iote2eResultReuseItem.toByteArray(iote2eResult));
+									bytes = baos.toByteArray();
+									socket.getSession().getBasicRemote().sendBinary(ByteBuffer.wrap(bytes));
+								} catch (Exception e) {
+									logger.error("Exception sending byte message",e);
+									break;
+								} finally {
+									baos.close();
+								}
+							} else logger.error("Can't find socket with key: {}", key);
 						}
 					}
 
 					try {
 						sleep(500L);
-					} catch (InterruptedException e) {
-					}
+					} catch (InterruptedException e) {}
 					if (shutdown)
 						break;
 				}

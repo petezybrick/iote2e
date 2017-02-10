@@ -6,11 +6,11 @@ import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryListenerException;
 
-public class Iote2eIgniteCacheEntryEventFilter<K,V> implements CacheEntryEventFilter<String, byte[]>, Serializable {
+public class Iote2eIgniteCacheEntryEventSingleFilter<K,V> implements CacheEntryEventFilter<String, byte[]>, Serializable {
 	private static final long serialVersionUID = 882712943322969160L;
 	private String remoteKey;
 	
-	public Iote2eIgniteCacheEntryEventFilter( String remoteKey ) {
+	public Iote2eIgniteCacheEntryEventSingleFilter( String remoteKey ) {
 		this.remoteKey = remoteKey;
 	}
 

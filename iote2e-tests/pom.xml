@@ -267,6 +267,11 @@
 			<artifactId>iote2e-common</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.pzybrick.iote2e</groupId>
+			<artifactId>iote2e-ws</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core -->
 		<dependency>
 			<groupId>com.datastax.cassandra</groupId>

@@ -9,10 +9,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
-import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefCondItem;
 import com.pzybrick.iote2e.ruleproc.svc.RuleDefItem;
 import com.pzybrick.iote2e.ruleproc.svc.RuleLoginSourceSensor;
@@ -94,10 +92,9 @@ public class CreateRuleDefJsonFile {
 			.add(new ActuatorState().setSourceName(sourceUuidLights).setSensorName(sensorNameSwitch2)
 					.setActuatorName(actuatorNameLedYellow).setActuatorValue(null).setActuatorDesc("Switch2ToLedYellow"));
 
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			FileUtils.writeStringToFile(fileNameExtRuleItems, gson.toJson(ruleDefItems));
-			FileUtils.writeStringToFile(fileNameExtRuleSourceSensors, gson.toJson(ruleSourceSensors));
-			FileUtils.writeStringToFile(fileNameExtActuatorState, gson.toJson(actuatorStates));
+			FileUtils.writeStringToFile(fileNameExtRuleItems, Iote2eUtils.getGsonInstance().toJson(ruleDefItems));
+			FileUtils.writeStringToFile(fileNameExtRuleSourceSensors, Iote2eUtils.getGsonInstance().toJson(ruleSourceSensors));
+			FileUtils.writeStringToFile(fileNameExtActuatorState, Iote2eUtils.getGsonInstance().toJson(actuatorStates));
 
 		} catch (Exception e) {
 			logger.error(e);

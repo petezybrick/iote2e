@@ -5,9 +5,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -118,7 +120,15 @@ public class SimBase {
 			String key = String.valueOf(System.currentTimeMillis());
 			ProducerRecord<String, byte[]> data = new ProducerRecord<String, byte[]>(kafkaTopic, key, iote2eRequestReuseItem.toByteArray(iote2eRequest));
 			logger.info("Sending to kafka: {}", iote2eRequest.toString());
-			kafkaProducer.send(data);
+			// send is an async call
+			Future future = kafkaProducer.send(data);
+			// for this simple testing, treat the send like a synchronous call, wait for it to complete
+			try {
+				RecordMetadata recordMetadata = (RecordMetadata)future.get();
+			} catch( Exception e ) {
+				logger.error(">>> get() {}", e.getMessage());
+				throw e;
+			}
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.ws.socket;
+package com.pzybrick.iote2e.tests.ws;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

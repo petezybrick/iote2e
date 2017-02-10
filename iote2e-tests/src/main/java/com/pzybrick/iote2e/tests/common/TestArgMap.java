@@ -1,4 +1,4 @@
-package com.pzybrick.test.iote2e.common.utils;
+package com.pzybrick.iote2e.tests.common;
 
 import org.junit.After;
 import org.junit.Assert;

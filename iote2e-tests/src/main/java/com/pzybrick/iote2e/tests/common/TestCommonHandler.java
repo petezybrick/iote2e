@@ -1,6 +1,5 @@
 package com.pzybrick.iote2e.tests.common;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -9,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
-import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 public abstract class TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestCommonHandler.class);
