@@ -12,6 +12,9 @@ services:
     networks:
       default:
         ipv4_address: 192.168.21.11
+    environment:
+      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
+      CASSANDRA_KEYSPACE_NAME: iote2e
     expose:
       - 47500-47509
       - 11211  
@@ -32,6 +35,9 @@ services:
     networks:
       default:
         ipv4_address: 192.168.21.12
+    environment:
+      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
+      CASSANDRA_KEYSPACE_NAME: iote2e
     expose:
       - 47500-47509
       - 11211  
