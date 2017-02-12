@@ -7,13 +7,18 @@ import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryUpdatedListener;
 
+import org.apache.ignite.Ignite;
+import org.apache.ignite.IgniteCache;
+import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.query.ContinuousQuery;
 import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.ScanQuery;
+import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.lang.IgniteBiPredicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
@@ -52,10 +57,24 @@ public class ThreadIgniteSubscribe extends Thread {
 	
 	@Override
 	public void run() {
-		// Create new continuous query.
-		ContinuousQuery<String,  byte[]> qry = new ContinuousQuery<>();
-		qry.setTimeInterval(100);
 		try {
+			MasterConfig masterConfig = MasterConfig.getInstance();
+			
+			String igniteConfigPath = masterConfig.getIgniteConfigPath();
+			if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
+			if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
+			String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getIgniteConfigFile();
+			logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getIgniteConfigName());
+			IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
+					igniteConfigPathNameExt, masterConfig.getIgniteConfigName());
+			Ignition.setClientMode(masterConfig.isIgniteClientMode());
+			Ignite ignite = Ignition.getOrStart(igniteConfiguration);			
+			IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(masterConfig.getIgniteCacheName());
+			
+			logger.debug("***************** create cache, igniteFilterKey={}, cacheName={}, cache={}",igniteFilterKey, masterConfig.getIgniteCacheName(), cache );
+			// Create new continuous query.
+			ContinuousQuery<String, byte[]> qry = new ContinuousQuery<String, byte[]>();
+			qry.setTimeInterval(100);
 			// Callback that is called locally when update notifications are
 			// received.
 			qry.setLocalListener(new CacheEntryUpdatedListener<String,  byte[]>() {
@@ -94,9 +113,8 @@ public class ThreadIgniteSubscribe extends Thread {
             }));
 			
 			subscribeUp = true;
-			Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 			while( true ) {
-                try (QueryCursor<Cache.Entry<String, byte[]>> cur = igniteSingleton.getCache().query(qry)) {
+                try (QueryCursor<Cache.Entry<String, byte[]>> cur = cache.query(qry)) {
 					try {
 						Thread.sleep(500000);
 					} catch( java.lang.InterruptedException e ) {

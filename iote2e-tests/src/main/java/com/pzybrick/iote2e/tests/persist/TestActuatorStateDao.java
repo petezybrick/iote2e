@@ -39,7 +39,7 @@ public class TestActuatorStateDao {
 			ActuatorStateDao.insertActuatorState( createActuatorStateSingle());
 			ActuatorStateDao.insertActuatorStateBatch( createActuatorStateBatch());
 			
-			String pk = "lo2|lo2_so2|lo2_so2_se2";
+			String pk = "lo2|lo2_so2|lo2_so2_se2|";
 			ActuatorState actuatorState = ActuatorStateDao.findActuatorState(pk);
 			logger.info(actuatorState.toString());
 			Assert.assertEquals("actuatorState login", "lo2", actuatorState.getLoginName());

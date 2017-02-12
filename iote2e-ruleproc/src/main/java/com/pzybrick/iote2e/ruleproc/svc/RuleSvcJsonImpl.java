@@ -95,7 +95,7 @@ public class RuleSvcJsonImpl extends RuleSvc {
 	}
 
 	protected ActuatorState findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorName) throws Exception {
-		String pk = String.format("%s|%s|%s", loginUuid, sourceUuid,sensorName);
+		String pk = String.format("%s|%s|%s|", loginUuid, sourceUuid,sensorName);
 		return ActuatorStateDao.findActuatorState(pk);
 	}
 

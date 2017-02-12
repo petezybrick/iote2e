@@ -93,7 +93,7 @@ export CASSANDRA_CONTACT_POINT=iote2e-cassandra1
 export CASSANDRA_KEYSPACE_NAME=iote2e
 	- cd to shared scripts folder: 
 cd /tmp/iote2e-shared/scripts
-	- if any MasterConfig settings have changed, then reload: ./initialload_cassandra_docker.sh
+	- if any MasterConfig settings have changed, then reload - see steps below
 	- run SimTempToFan: 
 ./run-junit-tests-sim-temptofan-docker.sh
 	- run SimHumidityToMister: ./run-junit-tests-sim-humiditytomister-docker.sh

@@ -33,26 +33,10 @@
 		</pluginManagement>
 
 		<plugins>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
-				<executions> <execution> <phase>package</phase> <goals> <goal>shade</goal> 
-				</goals> <configuration> <transformers> <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> 
-				<mainClass>com.pzybrick.iote2e.ruleproc.SomeClass</mainClass> </transformer> 
-				<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
-				<resource>META-INF/spring.handlers</resource> </transformer> <transformer 
-				implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
-				<resource>META-INF/spring.schemas</resource> </transformer> </transformers> 
-				</configuration> </execution> </executions> </plugin> -->
-
-			<!-- clean compile test-compile assembly:single -->
-			<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>2.3</version> 
-				<configuration> <descriptor>src/main/assembly/assembly.xml</descriptor> </configuration> 
-				<executions> <execution> <id>make-assembly</id> <phase>package</phase> <goals> 
-				<goal>single</goal> </goals> <configuration> <archive> <manifest> <mainClass>com.sample.TestMain</mainClass> 
-				</manifest> </archive> </configuration> </execution> </executions> </plugin> -->
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.4.3</version>
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 				</configuration>

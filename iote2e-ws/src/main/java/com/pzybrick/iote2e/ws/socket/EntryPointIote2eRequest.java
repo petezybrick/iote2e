@@ -109,7 +109,7 @@ public class EntryPointIote2eRequest {
 
 		@Override
 		public void run() {
-			logger.info("Run");
+			logger.info("ThreadFromClientIote2eRequest Run");
 			List<Iote2eRequest> iote2eRequests = new ArrayList<Iote2eRequest>();
 			try {
 				while (true) {
@@ -146,7 +146,7 @@ public class EntryPointIote2eRequest {
 
 		@Override
 		public void run() {
-			logger.info("Run");
+			logger.info("ThreadToClientLoginIote2eResult Run");
 			Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 			Map<String,List<Iote2eResult>> iote2eResultsByLoginName = new HashMap<String,List<Iote2eResult>>();
 			try {
