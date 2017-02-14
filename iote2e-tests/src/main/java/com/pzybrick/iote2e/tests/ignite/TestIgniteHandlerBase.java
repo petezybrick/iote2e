@@ -13,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 
 import com.google.gson.reflect.TypeToken;
-import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
@@ -34,7 +33,6 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvc iote2eSvc;
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
-	protected IgniteSingleton igniteSingleton = null;
 	protected Iote2eResultReuseItem iote2eResultReuseItem;
 	
 	public TestIgniteHandlerBase() {
@@ -51,7 +49,6 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 			iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
-			igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
 			logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
 			// reset to same default ActuatorState=null every time
 			if( iote2eRequestHandler.getMasterConfig().isForceResetActuatorState()) {
@@ -81,7 +78,6 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			iote2eRequestHandler.join();
 			threadIgniteSubscribe.shutdown();
 			threadIgniteSubscribe.join();
-			//IgniteSingleton.reset();
 		} finally {
 			ConfigDao.disconnect();
 			ActuatorStateDao.disconnect();
@@ -91,7 +87,6 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 	@AfterClass
 	public static void afterClass() throws Exception {
 		try {
-			IgniteSingleton.reset();
 		} finally {
 			ConfigDao.disconnect();
 			ActuatorStateDao.disconnect();
@@ -104,7 +99,7 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( 
-					igniteFilterKey, igniteSingleton, queueIote2eResults, (Thread)null);
+					igniteFilterKey, queueIote2eResults, (Thread)null);
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);
 			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(loginName).setSourceName(sourceName)

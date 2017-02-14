@@ -7,18 +7,13 @@ import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryUpdatedListener;
 
-import org.apache.ignite.Ignite;
-import org.apache.ignite.IgniteCache;
-import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.query.ContinuousQuery;
 import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.ScanQuery;
-import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.lang.IgniteBiPredicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
@@ -26,20 +21,21 @@ import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 public class ThreadIgniteSubscribe extends Thread {
 	private static final Logger logger = LogManager.getLogger(ThreadIgniteSubscribe.class);
 	private String igniteFilterKey;
-	private IgniteSingleton igniteSingleton;
 	private boolean shutdown;
 	private boolean subscribeUp;
 	private ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
 	private Thread threadPoller;
+	private IgniteGridConnection igniteGridConnection;
+
+	
 
 	public ThreadIgniteSubscribe() {
 	}
 
 	public static ThreadIgniteSubscribe startThreadSubscribe(String igniteFilterKey,
-			IgniteSingleton igniteSingleton, ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults, Thread threadPoller ) throws Exception {
+			ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults, Thread threadPoller ) throws Exception {
 		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe()
 				.setIgniteFilterKey(igniteFilterKey)
-				.setIgniteSingleton(igniteSingleton)
 				.setQueueIote2eResults(queueIote2eResults)
 				.setThreadPoller(threadPoller);
 		threadIgniteSubscribe.start();
@@ -58,22 +54,22 @@ public class ThreadIgniteSubscribe extends Thread {
 	@Override
 	public void run() {
 		try {
-			MasterConfig masterConfig = MasterConfig.getInstance();
-			
-			String igniteConfigPath = masterConfig.getIgniteConfigPath();
-			if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
-			if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
-			String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getIgniteConfigFile();
-			logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getIgniteConfigName());
-			IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
-					igniteConfigPathNameExt, masterConfig.getIgniteConfigName());
-			Ignition.setClientMode(masterConfig.isIgniteClientMode());
-			Ignite ignite = Ignition.getOrStart(igniteConfiguration);			
-			IgniteCache<String, byte[]> cache = ignite.getOrCreateCache(masterConfig.getIgniteCacheName());
-			
-			logger.debug("***************** create cache, igniteFilterKey={}, cacheName={}, cache={}",igniteFilterKey, masterConfig.getIgniteCacheName(), cache );
+			igniteGridConnection = new IgniteGridConnection().connect();
+//			MasterConfig masterConfig = MasterConfig.getInstance();
+//			String igniteConfigPath = masterConfig.getIgniteConfigPath();
+//			if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
+//			if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";
+//			String igniteConfigPathNameExt = igniteConfigPath + masterConfig.getIgniteConfigFile();
+//			logger.info("Initializing Ignite, config file=" + igniteConfigPathNameExt + ", config name=" +  masterConfig.getIgniteConfigName());
+//			IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
+//					igniteConfigPathNameExt, masterConfig.getIgniteConfigName());
+//			Ignition.setClientMode(masterConfig.isIgniteClientMode());
+//			ignite = Ignition.start(igniteConfiguration);
+//			cache = ignite.getOrCreateCache(masterConfig.getIgniteCacheName());	
+//			logger.debug("***************** create cache, igniteFilterKey={}, cacheName={}, cache={}", igniteFilterKey,
+//					masterConfig.getIgniteCacheName(), cache);
 			// Create new continuous query.
-			ContinuousQuery<String, byte[]> qry = new ContinuousQuery<String, byte[]>();
+			ContinuousQuery<String,  byte[]> qry = new ContinuousQuery<>();
 			qry.setTimeInterval(100);
 			// Callback that is called locally when update notifications are
 			// received.
@@ -85,7 +81,7 @@ public class ThreadIgniteSubscribe extends Thread {
 						Iote2eResult iote2eResult = null;
 						try {
 							iote2eResult = iote2eResultReuseItem.fromByteArray(e.getValue());
-							logger.info("******************** ignite - adding to queueIote2eResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
+							logger.debug("******************** ignite - adding to queueIote2eResults, eventType={}, key={}, value={}", e.getEventType().toString(), e.getKey(), iote2eResult.toString());
 							queueIote2eResults.add(iote2eResult);
 							if( threadPoller != null ) threadPoller.interrupt(); // if subscriber is waiting then wake up
 						} catch( Exception e2 ) {
@@ -113,14 +109,23 @@ public class ThreadIgniteSubscribe extends Thread {
             }));
 			
 			subscribeUp = true;
-			while( true ) {
-                try (QueryCursor<Cache.Entry<String, byte[]>> cur = cache.query(qry)) {
+			while (true) {
+				try (QueryCursor<Cache.Entry<String, byte[]>> cur = igniteGridConnection.getCache().query(qry)) {
 					try {
 						Thread.sleep(500000);
-					} catch( java.lang.InterruptedException e ) {
-						break;
+					} catch (java.lang.InterruptedException e) {}
+					if (shutdown) {
+						logger.info("Shutdown subcribe start ");
+						try {
+							if (igniteGridConnection.getCache() != null)
+								igniteGridConnection.getCache().close();
+						} catch (Exception e) {
+							logger.error(e.getMessage(), e);
+						}
+						logger.info("Shutdown subcribe complete ");
+						return;
 					}
-                }
+				}
 			}
 
 		} catch (javax.cache.CacheException e) {
@@ -145,10 +150,6 @@ public class ThreadIgniteSubscribe extends Thread {
 		return igniteFilterKey;
 	}
 
-	public IgniteSingleton getIgniteSingleton() {
-		return igniteSingleton;
-	}
-
 	public boolean isShutdown() {
 		return shutdown;
 	}
@@ -163,11 +164,6 @@ public class ThreadIgniteSubscribe extends Thread {
 
 	public ThreadIgniteSubscribe setIgniteFilterKey(String igniteFilterKey) {
 		this.igniteFilterKey = igniteFilterKey;
-		return this;
-	}
-
-	public ThreadIgniteSubscribe setIgniteSingleton(IgniteSingleton igniteSingleton) {
-		this.igniteSingleton = igniteSingleton;
 		return this;
 	}
 
@@ -193,5 +189,9 @@ public class ThreadIgniteSubscribe extends Thread {
 	public ThreadIgniteSubscribe setThreadPoller(Thread threadPoller) {
 		this.threadPoller = threadPoller;
 		return this;
+	}
+
+	public IgniteGridConnection getIgniteGridConnection() {
+		return igniteGridConnection;
 	}
 }

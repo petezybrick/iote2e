@@ -33,7 +33,7 @@ public class SimTempToFan extends SimBase {
 			pollResult = new ThreadPollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
-					TestCommonHandler.testTempToFanFilterKey, igniteSingleton, queueIote2eResults, pollResult);
+					TestCommonHandler.testTempToFanFilterKey, queueIote2eResults, pollResult);
 			double tempNow = TEMP_MIN;
 			tempDirectionIncrease = true;
 			while( true ) {

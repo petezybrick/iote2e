@@ -19,7 +19,6 @@ import org.junit.BeforeClass;
 
 import com.google.gson.Gson;
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
@@ -45,7 +44,6 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 	protected String kafkaTopic;
 	protected String kafkaGroup;
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
-	protected IgniteSingleton igniteSingleton = null;
 	protected Gson gson;
 
 	public TestSparkHandlerBase() {
@@ -62,7 +60,6 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 	@AfterClass
 	public static void afterClass() {
 		try {
-			IgniteSingleton.reset();
 			ConfigDao.disconnect();
 			ActuatorStateDao.disconnect();
 		} catch( Exception e ) {
@@ -81,7 +78,6 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 		iote2eRequestHandler.start();		
 		queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-		igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
 		logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
 
 		MasterConfig masterConfig = MasterConfig.getInstance();
@@ -120,7 +116,7 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
-					igniteFilterKey, igniteSingleton, queueIote2eResults, (Thread)null);
+					igniteFilterKey, queueIote2eResults, (Thread)null);
 
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);

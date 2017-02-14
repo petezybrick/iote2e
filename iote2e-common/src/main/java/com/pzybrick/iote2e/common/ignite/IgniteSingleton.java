@@ -44,10 +44,10 @@ public class IgniteSingleton {
 			}
 			igniteSingleton = null;
 		}
-		
 	}
 		
 	public static synchronized IgniteSingleton getInstance( MasterConfig masterConfig ) throws Exception {
+		if( System.currentTimeMillis() > 0 ) throw new Exception("DEPRECATED: IgniteSingleton.getInstance()");
 		if( igniteSingleton == null ) {
 			Throwable lastThrowable = null;
 			long retryMs = 1000;

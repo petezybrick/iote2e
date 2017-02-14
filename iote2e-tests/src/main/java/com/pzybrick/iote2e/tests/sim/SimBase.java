@@ -15,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
@@ -42,7 +41,6 @@ public class SimBase {
 	protected String kafkaTopic;
 	protected String kafkaGroup;
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
-	protected IgniteSingleton igniteSingleton = null;
 	protected Gson gson;
 	protected static Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
 	protected static ThreadSparkRun threadSparkRun;
@@ -64,7 +62,6 @@ public class SimBase {
 		iote2eRequestHandler.start();
 		
 		queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-		igniteSingleton = IgniteSingleton.getInstance(iote2eRequestHandler.getMasterConfig());
 		logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
 
 		kafkaTopic = masterConfig.getKafkaTopic();
@@ -96,7 +93,6 @@ public class SimBase {
 			kafkaProducer.close();
 			threadIgniteSubscribe.shutdown();
 			threadIgniteSubscribe.join();
-			IgniteSingleton.reset();
 			ConfigDao.disconnect();
 			ActuatorStateDao.disconnect();
 		} catch( Exception e ) {

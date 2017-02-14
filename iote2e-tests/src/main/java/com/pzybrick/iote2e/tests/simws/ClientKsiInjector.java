@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.util.component.LifeCycle;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
@@ -38,7 +37,6 @@ public class ClientKsiInjector {
 	private URI uri;
 	private WebSocketContainer container;
 	private MasterConfig masterConfig;
-	private IgniteSingleton igniteSingleton;
 	private ThreadIgniteSubscribe threadIgniteSubscribe;
 	private ThreadPollResult threadPollResult;
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
@@ -92,10 +90,9 @@ public class ClientKsiInjector {
 	
 	
 	private void startKsiThreads() throws Exception {
-		igniteSingleton = IgniteSingleton.getInstance(masterConfig);
 		threadPollResult.start();
 		threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
-			TestCommonHandler.testTempToFanFilterKey, igniteSingleton, queueIote2eResults, threadPollResult);
+			TestCommonHandler.testTempToFanFilterKey, queueIote2eResults, threadPollResult);
 		// if Spark not running standalone then start
 		if( masterConfig.getSparkMaster().startsWith("local")) {
 	    	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
@@ -127,7 +124,6 @@ public class ClientKsiInjector {
 
 			threadIgniteSubscribe.shutdown();
 			threadIgniteSubscribe.join();
-			IgniteSingleton.reset();
 			ConfigDao.disconnect();
 			ActuatorStateDao.disconnect();
 		} catch( Exception e ) {

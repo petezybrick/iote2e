@@ -20,7 +20,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
@@ -33,7 +32,6 @@ public class EntryPointIote2eRequest {
 	public static final Map<String, ServerSideSocketIote2eRequest> serverSideSocketIote2eRequest = new ConcurrentHashMap<String, ServerSideSocketIote2eRequest>();
 	public static final ConcurrentLinkedQueue<Iote2eResult> toClientIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 	public static final ConcurrentLinkedQueue<Iote2eRequest> fromClientIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-	public static IgniteSingleton igniteSingleton;
 	private RouteIote2eRequest routeIote2eRequest;
 	private Server server;
 	private ServerConnector connector;
@@ -53,7 +51,6 @@ public class EntryPointIote2eRequest {
 	public void process( ) throws Exception {
 		masterConfig = MasterConfig.getInstance();
 		logger.info(masterConfig.toString());
-		igniteSingleton = IgniteSingleton.getInstance(masterConfig);
 		String routerImplClassName = masterConfig.getWsRouterImplClassName();
 		if( null == routerImplClassName || routerImplClassName.length() == 0 ) 
 			throw new Exception("routerImplClassName is required entry in MasterConfig but is null");

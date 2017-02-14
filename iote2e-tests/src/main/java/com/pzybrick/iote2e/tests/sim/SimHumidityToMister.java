@@ -33,7 +33,7 @@ public class SimHumidityToMister extends SimBase {
 			pollResult = new ThreadPollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
-					TestCommonHandler.testHumidityFilterKey, igniteSingleton, queueIote2eResults, pollResult);
+					TestCommonHandler.testHumidityFilterKey, queueIote2eResults, pollResult);
 			double humidityNow = HUMIDITY_MAX;
 			humidityDirectionIncrease = false;
 			while( true ) {

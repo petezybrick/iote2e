@@ -15,7 +15,6 @@ import javax.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
@@ -95,7 +94,7 @@ public class ServerSideSocketIote2eRequest {
 					createkey();
 					EntryPointIote2eRequest.serverSideSocketIote2eRequest.put(keyCommon, this);
 					threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(keyCommon,
-							EntryPointIote2eRequest.igniteSingleton, EntryPointIote2eRequest.toClientIote2eResults, (Thread)null );
+							EntryPointIote2eRequest.toClientIote2eResults, (Thread)null );
 
 				} catch (IotAuthenticationException e) {
 					logger.error(e.getMessage());

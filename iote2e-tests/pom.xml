@@ -112,6 +112,14 @@
 							<overWrite>true</overWrite>
 							<outputDirectory>${basedir}/iote2e-shared/jars</outputDirectory>
 						</artifactItem>
+						<artifactItem>
+							<groupId>com.pzybrick.iote2e</groupId>
+							<artifactId>iote2e-tests</artifactId>
+							<version>1.0.0</version>
+							<type>jar</type>
+							<overWrite>true</overWrite>
+							<outputDirectory>/home/pete/development/server/apache-ignite-fabric-1.8.0-bin/libs/iote2e</outputDirectory>
+						</artifactItem>
 					</artifactItems>
 				</configuration>
 			</plugin>

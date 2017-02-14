@@ -29,7 +29,7 @@ public class SimLedGreen extends SimBase {
 			pollResult = new ThreadPollResult();
 			pollResult.start();
 			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
-					TestCommonHandler.testLedGreenFilterKey, igniteSingleton, queueIote2eResults, pollResult);
+					TestCommonHandler.testLedGreenFilterKey, queueIote2eResults, pollResult);
 
 			while( true ) {
 				logger.info( "ledGreenState: {}", getLedGreenState());

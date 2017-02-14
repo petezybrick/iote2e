@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.common.ignite.IgniteSingleton;
+import com.pzybrick.iote2e.common.ignite.IgniteGridConnection;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
@@ -25,9 +25,9 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 
 public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	private static final Logger logger = LogManager.getLogger(Iote2eSvcIgniteImpl.class);
-	private IgniteSingleton igniteSingleton;
 	private Iote2eResultReuseItem iote2eResultReuseItem;
 	private String keyspaceName;
+	private IgniteGridConnection igniteGridConnection;
 
 	public Iote2eSvcIgniteImpl() throws Exception {
 		this.iote2eResultReuseItem = new Iote2eResultReuseItem();
@@ -81,9 +81,9 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 				int cntRetry = 0;
 				while( System.currentTimeMillis() < timeoutAt ) {
 					try {
-						igniteSingleton.getCache().put(pkIgnite, iote2eResultReuseItem.toByteArray(iote2eResult));
+						igniteGridConnection.getCache().put(pkIgnite, iote2eResultReuseItem.toByteArray(iote2eResult));
 						isSuccess = true;
-						logger.info("cache.put successful, cache name={}, pk={}, value={}", igniteSingleton.getCache().getName(), pkIgnite, ruleEvalResult.getActuatorState().getActuatorValue());
+						logger.info("cache.put successful, cache name={}, pk={}, value={}", igniteGridConnection.getCache().getName(), pkIgnite, ruleEvalResult.getActuatorState().getActuatorValue());
 						break;
 					} catch( CacheException cacheException ) {
 						lastException = cacheException;
@@ -129,7 +129,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	public synchronized void init(MasterConfig masterConfig) throws Exception {
 		try {
 			logger.info("Getting IgniteCache for: " + masterConfig.getIgniteCacheName());
-			this.igniteSingleton = IgniteSingleton.getInstance(masterConfig);
+			igniteGridConnection = new IgniteGridConnection().connect();
 		} catch (Exception e) {
 			logger.error("Ignite create cache failure", e);
 			throw e;
@@ -140,10 +140,11 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	@Override
 	public synchronized void close() throws Exception {
 		try {
-			if( igniteSingleton != null )  {
+			if( igniteGridConnection != null )  {
 				// Be careful - ignite is a singleton, only close after last usage
-				igniteSingleton.getIgnite().close();
-				igniteSingleton = null;
+				igniteGridConnection.getCache().close();
+				igniteGridConnection.getIgnite().close();
+				igniteGridConnection = null;
 			}
 			ActuatorStateDao.disconnect();
 		} catch (Exception e) {
