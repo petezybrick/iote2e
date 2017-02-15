@@ -2,10 +2,14 @@ package com.pzybrick.iote2e.tests.simws;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.ignite.Ignite;
+import org.apache.ignite.IgniteCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.ignite.IgniteGridConnection;
+import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
@@ -60,6 +64,26 @@ public class SimWsClientBase {
 		pollIote2eResultsThread.shutdown();
 		pollIote2eResultsThread.join(5000);
 		threadSparkRun.shutdown();
+		shutdownIgnite();
+	}
+	
+	public void shutdownIgnite() {
+		try {
+			IgniteGridConnection igniteGridConnection = new IgniteGridConnection().connect();
+			try {
+				igniteGridConnection.getCache().close();
+			} catch( Exception e ) {
+				logger.warn(e.getMessage());
+			}			
+			try {
+				// This is a singleton so it should only be closed after all Ignite operations are completed
+				igniteGridConnection.getIgnite().close();
+			} catch( Exception e ) {
+				logger.warn(e.getMessage());
+			}
+		} catch( Exception e ) {
+			logger.warn(e.getMessage());
+		}
 	}
 	
 }

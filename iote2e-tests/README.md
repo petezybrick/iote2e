@@ -96,7 +96,13 @@ cd /tmp/iote2e-shared/scripts
 	- if any MasterConfig settings have changed, then reload - see steps below
 	- run SimTempToFan: 
 ./run-junit-tests-sim-temptofan-docker.sh
-	- run SimHumidityToMister: ./run-junit-tests-sim-humiditytomister-docker.sh
+./run-junit-tests-simws-temptofan-docker.sh
+	- run SimHumidityToMister: 
+./run-junit-tests-sim-humiditytomister-docker.sh
+./run-junit-tests-simws-humiditytomister-docker.sh
+./run-junit-tests-simws-ledgreen-docker.sh
+Optionally tail the log in the iote2e-ws1 instance
+
 
 ** ConfigInitialLoad on Cassandra Docker instance
 rebuild iote2e-tests, which will also copy to iote2e-tests/iote2e-shared/jars
@@ -110,9 +116,17 @@ docker exec -it iote2e-cassandra1 /bin/bash
 csqlsh iote2e-cassandra1
 select config_name from config;
 
+**Run local Ignite**
+*Note:* when running the junit tests locally, Ignite peer class loading is used, this is not the case in the docker implementation 
+export IGNITE_HOME="/home/pete/development/server/apache-ignite-fabric-1.8.0-bin"
+export IGNITE_VERSION="1.8.0"
+export DEFAULT_CONFIG="/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local.xml"
+export JVM_OPTS="-Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m"
 
-
-
+*open a terminal session or tab*
+cd /home/pete/development/server/apache-ignite-fabric-1.8.0-bin
+./bin/ignite.sh "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml"
+*then run the jUnit tests via IDE, i.e. Eclipse*
 
 Spark Kafka Consumer
 https://github.com/dibbhatt/kafka-spark-consumer

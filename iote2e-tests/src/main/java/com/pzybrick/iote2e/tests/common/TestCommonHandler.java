@@ -38,7 +38,7 @@ public abstract class TestCommonHandler {
 		List<Iote2eResult> iote2eResults = new ArrayList<Iote2eResult>();
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {
-			if (queueIote2eResults.size() > 0) {
+			if (!queueIote2eResults.isEmpty()) {
 				try {
 					Thread.sleep(500);
 				} catch (Exception e) {

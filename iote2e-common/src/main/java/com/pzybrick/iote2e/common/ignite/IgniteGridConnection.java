@@ -25,7 +25,7 @@ public class IgniteGridConnection {
 			IgniteConfiguration igniteConfiguration = Ignition.loadSpringBean(
 					igniteConfigPathNameExt, masterConfig.getIgniteConfigName());
 			Ignition.setClientMode(masterConfig.isIgniteClientMode());
-			ignite = Ignition.start(igniteConfiguration);
+			ignite = Ignition.getOrStart(igniteConfiguration);
 			cache = ignite.getOrCreateCache(masterConfig.getIgniteCacheName());	
 			logger.debug("***************** create cache: cacheName={}, cache={}", masterConfig.getIgniteCacheName(), cache);
 			return this;
