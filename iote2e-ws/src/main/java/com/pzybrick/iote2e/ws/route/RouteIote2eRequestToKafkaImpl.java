@@ -37,25 +37,45 @@ public class RouteIote2eRequestToKafkaImpl implements RouteIote2eRequest {
 	}
 
 	public void routeToTarget( Iote2eRequest iote2eRequest ) throws Exception {
-		logger.debug(iote2eRequest.toString());
-		String key = String.valueOf(System.currentTimeMillis());
-		logger.debug("sending to kafka, key={}", key );
-		ProducerRecord<String, byte[]> data = new ProducerRecord<String, byte[]>(kafkaTopic, key, iote2eRequestReuseItem.toByteArray(iote2eRequest));
 		try {
-			// send is an async call
-			Future future = kafkaProducer.send(data);
-			// for this simple testing, treat the send like a synchronous call, wait for it to complete
+			logger.debug(iote2eRequest.toString());
+			String key = String.valueOf(System.currentTimeMillis());
+			logger.debug("sending to kafka, key={}", key );
+			ProducerRecord<String, byte[]> data = null;
 			try {
-				RecordMetadata recordMetadata = (RecordMetadata)future.get();
+				logger.debug("+++++++++++ before data key={}", key );
+				data = new ProducerRecord<String, byte[]>(kafkaTopic, key, iote2eRequestReuseItem.toByteArray(iote2eRequest));
+				logger.debug("+++++++++++ after data key={}", key );
 			} catch( Exception e ) {
-				logger.error("get() {}", e.getMessage());
+				logger.error(e.getMessage(), e);
 				throw e;
 			}
-			logger.debug("sent to kafka, key={}", key );
-
-		} catch( Exception e ) {
-			logger.error(e.getMessage(), e);
-			throw e;
+			try {
+				// send is an async call
+				logger.debug("+++++++++++ before future key={}", key );
+				Future future = kafkaProducer.send(data);
+				logger.debug("+++++++++++ after future key={}", key );
+				// for this simple testing, treat the send like a synchronous call, wait for it to complete
+				try {
+					logger.debug("+++++++++++ before recordMetadata key={}", key );
+					RecordMetadata recordMetadata = (RecordMetadata)future.get();
+					logger.debug("+++++++++++ after recordMetadata key={}", key );
+				} catch( Exception e ) {
+					logger.error("get() {}", e.getMessage());
+					throw e;
+				}catch( Throwable t ) {
+					logger.error("get() {}", t.getMessage());
+					throw t;
+				}
+				logger.debug("sent to kafka, key={}", key );
+	
+			} catch( Exception e ) {
+				logger.error(e.getMessage(), e);
+				throw e;
+			}
+		} catch(Throwable t ) {
+			logger.error(t.getMessage(), t);
+			throw t;
 		}
 	} 
 }

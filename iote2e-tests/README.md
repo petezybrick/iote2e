@@ -95,13 +95,16 @@ export CASSANDRA_KEYSPACE_NAME=iote2e
 cd /tmp/iote2e-shared/scripts
 	- if any MasterConfig settings have changed, then reload - see steps below
 	- run SimTempToFan: 
-./run-junit-tests-sim-temptofan-docker.sh
 ./run-junit-tests-simws-temptofan-docker.sh
 	- run SimHumidityToMister: 
-./run-junit-tests-sim-humiditytomister-docker.sh
 ./run-junit-tests-simws-humiditytomister-docker.sh
 ./run-junit-tests-simws-ledgreen-docker.sh
 Optionally tail the log in the iote2e-ws1 instance
+
+./run-junit-tests-sim-temptofan-docker.sh
+./run-junit-tests-sim-humiditytomister-docker.sh
+./run-junit-tests-sim-ledgreen-docker.sh
+
 
 
 ** ConfigInitialLoad on Cassandra Docker instance

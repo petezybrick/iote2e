@@ -89,7 +89,7 @@ public class EntryPointIote2eRequest {
 		}
 	}
 
-	public static class ThreadFromClientIote2eRequest extends Thread {
+	public class ThreadFromClientIote2eRequest extends Thread {
 		private RouteIote2eRequest routeIote2eRequest;
 		private boolean shutdown;
 
@@ -110,29 +110,34 @@ public class EntryPointIote2eRequest {
 			List<Iote2eRequest> iote2eRequests = new ArrayList<Iote2eRequest>();
 			try {
 				while (true) {
+					iote2eRequests.clear();
 					while (!fromClientIote2eRequests.isEmpty()) {
-						iote2eRequests.add(fromClientIote2eRequests.poll());
+						Iote2eRequest iote2eRequest = fromClientIote2eRequests.poll();
+						if( iote2eRequest != null ) iote2eRequests.add(iote2eRequest);
 					}
 					for (Iote2eRequest iote2eRequest : iote2eRequests) {
 						// TODO: error recovery
 						routeIote2eRequest.routeToTarget(iote2eRequest);
 					}
-					iote2eRequests.clear();
 					try {
 						sleep(500L);
 					} catch (InterruptedException e) {
 					}
-					if (shutdown)
+					if (shutdown) {
+						logger.debug("exiting due to shutdown");
 						break;
+					}
 				}
 			} catch (Exception e) {
 				logger.error("Exception in source thread processing", e);
+			} catch (Throwable t) {
+				logger.error("Exception in source thread processing {}", t.getMessage(),t);
 			}
 			logger.info("Exit");
 		}
 	}
 
-	public static class ThreadToClientLoginIote2eResult extends Thread {
+	public class ThreadToClientLoginIote2eResult extends Thread {
 		private boolean shutdown;
 
 		public void shutdown() {

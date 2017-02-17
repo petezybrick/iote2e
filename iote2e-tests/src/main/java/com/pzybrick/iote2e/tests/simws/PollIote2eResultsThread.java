@@ -27,12 +27,14 @@ public abstract class PollIote2eResultsThread extends Thread {
 	@Override
 	public void run() {
 		while( true ) {
-			Iote2eResult iote2eResult = queueIote2eResults.poll();
-			if( iote2eResult != null ) {
-				processIote2eResult( iote2eResult );
+			while( !queueIote2eResults.isEmpty() ) {
+				Iote2eResult iote2eResult = queueIote2eResults.poll();
+				if( iote2eResult != null ) {
+					processIote2eResult( iote2eResult );
+				}
 			}
 			try {
-				sleep(5*60*1000);
+				sleep(1000);
 			} catch( InterruptedException e ) {}
 			if( this.shutdown ) break;
 		}

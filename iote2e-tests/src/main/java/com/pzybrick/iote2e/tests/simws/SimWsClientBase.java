@@ -64,26 +64,6 @@ public class SimWsClientBase {
 		pollIote2eResultsThread.shutdown();
 		pollIote2eResultsThread.join(5000);
 		threadSparkRun.shutdown();
-		shutdownIgnite();
-	}
-	
-	public void shutdownIgnite() {
-		try {
-			IgniteGridConnection igniteGridConnection = new IgniteGridConnection().connect();
-			try {
-				igniteGridConnection.getCache().close();
-			} catch( Exception e ) {
-				logger.warn(e.getMessage());
-			}			
-			try {
-				// This is a singleton so it should only be closed after all Ignite operations are completed
-				igniteGridConnection.getIgnite().close();
-			} catch( Exception e ) {
-				logger.warn(e.getMessage());
-			}
-		} catch( Exception e ) {
-			logger.warn(e.getMessage());
-		}
 	}
 	
 }

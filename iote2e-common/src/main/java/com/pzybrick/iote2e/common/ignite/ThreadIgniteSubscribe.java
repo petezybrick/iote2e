@@ -117,8 +117,8 @@ public class ThreadIgniteSubscribe extends Thread {
 					if (shutdown) {
 						logger.info("Shutdown subcribe start ");
 						try {
-							if (igniteGridConnection.getCache() != null)
-								igniteGridConnection.getCache().close();
+//							if (igniteGridConnection.getCache() != null)
+//								igniteGridConnection.getCache().close();
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}
