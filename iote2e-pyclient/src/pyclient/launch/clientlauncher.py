@@ -5,37 +5,44 @@ Created on Jul 30, 2016
 '''
 
 from pyclient.process.processtemptofan import ProcessTempToFan
+from pyclient.ws.requestthread import RequestThread
+from pyclient.ws.resultthread import ResultThread
 import sys
-# import clientthread
+import time
 from threading import Thread
+from Queue import Queue
+
 
 def main(endpoint_url, conf_file):
     import logging.config
     logging.config.fileConfig( conf_file, disable_existing_loggers=False)
     logger = logging.getLogger(__name__)
     
+    requestQueue = Queue()
+    resultQueue = Queue()
     
+    threadRequest = RequestThread(requestQueue)
+    threadResult = ResultThread(resultQueue)
     
+    threadRequest.start()
+    threadResult.start()
     
-    # end_point = "ws://hp-lt-ubuntu-1:8090/e2e/" #"ws://echo.websocket.org/"
-    # "/home/pete/development/workspace/e2e/e2eclientpython/config/e2e_client_consoleonly.conf"
-    #threads = []
-    #for i in range(1,2):
-    #    #t = Thread(target=client.main, args=(endpoint_url,"test000"+str(i),conf_file,))
-    #    t = clientthread.ClientThread( endpoint_url, "test000"+str(i))
-    #    t.start()
-    #    threads.append(t)
-        
-        
-    cls = globals()["ProcessTempToFan"]
-    processTempToFan = cls()
-    processTempToFan.process()
+    for i in range(1,5):
+        requestQueue.put("testRequest-" + str(i) )
+        resultQueue.put("testResult-" + str(i) )
+        time.sleep(.5)
     
-    # join all threads
-    #for t in threads:
-    #    t.join()
-    logger.info('Done')
+    #cls = globals()["ProcessTempToFan"]
+    #processTempToFan = cls()
+    #processTempToFan.process()    
 
+    threadRequest.shutdown()
+    threadResult.shutdown()
+    
+    threadRequest.join()
+    threadResult.join()
+    
+    logger.info('Done')
 
 
 if __name__ == '__main__':
