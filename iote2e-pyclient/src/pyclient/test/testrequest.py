@@ -5,7 +5,7 @@ Created on Feb 18, 2017
 '''
 import sys
 import avro.schema
-from pyclient.schema.iote2erequestitem import Iote2eRequestItem
+from pyclient.schema.iote2erequest import Iote2eRequest
 
 
 def main(conf_file):
@@ -19,12 +19,16 @@ def main(conf_file):
     testPairs = { 'testPairNameA':'testPairValueA', 'testPairNameB':'testPairValueB' }
     testMetadata = { 'testMetadataNameA':'testMetadataValueA', 'testMetadataNameB':'testMetadataValueB' }
     
-    iote2eRequestItem = Iote2eRequestItem( login_name='testLogin',source_name='testSourceName', source_type='testSourceType', request_uuid='testRequestUuid', 
+    iote2eRequestBefore = Iote2eRequest( login_name='testLogin',source_name='testSourceName', source_type='testSourceType', request_uuid='testRequestUuid', 
                                            request_timestamp='testRequestTimestamp', pairs=testPairs, operation='SENSORS_VALUES', metadata=testMetadata)
-    logger.info(iote2eRequestItem)
-    b = iote2eRequestItem.toAvroBinarySchema(schemaRequest)
-    logger.info(len(str(iote2eRequestItem)))
+    logger.info(iote2eRequestBefore)
+    b = Iote2eRequest.commonToAvroBinarySchema( schema=schemaRequest, dictContent=iote2eRequestBefore.__dict__)
+    logger.info(len(str(iote2eRequestBefore)))
     logger.info(len(b))
+    
+    iote2eRequestAfter = Iote2eRequest.requestFromAvroBinarySchema( schema=schemaRequest, rawBytes=b )
+    logger.info( iote2eRequestAfter )
+    logger.info( iote2eRequestAfter.pairs['testPairNameB'] )
 
 
 if __name__ == '__main__':

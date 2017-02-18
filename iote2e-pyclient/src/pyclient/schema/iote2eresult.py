@@ -3,10 +3,10 @@ Created on Feb 18, 2017
 
 @author: pete
 '''
-import avro.io
-import io
 
-class Iote2eResultItem():
+from pyclient.schema.iote2ebase import Iote2eBase
+
+class Iote2eResult(Iote2eBase):
     '''
     classdocs
     '''
@@ -30,12 +30,13 @@ class Iote2eResultItem():
         return 'login_name={},source_name={},source_type={},request_uuid={},request_timestamp={},result_code={},result_error_message={},result_uuid={},result_timestamp={},pairs={},operation={}, metadata={}' \
             .format(self.login_name,self.source_name,self.source_type,self.request_uuid,self.request_timestamp,self.result_code,self.result_error_message,self.result_uuid,self.result_timestamp,self.pairs,self.operation,self.metadata)
     
-    def toAvroBinarySchema(self, schema ):
-        writer = avro.io.DatumWriter(schema)
-        bytes_writer = io.BytesIO()
-        encoder = avro.io.BinaryEncoder(bytes_writer)
-        writer.write(self.__dict__,encoder)
-        raw_bytes = bytes_writer.getvalue()
-        b = bytearray()
-        b.extend(raw_bytes)
-        return b
+    @staticmethod
+    def resultFromAvroBinarySchema( schema, rawBytes ):
+        obj = Iote2eBase.commonFromAvroBinarySchema( schema, rawBytes)
+        iote2eResult = Iote2eResult( login_name=obj['login_name'], source_name=obj['source_name'], source_type =obj['source_type'],
+                                               request_uuid=obj['request_uuid'], request_timestamp=obj['request_timestamp'],
+                                               result_code=obj['result_code'], result_error_message=obj['result_error_message'],
+                                               result_uuid=obj['result_uuid'], result_timestamp=obj['result_timestamp'],
+                                               pairs=obj['pairs'], operation=obj['operation'], metadata=obj['metadata'])
+        return iote2eResult
+        

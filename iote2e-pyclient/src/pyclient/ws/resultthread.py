@@ -12,10 +12,11 @@ logger = logging.getLogger(__name__)
 
 class ResultThread( threading.Thread):
     
-    def __init__(self, resultQueue):
+    def __init__(self,resultQueue, processSensorActuator):
         logger.info("Shutting down")
         threading.Thread.__init__(self)
         self.resultQueue = resultQueue
+        self.processSensorActuator = processSensorActuator
         self.isShutdown = False
     
     def run(self, *args):
@@ -26,7 +27,8 @@ class ResultThread( threading.Thread):
                     break
                 iote2eResult = self.resultQueue.get(True, 2)
                 if iote2eResult != None:
-                    logger.info("Result: " + iote2eResult)
+                    logger.info("Rcvd Result: " + str(iote2eResult))
+                    self.processSensorActuator.handleIote2eResult( iote2eResult )
 
             except Empty:
                 pass

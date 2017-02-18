@@ -11,6 +11,8 @@ import sys
 import time
 from threading import Thread
 from Queue import Queue
+from pyclient.schema.iote2erequest import Iote2eRequest
+from pyclient.schema.iote2eresult import Iote2eResult
 
 
 def main(endpoint_url, conf_file):
@@ -20,21 +22,36 @@ def main(endpoint_url, conf_file):
     
     requestQueue = Queue()
     resultQueue = Queue()
+        
+    cls = globals()["ProcessTempToFan"]
+    processTempToFan = cls()
     
-    threadRequest = RequestThread(requestQueue)
-    threadResult = ResultThread(resultQueue)
+    threadRequest = RequestThread(requestQueue=requestQueue,processSensorActuator=processTempToFan)
+    threadResult = ResultThread(resultQueue=resultQueue, processSensorActuator=processTempToFan)
     
     threadRequest.start()
     threadResult.start()
+
+    #processTempToFan.process()  
     
     for i in range(1,5):
-        requestQueue.put("testRequest-" + str(i) )
-        resultQueue.put("testResult-" + str(i) )
+        testPairs = { 'testPairNameA'+str(i):'testPairValueA'+str(i), 'testPairNameB'+str(i):'testPairValueB'+str(i) }
+        testMetadata = { 'testMetadataNameA'+str(i):'testMetadataValueA'+str(i), 'testMetadataNameB'+str(i):'testMetadataValueB'+str(i) }
+
+        #iote2eRequest = Iote2eRequest( login_name='testLogin'+str(i),source_name='testSourceName'+str(i), source_type='testSourceType'+str(i), 
+        #                               request_uuid='testRequestUuid'+str(i), request_timestamp='testRequestTimestamp'+str(i), 
+        #                               pairs=testPairs, operation='SENSORS_VALUES', metadata=testMetadata)
+
+        #requestQueue.put(iote2eRequest)
+        
+        iote2eResult = Iote2eResult( login_name='testLogin'+str(i),source_name='testSourceName'+str(i), source_type='testSourceType'+str(i), 
+                                     result_uuid='testResultUuid'+str(i), result_timestamp='testResultTimestamp'+str(i), 
+                                     pairs=testPairs, operation='ACTUATOR_VALUES', metadata=testMetadata,
+                                     request_uuid='testRequestUuid'+str(i), request_timestamp='testRequestTimestamp'+str(i))
+        resultQueue.put(iote2eResult)
         time.sleep(.5)
     
-    #cls = globals()["ProcessTempToFan"]
-    #processTempToFan = cls()
-    #processTempToFan.process()    
+  
 
     threadRequest.shutdown()
     threadResult.shutdown()
