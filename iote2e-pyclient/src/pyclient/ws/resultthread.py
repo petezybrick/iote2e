@@ -4,9 +4,8 @@ Created on Feb 18, 2017
 @author: pete
 '''
 import threading
-import time
 import logging
-from Queue import Queue,Empty
+from Queue import Empty
 
 logger = logging.getLogger(__name__)
 

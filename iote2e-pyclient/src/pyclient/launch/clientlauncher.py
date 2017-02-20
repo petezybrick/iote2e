@@ -4,67 +4,67 @@ Created on Jul 30, 2016
 @author: pete
 '''
 
-from pyclient.process.processtemptofan import ProcessTempToFan
 from pyclient.ws.requestthread import RequestThread
 from pyclient.ws.resultthread import ResultThread
+from pyclient.ws.socketthread import SocketThread
 import sys
-import time
-from threading import Thread
+import avro
 from Queue import Queue
-from pyclient.schema.iote2erequest import Iote2eRequest
-from pyclient.schema.iote2eresult import Iote2eResult
+from pyclient.ws.loginvo import LoginVo
 
 
-def main(endpoint_url, conf_file):
+def main( schemaSourceFolder, endpoint_url, loginName, sourceName, loggingConfig, optionalFilterSensorName):
     import logging.config
-    logging.config.fileConfig( conf_file, disable_existing_loggers=False)
+    logging.config.fileConfig( loggingConfig, disable_existing_loggers=False)
     logger = logging.getLogger(__name__)
+    
+    if not schemaSourceFolder.endswith('/'):
+        schemaSourceFolder += '/'
+    schemaRequest = avro.schema.parse(open(schemaSourceFolder+'iote2e-request.avsc', 'rb').read())
+    schemaResult = avro.schema.parse(open(schemaSourceFolder+'iote2e-result.avsc', 'rb').read())
+
+    loginVo = LoginVo(loginName=loginName, passwordEncrypted='anything', sourceName=sourceName, optionalFilterSensorName=optionalFilterSensorName)
+    
+    socketThread = SocketThread( endpoint_url=endpoint_url, login=loginName)
+    socketThread.start()
     
     requestQueue = Queue()
     resultQueue = Queue()
         
-    cls = globals()["ProcessTempToFan"]
-    processTempToFan = cls()
+    cls = globals()['ProcessTempToFan']
+    processSensorActuator = cls()
     
-    threadRequest = RequestThread(requestQueue=requestQueue,processSensorActuator=processTempToFan)
-    threadResult = ResultThread(resultQueue=resultQueue, processSensorActuator=processTempToFan)
+    threadRequest = RequestThread(requestQueue=requestQueue,processSensorActuator=processSensorActuator)
+    threadResult = ResultThread(resultQueue=resultQueue, processSensorActuator=processSensorActuator)
     
     threadRequest.start()
     threadResult.start()
-
-    #processTempToFan.process()  
     
-    for i in range(1,5):
-        testPairs = { 'testPairNameA'+str(i):'testPairValueA'+str(i), 'testPairNameB'+str(i):'testPairValueB'+str(i) }
-        testMetadata = { 'testMetadataNameA'+str(i):'testMetadataValueA'+str(i), 'testMetadataNameB'+str(i):'testMetadataValueB'+str(i) }
+    socketThread = SocketThread(endpoint_url=endpoint_url, loginVo=loginVo, processSensorActuator=processSensorActuator, 
+                                schemaRequest=schemaRequest, schemaResult=schemaResult, 
+                                requestQueue=requestQueue, resultQueue=resultQueue)
 
-        #iote2eRequest = Iote2eRequest( login_name='testLogin'+str(i),source_name='testSourceName'+str(i), source_type='testSourceType'+str(i), 
-        #                               request_uuid='testRequestUuid'+str(i), request_timestamp='testRequestTimestamp'+str(i), 
-        #                               pairs=testPairs, operation='SENSORS_VALUES', metadata=testMetadata)
-
-        #requestQueue.put(iote2eRequest)
-        
-        iote2eResult = Iote2eResult( login_name='testLogin'+str(i),source_name='testSourceName'+str(i), source_type='testSourceType'+str(i), 
-                                     result_uuid='testResultUuid'+str(i), result_timestamp='testResultTimestamp'+str(i), 
-                                     pairs=testPairs, operation='ACTUATOR_VALUES', metadata=testMetadata,
-                                     request_uuid='testRequestUuid'+str(i), request_timestamp='testRequestTimestamp'+str(i))
-        resultQueue.put(iote2eResult)
-        time.sleep(.5)
+    socketThread.start()
+    socketThread.join()
     
-  
-
     threadRequest.shutdown()
     threadResult.shutdown()
     
-    threadRequest.join()
-    threadResult.join()
+    threadRequest.join(5)
+    threadResult.join(5)
     
     logger.info('Done')
 
 
 if __name__ == '__main__':
-    if( len(sys.argv) < 3 ):
+    if( len(sys.argv) < 6 ):
         print('Invalid format, execution cancelled')
-        print('Correct format: python endpoint_url <consoleConfigFile.conf>')
+        print('Correct format: python endpoint_url loginName sourceName consoleConfigFile.conf optionalFilterSensorName')
         sys.exit(8)
-    main(sys.argv[1], sys.argv[2])
+    optionalFilterSensorName = ''
+    if  len(sys.argv) > 6:
+        optionalFilterSensorName = sys.argv[6]
+    main(schemaSourceFolder=sys.argv[1], endpoint_url=sys.argv[2], loginName=sys.argv[3], sourceName=sys.argv[4], loggingConfig=sys.argv[5], optionalFilterSensorName=optionalFilterSensorName)
+
+    
+    

@@ -24,7 +24,6 @@ class RequestThread( threading.Thread):
     
     def run(self, *args):
         logger.info("RequestThread run start")
-        schemaRequest = avro.schema.parse(open('../../../../iote2e-schema/src/main/avro/iote2e-request.avsc', 'rb').read())
 
         while True:
             try:
@@ -34,8 +33,7 @@ class RequestThread( threading.Thread):
                 iote2eRequest = self.processSensorActuator.createIote2eRequest()
                 if iote2eRequest != None:
                     logger.info("Sending Request: " + str(iote2eRequest) )
-                    rawBytes = Iote2eRequest.commonToAvroBinarySchema( schema=schemaRequest, dictContent=iote2eRequest.__dict__)
-                    logger.info("Sending Request, raw bytes length: " + str(len(rawBytes) ) )
+                    self.requestQueue.put_nowait(iote2eRequest)
 
             except Empty:
                 pass
