@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 class RequestThread( threading.Thread):
     
     def __init__(self, requestQueue,processSensorActuator):
+        logger.info("Constructing")
         threading.Thread.__init__(self)
         self.requestQueue = requestQueue
         self.processSensorActuator = processSensorActuator

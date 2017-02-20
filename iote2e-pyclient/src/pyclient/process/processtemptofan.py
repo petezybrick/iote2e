@@ -5,6 +5,8 @@ Created on Aug 6, 2016
 '''
 import logging
 import time
+import uuid
+import datetime
 from pyclient.schema.iote2erequest import Iote2eRequest
 
 logger = logging.getLogger(__name__)
@@ -15,24 +17,22 @@ class ProcessTempToFan(object):
     classdocs
     '''
 
-    def __init__(self):
-        self.cnt = -1
+    def __init__(self, loginVo, sensorName):
+        self.loginVo = loginVo
+        self.sensorName = sensorName
         
     def process(self):
         logger.info('process');
         
     def createIote2eRequest(self ):
-        self.cnt += 1
-        logger.info('ProcessTempToFan createIote2eRequest: ' + str(self.cnt))
-        testPairs = { 'testPairNameA'+str(self.cnt):'testPairValueA'+str(self.cnt), 'testPairNameB'+str(self.cnt):'testPairValueB'+str(self.cnt) }
-        testMetadata = { 'testMetadataNameA'+str(self.cnt):'testMetadataValueA'+str(self.cnt), 'testMetadataNameB'+str(self.cnt):'testMetadataValueB'+str(self.cnt) }
+        time.sleep(2)
+        logger.info('ProcessTempToFan createIote2eRequest:')
+        pairs = { self.sensorName:'78.5' }
 
-        iote2eRequest = Iote2eRequest( login_name='testLogin'+str(self.cnt),source_name='testSourceName'+str(self.cnt), source_type='testSourceType'+str(self.cnt), 
-                                       request_uuid='testRequestUuid'+str(self.cnt), request_timestamp='testRequestTimestamp'+str(self.cnt), 
-                                       pairs=testPairs, operation='SENSORS_VALUES', metadata=testMetadata)
-        time.sleep(.25)
-        if (self.cnt % 2) == 0:
-            return None 
+        iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='temp', 
+                                       request_uuid=str(uuid.uuid4()), 
+                                       request_timestamp=datetime.datetime.utcnow().isoformat(), 
+                                       pairs=pairs, operation='SENSORS_VALUES')
         return iote2eRequest
         
     def handleIote2eResult(self, iote2eResult ):

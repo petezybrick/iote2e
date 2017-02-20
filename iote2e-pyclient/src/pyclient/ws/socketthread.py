@@ -9,10 +9,12 @@ import threading
 import time
 import json
 from websocket import ABNF
+from Queue import Empty
 import logging
 from threading import Thread
 from pyclient.ws.socketstate import SocketState
 from pyclient.schema.iote2erequest import Iote2eRequest
+from pyclient.schema.iote2eresult import Iote2eResult
 
 
 logger = logging.getLogger(__name__)
@@ -30,16 +32,16 @@ class SocketThread( threading.Thread):
         self.resultQueue = resultQueue
         self.data_type = ABNF.OPCODE_TEXT
         self.errno = None
-        self.strerror = None
+        self.strError = None
         self.socketState = SocketState.PENDING
         self.shutdown = False
  
     
     def on_data(self, ws, data, data_type, bcontinue ):
         self.socketState = SocketState.CONNECTED
-        #logger.info( self.loginName + ' on_data : ' + message)
+        #logger.info( self.loginVo.loginName + ' on_data : ' + message)
         if logger.isEnabledFor("DEBUG"):
-            logger.debug( self.loginName + ' on_data data_type : ' + str(data_type) + ', type() ' + str(type(data)) + ', continue ' + str(bcontinue) )
+            logger.debug( self.loginVo.loginName + ' on_data data_type : ' + str(data_type) + ', type() ' + str(type(data)) + ', continue ' + str(bcontinue) )
         # TODO: error recovery/retry loop 
         #self.response_queue.put_nowait(message)
         self.data_type = data_type
@@ -49,28 +51,28 @@ class SocketThread( threading.Thread):
         self.socketState = SocketState.CONNECTED
         if self.data_type == ABNF.OPCODE_TEXT:
             if logger.isEnabledFor("DEBUG"):
-                logger.debug( self.loginName + ' Rcvd Text: ' + message )
+                logger.debug( self.loginVo.loginName + ' Rcvd Text: ' + message )
         elif self.data_type == ABNF.OPCODE_BINARY:
             if logger.isEnabledFor("DEBUG"):
-                logger.debug( self.loginName + ' Rcvd Binary')
+                logger.debug( self.loginVo.loginName + ' Rcvd Binary')
             
-        logger.info( self.loginName + ' len=' + str(len(message)))
-        # TODO: error recovery/retry loop 
-        self.resultQueue.put_nowait(message)
+        logger.info( self.loginVo.loginName + ' len=' + str(len(message)))
+        # TODO: error recovery/retry loop
+        iote2eResult = Iote2eResult.resultFromAvroBinarySchema( self.schemaResult, message )
+        self.resultQueue.put_nowait(iote2eResult)
  
     
     def on_error(self, ws, error):
         self.socketState = SocketState.ERROR
         self.shutdown = True
-        self.errno = error.errno
-        self.strerror = error.strerror
-        logger.error( self.loginName + 'Error: ' + str(error) )
+        self.strError = str(error)
+        logger.error( 'Socket connect failure, endpointUrl: {}, loginName: {}, error: {}, '.format(self.endpoint_url, self.loginVo.loginName,self.strError ) )
 
     
     def on_close(self, ws):
         self.socketState = SocketState.CLOSED
         self.shutdown = True
-        logger.info( self.loginName + ' client socket closed')
+        logger.info( self.loginVo.loginName + ' client socket closed')
 
     
     def on_open(self, ws):
@@ -82,13 +84,16 @@ class SocketThread( threading.Thread):
                     break;
                 if self.socketState == SocketState.ERROR or self.socketState == SocketState.CLOSED:
                     break
-                iote2eRequest = self.requestQueue.get(True, 2)
-                if iote2eRequest != None:
-                    byteArray = Iote2eRequest.commonToAvroBinarySchema( schema=self.schemaRequest, dictContent=iote2eRequest.__dict__)
-                    ws.send(byteArray,opcode=ABNF.OPCODE_BINARY)
+                try :
+                    iote2eRequest = self.requestQueue.get(True, 2)
+                    if iote2eRequest != None:
+                        byteArray = Iote2eRequest.commonToAvroBinarySchema( schema=self.schemaRequest, dictContent=iote2eRequest.__dict__)
+                        ws.send(byteArray,opcode=ABNF.OPCODE_BINARY)
+                except Empty:
+                    pass
             time.sleep(1)
             ws.close()
-            logger.info( self.loginName + " Thread terminating " )
+            logger.info( self.loginVo.loginName + " Thread terminating " )
         t = Thread(target=run, args=())
         t.start()
     
@@ -98,7 +103,7 @@ class SocketThread( threading.Thread):
     
     def run(self, *args):
         websocket.enableTrace(False)
-        logger.info( self.loginName + 'Client connecting to server')
+        logger.info( 'Client connecting to server, loginName=' + self.loginVo.loginName + ', sourceName=' + self.loginVo.sourceName )
         ws = websocket.WebSocketApp(self.endpoint_url,
                                     on_message = self.on_message,
                                     on_error = self.on_error,
@@ -106,8 +111,8 @@ class SocketThread( threading.Thread):
                                     on_close = self.on_close,
                                     on_open = self.on_open )
         ws.run_forever()
-        if self.errno != None:
-            logger.error('WebSockets error, code={}, message={}'.format(self.errno, self.strerror))
+        if self.strError != None:
+            logger.error('WebSockets error: {}'.format(self.strError))
         time.sleep(2) 
 
     

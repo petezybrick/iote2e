@@ -35,7 +35,7 @@ public class RouteIote2eRequestLoopbackImpl implements RouteIote2eRequest {
 		pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME), sensorName );
 		pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME), new Utf8("testActuatorNamea"));
 		pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE), new Utf8("testActuatorValuea"));
-		pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE_UPDATED_AT), new Utf8("2017-01-02T03:04:05.678" ));
+		pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE_UPDATED_AT), new Utf8(Iote2eUtils.getDateNowUtc8601()));
 
 		
 		String resultTimestamp = Iote2eUtils.getDateNowUtc8601();

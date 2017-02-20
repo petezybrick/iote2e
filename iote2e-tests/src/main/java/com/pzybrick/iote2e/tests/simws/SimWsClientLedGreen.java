@@ -33,7 +33,7 @@ public class SimWsClientLedGreen extends SimWsClientBase {
 		try {
 			url = args[0];
 			loginVo = new LoginVo()
-					.setLogin(TestCommonHandler.testLedLoginName)
+					.setLoginName(TestCommonHandler.testLedLoginName)
 					.setSourceName(TestCommonHandler.testLedSourceName)
 					.setOptionalFilterSensorName(TestCommonHandler.testLedSensorNameGreen);
 			masterConfig = MasterConfig.getInstance();

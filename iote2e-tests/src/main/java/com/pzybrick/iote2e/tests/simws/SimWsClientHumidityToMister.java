@@ -37,7 +37,7 @@ public class SimWsClientHumidityToMister extends SimWsClientBase {
 		try {
 			url = args[0];
 			loginVo = new LoginVo()
-					.setLogin(TestCommonHandler.testHumidityLoginName)
+					.setLoginName(TestCommonHandler.testHumidityLoginName)
 					.setSourceName(TestCommonHandler.testHumiditySourceName)
 					.setOptionalFilterSensorName(TestCommonHandler.testHumiditySensorName);
 			masterConfig = MasterConfig.getInstance();

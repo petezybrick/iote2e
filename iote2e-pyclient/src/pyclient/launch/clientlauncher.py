@@ -9,8 +9,14 @@ from pyclient.ws.resultthread import ResultThread
 from pyclient.ws.socketthread import SocketThread
 import sys
 import avro
+import time
+import uuid
+import atexit
 from Queue import Queue
 from pyclient.ws.loginvo import LoginVo
+from pyclient.ws.socketstate import SocketState
+from pyclient.process.processtemptofan import ProcessTempToFan
+from pyclient.launch.clientrun import ClientRun
 
 
 def main( schemaSourceFolder, endpoint_url, loginName, sourceName, loggingConfig, optionalFilterSensorName):
@@ -18,42 +24,24 @@ def main( schemaSourceFolder, endpoint_url, loginName, sourceName, loggingConfig
     logging.config.fileConfig( loggingConfig, disable_existing_loggers=False)
     logger = logging.getLogger(__name__)
     
-    if not schemaSourceFolder.endswith('/'):
-        schemaSourceFolder += '/'
-    schemaRequest = avro.schema.parse(open(schemaSourceFolder+'iote2e-request.avsc', 'rb').read())
-    schemaResult = avro.schema.parse(open(schemaSourceFolder+'iote2e-result.avsc', 'rb').read())
-
-    loginVo = LoginVo(loginName=loginName, passwordEncrypted='anything', sourceName=sourceName, optionalFilterSensorName=optionalFilterSensorName)
-    
-    socketThread = SocketThread( endpoint_url=endpoint_url, login=loginName)
-    socketThread.start()
-    
-    requestQueue = Queue()
-    resultQueue = Queue()
-        
-    cls = globals()['ProcessTempToFan']
-    processSensorActuator = cls()
-    
-    threadRequest = RequestThread(requestQueue=requestQueue,processSensorActuator=processSensorActuator)
-    threadResult = ResultThread(resultQueue=resultQueue, processSensorActuator=processSensorActuator)
-    
-    threadRequest.start()
-    threadResult.start()
-    
-    socketThread = SocketThread(endpoint_url=endpoint_url, loginVo=loginVo, processSensorActuator=processSensorActuator, 
-                                schemaRequest=schemaRequest, schemaResult=schemaResult, 
-                                requestQueue=requestQueue, resultQueue=resultQueue)
-
-    socketThread.start()
-    socketThread.join()
-    
-    threadRequest.shutdown()
-    threadResult.shutdown()
-    
-    threadRequest.join(5)
-    threadResult.join(5)
-    
+    global clientRun 
+    clientRun = ClientRun(schemaSourceFolder, endpoint_url, loginName, sourceName, optionalFilterSensorName)
+    clientRun.process()
     logger.info('Done')
+    
+    
+def shutdownHook():
+    global clientRun
+    print('>>>> shutdown hook <<<<')
+    if clientRun.socketThread.is_alive():
+        clientRun.socketThread.shutdown
+        clientRun.socketThread.join(5)
+    if clientRun.threadRequest.is_alive():
+        clientRun.threadRequest.shutdown()
+        clientRun.threadRequest.join(5)
+    if clientRun.threadResult.is_alive():
+        clientRun.threadResult.shutdown()
+        clientRun.threadResult.join(5)
 
 
 if __name__ == '__main__':
@@ -61,6 +49,7 @@ if __name__ == '__main__':
         print('Invalid format, execution cancelled')
         print('Correct format: python endpoint_url loginName sourceName consoleConfigFile.conf optionalFilterSensorName')
         sys.exit(8)
+    atexit.register(shutdownHook)
     optionalFilterSensorName = ''
     if  len(sys.argv) > 6:
         optionalFilterSensorName = sys.argv[6]

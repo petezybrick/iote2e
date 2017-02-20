@@ -13,7 +13,7 @@ public class LoginVo {
 	private static final Logger logger = LogManager.getLogger(MasterConfig.class);
 
 	@Expose
-	private String login;
+	private String loginName;
 	@Expose
 	private String passwordEncrypted;
 	@Expose
@@ -29,8 +29,8 @@ public class LoginVo {
 		return logger;
 	}
 
-	public String getLogin() {
-		return login;
+	public String getLoginName() {
+		return loginName;
 	}
 
 	public String getPasswordEncrypted() {
@@ -45,8 +45,8 @@ public class LoginVo {
 		return optionalFilterSensorName;
 	}
 
-	public LoginVo setLogin(String login) {
-		this.login = login;
+	public LoginVo setLoginName(String login) {
+		this.loginName = login;
 		return this;
 	}
 

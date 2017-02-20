@@ -43,7 +43,7 @@ public class ClientSocketHandler {
 			final Utf8 TEST_SOURCE_NAME = new Utf8("local_t001");
 			final Utf8 TEST_SOURCE_TYPE = new Utf8("testSourceType");
 			final Utf8 TEST_SENSOR_NAME = new Utf8("testSensorName");	// fan
-			clientSocketHandler.setLoginVo( new LoginVo().setLogin(TEST_SOURCE_LOGIN.toString()).setSourceName(TEST_SOURCE_NAME.toString()) );
+			clientSocketHandler.setLoginVo( new LoginVo().setLoginName(TEST_SOURCE_LOGIN.toString()).setSourceName(TEST_SOURCE_NAME.toString()) );
 			// clientSocketHandler.setLoginVo( new LoginVo().setLogin(TEST_SOURCE_LOGIN.toString()).setSourceName(TEST_SOURCE_NAME.toString()).setOptionalFilterSensorName(TEST_SENSOR_NAME.toString()) );
 			clientSocketHandler.setUrl(args[0]);
 			clientSocketHandler.setQueueIote2eRequests( new ConcurrentLinkedQueue<Iote2eRequest>() );
@@ -70,7 +70,7 @@ public class ClientSocketHandler {
 				ClientSocketAvro iotClientSocketAvro = new ClientSocketAvro(iote2eReceiveReceiveThread,iote2eResultBytes);
 				session = container.connectToServer(iotClientSocketAvro, uri);
 				session.getBasicRemote().sendText( Iote2eUtils.getGsonInstance().toJson(loginVo));
-				logger.info("loginVo sent for {}", loginVo.getLogin());
+				logger.info("loginVo sent for {}", loginVo.getLoginName());
 			} finally {
 			}
 		} catch (Throwable t) {

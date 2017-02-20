@@ -70,7 +70,7 @@ public class ServerSideSocketIote2eRequest {
 			}
 			if( loginVo != null ) {
 				try {
-					loginUuid = IotE2eAuthentication.authenticate(loginVo.getLogin());
+					loginUuid = IotE2eAuthentication.authenticate(loginVo.getLoginName());
 					authenticated = true;
 					// The keyCommon attribute is used to identify this socket connection on the map of socket connections,
 					// as well key used when creating the Ignite remote filter 
@@ -162,7 +162,7 @@ public class ServerSideSocketIote2eRequest {
 	}
 
 	private void createkey() {
-		StringBuilder sb = new StringBuilder(loginVo.getLogin()).append("|").append(loginVo.getSourceName()).append("|");
+		StringBuilder sb = new StringBuilder(loginVo.getLoginName()).append("|").append(loginVo.getSourceName()).append("|");
 		if( null != loginVo.getOptionalFilterSensorName() && loginVo.getOptionalFilterSensorName().length() > 0 )
 			 sb.append(loginVo.getOptionalFilterSensorName()).append("|");
 		keyCommon = sb.toString();

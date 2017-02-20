@@ -37,7 +37,7 @@ public class SimWsClientTempToFan extends SimWsClientBase {
 		try {
 			url = args[0];
 			loginVo = new LoginVo()
-					.setLogin(TestCommonHandler.testTempToFanLoginName)
+					.setLoginName(TestCommonHandler.testTempToFanLoginName)
 					.setSourceName(TestCommonHandler.testTempToFanSourceName)
 					.setOptionalFilterSensorName(TestCommonHandler.testTempToFanSensorName);
 			masterConfig = MasterConfig.getInstance();
