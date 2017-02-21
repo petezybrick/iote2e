@@ -156,4 +156,5 @@ critical:
   to run: java -cp <PATH>/iote2e/iote2e-ruleproc/target/iote2e-ruleproc-1.0.0-all-tests.jar org.junit.runner.JUnitCore <TEST_PKG>.<TEST_CLASS>
   
 
-
+**Python Cassandra**
+sudo pip install cassandra-driver

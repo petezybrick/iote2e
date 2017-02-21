@@ -16,22 +16,21 @@ from Queue import Queue
 from pyclient.ws.loginvo import LoginVo
 from pyclient.ws.socketstate import SocketState
 from pyclient.process.processtemptofan import ProcessTempToFan
+from pyclient.processsim.processsimtemptofan import ProcessSimTempToFan
 from pyclient.launch.clientrun import ClientRun
 
+clientRun = None
 
-def main( schemaSourceFolder, endpoint_url, loginName, sourceName, loggingConfig, optionalFilterSensorName):
+def main( processClassName, schemaSourceFolder, endpoint_url, loginName, sourceName, loggingConfig, optionalFilterSensorName):
     import logging.config
     logging.config.fileConfig( loggingConfig, disable_existing_loggers=False)
     logger = logging.getLogger(__name__)
-    
-    global clientRun 
-    clientRun = ClientRun(schemaSourceFolder, endpoint_url, loginName, sourceName, optionalFilterSensorName)
+    clientRun = ClientRun(processClassName, schemaSourceFolder, endpoint_url, loginName, sourceName, optionalFilterSensorName)
     clientRun.process()
     logger.info('Done')
     
     
 def shutdownHook():
-    global clientRun
     print('>>>> shutdown hook <<<<')
     if clientRun.socketThread.is_alive():
         clientRun.socketThread.shutdown
@@ -45,15 +44,16 @@ def shutdownHook():
 
 
 if __name__ == '__main__':
-    if( len(sys.argv) < 6 ):
+    if( len(sys.argv) < 7 ):
         print('Invalid format, execution cancelled')
         print('Correct format: python endpoint_url loginName sourceName consoleConfigFile.conf optionalFilterSensorName')
         sys.exit(8)
-    atexit.register(shutdownHook)
+    #atexit.register(shutdownHook)
     optionalFilterSensorName = ''
-    if  len(sys.argv) > 6:
-        optionalFilterSensorName = sys.argv[6]
-    main(schemaSourceFolder=sys.argv[1], endpoint_url=sys.argv[2], loginName=sys.argv[3], sourceName=sys.argv[4], loggingConfig=sys.argv[5], optionalFilterSensorName=optionalFilterSensorName)
+    if  len(sys.argv) > 7:
+        optionalFilterSensorName = sys.argv[7]
+    main(processClassName=sys.argv[1], schemaSourceFolder=sys.argv[2], endpoint_url=sys.argv[3], loginName=sys.argv[4], sourceName=sys.argv[5], 
+         loggingConfig=sys.argv[6], optionalFilterSensorName=optionalFilterSensorName)
 
     
     

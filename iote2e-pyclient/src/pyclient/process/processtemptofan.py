@@ -27,6 +27,7 @@ class ProcessTempToFan(object):
     def createIote2eRequest(self ):
         time.sleep(2)
         logger.info('ProcessTempToFan createIote2eRequest:')
+        # TODO: read temp from sensor here
         pairs = { self.sensorName:'78.5' }
 
         iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='temp', 
@@ -36,6 +37,7 @@ class ProcessTempToFan(object):
         return iote2eRequest
         
     def handleIote2eResult(self, iote2eResult ):
+        # TODO: turn on/off actuator (fan) here
         logger.info('ProcessTempToFan handleIote2eResult: ' + str(iote2eResult))
         
         
