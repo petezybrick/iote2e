@@ -17,6 +17,8 @@ from pyclient.ws.loginvo import LoginVo
 from pyclient.ws.socketstate import SocketState
 from pyclient.process.processtemptofan import ProcessTempToFan
 from pyclient.processsim.processsimtemptofan import ProcessSimTempToFan
+from pyclient.processsim.processsimhumiditytomister import ProcessSimHumidityToMister
+from pyclient.processsim.processsimledgreen import ProcessSimLedGreen
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +28,10 @@ class ClientRun():
     classdocs
     '''
 
-    def __init__(self, processClassName, schemaSourceFolder, endpoint_url, loginName, sourceName, optionalFilterSensorName ):
+    def __init__(self, processClassName, sensorName, schemaSourceFolder, endpoint_url, loginName, sourceName, optionalFilterSensorName ):
         logger.info('ctor')
         self.processClassName = processClassName
+        self.sensorName = sensorName
         self.schemaSourceFolder = schemaSourceFolder
         self.endpoint_url = endpoint_url
         self.loginName = loginName
@@ -48,7 +51,7 @@ class ClientRun():
         resultQueue = Queue()
             
         cls = globals()[self.processClassName]
-        processSensorActuator = cls(loginVo=loginVo,sensorName='temp1')
+        processSensorActuator = cls(loginVo=loginVo,sensorName=self.sensorName)
         
         self.threadRequest = RequestThread(requestQueue=requestQueue,processSensorActuator=processSensorActuator)
         self.threadResult = ResultThread(resultQueue=resultQueue, processSensorActuator=processSensorActuator)
