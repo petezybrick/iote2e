@@ -116,9 +116,7 @@ public class EntryPointIote2eRequest {
 						if( iote2eRequest != null ) iote2eRequests.add(iote2eRequest);
 					}
 					for (Iote2eRequest iote2eRequest : iote2eRequests) {
-						// TODO: error recovery
 						routeIote2eRequest.routeToTarget(iote2eRequest);
-						logger.debug("+++++++++++ after routeToTarget");
 					}
 					try {
 						sleep(500L);
