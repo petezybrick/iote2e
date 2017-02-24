@@ -118,6 +118,7 @@ public class EntryPointIote2eRequest {
 					for (Iote2eRequest iote2eRequest : iote2eRequests) {
 						// TODO: error recovery
 						routeIote2eRequest.routeToTarget(iote2eRequest);
+						logger.debug("+++++++++++ after routeToTarget");
 					}
 					try {
 						sleep(500L);
@@ -132,6 +133,8 @@ public class EntryPointIote2eRequest {
 				logger.error("Exception in source thread processing", e);
 			} catch (Throwable t) {
 				logger.error("Exception in source thread processing {}", t.getMessage(),t);
+			} finally {
+				logger.debug("+++++++++++ How did I get here?");
 			}
 			logger.info("Exit");
 		}

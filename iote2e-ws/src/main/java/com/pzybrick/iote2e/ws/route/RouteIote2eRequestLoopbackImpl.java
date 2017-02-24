@@ -18,7 +18,7 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest;
 
 public class RouteIote2eRequestLoopbackImpl implements RouteIote2eRequest {
-	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
+	private static final Logger logger = LogManager.getLogger(RouteIote2eRequestLoopbackImpl.class);
 
 	public void routeToTarget( Iote2eRequest iote2eRequest ) throws Exception {
 		logger.debug(iote2eRequest.toString());

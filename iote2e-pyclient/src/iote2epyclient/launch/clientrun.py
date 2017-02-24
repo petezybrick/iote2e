@@ -7,10 +7,8 @@ Created on Jul 30, 2016
 from iote2epyclient.ws.requestthread import RequestThread
 from iote2epyclient.ws.resultthread import ResultThread
 from iote2epyclient.ws.socketthread import SocketThread
-import sys
 import avro
 import time
-import uuid
 import logging
 from Queue import Queue
 from iote2epyclient.ws.loginvo import LoginVo

@@ -1,6 +1,8 @@
 package com.pzybrick.iote2e.ws.route;
 
 import java.util.Properties;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -12,10 +14,9 @@ import org.apache.logging.log4j.Logger;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
-import com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest;
 
 public class RouteIote2eRequestToKafkaImpl implements RouteIote2eRequest {
-	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
+	private static final Logger logger = LogManager.getLogger(RouteIote2eRequestToKafkaImpl.class);
 	protected KafkaProducer<String, byte[]> kafkaProducer;
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 	protected String kafkaTopic;
@@ -58,14 +59,32 @@ public class RouteIote2eRequestToKafkaImpl implements RouteIote2eRequest {
 				// for this simple testing, treat the send like a synchronous call, wait for it to complete
 				try {
 					logger.debug("+++++++++++ before recordMetadata key={}", key );
+					logger.debug("+++++++++++ before recordMetadata MB: {}", (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024*1024));
 					RecordMetadata recordMetadata = (RecordMetadata)future.get();
 					logger.debug("+++++++++++ after recordMetadata key={}", key );
+					
+				} catch( CancellationException e ) {
+					logger.error("+++++++++++ caught CancellationException" );
+					logger.error("get() {}", e.getMessage());
+					throw e;
+				}  catch( InterruptedException e ) {
+					logger.error("+++++++++++ caught InterruptedException" );
+					logger.error("get() {}", e.getMessage());
+					throw e;
+				} catch( ExecutionException e ) {
+					logger.error("+++++++++++ caught ExecutionException" );
+					logger.error("get() {}", e.getMessage());
+					throw e;
 				} catch( Exception e ) {
+					logger.error("+++++++++++ caught Exception" );
 					logger.error("get() {}", e.getMessage());
 					throw e;
 				}catch( Throwable t ) {
+					logger.error("+++++++++++ caught Throwable" );
 					logger.error("get() {}", t.getMessage());
 					throw t;
+				} finally {
+					logger.debug("+++++++++++ finally recordMetadata key={}", key );
 				}
 				logger.debug("sent to kafka, key={}", key );
 	
