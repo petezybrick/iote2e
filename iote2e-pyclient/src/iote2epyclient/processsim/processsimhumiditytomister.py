@@ -39,7 +39,7 @@ class ProcessSimHumidityToMister(object):
         logger.info( "humidityNow: {}".format(self.humidityNow))
         
         if self.humidityNow <= self.HUMIDITY_MIN or self.humidityNow >= self.HUMIDITY_MAX:
-            logger.error("Temp exceeded: {}".format(self.humidityNow))
+            logger.error("Humidity exceeded: {}".format(self.humidityNow))
             # TODO: need to throw an exception or something so the calling thread exits
             sys.exit(8)
 

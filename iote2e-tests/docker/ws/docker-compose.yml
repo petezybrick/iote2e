@@ -3,7 +3,7 @@ version: '2'
 services:
   iote2e-ws1:
     image: demomgr:1.0.0
-    command: java -Xms512m -Xmx1G -cp /tmp/iote2e-shared/jars/iote2e-ws-1.0.0.jar com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest > /tmp/iote2e-shared/ws.log
+    command: java -Xms512m -Xmx1G -cp /tmp/iote2e-shared/jars/iote2e-ws-1.0.0.jar com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest
     hostname: iote2e-ws1
     container_name: iote2e-ws1
     mem_limit: 8g
