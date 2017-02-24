@@ -8,7 +8,7 @@ import time
 import logging
 import avro
 from Queue import Queue,Empty
-from pyclient.schema.iote2erequest import Iote2eRequest
+from iote2epyclient.schema.iote2erequest import Iote2eRequest
 
 
 logger = logging.getLogger(__name__)

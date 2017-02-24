@@ -12,9 +12,9 @@ from websocket import ABNF
 from Queue import Empty
 import logging
 from threading import Thread
-from pyclient.ws.socketstate import SocketState
-from pyclient.schema.iote2erequest import Iote2eRequest
-from pyclient.schema.iote2eresult import Iote2eResult
+from iote2epyclient.ws.socketstate import SocketState
+from iote2epyclient.schema.iote2erequest import Iote2eRequest
+from iote2epyclient.schema.iote2eresult import Iote2eResult
 
 
 logger = logging.getLogger(__name__)

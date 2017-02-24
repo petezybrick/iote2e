@@ -5,7 +5,7 @@ Created on Jul 30, 2016
 '''
 
 import sys
-from pyclient.launch.clientrun import ClientRun
+from iote2epyclient.launch.clientrun import ClientRun
 
 clientRun = None
 

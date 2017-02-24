@@ -4,21 +4,21 @@ Created on Jul 30, 2016
 @author: pete
 '''
 
-from pyclient.ws.requestthread import RequestThread
-from pyclient.ws.resultthread import ResultThread
-from pyclient.ws.socketthread import SocketThread
+from iote2epyclient.ws.requestthread import RequestThread
+from iote2epyclient.ws.resultthread import ResultThread
+from iote2epyclient.ws.socketthread import SocketThread
 import sys
 import avro
 import time
 import uuid
 import logging
 from Queue import Queue
-from pyclient.ws.loginvo import LoginVo
-from pyclient.ws.socketstate import SocketState
-from pyclient.process.processtemptofan import ProcessTempToFan
-from pyclient.processsim.processsimtemptofan import ProcessSimTempToFan
-from pyclient.processsim.processsimhumiditytomister import ProcessSimHumidityToMister
-from pyclient.processsim.processsimledgreen import ProcessSimLedGreen
+from iote2epyclient.ws.loginvo import LoginVo
+from iote2epyclient.ws.socketstate import SocketState
+from iote2epyclient.process.processtemptofan import ProcessTempToFan
+from iote2epyclient.processsim.processsimtemptofan import ProcessSimTempToFan
+from iote2epyclient.processsim.processsimhumiditytomister import ProcessSimHumidityToMister
+from iote2epyclient.processsim.processsimledgreen import ProcessSimLedGreen
 
 logger = logging.getLogger(__name__)
 

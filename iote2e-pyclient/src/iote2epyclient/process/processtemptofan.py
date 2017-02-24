@@ -7,7 +7,7 @@ import logging
 import time
 import uuid
 import datetime
-from pyclient.schema.iote2erequest import Iote2eRequest
+from iote2epyclient.schema.iote2erequest import Iote2eRequest
 
 logger = logging.getLogger(__name__)
 

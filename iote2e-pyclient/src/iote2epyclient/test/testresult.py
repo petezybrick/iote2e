@@ -5,7 +5,7 @@ Created on Feb 18, 2017
 '''
 import sys
 import avro.schema
-from pyclient.schema.iote2eresult import Iote2eResult
+from iote2epyclient.schema.iote2eresult import Iote2eResult
 
 
 def main(conf_file):

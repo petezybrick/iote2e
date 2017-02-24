@@ -4,7 +4,7 @@ Created on Feb 18, 2017
 @author: pete
 '''
 
-from pyclient.schema.iote2ebase import Iote2eBase
+from iote2epyclient.schema.iote2ebase import Iote2eBase
 
 class Iote2eResult(Iote2eBase):
     '''
