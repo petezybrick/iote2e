@@ -66,23 +66,22 @@ class ClientRun():
                 break;
             time.sleep(1)
         
-        socketThreadTimeout = None
         if self.socketThread.socketState == SocketState.ERROR or self.socketThread.socketState == SocketState.CLOSED:
             self.socketThread.shutdown
-            self.socketThreadTimeout = 5
-        else:   
+            self.socketThread.join(5)
+            if self.threadRequest.is_alive():
+                self.threadRequest.shutdown()
+                self.threadRequest.join(5)
+            if self.threadResult.is_alive():
+                self.threadResult.shutdown()
+                self.threadResult.join(5)
+        else:
             self.threadRequest.start()
             self.threadResult.start()
-            
-        self.socketThread.join(socketThreadTimeout)
+            # need to do this in short join loop for SIGINT to be able to interrupt
+            while True:
+                self.socketThread.join(1)    
     
-        if self.threadRequest.is_alive():
-            self.threadRequest.shutdown()
-            self.threadRequest.join(5)
-        if self.threadResult.is_alive():
-            self.threadResult.shutdown()
-            self.threadResult.join(5)
-        
         logger.info('Done')
 
 
