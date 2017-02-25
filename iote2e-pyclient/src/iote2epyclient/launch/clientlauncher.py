@@ -16,9 +16,9 @@ def main( processClassName, sensorName, schemaSourceFolder, endpoint_url, loginN
     logger = logging.getLogger(__name__)
     clientRun = ClientRun(processClassName, sensorName, schemaSourceFolder, endpoint_url, loginName, sourceName, optionalFilterSensorName)
     def signal_handler(signal, frame):
-        print('ClientRun main shutdown')
+        logger.info('ClientRun main shutdown - start')
         if clientRun.socketThread.is_alive():
-            clientRun.socketThread.shutdown
+            clientRun.socketThread.shutdown()
             clientRun.socketThread.join(5)
         if clientRun.threadRequest.is_alive():
             clientRun.threadRequest.shutdown()
@@ -26,7 +26,8 @@ def main( processClassName, sensorName, schemaSourceFolder, endpoint_url, loginN
         if clientRun.threadResult.is_alive():
             clientRun.threadResult.shutdown()
             clientRun.threadResult.join(5)
-            sys.exit(0)
+        logger.info('ClientRun main shutdown - complete, exiting')
+        sys.exit(0)
     signal.signal(signal.SIGINT, signal_handler)
     clientRun.process()
     logger.info('Done')

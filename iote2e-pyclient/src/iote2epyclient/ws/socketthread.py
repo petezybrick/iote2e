@@ -34,7 +34,7 @@ class SocketThread( threading.Thread):
         self.errno = None
         self.strError = None
         self.socketState = SocketState.PENDING
-        self.shutdown = False
+        self.isShutdown = False
  
     
     def on_data(self, ws, data, data_type, bcontinue ):
@@ -64,14 +64,14 @@ class SocketThread( threading.Thread):
     
     def on_error(self, ws, error):
         self.socketState = SocketState.ERROR
-        self.shutdown = True
+        self.isShutdown = True
         self.strError = str(error)
         logger.error( 'Socket connect failure, endpointUrl: {}, loginName: {}, error: {}, '.format(self.endpoint_url, self.loginVo.loginName,self.strError ) )
 
     
     def on_close(self, ws):
         self.socketState = SocketState.CLOSED
-        self.shutdown = True
+        self.isShutdown = True
         logger.info( self.loginVo.loginName + ' client socket closed')
 
     
@@ -80,7 +80,7 @@ class SocketThread( threading.Thread):
             loginVoJson = json.dumps(self.loginVo.__dict__)
             ws.send(loginVoJson)
             while True:
-                if self.shutdown:
+                if self.isShutdown:
                     break;
                 if self.socketState == SocketState.ERROR or self.socketState == SocketState.CLOSED:
                     break
@@ -99,7 +99,7 @@ class SocketThread( threading.Thread):
     
     def shutdown(self):
         logger.info('Shutting down')
-        self.shutdown = True
+        self.isShutdown = True
     
     def run(self, *args):
         websocket.enableTrace(False)

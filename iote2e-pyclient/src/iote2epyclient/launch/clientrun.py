@@ -80,7 +80,8 @@ class ClientRun():
             self.threadResult.start()
             # need to do this in short join loop for SIGINT to be able to interrupt
             while True:
-                self.socketThread.join(1)    
+                time.sleep(60*60*24)
+                #self.socketThread.join(1)    
     
         logger.info('Done')
 

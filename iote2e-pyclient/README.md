@@ -8,12 +8,12 @@
 * Copy iote2epyclient-1.0.0.tar.gz to target location (i.e. SCP to an RPi or EC2 instance)
 * Login to target system and `cd` to target directory
 * Execute the following commands:
-		* sudo rm -rf iote2epyclient-1.0.0
-		* tar -xvzf iote2epyclient-1.0.0.tar.gz
-		* cd iote2epyclient-1.0.0
-		* sudo python setup.py install
-		* cd ..
-		* sudo rm -rf iote2epyclient-1.0.0
+sudo rm -rf iote2epyclient-1.0.0
+tar -xvzf iote2epyclient-1.0.0.tar.gz
+cd iote2epyclient-1.0.0
+sudo python setup.py install
+cd ..
+sudo rm -rf iote2epyclient-1.0.0
 * Verify successful installation
 		* Start Python interactive and enter:
 				* import iote2epyclient 

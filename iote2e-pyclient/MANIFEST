@@ -4,6 +4,7 @@ src/iote2epyclient/__init__.py
 src/iote2epyclient/launch/__init__.py
 src/iote2epyclient/launch/clientlauncher.py
 src/iote2epyclient/launch/clientrun.py
+src/iote2epyclient/launch/testexit.py
 src/iote2epyclient/process/__init__.py
 src/iote2epyclient/process/processtemptofan.py
 src/iote2epyclient/processsim/__init__.py
