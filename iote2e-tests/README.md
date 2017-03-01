@@ -158,3 +158,19 @@ critical:
 
 **Python Cassandra**
 sudo pip install cassandra-driver
+
+
+**MySQL**
+Initializing
+1. start MySQL 5.6
+	1.1 cd to docker/mysql folder
+	1.2 docker-compose up -d
+2. docker exec -it iote2e-mysql-master /bin/bash
+3. mysql -u root -p
+	3.1 password: Password*8
+4. At the prompt, enter the following to create the iote2e_batch user and dbiote2e_batch database
+	source /tmp/iote2e-shared/sql/mysql_create_batch_db_user.sql
+5. Enter the following statement to create the tables:
+	source /tmp/iote2e-shared/sql/mysql_create_batch_tables.sql
+6. Exit from mysql command line, enter: exit
+7. Exit from iote2e-mysql-master, enter: exit

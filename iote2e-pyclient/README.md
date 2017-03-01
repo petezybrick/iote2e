@@ -45,6 +45,7 @@ install Python
 	sudo apt install python-pip
 	sudo pip install --upgrade pip
 	dup pip install enum
+	pip install websocket-client
 Install Avro for Python
 	Note that the steps below assume Release 1.8.1, if you are using a newer/older version then adjust accordingly
 	Review the steps on the Avro Python installation page, i.e. https://avro.apache.org/docs/1.8.1/gettingstartedpython.html
@@ -60,4 +61,6 @@ Install Avro for Python
 		import avro -> should not throw exception
 		exit()
 Install Python Websocket client support
-	pip install websocket-client
+	
+	
+sudo shutdown -P now
