@@ -14,9 +14,8 @@ public class IgniteGridConnection {
 	private IgniteCache<String, byte[]> cache = null;
 	private Ignite ignite = null;
 	
-	public IgniteGridConnection connect() throws Exception {
+	public IgniteGridConnection connect( MasterConfig masterConfig) throws Exception {
 		try {
-			MasterConfig masterConfig = MasterConfig.getInstance();
 			String igniteConfigPath = masterConfig.getIgniteConfigPath();
 			if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
 			if( !igniteConfigPath.endsWith("/") ) igniteConfigPath = igniteConfigPath + "/";

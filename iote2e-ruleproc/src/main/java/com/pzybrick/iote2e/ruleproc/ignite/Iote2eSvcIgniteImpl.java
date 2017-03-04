@@ -28,11 +28,10 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	private Iote2eResultReuseItem iote2eResultReuseItem;
 	private String keyspaceName;
 	private IgniteGridConnection igniteGridConnection;
+	private MasterConfig masterConfig;
 
 	public Iote2eSvcIgniteImpl() throws Exception {
 		this.iote2eResultReuseItem = new Iote2eResultReuseItem();
-		this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
-		ActuatorStateDao.useKeyspace(keyspaceName);
 	}
 
 	@Override
@@ -128,8 +127,11 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 	@Override
 	public synchronized void init(MasterConfig masterConfig) throws Exception {
 		try {
+			this.masterConfig = masterConfig;
+			this.keyspaceName = masterConfig.getKeyspaceName();
+			ActuatorStateDao.connect(masterConfig.getContactPoint(), keyspaceName);
 			logger.info("Getting IgniteCache for: " + masterConfig.getIgniteCacheName());
-			igniteGridConnection = new IgniteGridConnection().connect();
+			igniteGridConnection = new IgniteGridConnection().connect(masterConfig);
 		} catch (Exception e) {
 			logger.error("Ignite create cache failure", e);
 			throw e;

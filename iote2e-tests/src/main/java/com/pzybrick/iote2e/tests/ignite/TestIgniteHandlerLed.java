@@ -16,7 +16,7 @@ import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerLed.class);
 
-	public TestIgniteHandlerLed() {
+	public TestIgniteHandlerLed() throws Exception {
 		super();
 	}
 	

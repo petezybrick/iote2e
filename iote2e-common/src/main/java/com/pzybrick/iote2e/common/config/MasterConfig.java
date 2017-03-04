@@ -1,5 +1,7 @@
 package com.pzybrick.iote2e.common.config;
 
+import java.io.Serializable;
+
 import javax.annotation.Generated;
 
 import org.apache.logging.log4j.LogManager;
@@ -8,12 +10,16 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+import com.pzybrick.iote2e.common.persist.CassandraBaseDao;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 
 @Generated("org.jsonschema2pojo")
-public class MasterConfig {
+public class MasterConfig implements Serializable {
 	private static final Logger logger = LogManager.getLogger(MasterConfig.class);
 	private static MasterConfig masterConfig;
+	private String masterConfigJsonKey;
+	private String contactPoint;
+	private String keyspaceName;
 	
 	@Expose
 	private String ruleSvcClassName;
@@ -74,18 +80,19 @@ public class MasterConfig {
 	private MasterConfig() {
 		
 	}
-	
-	public static synchronized MasterConfig getInstance( ) throws Exception {
+
+		
+	public static synchronized MasterConfig getInstance( String masterConfigJsonKey, String contactPoint, String keyspaceName ) throws Exception {
 		if( masterConfig == null ) {
 			try {
 				logger.info("Instantiating MasterConfig singleton");
-				String keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
-				ConfigDao.useKeyspace(keyspaceName);
-				String masterConfigJsonKey = System.getenv("MASTER_CONFIG_JSON_KEY");
+				if( keyspaceName == null ) keyspaceName = CassandraBaseDao.DEFAULT_KEYSPACE_NAME;
+				ConfigDao.connect(contactPoint, keyspaceName);
 				String rawJson = ConfigDao.findConfigJson(masterConfigJsonKey);
 				Gson gson = new GsonBuilder().setPrettyPrinting().create();
 				masterConfig = gson.fromJson(rawJson, MasterConfig.class);
-				
+				masterConfig.setContactPoint(contactPoint);
+				masterConfig.setKeyspaceName(keyspaceName);				
 			} catch (Throwable t ) {
 				logger.error("Cassandra initialization failure", t);
 				throw t;
@@ -247,7 +254,8 @@ public class MasterConfig {
 
 	@Override
 	public String toString() {
-		return "MasterConfig [ruleSvcClassName=" + ruleSvcClassName + ", requestSvcClassName=" + requestSvcClassName
+		return "MasterConfig [masterConfigJsonKey=" + masterConfigJsonKey + ", keyspacename=" + keyspaceName
+				+ ", ruleSvcClassName=" + ruleSvcClassName + ", requestSvcClassName=" + requestSvcClassName
 				+ ", actuatorStateKey=" + actuatorStateKey + ", ruleLoginSourceSensorKey=" + ruleLoginSourceSensorKey
 				+ ", ruleDefItemKey=" + ruleDefItemKey + ", igniteCacheName=" + igniteCacheName + ", igniteConfigFile="
 				+ igniteConfigFile + ", igniteConfigName=" + igniteConfigName + ", igniteClientMode=" + igniteClientMode
@@ -347,6 +355,33 @@ public class MasterConfig {
 
 	public MasterConfig setWsRouterImplClassName(String wsRouterImplClassName) {
 		this.wsRouterImplClassName = wsRouterImplClassName;
+		return this;
+	}
+
+	public String getKeyspaceName() {
+		return keyspaceName;
+	}
+
+	public MasterConfig setKeyspaceName(String keyspacename) {
+		this.keyspaceName = keyspacename;
+		return this;
+	}
+
+	public String getMasterConfigJsonKey() {
+		return masterConfigJsonKey;
+	}
+
+	public MasterConfig setMasterConfigJsonKey(String masterConfigJsonKey) {
+		this.masterConfigJsonKey = masterConfigJsonKey;
+		return this;
+	}
+
+	public String getContactPoint() {
+		return contactPoint;
+	}
+
+	public MasterConfig setContactPoint(String contactPoint) {
+		this.contactPoint = contactPoint;
 		return this;
 	}
 

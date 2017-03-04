@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
@@ -48,22 +49,27 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 	protected ConsumerConnector kafkaConsumerConnector;
 	protected ExecutorService executor;
 
-	public TestKafkaHandlerBase() {
+	public TestKafkaHandlerBase() throws Exception {
 		super();
 	}
+	
+	
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		TestCommonHandler.beforeClass();
+	}
 
+	
 	@Before
 	public void before() throws Exception {
 		logger.info(
 				"------------------------------------------------------------------------------------------------------");
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 		queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-		iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler(masterConfig, queueIote2eRequests);
 		iote2eSvc = (Iote2eSvcKafkaImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();
-		
-		MasterConfig masterConfig = MasterConfig.getInstance();
 		kafkaTopic = masterConfig.getKafkaTopic();
 		kafkaGroup = masterConfig.getKafkaGroup();
 		Properties props = new Properties();

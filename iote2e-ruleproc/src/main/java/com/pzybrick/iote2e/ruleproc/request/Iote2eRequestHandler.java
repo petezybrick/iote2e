@@ -23,10 +23,10 @@ public class Iote2eRequestHandler extends Thread {
 	private MasterConfig masterConfig;
 	private String keyspaceName;
 
-	public Iote2eRequestHandler(ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
+	public Iote2eRequestHandler(MasterConfig masterConfig, ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
 		logger.debug("ctor");
 		try {
-			masterConfig = MasterConfig.getInstance();
+			this.masterConfig = masterConfig;
 			this.iote2eRequests = iote2eRequests;
 			Class cls = Class.forName(masterConfig.getRuleSvcClassName());
 			ruleSvc = (RuleSvc) cls.newInstance();

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import com.google.gson.reflect.TypeToken;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
@@ -35,10 +36,17 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
 	protected Iote2eResultReuseItem iote2eResultReuseItem;
 	
-	public TestIgniteHandlerBase() {
+	public TestIgniteHandlerBase() throws Exception {
 		super();
 	}
-
+	
+	
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		TestCommonHandler.beforeClass();
+	}
+	
+	
 	@Before
 	public void before() throws Exception {
 		try {			
@@ -47,12 +55,12 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			iote2eResultReuseItem = new Iote2eResultReuseItem();
 			queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 			queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-			iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
+			iote2eRequestHandler = new Iote2eRequestHandler(masterConfig, queueIote2eRequests);
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
-			logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
+			logger.info("Cache name: " + masterConfig.getIgniteCacheName());
 			// reset to same default ActuatorState=null every time
-			if( iote2eRequestHandler.getMasterConfig().isForceResetActuatorState()) {
-				String rawJson = ConfigDao.findConfigJson(iote2eRequestHandler.getMasterConfig().getActuatorStateKey());
+			if( masterConfig.isForceResetActuatorState()) {
+				String rawJson = ConfigDao.findConfigJson(masterConfig.getActuatorStateKey());
 				List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
 						new TypeToken<List<ActuatorState>>() {
 						}.getType());
@@ -98,7 +106,7 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( 
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( masterConfig,
 					igniteFilterKey, queueIote2eResults, (Thread)null);
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 			pairs.put(sensorName, sensorValue);

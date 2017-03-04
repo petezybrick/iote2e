@@ -22,9 +22,8 @@ public class RouteIote2eRequestToKafkaImpl implements RouteIote2eRequest {
 	protected String kafkaTopic;
 	protected String kafkaGroup;
 	
-	public RouteIote2eRequestToKafkaImpl() throws Exception {
+	public RouteIote2eRequestToKafkaImpl(MasterConfig masterConfig) throws Exception {
 		logger.debug("constructing, connecting to Kafka producer");
-		MasterConfig masterConfig = MasterConfig.getInstance();
 		kafkaTopic = masterConfig.getKafkaTopic();
 		kafkaGroup = masterConfig.getKafkaGroup();
 		Properties props = new Properties();

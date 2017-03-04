@@ -16,10 +16,21 @@ public class SimLedGreen extends SimBase {
 	private ThreadPollResult pollResult;
 	private String ledGreenState = "0";
 
+	
 	public static void main(String[] args) {
-		SimLedGreen simLedGreen = new SimLedGreen();
-		simLedGreen.process();
+		try {
+			SimLedGreen simLedGreen = new SimLedGreen();
+			simLedGreen.process();
+		} catch( Exception e ) {
+			logger.error(e.getMessage(), e);
+		}
 	}
+	
+	
+	public SimLedGreen() throws Exception {
+		super();
+	}
+	
 
 	public void process() {
 		try {
@@ -28,7 +39,7 @@ public class SimLedGreen extends SimBase {
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
 			pollResult = new ThreadPollResult();
 			pollResult.start();
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( masterConfig,
 					TestCommonHandler.testLedGreenFilterKey, queueIote2eResults, pollResult);
 
 			while( true ) {

@@ -46,15 +46,15 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
 	protected Gson gson;
 
-	public TestSparkHandlerBase() {
+	public TestSparkHandlerBase() throws Exception {
 		super();
 	}
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		// cassandra
-		ActuatorStateDao.useKeyspace( System.getenv("CASSANDRA_KEYSPACE_NAME"));
-
+		ConfigDao.connect( System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME"));
+		ActuatorStateDao.connect( System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME"));
 	}
 	
 	@AfterClass
@@ -74,13 +74,11 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 		iote2eResultReuseItem = new Iote2eResultReuseItem();
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler(masterConfig,queueIote2eRequests);
 		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 		iote2eRequestHandler.start();		
 		queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-		logger.info("Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
-
-		MasterConfig masterConfig = MasterConfig.getInstance();
+		logger.info("Cache name: " + masterConfig.getIgniteCacheName());
 		kafkaTopic = masterConfig.getKafkaTopic();
 		kafkaGroup = masterConfig.getKafkaGroup();
 		Properties props = new Properties();
@@ -115,7 +113,7 @@ public class TestSparkHandlerBase extends TestCommonHandler {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( masterConfig, 
 					igniteFilterKey, queueIote2eResults, (Thread)null);
 
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();

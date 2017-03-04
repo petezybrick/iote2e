@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
@@ -24,16 +25,23 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 	protected Iote2eRequestHandler iote2eRequestHandler;
 	protected Iote2eSvcLocalTestImpl iote2eSvc;
 
-	public TestLocalHandlerBase() {
+	public TestLocalHandlerBase() throws Exception {
 		super();
 	}
+	
+	
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		TestCommonHandler.beforeClass();
+	}
 
+	
 	@Before
 	public void before() throws Exception {
 		logger.info(
 				"------------------------------------------------------------------------------------------------------");
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler( masterConfig, queueIote2eRequests );
 		iote2eSvc = (Iote2eSvcLocalTestImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();

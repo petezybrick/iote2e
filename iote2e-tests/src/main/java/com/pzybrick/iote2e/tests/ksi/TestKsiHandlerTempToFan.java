@@ -18,7 +18,7 @@ public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKsiHandlerTempToFan.class);
 	private static final String pkActuatorState = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName;
 	
-	public TestKsiHandlerTempToFan() {
+	public TestKsiHandlerTempToFan() throws Exception {
 		super();
 	}
 	

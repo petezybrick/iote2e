@@ -93,7 +93,7 @@ public class ServerSideSocketIote2eRequest {
 					//		2.3 This key structure is used when the attribute LoginVo.optionalFilterSensorName is not null and not an empty string
 					createkey();
 					EntryPointIote2eRequest.serverSideSocketIote2eRequest.put(keyCommon, this);
-					threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(keyCommon,
+					threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( EntryPointIote2eRequest.masterConfig, keyCommon,
 							EntryPointIote2eRequest.toClientIote2eResults, (Thread)null );
 
 				} catch (IotAuthenticationException e) {

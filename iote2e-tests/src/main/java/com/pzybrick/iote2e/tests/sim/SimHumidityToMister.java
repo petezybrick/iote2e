@@ -21,8 +21,16 @@ public class SimHumidityToMister extends SimBase {
 	private ThreadPollResult pollResult;
 
 	public static void main(String[] args) {
-		SimHumidityToMister simHumidityToMister = new SimHumidityToMister();
-		simHumidityToMister.process();
+		try {
+			SimHumidityToMister simHumidityToMister = new SimHumidityToMister();
+			simHumidityToMister.process();
+		} catch( Exception e ) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	public SimHumidityToMister() throws Exception {
+		super();
 	}
 
 	public void process() {
@@ -32,7 +40,7 @@ public class SimHumidityToMister extends SimBase {
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
 			pollResult = new ThreadPollResult();
 			pollResult.start();
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( masterConfig,
 					TestCommonHandler.testHumidityFilterKey, queueIote2eResults, pollResult);
 			double humidityNow = HUMIDITY_MAX;
 			humidityDirectionIncrease = false;

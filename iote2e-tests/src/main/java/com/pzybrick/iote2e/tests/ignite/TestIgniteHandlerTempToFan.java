@@ -16,7 +16,7 @@ import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 public class TestIgniteHandlerTempToFan extends TestIgniteHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerTempToFan.class);
 	
-	public TestIgniteHandlerTempToFan() {
+	public TestIgniteHandlerTempToFan() throws Exception {
 		super();
 	}
 	

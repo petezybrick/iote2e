@@ -20,7 +20,7 @@ public class TestSparkHandlerLed extends TestSparkHandlerBase {
 	private static final String pkActuatorStateYellow = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow;
 	private static final String pkActuatorStateRed = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed;
 
-	public TestSparkHandlerLed() {
+	public TestSparkHandlerLed() throws Exception {
 		super();
 	}
 	

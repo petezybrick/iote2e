@@ -12,9 +12,7 @@ import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
-import com.google.gson.annotations.Expose;
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.common.utils.ArgMap;
 
 import consumer.kafka.Config;
 import consumer.kafka.MessageAndMetadata;
@@ -29,7 +27,8 @@ public class Iote2eRequestSparkConsumer {
 	
     public static void main(String[] args) throws Exception {
     	Iote2eRequestSparkConsumer iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-    	iote2eRequestSparkConsumer.process();
+    	MasterConfig masterConfig = MasterConfig.getInstance( args[0], args[1], args[2] );
+    	iote2eRequestSparkConsumer.process( masterConfig );
 //    	RunProcess runProcess = new RunProcess( iote2eRequestSparkConsumer);
 //    	runProcess.start();
 //    	try {
@@ -42,22 +41,23 @@ public class Iote2eRequestSparkConsumer {
     
     private static class RunProcess extends Thread {
     	private Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
+    	private MasterConfig masterConfig;
     	
-    	public RunProcess( Iote2eRequestSparkConsumer iote2eRequestSparkConsumer ) {
+    	public RunProcess( Iote2eRequestSparkConsumer iote2eRequestSparkConsumer, MasterConfig masterConfig ) {
     		this.iote2eRequestSparkConsumer = iote2eRequestSparkConsumer;
+    		this.masterConfig = masterConfig;
     	}
 		@Override
 		public void run() {
 			try {
-	    		iote2eRequestSparkConsumer.process();
+	    		iote2eRequestSparkConsumer.process( masterConfig );
 			} catch( Exception e ) {
 				logger.error(e.getMessage(), e);
 			}
 		}
     }
     	
-    public void process() throws Exception {
-    	MasterConfig masterConfig = MasterConfig.getInstance();
+    public void process(MasterConfig masterConfig) throws Exception {
     	logger.info(masterConfig.toString());
     	String sparkAppName = masterConfig.getSparkAppName();
     	String sparkMaster = masterConfig.getSparkMaster();
@@ -102,7 +102,7 @@ public class Iote2eRequestSparkConsumer {
         kafkaProps.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         kafkaProps.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 
-        Iote2eRequestSparkProcessor streamProcessor = new Iote2eRequestSparkProcessor();
+        Iote2eRequestSparkProcessor streamProcessor = new Iote2eRequestSparkProcessor(masterConfig);
         
         int numberOfReceivers = 6;	
         

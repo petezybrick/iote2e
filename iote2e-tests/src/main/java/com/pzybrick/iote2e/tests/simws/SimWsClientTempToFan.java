@@ -27,11 +27,21 @@ public class SimWsClientTempToFan extends SimWsClientBase {
 	private static final long TEMP_PUT_FREQ_MS = 2000;
 	private boolean tempDirectionIncrease = true;
 
-
+	
 	public static void main(String[] args) {
-		SimWsClientTempToFan simWsClientTempToFan = new SimWsClientTempToFan();
-		simWsClientTempToFan.process(args);
+		try {
+			SimWsClientTempToFan simWsClientTempToFan = new SimWsClientTempToFan();
+			simWsClientTempToFan.process(args);
+		} catch(Exception e ) {
+			logger.error(e.getMessage(), e);
+		}
 	}
+
+	
+	public SimWsClientTempToFan() throws Exception {
+		super();
+	}
+
 
 	public void process(String[] args) {
 		try {
@@ -40,7 +50,6 @@ public class SimWsClientTempToFan extends SimWsClientBase {
 					.setLoginName(TestCommonHandler.testTempToFanLoginName)
 					.setSourceName(TestCommonHandler.testTempToFanSourceName)
 					.setOptionalFilterSensorName(TestCommonHandler.testTempToFanSensorName);
-			masterConfig = MasterConfig.getInstance();
 			Runtime.getRuntime().addShutdownHook(new SimWsTempToFanShutdownHook());
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
 			pollIote2eResultsThread = new PollIote2eResultsThread(queueIote2eResults) {

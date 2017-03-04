@@ -15,7 +15,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 public class TestLocalHandlerLed extends TestLocalHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerLed.class);	
 
-	public TestLocalHandlerLed() {
+	public TestLocalHandlerLed() throws Exception {
 		super();
 	}
 	

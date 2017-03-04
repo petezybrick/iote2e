@@ -16,7 +16,7 @@ import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 public class TestIgniteHandlerHumidityToMister extends TestIgniteHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerHumidityToMister.class);
 
-	public TestIgniteHandlerHumidityToMister() {
+	public TestIgniteHandlerHumidityToMister() throws Exception {
 		super();
 	}
 	

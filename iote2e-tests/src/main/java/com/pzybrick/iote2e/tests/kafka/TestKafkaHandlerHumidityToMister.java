@@ -15,7 +15,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 public class TestKafkaHandlerHumidityToMister extends TestKafkaHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerHumidityToMister.class);
 	
-	public TestKafkaHandlerHumidityToMister() {
+	public TestKafkaHandlerHumidityToMister() throws Exception {
 		super();
 	}
 	

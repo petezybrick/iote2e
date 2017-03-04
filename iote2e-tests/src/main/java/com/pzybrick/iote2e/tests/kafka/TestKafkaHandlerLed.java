@@ -15,7 +15,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 public class TestKafkaHandlerLed extends TestKafkaHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerLed.class);
 
-	public TestKafkaHandlerLed() {
+	public TestKafkaHandlerLed() throws Exception {
 		super();
 	}
 	

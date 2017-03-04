@@ -15,7 +15,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 public class TestLocalHandlerHumidityToMister extends TestLocalHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerHumidityToMister.class);
 	
-	public TestLocalHandlerHumidityToMister() {
+	public TestLocalHandlerHumidityToMister() throws Exception {
 		super();
 	}
 	

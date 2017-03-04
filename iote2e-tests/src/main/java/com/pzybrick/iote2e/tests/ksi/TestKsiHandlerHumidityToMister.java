@@ -18,7 +18,7 @@ public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKsiHandlerHumidityToMister.class);
 	private static final String pkActuatorState = testHumidityLoginName + "|" + testHumiditySourceName + "|" + testHumiditySensorName;
 
-	public TestKsiHandlerHumidityToMister() {
+	public TestKsiHandlerHumidityToMister() throws Exception {
 		super();
 	}
 	

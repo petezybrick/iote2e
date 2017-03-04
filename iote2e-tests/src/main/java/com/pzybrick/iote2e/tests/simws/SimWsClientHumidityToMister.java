@@ -29,10 +29,20 @@ public class SimWsClientHumidityToMister extends SimWsClientBase {
 
 
 	public static void main(String[] args) {
+		try {
 		SimWsClientHumidityToMister simWsClientHumidityToMister = new SimWsClientHumidityToMister();
 		simWsClientHumidityToMister.process(args);
+		} catch(Exception e ) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
+	
+	public SimWsClientHumidityToMister() throws Exception {
+		super();
+	}
+
+	
 	public void process(String[] args) {
 		try {
 			url = args[0];
@@ -40,7 +50,6 @@ public class SimWsClientHumidityToMister extends SimWsClientBase {
 					.setLoginName(TestCommonHandler.testHumidityLoginName)
 					.setSourceName(TestCommonHandler.testHumiditySourceName)
 					.setOptionalFilterSensorName(TestCommonHandler.testHumiditySensorName);
-			masterConfig = MasterConfig.getInstance();
 			Runtime.getRuntime().addShutdownHook(new SimWsTempToFanShutdownHook());
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
 			pollIote2eResultsThread = new PollIote2eResultsThread(queueIote2eResults) {

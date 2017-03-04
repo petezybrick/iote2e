@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.reflect.TypeToken;
+import com.pzybrick.iote2e.common.persist.CassandraBaseDao;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.persist.ConfigVo;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
@@ -37,6 +38,7 @@ public class ConfigInitialLoad {
 		try {
 			List<ConfigVo> configVos = new ArrayList<ConfigVo>();
 			if( !pathToConfigFiles.endsWith("/" ) ) pathToConfigFiles = pathToConfigFiles + "/";
+			CassandraBaseDao.connect(System.getenv("CASSANDRA_CONTACT_POINT"), "iote2e");
 			ConfigDao.dropKeyspace("iote2e");
 			ConfigDao.createKeyspace("iote2e", "SimpleStrategy", 3);			
 			ConfigDao.useKeyspace("iote2e");
@@ -65,6 +67,7 @@ public class ConfigInitialLoad {
 			throw e;
 		} finally {
 			ConfigDao.disconnect();
+			ActuatorStateDao.disconnect();
 		}
 	}
 	

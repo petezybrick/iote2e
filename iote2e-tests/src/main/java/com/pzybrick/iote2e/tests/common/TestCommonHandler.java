@@ -6,11 +6,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.BeforeClass;
 
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
 public abstract class TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestCommonHandler.class);
+	protected static MasterConfig masterConfig;
 
 	public static final String testHumidityLoginName = "pzybrick1";
 	public static final String testHumiditySourceName = "rpi_999";
@@ -33,6 +36,15 @@ public abstract class TestCommonHandler {
 	public static final String testTempToFanSourceType = "temp";
 	public static final String testTempToFanSensorName = "temp1";
 	public static final String testTempToFanFilterKey = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName + "|";
+	
+	public TestCommonHandler() throws Exception {
+	}
+	
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		TestCommonHandler.masterConfig = MasterConfig.getInstance(System.getenv("MASTER_CONFIG_JSON_KEY"), System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME") );
+	}
+
 	
 	public static List<Iote2eResult> commonThreadSubscribeGetIote2eResults(long maxWaitMsecs, ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults ) throws Exception {
 		List<Iote2eResult> iote2eResults = new ArrayList<Iote2eResult>();

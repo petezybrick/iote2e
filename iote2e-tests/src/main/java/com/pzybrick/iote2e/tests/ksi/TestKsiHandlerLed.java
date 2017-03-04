@@ -20,7 +20,7 @@ public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	private static final String pkActuatorStateYellow = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow;
 	private static final String pkActuatorStateRed = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed;
 
-	public TestKsiHandlerLed() {
+	public TestKsiHandlerLed() throws Exception {
 		super();
 	}
 	

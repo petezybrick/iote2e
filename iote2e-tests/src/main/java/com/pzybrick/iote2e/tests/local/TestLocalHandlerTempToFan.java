@@ -15,7 +15,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 public class TestLocalHandlerTempToFan extends TestLocalHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerTempToFan.class);
 	
-	public TestLocalHandlerTempToFan() {
+	public TestLocalHandlerTempToFan() throws Exception {
 		super();
 	}
 	

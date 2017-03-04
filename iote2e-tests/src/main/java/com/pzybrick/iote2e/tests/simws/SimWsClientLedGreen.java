@@ -25,9 +25,19 @@ public class SimWsClientLedGreen extends SimWsClientBase {
 
 
 	public static void main(String[] args) {
-		SimWsClientLedGreen simWsClientLedGreen = new SimWsClientLedGreen();
-		simWsClientLedGreen.process(args);
+		try {
+			SimWsClientLedGreen simWsClientLedGreen = new SimWsClientLedGreen();
+			simWsClientLedGreen.process(args);
+		} catch(Exception e ) {
+			logger.error(e.getMessage(), e);
+		}
 	}
+
+	
+	public SimWsClientLedGreen() throws Exception {
+		super();
+	}
+
 
 	public void process(String[] args) {
 		try {
@@ -36,7 +46,6 @@ public class SimWsClientLedGreen extends SimWsClientBase {
 					.setLoginName(TestCommonHandler.testLedLoginName)
 					.setSourceName(TestCommonHandler.testLedSourceName)
 					.setOptionalFilterSensorName(TestCommonHandler.testLedSensorNameGreen);
-			masterConfig = MasterConfig.getInstance();
 			Runtime.getRuntime().addShutdownHook(new SimWsTempToFanShutdownHook());
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
 			pollIote2eResultsThread = new PollIote2eResultsThread(queueIote2eResults) {

@@ -18,7 +18,7 @@ public class TestSparkHandlerHumidityToMister extends TestSparkHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestSparkHandlerHumidityToMister.class);
 	private static final String pkActuatorState = testHumidityLoginName + "|" + testHumiditySourceName + "|" + testHumiditySensorName;
 
-	public TestSparkHandlerHumidityToMister() {
+	public TestSparkHandlerHumidityToMister() throws Exception {
 		super();
 	}
 	

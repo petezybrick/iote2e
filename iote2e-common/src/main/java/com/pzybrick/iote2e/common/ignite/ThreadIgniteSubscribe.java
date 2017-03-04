@@ -14,6 +14,7 @@ import org.apache.ignite.lang.IgniteBiPredicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
@@ -26,18 +27,19 @@ public class ThreadIgniteSubscribe extends Thread {
 	private ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
 	private Thread threadPoller;
 	private IgniteGridConnection igniteGridConnection;
-
+	private MasterConfig masterConfig;
 	
 
 	public ThreadIgniteSubscribe() {
 	}
 
-	public static ThreadIgniteSubscribe startThreadSubscribe(String igniteFilterKey,
+	public static ThreadIgniteSubscribe startThreadSubscribe( MasterConfig masterConfig, String igniteFilterKey,
 			ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults, Thread threadPoller ) throws Exception {
 		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe()
 				.setIgniteFilterKey(igniteFilterKey)
 				.setQueueIote2eResults(queueIote2eResults)
-				.setThreadPoller(threadPoller);
+				.setThreadPoller(threadPoller)
+				.setMasterConfig(masterConfig);
 		threadIgniteSubscribe.start();
 		long timeoutAt = System.currentTimeMillis() + 10000L;
 		while (System.currentTimeMillis() < timeoutAt && !threadIgniteSubscribe.isSubscribeUp() ) {
@@ -54,7 +56,7 @@ public class ThreadIgniteSubscribe extends Thread {
 	@Override
 	public void run() {
 		try {
-			igniteGridConnection = new IgniteGridConnection().connect();
+			igniteGridConnection = new IgniteGridConnection().connect(masterConfig);
 //			MasterConfig masterConfig = MasterConfig.getInstance();
 //			String igniteConfigPath = masterConfig.getIgniteConfigPath();
 //			if( igniteConfigPath == null ) throw new Exception("Required MasterConfig value igniteConfigPath is not set, try setting to location of ignite-iote2e.xml");
@@ -193,5 +195,14 @@ public class ThreadIgniteSubscribe extends Thread {
 
 	public IgniteGridConnection getIgniteGridConnection() {
 		return igniteGridConnection;
+	}
+
+	public MasterConfig getMasterConfig() {
+		return masterConfig;
+	}
+
+	public ThreadIgniteSubscribe setMasterConfig(MasterConfig masterConfig) {
+		this.masterConfig = masterConfig;
+		return this;
 	}
 }

@@ -22,12 +22,19 @@ public class SimWsClientBase {
 	protected ClientSocketHandler clientSocketHandler;
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-	protected MasterConfig masterConfig;
+	protected static MasterConfig masterConfig;
 	protected ThreadSparkRun threadSparkRun;
 	protected Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
 	protected LoginVo loginVo;
 	protected String url;
 	protected PollIote2eResultsThread pollIote2eResultsThread;
+	
+	
+	public SimWsClientBase() throws Exception {
+		if( SimWsClientBase.masterConfig == null ) 
+			SimWsClientBase.masterConfig = MasterConfig.getInstance(System.getenv("MASTER_CONFIG_JSON_KEY"), 
+					System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME") );
+	}
 
 
 	public void before( ) {
@@ -35,7 +42,7 @@ public class SimWsClientBase {
 			// if Spark not running standalone then start
 			if( masterConfig.getSparkMaster().startsWith("local")) {
 		    	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-		    	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer);
+		    	threadSparkRun = new ThreadSparkRun( masterConfig, iote2eRequestSparkConsumer);
 		    	threadSparkRun.start();
 		    	long expiredAt = System.currentTimeMillis() + (10*1000);
 		    	while( expiredAt > System.currentTimeMillis() ) {

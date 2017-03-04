@@ -15,7 +15,7 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 public class TestKafkaHandlerTempToFan extends TestKafkaHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerTempToFan.class);
 	
-	public TestKafkaHandlerTempToFan() {
+	public TestKafkaHandlerTempToFan() throws Exception {
 		super();
 	}
 	

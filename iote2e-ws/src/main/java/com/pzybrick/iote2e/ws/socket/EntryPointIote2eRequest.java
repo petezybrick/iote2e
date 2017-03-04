@@ -35,21 +35,24 @@ public class EntryPointIote2eRequest {
 	private RouteIote2eRequest routeIote2eRequest;
 	private Server server;
 	private ServerConnector connector;
-	private MasterConfig masterConfig;
+	public static MasterConfig masterConfig;
 	
 
 	public static void main(String[] args) {
 		logger.info("Starting");
 		try {
+			masterConfig = MasterConfig.getInstance( args[0], args[1], args[2] );
 			EntryPointIote2eRequest entryPointIote2eRequest = new EntryPointIote2eRequest();
 			entryPointIote2eRequest.process( );
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);
 		}
 	}
+	
+	public EntryPointIote2eRequest( ) {
+	}
 
 	public void process( ) throws Exception {
-		masterConfig = MasterConfig.getInstance();
 		logger.info(masterConfig.toString());
 		String routerImplClassName = masterConfig.getWsRouterImplClassName();
 		if( null == routerImplClassName || routerImplClassName.length() == 0 ) 

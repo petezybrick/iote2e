@@ -51,17 +51,19 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 	protected ConcurrentLinkedQueue<byte[]> subscribeResults;
 	protected Gson gson;
 
-	public TestKsiHandlerBase() {
+	public TestKsiHandlerBase() throws Exception {
 		super();
 	}
+
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
+		TestCommonHandler.beforeClass();
 		// cassandra
-		ActuatorStateDao.useKeyspace( System.getenv("CASSANDRA_KEYSPACE_NAME"));
+		ActuatorStateDao.connect( masterConfig.getContactPoint(), masterConfig.getKeyspaceName() );
 		// spark
     	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-    	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer);
+    	threadSparkRun = new ThreadSparkRun( masterConfig, iote2eRequestSparkConsumer);
     	threadSparkRun.start();
     	long expiredAt = System.currentTimeMillis() + (10*1000);
     	while( expiredAt > System.currentTimeMillis() ) {
@@ -93,14 +95,12 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 		queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-		iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler( masterConfig, queueIote2eRequests );
 		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 		iote2eRequestHandler.start();
 		
 		subscribeResults = new ConcurrentLinkedQueue<byte[]>();
-		logger.info(">>> Cache name: " + iote2eRequestHandler.getMasterConfig().getIgniteCacheName());
-
-		MasterConfig masterConfig = MasterConfig.getInstance();
+		logger.info(">>> Cache name: " + masterConfig.getIgniteCacheName());
 		kafkaTopic = masterConfig.getKafkaTopic();
 		kafkaGroup = masterConfig.getKafkaGroup();
 		Properties props = new Properties();
@@ -135,7 +135,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( masterConfig,
 					igniteFilterKey, queueIote2eResults, (Thread)null);
 
 			Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();

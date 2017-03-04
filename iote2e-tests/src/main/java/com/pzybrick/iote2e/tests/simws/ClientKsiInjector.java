@@ -59,10 +59,16 @@ public class ClientKsiInjector {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public ClientKsiInjector() throws Exception {
+		this.masterConfig = MasterConfig.getInstance(System.getenv("MASTER_CONFIG_JSON_KEY"), 
+				System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME") );
+	}
 
+	
 	public void process(String url) throws Exception {
 		try {
-			masterConfig = MasterConfig.getInstance();
 			startKsiThreads();
 			uri = URI.create(url);
 			container = ContainerProvider.getWebSocketContainer();
@@ -91,12 +97,12 @@ public class ClientKsiInjector {
 	
 	private void startKsiThreads() throws Exception {
 		threadPollResult.start();
-		threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
+		threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( masterConfig,
 			TestCommonHandler.testTempToFanFilterKey, queueIote2eResults, threadPollResult);
 		// if Spark not running standalone then start
 		if( masterConfig.getSparkMaster().startsWith("local")) {
 	    	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-	    	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer);
+	    	threadSparkRun = new ThreadSparkRun( masterConfig, iote2eRequestSparkConsumer);
 	    	threadSparkRun.start();
 	    	long expiredAt = System.currentTimeMillis() + (10*1000);
 	    	while( expiredAt > System.currentTimeMillis() ) {
@@ -117,7 +123,7 @@ public class ClientKsiInjector {
 				iotClientSocketThread.join();
 			}
 			
-			if( MasterConfig.getInstance().getSparkMaster().startsWith("local")) {
+			if( masterConfig.getSparkMaster().startsWith("local")) {
 		    	iote2eRequestSparkConsumer.stop();
 				threadSparkRun.join();
 			}

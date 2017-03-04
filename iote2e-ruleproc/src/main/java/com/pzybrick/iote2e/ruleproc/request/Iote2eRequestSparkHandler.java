@@ -14,11 +14,9 @@ public class Iote2eRequestSparkHandler {
 	private static final Logger logger = LogManager.getLogger(Iote2eRequestSparkHandler.class);
 	private RuleSvc ruleSvc;
 	private Iote2eSvc iote2eSvc;
-	private MasterConfig masterConfig;
 
-	public Iote2eRequestSparkHandler() throws Exception {
+	public Iote2eRequestSparkHandler(MasterConfig masterConfig) throws Exception {
 		try {
-			masterConfig = MasterConfig.getInstance();
 			Class cls = Class.forName(masterConfig.getRuleSvcClassName());
 			ruleSvc = (RuleSvc) cls.newInstance();
 			cls = Class.forName(masterConfig.getRequestSvcClassName());

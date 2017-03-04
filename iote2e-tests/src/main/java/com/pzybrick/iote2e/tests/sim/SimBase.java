@@ -44,20 +44,23 @@ public class SimBase {
 	protected Gson gson;
 	protected static Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
 	protected static ThreadSparkRun threadSparkRun;
+	protected static MasterConfig masterConfig;
 
 
-	public SimBase() {
+	public SimBase() throws Exception {
 		super();
+		if( SimBase.masterConfig == null )
+			SimBase.masterConfig = MasterConfig.getInstance(System.getenv("MASTER_CONFIG_JSON_KEY"), 
+					System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME") );
 	}
 
 	public void before() throws Exception {
 		// cassandra
-		ActuatorStateDao.useKeyspace( System.getenv("CASSANDRA_KEYSPACE_NAME"));
-		MasterConfig masterConfig = MasterConfig.getInstance();
+		ActuatorStateDao.connect(masterConfig.getContactPoint(), masterConfig.getKeyspaceName());
 		iote2eResultReuseItem = new Iote2eResultReuseItem();
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler(queueIote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandler( masterConfig, queueIote2eRequests );
 		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 		iote2eRequestHandler.start();
 		
@@ -76,7 +79,7 @@ public class SimBase {
 		// spark
 		if( masterConfig.getSparkMaster().startsWith("local")) {
 	    	iote2eRequestSparkConsumer = new Iote2eRequestSparkConsumer();
-	    	threadSparkRun = new ThreadSparkRun( iote2eRequestSparkConsumer);
+	    	threadSparkRun = new ThreadSparkRun( masterConfig, iote2eRequestSparkConsumer);
 	    	threadSparkRun.start();
 		}
 	}
@@ -84,7 +87,7 @@ public class SimBase {
 	public void after() throws Exception {
 		logger.info(">>>> Shutdown hook calling after");
 		try {
-			if( MasterConfig.getInstance().getSparkMaster().startsWith("local")) {
+			if( masterConfig.getSparkMaster().startsWith("local")) {
 		    	iote2eRequestSparkConsumer.stop();
 				threadSparkRun.join();
 			}

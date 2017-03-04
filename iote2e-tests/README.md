@@ -120,10 +120,9 @@ csqlsh iote2e-cassandra1
 select config_name from config;
 
 **Run local Ignite**
-*Note:* when running the junit tests locally, Ignite peer class loading is used, this is not the case in the docker implementation 
 export IGNITE_HOME="/home/pete/development/server/apache-ignite-fabric-1.8.0-bin"
 export IGNITE_VERSION="1.8.0"
-export DEFAULT_CONFIG="/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local.xml"
+export DEFAULT_CONFIG="/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml"
 export JVM_OPTS="-Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m"
 
 *open a terminal session or tab*

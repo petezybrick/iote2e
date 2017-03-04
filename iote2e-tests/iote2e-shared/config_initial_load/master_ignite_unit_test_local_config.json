@@ -4,7 +4,7 @@
 	"forceResetActuatorState": true,
 	"igniteCacheName": "test-iote2e-sourceresponse-cache",
 	"igniteClientMode": true,
-	"igniteConfigFile": "ignite-iote2e-local.xml",
+	"igniteConfigFile": "ignite-iote2e-local-peer-false.xml",
 	"igniteConfigName": "ignite.cfg",
 	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/",
 	"kafkaBootstrapServers": "hp-lt-ubuntu-1:9092,hp-lt-ubuntu-1:9093,hp-lt-ubuntu-1:9094",

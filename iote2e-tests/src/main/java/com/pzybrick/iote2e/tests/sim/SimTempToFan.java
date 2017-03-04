@@ -20,11 +20,22 @@ public class SimTempToFan extends SimBase {
 	private boolean tempDirectionIncrease = true;
 	private ThreadPollResult pollResult;
 
-	public static void main(String[] args) {
-		SimTempToFan simTempToFan = new SimTempToFan();
-		simTempToFan.process();
-	}
 
+	public static void main(String[] args) {
+		try {
+			SimTempToFan simTempToFan = new SimTempToFan();
+			simTempToFan.process();
+		} catch( Exception e ) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	
+	public SimTempToFan() throws Exception {
+		super();
+	}
+	
+	
 	public void process() {
 		try {
 			Runtime.getRuntime().addShutdownHook(new SimTempToFanShutdownHook());
@@ -32,7 +43,7 @@ public class SimTempToFan extends SimBase {
 			ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
 			pollResult = new ThreadPollResult();
 			pollResult.start();
-			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe(
+			threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( masterConfig,
 					TestCommonHandler.testTempToFanFilterKey, queueIote2eResults, pollResult);
 			double tempNow = TEMP_MIN;
 			tempDirectionIncrease = true;

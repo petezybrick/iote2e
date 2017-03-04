@@ -19,22 +19,19 @@ public class RuleSvcJsonImpl extends RuleSvc {
 	private List<RuleLoginSourceSensor> ruleLoginSourceSensors;
 	private Map<String, RuleDefItem> rdiByRuleUuid;
 	private List<RuleDefItem> ruleDefItems;
-	private String keyspaceName;
 
 	public RuleSvcJsonImpl() {
 		this.rssByLoginSourceUuid = new HashMap<String, Map<String, RuleLoginSourceSensor>>();
 		this.rdiByRuleUuid = new HashMap<String, RuleDefItem>();
-		this.keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
 	}
 
 
 	public void init(MasterConfig masterConfig) throws Exception {
 		logger.info(masterConfig.toString());
-		ActuatorStateDao.useKeyspace(keyspaceName);
-		ConfigDao.useKeyspace(keyspaceName);
+		ConfigDao.connect(masterConfig.getContactPoint(), masterConfig.getKeyspaceName());
 		// If ActuatorState table doesn't exist or force flag is set then drop/create and populate table
-		ActuatorStateDao.useKeyspace(keyspaceName);
-		if( masterConfig.isForceRefreshActuatorState() || !ActuatorStateDao.isTableExists(keyspaceName) ) {
+		ActuatorStateDao.connect(masterConfig.getContactPoint(), masterConfig.getKeyspaceName());
+		if( masterConfig.isForceRefreshActuatorState() || !ActuatorStateDao.isTableExists(masterConfig.getKeyspaceName()) ) {
 			ActuatorStateDao.dropTable();
 			ActuatorStateDao.createTable();
 			String rawJson = ConfigDao.findConfigJson(masterConfig.getActuatorStateKey());

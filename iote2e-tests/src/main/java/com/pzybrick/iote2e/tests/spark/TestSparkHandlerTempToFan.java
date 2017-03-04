@@ -18,7 +18,7 @@ public class TestSparkHandlerTempToFan extends TestSparkHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestSparkHandlerTempToFan.class);
 	private static final String pkActuatorState = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName;
 	
-	public TestSparkHandlerTempToFan() {
+	public TestSparkHandlerTempToFan() throws Exception {
 		super();
 	}
 	

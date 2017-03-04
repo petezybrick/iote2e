@@ -13,6 +13,7 @@ import com.datastax.driver.core.exceptions.NoHostAvailableException;
 
 public class CassandraBaseDao {
 	private static final Logger logger = LogManager.getLogger(CassandraBaseDao.class);
+	public static final String DEFAULT_KEYSPACE_NAME = "iote2e";
 	private static Cluster cluster;
 	private static Session session;
 	private static String contactPoint;
@@ -114,14 +115,14 @@ public class CassandraBaseDao {
 	}
 	
 	public static void useKeyspace( String keyspaceName ) throws Exception {
-		if( keyspaceName == null ) throw new Exception("Missing required keyspace name, try setting env var CASSANDRA_KEYSPACE_NAME=\"iote2e\"");
+		if( keyspaceName == null ) throw new Exception("Missing required keyspace name, must be specified when creating MasterConfig");
 		execute( String.format("USE %s; ", keyspaceName) );
 	}
 	
-	protected static Session getSession() throws Exception {
+	protected static Session getSession( ) throws Exception {
 		try {
 			logger.debug("getSession");
-			if( session == null ) connect();
+			if( session == null ) throw new Exception("Must do a connect() before a getSession()");
 			return session;
 		} catch( Exception e ) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -130,14 +131,12 @@ public class CassandraBaseDao {
 	}
 	
 	
-	public synchronized static void connect() throws Exception {
+	public synchronized static void connect( String contactPoint, String keyspaceName ) throws Exception {
 		try {
-			if( contactPoint == null ) contactPoint = System.getenv("CASSANDRA_CONTACT_POINT");
-			if( contactPoint == null ) throw new Exception("Missing required env var CASSANDRA_CONTACT_POINT, for local testing set to 127.0.0.1");
+			CassandraBaseDao.contactPoint = contactPoint;
+			CassandraBaseDao.keyspaceName = keyspaceName;
 			logger.debug("contactPoint={}",contactPoint);
 			cluster = Cluster.builder().addContactPoint(contactPoint).build();
-			if( keyspaceName == null ) keyspaceName = System.getenv("CASSANDRA_KEYSPACE_NAME");
-			if( keyspaceName == null ) throw new Exception("Missing required keyspace name, try setting env var CASSANDRA_KEYSPACE_NAME=\"iote2e\"");
 			session = cluster.connect( keyspaceName );
 		} catch( Exception e ) {
 			logger.error(e.getLocalizedMessage(), e);

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestSparkHandler;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
@@ -17,18 +18,20 @@ public class RouterIote2eRequestImpl implements Router {
     private int batchSize;
     private List<Iote2eRequest> iote2eRequests;
     private static Iote2eRequestSparkHandler iote2eRequestSparkHandler;
-    
-    static {
-    	try {
-    		iote2eRequestSparkHandler = new Iote2eRequestSparkHandler();
-    	} catch( Exception e ) {
-    		logger.error(e.getMessage(), e);
-    	}
-    }
+//    
+//    static {
+//    	try {
+//    		iote2eRequestSparkHandler = new Iote2eRequestSparkHandler();
+//    	} catch( Exception e ) {
+//    		logger.error(e.getMessage(), e);
+//    	}
+//    }
 
-    public RouterIote2eRequestImpl( ) {
+    public RouterIote2eRequestImpl( MasterConfig masterConfig ) throws Exception {
         this.batchSize = DEFAULT_BATCH_SIZE;
         this.iote2eRequests = new ArrayList<Iote2eRequest>();
+        if( iote2eRequestSparkHandler == null ) 
+        	iote2eRequestSparkHandler = new Iote2eRequestSparkHandler(masterConfig);
     }
 
     @Override
