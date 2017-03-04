@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestSparkHandler;
+import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestRouterHandler;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
 
@@ -17,33 +17,32 @@ public class RouterIote2eRequestImpl implements Router {
     public static final int DEFAULT_BATCH_SIZE = 1000;
     private int batchSize;
     private List<Iote2eRequest> iote2eRequests;
-    private static Iote2eRequestSparkHandler iote2eRequestSparkHandler;
-//    
-//    static {
-//    	try {
-//    		iote2eRequestSparkHandler = new Iote2eRequestSparkHandler();
-//    	} catch( Exception e ) {
-//    		logger.error(e.getMessage(), e);
-//    	}
-//    }
+    private static Iote2eRequestRouterHandler iote2eRequestRouterHandler;
+
 
     public RouterIote2eRequestImpl( MasterConfig masterConfig ) throws Exception {
         this.batchSize = DEFAULT_BATCH_SIZE;
         this.iote2eRequests = new ArrayList<Iote2eRequest>();
-        if( iote2eRequestSparkHandler == null ) 
-        	iote2eRequestSparkHandler = new Iote2eRequestSparkHandler(masterConfig);
+        if( iote2eRequestRouterHandler == null ) {
+			Class cls = Class.forName(masterConfig.getRouterIote2eRequestClassName());
+			Iote2eRequestRouterHandler handler = (Iote2eRequestRouterHandler)cls.newInstance();
+			handler.init(masterConfig);
+			RouterIote2eRequestImpl.iote2eRequestRouterHandler = handler;
+        }
     }
+    
 
     @Override
     public void add(Iote2eRequest iote2eRequest) throws Exception {
     	iote2eRequests.add( iote2eRequest );
     }
+    
 
     public void flush() throws Exception {
     	if( iote2eRequests.size() > 0 ) {
 	        logger.info("Flush Start iote2eRequests.size()={}", iote2eRequests.size() );
 	        // evaluate each rule and if it hits, then push the Iote2eResult back out to the originator via Ignite
-	    	iote2eRequestSparkHandler.processRequests(iote2eRequests);
+	        iote2eRequestRouterHandler.processRequests(iote2eRequests);
 	        logger.info("Flush End");
     	}
     }

@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ruleproc.request;
+package com.pzybrick.iote2e.tests.common;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -7,13 +7,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.ruleproc.svc.RuleSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 
-public class Iote2eRequestHandler extends Thread {
-	private static final Logger logger = LogManager.getLogger(Iote2eRequestHandler.class);
+public class Iote2eRequestHandlerDbTestThread extends Thread {
+	private static final Logger logger = LogManager.getLogger(Iote2eRequestHandlerDbTestThread.class);
 	private ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests = null;
 	private RuleSvc ruleSvc;
 	private Iote2eSvc iote2eSvc;
@@ -23,7 +24,7 @@ public class Iote2eRequestHandler extends Thread {
 	private MasterConfig masterConfig;
 	private String keyspaceName;
 
-	public Iote2eRequestHandler(MasterConfig masterConfig, ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
+	public Iote2eRequestHandlerDbTestThread(MasterConfig masterConfig, ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) throws Exception {
 		logger.debug("ctor");
 		try {
 			this.masterConfig = masterConfig;
@@ -88,7 +89,7 @@ public class Iote2eRequestHandler extends Thread {
 		return iote2eRequests;
 	}
 
-	public Iote2eRequestHandler setIote2eRequests(ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) {
+	public Iote2eRequestHandlerDbTestThread setIote2eRequests(ConcurrentLinkedQueue<Iote2eRequest> iote2eRequests) {
 		this.iote2eRequests = iote2eRequests;
 		return this;
 	}
@@ -116,27 +117,27 @@ public class Iote2eRequestHandler extends Thread {
 		return keyspaceName;
 	}
 
-	public Iote2eRequestHandler setRuleSvc(RuleSvc ruleSvc) {
+	public Iote2eRequestHandlerDbTestThread setRuleSvc(RuleSvc ruleSvc) {
 		this.ruleSvc = ruleSvc;
 		return this;
 	}
 
-	public Iote2eRequestHandler setIote2eSvc(Iote2eSvc iote2eSvc) {
+	public Iote2eRequestHandlerDbTestThread setIote2eSvc(Iote2eSvc iote2eSvc) {
 		this.iote2eSvc = iote2eSvc;
 		return this;
 	}
 
-	public Iote2eRequestHandler setShutdown(boolean shutdown) {
+	public Iote2eRequestHandlerDbTestThread setShutdown(boolean shutdown) {
 		this.shutdown = shutdown;
 		return this;
 	}
 
-	public Iote2eRequestHandler setMasterConfig(MasterConfig masterConfig) {
+	public Iote2eRequestHandlerDbTestThread setMasterConfig(MasterConfig masterConfig) {
 		this.masterConfig = masterConfig;
 		return this;
 	}
 
-	public Iote2eRequestHandler setKeyspaceName(String keyspaceName) {
+	public Iote2eRequestHandlerDbTestThread setKeyspaceName(String keyspaceName) {
 		this.keyspaceName = keyspaceName;
 		return this;
 	}

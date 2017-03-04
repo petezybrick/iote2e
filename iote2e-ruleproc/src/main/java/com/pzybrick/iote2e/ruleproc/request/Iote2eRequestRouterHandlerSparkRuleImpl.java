@@ -10,12 +10,18 @@ import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.ruleproc.svc.RuleSvc;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
-public class Iote2eRequestSparkHandler {
-	private static final Logger logger = LogManager.getLogger(Iote2eRequestSparkHandler.class);
+public class Iote2eRequestRouterHandlerSparkRuleImpl implements Iote2eRequestRouterHandler {
+	private static final Logger logger = LogManager.getLogger(Iote2eRequestRouterHandlerSparkRuleImpl.class);
 	private RuleSvc ruleSvc;
 	private Iote2eSvc iote2eSvc;
 
-	public Iote2eRequestSparkHandler(MasterConfig masterConfig) throws Exception {
+
+	public Iote2eRequestRouterHandlerSparkRuleImpl( ) throws Exception {
+
+	}
+	
+	
+	public void init(MasterConfig masterConfig) throws Exception {
 		try {
 			Class cls = Class.forName(masterConfig.getRuleSvcClassName());
 			ruleSvc = (RuleSvc) cls.newInstance();

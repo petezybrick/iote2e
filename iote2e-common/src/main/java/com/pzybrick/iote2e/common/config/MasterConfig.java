@@ -66,6 +66,8 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String kafkaZookeeperConsumerPath;
 	@Expose
+	private String routerIote2eRequestClassName;
+	@Expose
 	private String sparkAppName;
 	@Expose
 	private String sparkMaster;
@@ -254,22 +256,22 @@ public class MasterConfig implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MasterConfig [masterConfigJsonKey=" + masterConfigJsonKey + ", keyspacename=" + keyspaceName
-				+ ", ruleSvcClassName=" + ruleSvcClassName + ", requestSvcClassName=" + requestSvcClassName
-				+ ", actuatorStateKey=" + actuatorStateKey + ", ruleLoginSourceSensorKey=" + ruleLoginSourceSensorKey
-				+ ", ruleDefItemKey=" + ruleDefItemKey + ", igniteCacheName=" + igniteCacheName + ", igniteConfigFile="
-				+ igniteConfigFile + ", igniteConfigName=" + igniteConfigName + ", igniteClientMode=" + igniteClientMode
-				+ ", igniteConfigPath=" + igniteConfigPath + ", forceRefreshActuatorState=" + forceRefreshActuatorState
-				+ ", forceResetActuatorState=" + forceResetActuatorState + ", kafkaGroup=" + kafkaGroup
-				+ ", kafkaTopic=" + kafkaTopic + ", kafkaBootstrapServers=" + kafkaBootstrapServers
-				+ ", kafkaZookeeperHosts=" + kafkaZookeeperHosts + ", kafkaZookeeperPort=" + kafkaZookeeperPort
-				+ ", kafkaConsumerNumThreads=" + kafkaConsumerNumThreads + ", kafkaZookeeperBrokerPath="
-				+ kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
+		return "MasterConfig [masterConfigJsonKey=" + masterConfigJsonKey + ", contactPoint=" + contactPoint
+				+ ", keyspaceName=" + keyspaceName + ", ruleSvcClassName=" + ruleSvcClassName + ", requestSvcClassName="
+				+ requestSvcClassName + ", actuatorStateKey=" + actuatorStateKey + ", ruleLoginSourceSensorKey="
+				+ ruleLoginSourceSensorKey + ", ruleDefItemKey=" + ruleDefItemKey + ", igniteCacheName="
+				+ igniteCacheName + ", igniteConfigFile=" + igniteConfigFile + ", igniteConfigName=" + igniteConfigName
+				+ ", igniteClientMode=" + igniteClientMode + ", igniteConfigPath=" + igniteConfigPath
+				+ ", forceRefreshActuatorState=" + forceRefreshActuatorState + ", forceResetActuatorState="
+				+ forceResetActuatorState + ", kafkaGroup=" + kafkaGroup + ", kafkaTopic=" + kafkaTopic
+				+ ", kafkaBootstrapServers=" + kafkaBootstrapServers + ", kafkaZookeeperHosts=" + kafkaZookeeperHosts
+				+ ", kafkaZookeeperPort=" + kafkaZookeeperPort + ", kafkaConsumerNumThreads=" + kafkaConsumerNumThreads
+				+ ", kafkaZookeeperBrokerPath=" + kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
 				+ ", kafkaZookeeperConsumerConnection=" + kafkaZookeeperConsumerConnection
-				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", sparkAppName=" + sparkAppName
-				+ ", sparkMaster=" + sparkMaster + ", sparkStreamDurationMs=" + sparkStreamDurationMs
-				+ ", wsRouterImplClassName=" + wsRouterImplClassName + ", wsServerListenPort=" + wsServerListenPort
-				+ "]";
+				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", routerIote2eRequestClassName="
+				+ routerIote2eRequestClassName + ", sparkAppName=" + sparkAppName + ", sparkMaster=" + sparkMaster
+				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", wsRouterImplClassName="
+				+ wsRouterImplClassName + ", wsServerListenPort=" + wsServerListenPort + "]";
 	}
 
 	public String getKafkaZookeeperBrokerPath() {
@@ -382,6 +384,17 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setContactPoint(String contactPoint) {
 		this.contactPoint = contactPoint;
+		return this;
+	}
+
+
+	public String getRouterIote2eRequestClassName() {
+		return routerIote2eRequestClassName;
+	}
+
+
+	public MasterConfig setRouterIote2eRequestClassName(String routerIote2eRequestClassName) {
+		this.routerIote2eRequestClassName = routerIote2eRequestClassName;
 		return this;
 	}
 

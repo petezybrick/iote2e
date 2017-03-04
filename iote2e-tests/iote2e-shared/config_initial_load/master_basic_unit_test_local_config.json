@@ -8,6 +8,7 @@
 	"igniteConfigName": "ignite.cfg",
 	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/",
 	"requestSvcClassName": "com.pzybrick.iote2e.tests.local.Iote2eSvcLocalTestImpl",
+	"routerIote2eRequestClassName":"com.pzybrick.iote2e.ruleproc.request.Iote2eRequestRouterHandlerSparkRuleImpl",
 	"ruleDefItemKey": "rule_def_item",
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
 	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",

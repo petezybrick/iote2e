@@ -19,7 +19,6 @@ import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
@@ -27,13 +26,14 @@ import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.iote2e.tests.common.Iote2eRequestHandlerIgniteTestThread;
 import com.pzybrick.iote2e.tests.common.ThreadSparkRun;
 
 public class SimBase {
 	private static final Logger logger = LogManager.getLogger(SimBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
-	protected Iote2eRequestHandler iote2eRequestHandler;
+	protected Iote2eRequestHandlerIgniteTestThread iote2eRequestHandler;
 	protected Iote2eSvc iote2eSvc;
 	protected KafkaProducer<String, byte[]> kafkaProducer;
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem;
@@ -60,7 +60,7 @@ public class SimBase {
 		iote2eResultReuseItem = new Iote2eResultReuseItem();
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler( masterConfig, queueIote2eRequests );
+		iote2eRequestHandler = new Iote2eRequestHandlerIgniteTestThread( masterConfig, queueIote2eRequests );
 		iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 		iote2eRequestHandler.start();
 		

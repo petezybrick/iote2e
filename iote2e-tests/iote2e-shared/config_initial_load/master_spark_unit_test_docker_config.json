@@ -18,6 +18,7 @@
 	"kafkaZookeeperHosts": "iote2e-zoo1,iote2e-zoo2,iote2e-zoo3",
 	"kafkaZookeeperPort": "2181",
 	"requestSvcClassName": "com.pzybrick.iote2e.ruleproc.ignite.Iote2eSvcIgniteImpl",
+	"routerIote2eRequestClassName":"com.pzybrick.iote2e.ruleproc.request.Iote2eRequestRouterHandlerSparkRuleImpl",
 	"ruleDefItemKey": "rule_def_item",
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
 	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",

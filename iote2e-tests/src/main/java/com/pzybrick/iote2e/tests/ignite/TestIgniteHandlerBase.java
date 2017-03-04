@@ -18,20 +18,20 @@ import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
 import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.iote2e.tests.common.Iote2eRequestHandlerIgniteTestThread;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
 public class TestIgniteHandlerBase extends TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
-	protected Iote2eRequestHandler iote2eRequestHandler;
+	protected Iote2eRequestHandlerIgniteTestThread iote2eRequestHandler;
 	protected Iote2eSvc iote2eSvc;
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
 	protected Iote2eResultReuseItem iote2eResultReuseItem;
@@ -55,7 +55,7 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 			iote2eResultReuseItem = new Iote2eResultReuseItem();
 			queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 			queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-			iote2eRequestHandler = new Iote2eRequestHandler(masterConfig, queueIote2eRequests);
+			iote2eRequestHandler = new Iote2eRequestHandlerIgniteTestThread(masterConfig, queueIote2eRequests);
 			iote2eSvc = iote2eRequestHandler.getIote2eSvc();
 			logger.info("Cache name: " + masterConfig.getIgniteCacheName());
 			// reset to same default ActuatorState=null every time

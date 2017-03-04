@@ -13,16 +13,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
+import com.pzybrick.iote2e.tests.common.Iote2eRequestHandlerIgniteTestThread;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
 public class TestLocalHandlerBase extends TestCommonHandler {
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerBase.class);
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
-	protected Iote2eRequestHandler iote2eRequestHandler;
+	protected Iote2eRequestHandlerIgniteTestThread iote2eRequestHandler;
 	protected Iote2eSvcLocalTestImpl iote2eSvc;
 
 	public TestLocalHandlerBase() throws Exception {
@@ -41,7 +41,7 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 		logger.info(
 				"------------------------------------------------------------------------------------------------------");
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
-		iote2eRequestHandler = new Iote2eRequestHandler( masterConfig, queueIote2eRequests );
+		iote2eRequestHandler = new Iote2eRequestHandlerIgniteTestThread( masterConfig, queueIote2eRequests );
 		iote2eSvc = (Iote2eSvcLocalTestImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();

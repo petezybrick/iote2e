@@ -14,6 +14,7 @@
 	"kafkaZookeeperHosts": "hp-lt-ubuntu-1",
 	"kafkaZookeeperPort": "2181",
 	"requestSvcClassName": "com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl",
+	"routerIote2eRequestClassName":"com.pzybrick.iote2e.ruleproc.request.Iote2eRequestRouterHandlerSparkRuleImpl",
 	"ruleDefItemKey": "rule_def_item",
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
 	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",

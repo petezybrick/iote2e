@@ -22,12 +22,12 @@ import org.junit.BeforeClass;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestHandler;
 import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
+import com.pzybrick.iote2e.tests.common.Iote2eRequestHandlerIgniteTestThread;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
 import kafka.consumer.ConsumerConfig;
@@ -41,7 +41,7 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
-	protected Iote2eRequestHandler iote2eRequestHandler;
+	protected Iote2eRequestHandlerIgniteTestThread iote2eRequestHandler;
 	protected Iote2eSvcKafkaImpl iote2eSvc;
 	protected KafkaProducer<String, byte[]> kafkaProducer;
 	protected String kafkaTopic;
@@ -66,7 +66,7 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 				"------------------------------------------------------------------------------------------------------");
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
 		queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
-		iote2eRequestHandler = new Iote2eRequestHandler(masterConfig, queueIote2eRequests);
+		iote2eRequestHandler = new Iote2eRequestHandlerIgniteTestThread(masterConfig, queueIote2eRequests);
 		iote2eSvc = (Iote2eSvcKafkaImpl) iote2eRequestHandler.getIote2eSvc();
 		iote2eSvc.setRuleEvalResults(null);
 		iote2eRequestHandler.start();
