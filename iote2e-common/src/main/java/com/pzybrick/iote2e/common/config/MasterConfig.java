@@ -48,6 +48,16 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String kafkaGroup;
 	@Expose
+	private String jdbcDriverClassName;
+	@Expose
+	private Integer jdbcInsertBlockSize;
+	@Expose
+	private String jdbcLogin;
+	@Expose
+	private String jdbcPassword;
+	@Expose
+	private String jdbcUrl;
+	@Expose
 	private String kafkaTopic;
 	@Expose
 	private String kafkaBootstrapServers;
@@ -263,7 +273,9 @@ public class MasterConfig implements Serializable {
 				+ igniteCacheName + ", igniteConfigFile=" + igniteConfigFile + ", igniteConfigName=" + igniteConfigName
 				+ ", igniteClientMode=" + igniteClientMode + ", igniteConfigPath=" + igniteConfigPath
 				+ ", forceRefreshActuatorState=" + forceRefreshActuatorState + ", forceResetActuatorState="
-				+ forceResetActuatorState + ", kafkaGroup=" + kafkaGroup + ", kafkaTopic=" + kafkaTopic
+				+ forceResetActuatorState + ", kafkaGroup=" + kafkaGroup + ", jdbcDriverClassName="
+				+ jdbcDriverClassName + ", jdbcInsertBlockSize=" + jdbcInsertBlockSize + ", jdbcLogin=" + jdbcLogin
+				+ ", jdbcPassword=" + jdbcPassword + ", jdbcUrl=" + jdbcUrl + ", kafkaTopic=" + kafkaTopic
 				+ ", kafkaBootstrapServers=" + kafkaBootstrapServers + ", kafkaZookeeperHosts=" + kafkaZookeeperHosts
 				+ ", kafkaZookeeperPort=" + kafkaZookeeperPort + ", kafkaConsumerNumThreads=" + kafkaConsumerNumThreads
 				+ ", kafkaZookeeperBrokerPath=" + kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
@@ -395,6 +407,61 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setRouterIote2eRequestClassName(String routerIote2eRequestClassName) {
 		this.routerIote2eRequestClassName = routerIote2eRequestClassName;
+		return this;
+	}
+
+
+	public String getJdbcDriverClassName() {
+		return jdbcDriverClassName;
+	}
+
+
+	public String getJdbcLogin() {
+		return jdbcLogin;
+	}
+
+
+	public String getJdbcPassword() {
+		return jdbcPassword;
+	}
+
+
+	public String getJdbcUrl() {
+		return jdbcUrl;
+	}
+
+
+	public MasterConfig setJdbcDriverClassName(String jdbcDriverClassName) {
+		this.jdbcDriverClassName = jdbcDriverClassName;
+		return this;
+	}
+
+
+	public MasterConfig setJdbcLogin(String jdbcLogin) {
+		this.jdbcLogin = jdbcLogin;
+		return this;
+	}
+
+
+	public MasterConfig setJdbcPassword(String jdbcPassword) {
+		this.jdbcPassword = jdbcPassword;
+		return this;
+	}
+
+
+	public MasterConfig setJdbcUrl(String jdbcUrl) {
+		this.jdbcUrl = jdbcUrl;
+		return this;
+	}
+
+
+	public Integer getJdbcInsertBlockSize() {
+		return jdbcInsertBlockSize;
+	}
+
+
+	public MasterConfig setJdbcInsertBlockSize(Integer jdbcInsertBlockSize) {
+		this.jdbcInsertBlockSize = jdbcInsertBlockSize;
 		return this;
 	}
 

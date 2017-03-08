@@ -260,6 +260,11 @@
 			<version>${scala.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.1.1</version>
+		</dependency>		
+		<dependency>
 			<groupId>com.pzybrick.iote2e</groupId>
 			<artifactId>iote2e-schema</artifactId>
 			<version>1.0.0</version>
