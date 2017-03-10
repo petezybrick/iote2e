@@ -12,9 +12,9 @@ services:
       default:
         ipv4_address: 192.168.21.60
     expose:
-      - 3066
+      - 3306
     ports:
-      - 3067:3066
+      - 3307:3306
     volumes:
       - ../../iote2e-shared:/tmp/iote2e-shared
 

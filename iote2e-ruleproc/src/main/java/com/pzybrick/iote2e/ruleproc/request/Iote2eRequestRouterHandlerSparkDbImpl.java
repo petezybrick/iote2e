@@ -93,7 +93,7 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 	
 	
 	private void insertEachBlock( List<Iote2eRequest> iote2eRequests, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
-		final DateTimeFormatter dtfmt = ISODateTimeFormat.basicDateTime();
+		final DateTimeFormatter dtfmt = ISODateTimeFormat.dateTime();
 		String tableName = null;
 		String request_uuid = null;
 		PreparedStatement pstmt = null;
@@ -154,8 +154,8 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 		if( cachePrepStmtsByTableName.containsKey(tableName) ) return cachePrepStmtsByTableName.get(tableName);
 		final String sqlTemperature = "INSERT INTO temperature (request_uuid,login_name,source_name,request_timestamp,degrees_f) VALUES (?,?,?,?,?)";
 		final String sqlHumidity = "INSERT INTO humidity (request_uuid,login_name,source_name,request_timestamp,pct_humidity) VALUES (?,?,?,?,?)";
-		final String sqlSwitch = "INSERT INTO temperature (request_uuid,login_name,source_name,request_timestamp,switch_state) VALUES (?,?,?,?,?)";
-		final String sqlHeartbeat = "INSERT INTO temperature (request_uuid,login_name,source_name,request_timestamp,heartbeat_state) VALUES (?,?,?,?,?)";
+		final String sqlSwitch = "INSERT INTO switch (request_uuid,login_name,source_name,request_timestamp,switch_state) VALUES (?,?,?,?,?)";
+		final String sqlHeartbeat = "INSERT INTO heartbeat (request_uuid,login_name,source_name,request_timestamp,heartbeat_state) VALUES (?,?,?,?,?)";
 		
 		String sql = null;
 		if( "temperature".compareToIgnoreCase(tableName) == 0) sql = sqlTemperature;
