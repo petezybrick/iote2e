@@ -20,18 +20,19 @@ public class ResetPyClientActuatorState {
 
 	public void process(String[] args) {
 		try {
-			logger.info("Resetting Actuator table for: {}",args[0]);
-			if("temp".equalsIgnoreCase(args[0]) )
+			logger.info("Resetting Actuator table for: {}",args[2]);
+			ActuatorStateDao.connect(args[0], args[1]);
+			if("temp".equalsIgnoreCase(args[2]) )
 				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
-			else if("humidity".equalsIgnoreCase(args[0]) )
+			else if("humidity".equalsIgnoreCase(args[2]) )
 				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
-			else if("ledgreen".equalsIgnoreCase(args[0]) )
+			else if("ledgreen".equalsIgnoreCase(args[2]) )
 				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
-			else if( "all".equalsIgnoreCase(args[0]) ) {
+			else if( "all".equalsIgnoreCase(args[2]) ) {
 				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
 				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
 				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
-			} else throw new Exception("Invalid request, must be temp|humidity|ledgreen, was: " + args[0]);
+			} else throw new Exception("Invalid request, must be temp|humidity|ledgreen, was: " + args[2]);
 		} catch( Exception e ) {
 			logger.error(e.getMessage(), e);
 		} finally {

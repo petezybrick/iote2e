@@ -4,5 +4,5 @@ set -o allexport
 source TestCommonDocker.properties
 set +o allexport
 java -cp ../jars/iote2e-tests-1.0.0.jar \
-"com.pzybrick.iote2e.tests.simws.ResetPyClientActuatorState" "$1"
+"com.pzybrick.iote2e.tests.simws.ResetPyClientActuatorState" "$1" "$2" "$3"
 

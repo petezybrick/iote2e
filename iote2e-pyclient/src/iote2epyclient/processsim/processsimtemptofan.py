@@ -44,7 +44,7 @@ class ProcessSimTempToFan(object):
 
         # TODO: read temp from sensor here
         pairs = { self.sensorName: str(self.tempNow)}
-        iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='temp', 
+        iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='temperature', 
                                        request_uuid=str(uuid.uuid4()), 
                                        request_timestamp=datetime.datetime.utcnow().isoformat(), 
                                        pairs=pairs, operation='SENSORS_VALUES')

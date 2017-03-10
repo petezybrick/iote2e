@@ -33,7 +33,7 @@ public abstract class TestCommonHandler {
 	
 	public static final String testTempToFanLoginName = "pzybrick1";
 	public static final String testTempToFanSourceName = "rpi_999";
-	public static final String testTempToFanSourceType = "temp";
+	public static final String testTempToFanSourceType = "temperature";
 	public static final String testTempToFanSensorName = "temp1";
 	public static final String testTempToFanFilterKey = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName + "|";
 	

@@ -67,11 +67,37 @@ Run Spark unit tests under Docker
 - cd to local spark folder, i.e. `cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7`
 - submit iote2e-ruleproc spark job	
 
+**Reset actuator state before running any tests**
+- docker exec -it iote2e-demomgr1 /bin/bash
+- cd /tmp/iote2e-shared/scripts
+- ./reset-pyclient-actuator-state.sh iote2e-cassandra1 iote2e all
+
+**Batch layer - writes to db**
 ./bin/spark-submit \
   --class com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer \
   --deploy-mode cluster \
   --master spark://localhost:6066 \
-  /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar
+  --executor-memory 8G \
+  --total-executor-cores 4 \
+  /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar \
+  master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
+
+**Speed layer - runs rules
+./bin/spark-submit \
+  --class com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer \
+  --deploy-mode cluster \
+  --master spark://localhost:6066 \
+  /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar \
+  master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
+
+  --executor-memory 2G \
+  --total-executor-cores 3 \
+  --executor-cores NUM 
+
+  masterConfigJsonKey, String contactPoint, String keyspaceName
+  iote2e-cassandra1
+      CASSANDRA_KEYSPACE_NAME: iote2e
+      MASTER_CONFIG_JSON_KEY: master_spark_unit_test_docker_config
   
 - review the returned json for "success":true
 		17/02/04 12:41:01 INFO RestSubmissionClient: Server responded with CreateSubmissionResponse:
@@ -120,13 +146,13 @@ csqlsh iote2e-cassandra1
 select config_name from config;
 
 **Run local Ignite**
+*open a terminal session or tab*
+cd /home/pete/development/server/apache-ignite-fabric-1.8.0-bin
 export IGNITE_HOME="/home/pete/development/server/apache-ignite-fabric-1.8.0-bin"
 export IGNITE_VERSION="1.8.0"
 export DEFAULT_CONFIG="/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml"
 export JVM_OPTS="-Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m"
 
-*open a terminal session or tab*
-cd /home/pete/development/server/apache-ignite-fabric-1.8.0-bin
 ./bin/ignite.sh "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml"
 *then run the jUnit tests via IDE, i.e. Eclipse*
 
