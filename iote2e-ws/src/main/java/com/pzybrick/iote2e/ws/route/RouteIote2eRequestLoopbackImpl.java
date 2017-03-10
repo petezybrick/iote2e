@@ -9,7 +9,7 @@ import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pzybrick.iote2e.common.utils.Iote2eConstants;
+import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
@@ -17,9 +17,18 @@ import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest;
 
+
 public class RouteIote2eRequestLoopbackImpl implements RouteIote2eRequest {
 	private static final Logger logger = LogManager.getLogger(RouteIote2eRequestLoopbackImpl.class);
-
+	private MasterConfig masterConfig;
+	
+	
+	@Override
+	public void init(MasterConfig masterConfig) throws Exception {
+		this.masterConfig = masterConfig;
+	}
+	
+	
 	public void routeToTarget( Iote2eRequest iote2eRequest ) throws Exception {
 		logger.debug(iote2eRequest.toString());
 		String actuatorValue = "testActuatorValuea";
@@ -54,4 +63,5 @@ public class RouteIote2eRequestLoopbackImpl implements RouteIote2eRequest {
 				.build();
 		EntryPointIote2eRequest.toClientIote2eResults.add(iote2eResult);
 	}
+
 }

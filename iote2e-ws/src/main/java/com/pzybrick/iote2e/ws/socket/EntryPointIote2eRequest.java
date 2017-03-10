@@ -59,6 +59,7 @@ public class EntryPointIote2eRequest {
 			throw new Exception("routerImplClassName is required entry in MasterConfig but is null");
 		Class clazz = Class.forName(routerImplClassName);
 		routeIote2eRequest = (RouteIote2eRequest)clazz.newInstance();
+		routeIote2eRequest.init(masterConfig);
 		server = new Server();
 		connector = new ServerConnector(server);
 		connector.setPort(masterConfig.getWsServerListenPort());

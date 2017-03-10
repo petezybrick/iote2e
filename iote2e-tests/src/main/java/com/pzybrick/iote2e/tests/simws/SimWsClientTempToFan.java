@@ -22,9 +22,9 @@ public class SimWsClientTempToFan extends SimWsClientBase {
 	private static final Logger logger = LogManager.getLogger(SimWsClientTempToFan.class);
 	private static final double TEMP_MIN = 74.0;
 	private static final double TEMP_MAX = 83.0;
-	private static final double TEMP_START = 77.5;
-	private static final double TEMP_INCR = .5;
-	private static final long TEMP_PUT_FREQ_MS = 2000;
+	private static final double TEMP_START = 77.0;
+	private static final double TEMP_INCR = 1.0;
+	private static final long TEMP_PUT_FREQ_MS = 4000;
 	private boolean tempDirectionIncrease = true;
 
 	

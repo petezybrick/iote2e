@@ -23,8 +23,8 @@ public class SimWsClientHumidityToMister extends SimWsClientBase {
 	private static final double HUMIDITY_MIN = 82.0;
 	private static final double HUMIDITY_MAX = 93.0;
 	private static final double HUMIDITY_START = 90.0;
-	private static final double HUMIDITY_INCR = .5;
-	private static final long HUMIDITY_PUT_FREQ_MS = 2000;
+	private static final double HUMIDITY_INCR = 1.0;
+	private static final long HUMIDITY_PUT_FREQ_MS = 4000;
 	private boolean humidityDirectionIncrease = true;
 
 

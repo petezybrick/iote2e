@@ -16,7 +16,7 @@ public class SimHumidityToMister extends SimBase {
 	private static final double HUMIDITY_MAX = 93.0;
 	private static final double HUMIDITY_START = 92.0;
 	private static final double HUMIDITY_INCR = .5;
-	private static final long HUMIDITY_PUT_FREQ_MS = 2000;
+	private static final long HUMIDITY_PUT_FREQ_MS = 3000;
 	private boolean humidityDirectionIncrease = true;
 	private ThreadPollResult pollResult;
 

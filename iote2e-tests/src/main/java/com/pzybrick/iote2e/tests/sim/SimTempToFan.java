@@ -15,8 +15,8 @@ public class SimTempToFan extends SimBase {
 	private static final double TEMP_MIN = 74.0;
 	private static final double TEMP_MAX = 83.0;
 	private static final double TEMP_START = 79.0;
-	private static final double TEMP_INCR = .5;
-	private static final long TEMP_PUT_FREQ_MS = 2000;
+	private static final double TEMP_INCR = 1.0;
+	private static final long TEMP_PUT_FREQ_MS = 5000;
 	private boolean tempDirectionIncrease = true;
 	private ThreadPollResult pollResult;
 

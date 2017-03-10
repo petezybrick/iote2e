@@ -78,6 +78,7 @@ Run Spark unit tests under Docker
   --deploy-mode cluster \
   --master spark://localhost:6066 \
   --executor-memory 8G \
+  --executor-cores 2 \
   --total-executor-cores 4 \
   /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar \
   master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
@@ -87,6 +88,9 @@ Run Spark unit tests under Docker
   --class com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer \
   --deploy-mode cluster \
   --master spark://localhost:6066 \
+  --executor-memory 8G \
+  --executor-cores 2 \
+  --total-executor-cores 4 \
   /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar \
   master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
 

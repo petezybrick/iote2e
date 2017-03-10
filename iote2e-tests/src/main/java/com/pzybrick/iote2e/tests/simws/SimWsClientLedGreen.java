@@ -20,7 +20,7 @@ import com.pzybrick.iote2e.ws.security.LoginVo;
 
 public class SimWsClientLedGreen extends SimWsClientBase {
 	private static final Logger logger = LogManager.getLogger(SimWsClientLedGreen.class);
-	private static final long LEDGREEN_PUT_FREQ_MS = 3000;
+	private static final long LEDGREEN_PUT_FREQ_MS = 4000;
 	private String ledGreenState = "0";
 
 

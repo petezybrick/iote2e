@@ -49,8 +49,8 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 				ruleEvalResult.getActuatorState().setActuatorValue(ruleEvalResult.getActuatorTargetValue());
 				ruleEvalResult.getActuatorState().setActuatorValueUpdatedAt(Iote2eUtils.getDateNowUtc8601() );
 				String pkActuatorState = iote2eRequest.getLoginName().toString()+"|"+iote2eRequest.getSourceName().toString() +
-						"|"+ruleEvalResult.getSensorName();
-				String pkIgnite = pkActuatorState+"|"+ruleEvalResult.getActuatorState().getActuatorName();
+						"|"+ruleEvalResult.getSensorName()+"|";
+				String pkIgnite = pkActuatorState+ruleEvalResult.getActuatorState().getActuatorName();
 				
 				Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
 				pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME), new Utf8(ruleEvalResult.getActuatorState().getSensorName() ));

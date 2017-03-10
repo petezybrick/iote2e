@@ -24,7 +24,7 @@
 	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
 	"sparkAppName": "iote2e-speed-rule",
 	"sparkMaster": "",
-	"sparkStreamDurationMs": "500",
+	"sparkStreamDurationMs": "1000",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestToKafkaImpl",
 	"wsServerListenPort": "8090"
 }
