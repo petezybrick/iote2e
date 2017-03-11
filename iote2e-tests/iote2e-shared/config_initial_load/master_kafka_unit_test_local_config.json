@@ -13,11 +13,11 @@
 	"kafkaTopic": "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox",
 	"kafkaZookeeperHosts": "hp-lt-ubuntu-1",
 	"kafkaZookeeperPort": "2181",
-	"requestSvcClassName": "com.pzybrick.iote2e.ruleproc.kafka.Iote2eSvcKafkaImpl",
-	"routerIote2eRequestClassName":"com.pzybrick.iote2e.ruleproc.request.Iote2eRequestRouterHandlerSparkRuleImpl",
+	"requestSvcClassName": "com.pzybrick.iote2e.stream.kafka.Iote2eSvcKafkaImpl",
+	"routerIote2eRequestClassName":"com.pzybrick.iote2e.stream.request.Iote2eRequestRouterHandlerSparkRuleImpl",
 	"ruleDefItemKey": "rule_def_item",
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
-	"ruleSvcClassName": "com.pzybrick.iote2e.ruleproc.svc.RuleSvcJsonImpl",
+	"ruleSvcClassName": "com.pzybrick.iote2e.stream.svc.RuleSvcJsonImpl",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestToKafkaImpl",
 	"wsServerListenPort": "8090"
 }

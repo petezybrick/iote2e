@@ -17,11 +17,11 @@ docker build -t spark:2.0.2 .
   1000
   
 ./bin/spark-submit \
-  --class com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer \
+  --class com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer \
   --deploy-mode cluster \
   --total-executor-cores 6 \
   --master spark://localhost:6066 \
-  /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar
+  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar
 
 
 

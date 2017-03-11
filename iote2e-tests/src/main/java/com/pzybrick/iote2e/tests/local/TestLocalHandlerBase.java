@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
+import com.pzybrick.iote2e.stream.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.tests.common.Iote2eRequestHandlerIgniteTestThread;

@@ -10,8 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
-import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
+import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.stream.svc.ActuatorState;
 
 
 

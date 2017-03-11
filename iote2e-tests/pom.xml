@@ -296,7 +296,7 @@
 		
 		<dependency>
 			<groupId>com.pzybrick.iote2e</groupId>
-			<artifactId>iote2e-ruleproc</artifactId>
+			<artifactId>iote2e-stream</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 

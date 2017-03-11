@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
+import com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer;
 
 public class ThreadSparkRun extends Thread {
 	private static final Logger logger = LogManager.getLogger(ThreadSparkRun.class);

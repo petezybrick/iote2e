@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.ignite.IgniteGridConnection;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
-import com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer;
+import com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.tests.common.ThreadSparkRun;

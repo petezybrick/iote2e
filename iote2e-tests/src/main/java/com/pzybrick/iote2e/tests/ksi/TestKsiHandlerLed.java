@@ -9,7 +9,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 

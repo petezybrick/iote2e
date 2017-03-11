@@ -17,8 +17,8 @@ import com.pzybrick.iote2e.common.persist.CassandraBaseDao;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.persist.ConfigVo;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
-import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
+import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.stream.svc.ActuatorState;
 
 public class ConfigInitialLoad {
 	private static final Logger logger = LogManager.getLogger(ConfigInitialLoad.class);

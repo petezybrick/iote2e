@@ -10,10 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
-import com.pzybrick.iote2e.ruleproc.svc.RuleDefCondItem;
-import com.pzybrick.iote2e.ruleproc.svc.RuleDefItem;
-import com.pzybrick.iote2e.ruleproc.svc.RuleLoginSourceSensor;
+import com.pzybrick.iote2e.stream.svc.ActuatorState;
+import com.pzybrick.iote2e.stream.svc.RuleDefCondItem;
+import com.pzybrick.iote2e.stream.svc.RuleDefItem;
+import com.pzybrick.iote2e.stream.svc.RuleLoginSourceSensor;
 
 public class CreateRuleDefJsonFile {
 	private static final Logger logger = LogManager.getLogger(CreateRuleDefJsonFile.class);

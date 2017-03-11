@@ -15,8 +15,8 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
-import com.pzybrick.iote2e.ruleproc.svc.ActuatorState;
-import com.pzybrick.iote2e.ruleproc.svc.LoginSourceSensorActuator;
+import com.pzybrick.iote2e.stream.svc.ActuatorState;
+import com.pzybrick.iote2e.stream.svc.LoginSourceSensorActuator;
 
 public class LearnCassandra {
 	private static final Logger logger = LogManager.getLogger(LearnCassandra.class);

@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
-import com.pzybrick.iote2e.ruleproc.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;

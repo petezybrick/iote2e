@@ -1,7 +1,7 @@
 
-java -cp iote2e-ruleproc-1.0.0.jar com.pzybrick.iote2e.ruleproc.kafkademo.KafkaStringDemo 15 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
+java -cp iote2e-stream-1.0.0.jar com.pzybrick.iote2e.stream.kafkademo.KafkaStringDemo 15 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
 
-java -cp iote2e-ruleproc-1.0.0.jar com.pzybrick.iote2e.ruleproc.kafkademo.KafkaAvroDemo 1000 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
+java -cp iote2e-stream-1.0.0.jar com.pzybrick.iote2e.stream.kafkademo.KafkaAvroDemo 1000 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
 
 Setup to run unit tests with Iote2eRequests inbound from Kafka
 Note: can't use Kafka under Docker to run jUnit tests, the hostname returned is based on the hostname in docker
@@ -63,9 +63,9 @@ Remove
 Run Spark unit tests under Docker
 - start docker environment as per above
 - bring up the Spark console - open browser, http://localhost:8080
-- ensure that the iote2e-ruleproc application has been rebuilt via maven, which will copy to docker shared jars folder
+- ensure that the iote2e-stream application has been rebuilt via maven, which will copy to docker shared jars folder
 - cd to local spark folder, i.e. `cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7`
-- submit iote2e-ruleproc spark job	
+- submit iote2e-stream spark job	
 
 **Reset actuator state before running any tests**
 - docker exec -it iote2e-demomgr1 /bin/bash
@@ -74,24 +74,24 @@ Run Spark unit tests under Docker
 
 **Batch layer - writes to db**
 ./bin/spark-submit \
-  --class com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer \
+  --class com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer \
   --deploy-mode cluster \
   --master spark://localhost:6066 \
   --executor-memory 8G \
   --executor-cores 2 \
   --total-executor-cores 4 \
-  /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar \
+  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
   master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
 
 **Speed layer - runs rules
 ./bin/spark-submit \
-  --class com.pzybrick.iote2e.ruleproc.spark.Iote2eRequestSparkConsumer \
+  --class com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer \
   --deploy-mode cluster \
   --master spark://localhost:6066 \
   --executor-memory 8G \
   --executor-cores 2 \
   --total-executor-cores 4 \
-  /tmp/iote2e-shared/jars/iote2e-ruleproc-1.0.0.jar \
+  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
   master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
 
   --executor-memory 2G \
@@ -113,7 +113,7 @@ Run Spark unit tests under Docker
 		  "success" : true
 		}
 
-- at this point the iote2e-ruleproc spark streaming job is running and reading from the stream that is connected to kafka, but no messages are being sent yet
+- at this point the iote2e-stream spark streaming job is running and reading from the stream that is connected to kafka, but no messages are being sent yet
 - run SimTempToFan
 	- this should turn the fan on at 80 degrees, and start the temperature decreasing
 	- when the temp hits 77 degrees, it should turn the fan off and start the temperature increasing
@@ -182,7 +182,7 @@ http://stackoverflow.com/questions/10307652/how-to-include-test-classes-in-jar-c
 critical: 
   mvn clean compile test-compile assembly:single
   	>>> creates shaded/uber jar with test classes
-  to run: java -cp <PATH>/iote2e/iote2e-ruleproc/target/iote2e-ruleproc-1.0.0-all-tests.jar org.junit.runner.JUnitCore <TEST_PKG>.<TEST_CLASS>
+  to run: java -cp <PATH>/iote2e/iote2e-stream/target/iote2e-stream-1.0.0-all-tests.jar org.junit.runner.JUnitCore <TEST_PKG>.<TEST_CLASS>
   
 
 **Python Cassandra**

@@ -6,8 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eSvc;
-import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
+import com.pzybrick.iote2e.stream.request.Iote2eSvc;
+import com.pzybrick.iote2e.stream.svc.RuleEvalResult;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 
 public class Iote2eSvcLocalTestImpl implements Iote2eSvc {

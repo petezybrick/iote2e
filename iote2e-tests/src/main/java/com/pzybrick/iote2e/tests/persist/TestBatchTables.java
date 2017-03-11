@@ -19,8 +19,8 @@ import org.junit.Test;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.ruleproc.persist.PooledDataSource;
-import com.pzybrick.iote2e.ruleproc.request.Iote2eRequestRouterHandlerSparkDbImpl;
+import com.pzybrick.iote2e.stream.persist.PooledDataSource;
+import com.pzybrick.iote2e.stream.request.Iote2eRequestRouterHandlerSparkDbImpl;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 

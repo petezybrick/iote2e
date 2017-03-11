@@ -9,7 +9,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.pzybrick.iote2e.ruleproc.svc.RuleEvalResult;
+import com.pzybrick.iote2e.stream.svc.RuleEvalResult;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKafkaHandlerLed extends TestKafkaHandlerBase {
