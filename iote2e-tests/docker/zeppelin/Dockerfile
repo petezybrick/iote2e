@@ -7,7 +7,7 @@ RUN apt-get update \
 # Users with other locales should set this in their derivative image
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+#ENV LC_ALL en_US.UTF-8
 
 RUN apt-get update \
  && apt-get -yq install nano \
@@ -39,6 +39,18 @@ RUN curl -sL --retry 3 --insecure \
   && ln -s $JAVA_HOME /usr/java \
   && rm -rf $JAVA_HOME/man
 
+# Zeppelin
+ENV ZEPPELIN_VERSION 0.7.0
+copy zeppelin-${ZEPPELIN_VERSION}-bin-all.tgz zeppelin-${ZEPPELIN_VERSION}-bin-all.tgz
+RUN tar -xzvf zeppelin-${ZEPPELIN_VERSION}-bin-all.tgz -C /usr/share 
+
+RUN mv /usr/share/zeppelin-${ZEPPELIN_VERSION}-bin-all /usr/share/zeppelin-${ZEPPELIN_VERSION} \
+   && chown -R root:root /usr/share/zeppelin-${ZEPPELIN_VERSION}
+COPY zeppelin-site.xml  /usr/share/zeppelin-${ZEPPELIN_VERSION}/conf/zeppelin-site.xml
+COPY iote2e-start-zeppelin.sh  /usr/share/zeppelin-${ZEPPELIN_VERSION}/bin/iote2e-start-zeppelin.sh
+RUN chmod +x /usr/share/zeppelin-${ZEPPELIN_VERSION}/bin/iote2e-start-zeppelin.sh
+COPY mysql-connector-java-5.1.41-bin.jar  /usr/share/zeppelin-${ZEPPELIN_VERSION}/interpreter/jdbc/mysql-connector-java-5.1.41-bin.jar
+
 ENV TERM xterm
 
-CMD ["/bin/bash"]
+CMD ["/usr/share/zeppelin-${ZEPPELIN_VERSION}/bin/iote2e-start-zeppelin.sh"]

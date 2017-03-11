@@ -5,8 +5,9 @@ docker-compose --file $1/ignite/docker-compose.yml up -d
 docker-compose --file $1/kafka-cluster/docker-compose.yml up -d
 docker-compose --file $1/spark-cluster/docker-compose.yml up -d
 docker-compose --file $1/ws/docker-compose.yml up -d
-docker-compose --file $1/demomgr/docker-compose.yml up -d
 docker-compose --file $1/mysql/docker-compose.yml up -d
+docker-compose --file $1/demomgr/docker-compose.yml up -d
+docker-compose --file $1/zeppelin/docker-compose.yml up -d
 
 sleep 1
-docker ps
+# docker ps

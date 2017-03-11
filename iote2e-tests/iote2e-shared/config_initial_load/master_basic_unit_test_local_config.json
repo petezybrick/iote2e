@@ -7,7 +7,7 @@
 	"igniteConfigFile": "ignite-iote2e-local.xml",
 	"igniteConfigName": "ignite.cfg",
 	"igniteConfigPath": "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/",
-	"jdbcDriverClassName": "com.mysql.cj.jdbc.Driver",
+	"jdbcDriverClassName": "com.mysql.jdbc.Driver",
 	"jdbcInsertBlockSize": "1000",
 	"jdbcLogin": "iote2e_batch",
 	"jdbcPassword": "Password*8",

@@ -1,50 +1,21 @@
 version: '2'
 
 services:
-  iote2e-demomgr1:
-    image: demomgr:1.0.0
-    # hack to keep the container from exiting
-    command: tail -F -n0 /etc/hosts
-    hostname: iote2e-demomgr1
-    container_name: iote2e-demomgr1
+  iote2e-zeppelin1:
+    image: zeppelin:0.7.0
+    command: /usr/share/zeppelin-0.7.0/bin/iote2e-start-zeppelin.sh
+    hostname: iote2e-zeppelin1
+    container_name: iote2e-zeppelin1
     mem_limit: 8g
     memswap_limit: 8g
     networks:
       default:
-        ipv4_address: 192.168.21.11
-    environment:
-      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
-      CASSANDRA_KEYSPACE_NAME: iote2e
+        ipv4_address: 192.168.21.14
     expose:
-      - 47500-47509
-      - 11211  
-      - 47100
-      - 49112
+      - 8081
+    ports:
+      - 8081:8081
     volumes:
-      - ./data:/tmp/data
-      - ../../iote2e-shared:/tmp/iote2e-shared
- 
-  iote2e-demomgr2:
-    image: demomgr:1.0.0
-    # hack to keep the container from exiting
-    command: tail -F -n0 /etc/hosts
-    hostname: iote2e-demomgr2
-    container_name: iote2e-demomgr2
-    mem_limit: 8g
-    memswap_limit: 8g
-    networks:
-      default:
-        ipv4_address: 192.168.21.12
-    environment:
-      CASSANDRA_CONTACT_POINT: iote2e-cassandra1
-      CASSANDRA_KEYSPACE_NAME: iote2e
-    expose:
-      - 47500-47509
-      - 11211  
-      - 47100
-      - 49112
-    volumes:
-      - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
   
 networks:
