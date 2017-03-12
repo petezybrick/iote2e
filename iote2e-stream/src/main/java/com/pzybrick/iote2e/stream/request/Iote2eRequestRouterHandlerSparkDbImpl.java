@@ -107,7 +107,10 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 				pstmt.setString(offset++, request_uuid );
 				pstmt.setString(offset++, iote2eRequest.getLoginName().toString());
 				pstmt.setString(offset++, iote2eRequest.getSourceName().toString());
-				Timestamp timestamp = new Timestamp(dtfmt.parseDateTime(iote2eRequest.getRequestTimestamp().toString()).getMillis());
+				// This is a total hack - some python systems will send in microseconds, i.e. .123456 instead of just .123
+				String requestTimestamp = iote2eRequest.getRequestTimestamp().toString();
+				if( requestTimestamp.length() == 26 ) requestTimestamp = requestTimestamp.substring(0,23) + "Z";
+				Timestamp timestamp = new Timestamp(dtfmt.parseDateTime(requestTimestamp).getMillis());
 				pstmt.setTimestamp(offset++, timestamp);
 				// Next value(s)/types are specific to the table
 				// For this simple example, assume one value passed as string
@@ -135,6 +138,7 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 				if( sqlEx.getSQLState() != null && sqlEx.getSQLState().startsWith("23") )
 					logger.debug("Skipping duplicate row, table={}, request_uuid={}", tableName, request_uuid);
 				else {
+					logger.error("Error on insert for pstmt: {}", pstmt.toString());
 					throw sqlEx;
 				}
 			} else {
@@ -162,6 +166,7 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 		else if( "humidity".compareToIgnoreCase(tableName) == 0) sql = sqlHumidity;
 		else if( "switch".compareToIgnoreCase(tableName) == 0) sql = sqlSwitch;
 		else if( "heartbeat".compareToIgnoreCase(tableName) == 0) sql = sqlHeartbeat;
+		else throw new Exception("Invalid table name: " + tableName);
 
 		PreparedStatement pstmt = con.prepareStatement(sql);
 		cachePrepStmtsByTableName.put(tableName, pstmt);

@@ -44,19 +44,24 @@ python -m iote2epyclient.launch.clientlauncher 'ProcessSimHumidityToMister' 'hum
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'switch0' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi_999' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' 'switch0'
 
 ##Installation RPi
-install Python
+Install Ubuntu Mate 
+	Download Ubuntu Mate: https://ubuntu-mate.org/raspberry-pi/
+	Copy to microSDHC - I used Etcher on MacBook, worked great
+	Plug the microSDHC into the RPi and power up
+	Follow the prompts
+Start Ubuntu Mate
+	Open the ssh port
+		sudo wfw allow 22
+		sudo systemctl restart ssh
+install Python add ons
 	sudo apt-get update
-	sudo apt-get python-minimal
-	sudo apt install python-pip
 	sudo pip install --upgrade pip
-	dup pip install enum
+	sudo pip install enum
 	pip install websocket-client
 Install Avro for Python
 	Note that the steps below assume Release 1.8.1, if you are using a newer/older version then adjust accordingly
 	Review the steps on the Avro Python installation page, i.e. https://avro.apache.org/docs/1.8.1/gettingstartedpython.html
-	mkdir ~/avro-1.8.1
-	cd avro-1.8.1
-	Download the Avro install tgz.  Ensure it is the same version as the dependency in the pom.xml in the iote2e-schema project, currently 1.8.8
+	Download the Avro install tgz.  Ensure it is the same version as the dependency in the pom.xml in the iote2e-schema project, currently 1.8.1sudo 
 		A download mirror can be found on the Avro downloads page, update the below URL with the mirror's name and execute the wget
 		wget http://apache.spinellicreations.com/avro/avro-1.8.1/py/avro-1.8.1.tar.gz
 	tar xvf avro-1.8.1.tar.gz
