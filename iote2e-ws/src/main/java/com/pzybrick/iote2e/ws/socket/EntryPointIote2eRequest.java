@@ -37,19 +37,41 @@ public class EntryPointIote2eRequest {
 	private ServerConnector connector;
 	public static MasterConfig masterConfig;
 	
-
+	
+	public EntryPointIote2eRequest( ) {
+	}
+	
+	
 	public static void main(String[] args) {
 		logger.info("Starting");
 		try {
-			masterConfig = MasterConfig.getInstance( args[0], args[1], args[2] );
+			masterConfigWithRetries( args );
 			EntryPointIote2eRequest entryPointIote2eRequest = new EntryPointIote2eRequest();
 			entryPointIote2eRequest.process( );
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);
 		}
 	}
-	
-	public EntryPointIote2eRequest( ) {
+
+	/*
+	 * Give Cassandra a minute to start
+	 */
+	private static void masterConfigWithRetries( String args[] ) throws Exception {
+		final int RETRY_MINUTES = 10;
+		long maxWait = System.currentTimeMillis() + (RETRY_MINUTES * 60 * 1000);
+		Exception exception = null;
+		while( true ) {
+			try {
+				masterConfig = MasterConfig.getInstance( args[0], args[1], args[2] );
+				return;
+			} catch(Exception e ) {
+				exception = e;
+			}
+			if( System.currentTimeMillis() > maxWait ) break;
+			logger.debug("retrying Cassandra connection");
+			try { Thread.sleep(5000); } catch(Exception e) {}
+		}
+		throw exception;
 	}
 
 	public void process( ) throws Exception {

@@ -16,7 +16,7 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiHandlerHumidityToMister extends TestKsiHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKsiHandlerHumidityToMister.class);
-	private static final String pkActuatorState = testHumidityLoginName + "|" + testHumiditySourceName + "|" + testHumiditySensorName;
+	private static final String pkActuatorState = testHumidityLoginName + "|" + testHumiditySourceName + "|" + testHumiditySensorName + "|";
 
 	public TestKsiHandlerHumidityToMister() throws Exception {
 		super();

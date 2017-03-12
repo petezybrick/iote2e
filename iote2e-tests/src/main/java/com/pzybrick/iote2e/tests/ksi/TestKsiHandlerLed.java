@@ -16,9 +16,9 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiHandlerLed extends TestKsiHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKsiHandlerLed.class);
-	private static final String pkActuatorStateGreen = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen;
-	private static final String pkActuatorStateYellow = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow;
-	private static final String pkActuatorStateRed = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed;
+	private static final String pkActuatorStateGreen = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
+	private static final String pkActuatorStateYellow = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
+	private static final String pkActuatorStateRed = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed + "|";
 
 	public TestKsiHandlerLed() throws Exception {
 		super();

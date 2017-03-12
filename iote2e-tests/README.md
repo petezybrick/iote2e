@@ -3,6 +3,7 @@ java -cp iote2e-stream-1.0.0.jar com.pzybrick.iote2e.stream.kafkademo.KafkaStrin
 
 java -cp iote2e-stream-1.0.0.jar com.pzybrick.iote2e.stream.kafkademo.KafkaAvroDemo 1000 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
 
+**Start Kafka/Zookeeper local**
 Setup to run unit tests with Iote2eRequests inbound from Kafka
 Note: can't use Kafka under Docker to run jUnit tests, the hostname returned is based on the hostname in docker
 Here is a solid writeup: http://www.michael-noll.com/blog/2013/03/13/running-a-multi-broker-apache-kafka-cluster-on-a-single-node/ 
@@ -20,13 +21,26 @@ Note: if the topic doesn't already exist, then creat it now:
 env JMX_PORT=9999 ./bin/kafka-server-start.sh config/server-0.properties
 env JMX_PORT=10000 ./bin/kafka-server-start.sh config/server-1.properties
 env JMX_PORT=10001 ./bin/kafka-server-start.sh config/server-2.properties
-Start Cassandra single node local
+
+**Start Cassandra single node local**
 start another terminal tab or session
 cd to cassandra folder: cd /home/pete/development/server/apache-cassandra-3.9
 Settings to minimize Cassandra memory usage for development - if not set, Cassandra will use memory as if your machine is only running Cassandra
 export MAX_HEAP_SIZE=1G
 export HEAP_NEWSIZE=200M
 ./bin/cassandra -f
+
+**Run local Ignite**
+*open a terminal session or tab*
+cd /home/pete/development/server/apache-ignite-fabric-1.8.0-bin
+export IGNITE_HOME="/home/pete/development/server/apache-ignite-fabric-1.8.0-bin"
+export IGNITE_VERSION="1.8.0"
+export DEFAULT_CONFIG="/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml"
+export JVM_OPTS="-Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m"
+
+./bin/ignite.sh "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml"
+*then run the jUnit tests via IDE, i.e. Eclipse*
+
 
 Start/stop environment for standalone jUnit tests
 Start
@@ -94,14 +108,6 @@ Run Spark unit tests under Docker
   /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
   master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
 
-  --executor-memory 2G \
-  --total-executor-cores 3 \
-  --executor-cores NUM 
-
-  masterConfigJsonKey, String contactPoint, String keyspaceName
-  iote2e-cassandra1
-      CASSANDRA_KEYSPACE_NAME: iote2e
-      MASTER_CONFIG_JSON_KEY: master_spark_unit_test_docker_config
   
 - review the returned json for "success":true
 		17/02/04 12:41:01 INFO RestSubmissionClient: Server responded with CreateSubmissionResponse:
@@ -149,16 +155,6 @@ docker exec -it iote2e-cassandra1 /bin/bash
 csqlsh iote2e-cassandra1
 select config_name from config;
 
-**Run local Ignite**
-*open a terminal session or tab*
-cd /home/pete/development/server/apache-ignite-fabric-1.8.0-bin
-export IGNITE_HOME="/home/pete/development/server/apache-ignite-fabric-1.8.0-bin"
-export IGNITE_VERSION="1.8.0"
-export DEFAULT_CONFIG="/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml"
-export JVM_OPTS="-Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m"
-
-./bin/ignite.sh "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml"
-*then run the jUnit tests via IDE, i.e. Eclipse*
 
 Spark Kafka Consumer
 https://github.com/dibbhatt/kafka-spark-consumer

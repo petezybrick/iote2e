@@ -26,7 +26,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
 		String testLedValue = "1";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue, filterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 3000, queueIote2eResults );
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
 		Assert.assertEquals("iote2eResults getActuatorTargetValue", "green", 
@@ -39,7 +39,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
 		String testLedValue = "0";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameGreen, testLedValue, filterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 3000, queueIote2eResults );
 
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
@@ -53,7 +53,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed + "|";
 		String testLedValue = "1";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, filterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 3000, queueIote2eResults );
 
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
@@ -67,7 +67,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameRed + "|";
 		String testLedValue = "0";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameRed, testLedValue, filterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 3000, queueIote2eResults );
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
 		Assert.assertEquals("iote2eResults getActuatorTargetValue", "off", 
@@ -80,7 +80,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
 		String testLedValue = "1";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue, filterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 3000, queueIote2eResults );
 
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );
@@ -94,7 +94,7 @@ public class TestIgniteHandlerLed extends TestIgniteHandlerBase {
 		String filterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
 		String testLedValue = "0";
 		commonRun( testLedLoginName, testLedSourceName, testLedSourceType, testLedSensorNameYellow, testLedValue, filterKey);
-		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 2000, queueIote2eResults );
+		List<Iote2eResult> iote2eResults = commonThreadSubscribeGetIote2eResults( 3000, queueIote2eResults );
 
 		Assert.assertNotNull("iote2eResults is null", iote2eResults == null );
 		Assert.assertEquals("iote2eResults must have size=1", 1, iote2eResults.size() );

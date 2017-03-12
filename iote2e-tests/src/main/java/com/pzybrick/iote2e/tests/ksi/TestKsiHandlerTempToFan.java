@@ -16,7 +16,7 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiHandlerTempToFan extends TestKsiHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestKsiHandlerTempToFan.class);
-	private static final String pkActuatorState = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName;
+	private static final String pkActuatorState = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName + "|";
 	
 	public TestKsiHandlerTempToFan() throws Exception {
 		super();

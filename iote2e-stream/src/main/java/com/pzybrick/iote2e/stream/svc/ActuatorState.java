@@ -32,7 +32,7 @@ public class ActuatorState implements Serializable {
 	
 	public String getPk() {
 		if( pk != null ) return pk;
-		pk = String.format( "%s|%s|%s", loginName,sourceName,sensorName);
+		pk = String.format( "%s|%s|%s|", loginName,sourceName,sensorName);
 		return pk;
 	}
 

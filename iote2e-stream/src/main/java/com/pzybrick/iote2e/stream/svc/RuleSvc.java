@@ -11,6 +11,8 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.stream.svc.RuleDefCondItem.RuleComparator;
 
+import scala.tools.jline_embedded.internal.Log;
+
 public abstract class RuleSvc {
 	private static final Logger logger = LogManager.getLogger(RuleSvc.class);
 
@@ -88,6 +90,7 @@ public abstract class RuleSvc {
 
 		boolean ruleActuatorHit = false;
 		if( actuatorState.getActuatorValue() != null ) {
+			logger.debug("actuatorState.getActuatorValue() = " + actuatorState.getActuatorValue());
 			ruleActuatorHit = ruleEvalCommon(actuatorState.getActuatorValue(),
 					ruleDefCondItem.getActuatorTypeValue(), ruleDefCondItem.getActuatorCompareValue(),
 					ruleDefCondItem.getIntActuatorCompareValue(), ruleDefCondItem.getDblActuatorCompareValue(),
@@ -106,6 +109,7 @@ public abstract class RuleSvc {
 	private boolean ruleEvalCommon(String currentValue, String typeValue, String strCompareValue,
 			Integer intCompareValue, Double dblCompareValue, RuleComparator ruleComparator, RuleDefItem ruleDefItem)
 			throws Exception {
+		logger.debug("currentValue {}, typeValue {}, strCompareValue {}, intCompareValue {}, dblCompareValue {}", currentValue, typeValue, strCompareValue, intCompareValue, dblCompareValue);
 		boolean isRuleHit = false;
 		int compareResult = 0;
 		if ("dbl".equals(typeValue)) {

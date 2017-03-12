@@ -1,6 +1,7 @@
 package com.pzybrick.iote2e.tests.ksi;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
@@ -25,6 +27,7 @@ import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.stream.request.Iote2eSvc;
 import com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer;
+import com.pzybrick.iote2e.stream.svc.ActuatorState;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
@@ -91,6 +94,14 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 	public void before() throws Exception {
 		logger.info(
 				"------------------------------------------------------------------------------------------------------");
+		// reset to same default ActuatorState=null every time
+		if( masterConfig.isForceResetActuatorState()) {
+			String rawJson = ConfigDao.findConfigJson(masterConfig.getActuatorStateKey());
+			List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
+					new TypeToken<List<ActuatorState>>() {
+					}.getType());
+			ActuatorStateDao.resetActuatorStateBatch(actuatorStates);
+		}
 		iote2eResultReuseItem = new Iote2eResultReuseItem();
 		iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 		queueIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
