@@ -3,6 +3,23 @@ java -cp iote2e-stream-1.0.0.jar com.pzybrick.iote2e.stream.kafkademo.KafkaStrin
 
 java -cp iote2e-stream-1.0.0.jar com.pzybrick.iote2e.stream.kafkademo.KafkaAvroDemo 1000 "iote2e-zoo2:2181" "iote2e-group-sandbox" "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox" "iote2e-kafka1:9092,iote2e-kafka2:9092,iote2e-kafka3:9092"
 
+**Start local unit test environment**
+This single batch file will do the steps below - start/stop Kafka/Zookeeper, Cassandra and Ignite
+Start
+	open terminal session
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
+	unit-test-env-start.sh arguments: $1=Kafka installation path, $2=Cassandra installation path, $3=Ignite installation path $4=Ignite config file path/name
+	run start script: ./unit-test-env-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9 /home/pete/development/server/apache-ignite-fabric-1.8.0-bin /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml
+	open another terminal session/tab
+	cd to scripts folder
+Run
+	run tests, i.e. ./run-junit-tests-ksi.sh
+Stop
+	open terminal session
+	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-scripts
+	run stop script: ./unit-test-env-stop.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9
+
+
 **Start Kafka/Zookeeper local**
 Setup to run unit tests with Iote2eRequests inbound from Kafka
 Note: can't use Kafka under Docker to run jUnit tests, the hostname returned is based on the hostname in docker
@@ -42,19 +59,6 @@ export JVM_OPTS="-Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=
 *then run the jUnit tests via IDE, i.e. Eclipse*
 
 
-Start/stop environment for standalone jUnit tests
-Start
-	open terminal session
-	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/iote2e-scripts
-	run start script: ./unit-test-env-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9
-	open another terminal session/tab
-	cd to scripts folder
-Run
-	run tests, i.e. ./run-junit-tests-ksi.sh
-Stop
-	open terminal session
-	cd to scripts folder: cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-scripts
-	run stop script: ./unit-test-env-stop.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9
 
 Start/Stop/Update Docker Environment
 Start

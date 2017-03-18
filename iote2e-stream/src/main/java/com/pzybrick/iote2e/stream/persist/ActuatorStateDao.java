@@ -1,6 +1,8 @@
 package com.pzybrick.iote2e.stream.persist;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +11,9 @@ import org.joda.time.DateTimeZone;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
+import com.google.gson.reflect.TypeToken;
 import com.pzybrick.iote2e.common.persist.CassandraBaseDao;
+import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.stream.svc.ActuatorState;
 
 public class ActuatorStateDao extends CassandraBaseDao {
@@ -190,6 +194,31 @@ public class ActuatorStateDao extends CassandraBaseDao {
 			actuatorState.getActuatorDesc() );
 		return insert;
 	}
+	
+	public static List<ActuatorState> createActuatorStatesFromJson( String rawJson ) throws Exception {
+		List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
+				new TypeToken<List<ActuatorState>>() {
+				}.getType());
+		expandSourceNames(actuatorStates);
+		return actuatorStates;
+	}
+	
+	public static void expandSourceNames(List<ActuatorState> actuatorStates) throws Exception {
+		ListIterator<ActuatorState> lit = actuatorStates.listIterator();
+		while( lit.hasNext() ) {
+			ActuatorState actuatorState = lit.next();
+			if(actuatorState.getSourceName().indexOf("|") > -1 ) {
+				lit.remove();
+				List<String> sourceNames = Arrays.asList( actuatorState.getSourceName().split("[|]"));
+				for( String sourceName : sourceNames ) {
+					ActuatorState clone = actuatorState.clone();
+					clone.setSourceName(sourceName);
+					lit.add(clone);
+				}
+			}
+		}
+	}
+
 	
 	private static String createUpdateValueCql( String pk, String newValue  ) {
 		if( newValue != null ) newValue = "'" + newValue + "'";

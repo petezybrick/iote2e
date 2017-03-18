@@ -97,9 +97,7 @@ public class TestKsiHandlerBase extends TestCommonHandler {
 		// reset to same default ActuatorState=null every time
 		if( masterConfig.isForceResetActuatorState()) {
 			String rawJson = ConfigDao.findConfigJson(masterConfig.getActuatorStateKey());
-			List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
-					new TypeToken<List<ActuatorState>>() {
-					}.getType());
+			List<ActuatorState> actuatorStates = ActuatorStateDao.createActuatorStatesFromJson(rawJson);
 			ActuatorStateDao.resetActuatorStateBatch(actuatorStates);
 		}
 		iote2eResultReuseItem = new Iote2eResultReuseItem();

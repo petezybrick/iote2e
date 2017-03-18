@@ -6,7 +6,7 @@ Created on Aug 6, 2016
 import logging
 import time
 import uuid
-import datetime
+from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ class ProcessTempToFan(object):
 
         iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='temp', 
                                        request_uuid=str(uuid.uuid4()), 
-                                       request_timestamp=datetime.datetime.utcnow().isoformat(), 
+                                       request_timestamp=ClientUtils.nowIso8601(), 
                                        pairs=pairs, operation='SENSORS_VALUES')
         return iote2eRequest
         

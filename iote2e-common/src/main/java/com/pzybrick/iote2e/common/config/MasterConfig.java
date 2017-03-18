@@ -16,7 +16,6 @@ import com.pzybrick.iote2e.common.persist.ConfigDao;
 @Generated("org.jsonschema2pojo")
 public class MasterConfig implements Serializable {
 	private static final Logger logger = LogManager.getLogger(MasterConfig.class);
-	private static MasterConfig masterConfig;
 	private String masterConfigJsonKey;
 	private String contactPoint;
 	private String keyspaceName;
@@ -94,24 +93,24 @@ public class MasterConfig implements Serializable {
 	}
 
 		
-	public static synchronized MasterConfig getInstance( String masterConfigJsonKey, String contactPoint, String keyspaceName ) throws Exception {
-		if( masterConfig == null ) {
-			try {
-				logger.info("Instantiating MasterConfig singleton");
-				if( keyspaceName == null ) keyspaceName = CassandraBaseDao.DEFAULT_KEYSPACE_NAME;
-				ConfigDao.connect(contactPoint, keyspaceName);
-				String rawJson = ConfigDao.findConfigJson(masterConfigJsonKey);
-				Gson gson = new GsonBuilder().setPrettyPrinting().create();
-				masterConfig = gson.fromJson(rawJson, MasterConfig.class);
-				masterConfig.setContactPoint(contactPoint);
-				masterConfig.setKeyspaceName(keyspaceName);				
-			} catch (Throwable t ) {
-				logger.error("Cassandra initialization failure", t);
-				throw t;
-			}
+	public static MasterConfig getInstance( String masterConfigJsonKey, String contactPoint, String keyspaceName ) throws Exception {
+		MasterConfig masterConfig = null;
+		try {
+			logger.info("Instantiating MasterConfig singleton");
+			if( keyspaceName == null ) keyspaceName = CassandraBaseDao.DEFAULT_KEYSPACE_NAME;
+			ConfigDao.connect(contactPoint, keyspaceName);
+			String rawJson = ConfigDao.findConfigJson(masterConfigJsonKey);
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			masterConfig = gson.fromJson(rawJson, MasterConfig.class);
+			masterConfig.setContactPoint(contactPoint);
+			masterConfig.setKeyspaceName(keyspaceName);				
+		} catch (Throwable t ) {
+			logger.error("Cassandra initialization failure", t);
+			throw t;
 		}
 		return masterConfig;
 	}
+	
 	
 	public String getRuleSvcClassName() {
 		return ruleSvcClassName;

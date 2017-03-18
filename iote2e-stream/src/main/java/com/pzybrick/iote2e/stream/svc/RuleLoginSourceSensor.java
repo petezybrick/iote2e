@@ -74,6 +74,17 @@ public class RuleLoginSourceSensor implements Serializable {
 		this.loginName = loginName;
 		return this;
 	}
+
+	@Override
+	protected RuleLoginSourceSensor clone() throws CloneNotSupportedException {
+		RuleLoginSourceSensor clone = new RuleLoginSourceSensor();
+		clone.loginName = this.loginName;
+		clone.sourceName = sourceName;
+		clone.sensorName = sensorName;
+		clone.ruleUuid = ruleUuid;
+		clone.desc = desc;
+		return clone;
+	}
 	
 	
 

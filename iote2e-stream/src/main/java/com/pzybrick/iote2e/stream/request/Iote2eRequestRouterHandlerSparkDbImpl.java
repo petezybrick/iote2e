@@ -107,10 +107,7 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 				pstmt.setString(offset++, request_uuid );
 				pstmt.setString(offset++, iote2eRequest.getLoginName().toString());
 				pstmt.setString(offset++, iote2eRequest.getSourceName().toString());
-				// This is a total hack - some python systems will send in microseconds, i.e. .123456 instead of just .123
-				String requestTimestamp = iote2eRequest.getRequestTimestamp().toString();
-				if( requestTimestamp.length() == 26 ) requestTimestamp = requestTimestamp.substring(0,23) + "Z";
-				Timestamp timestamp = new Timestamp(dtfmt.parseDateTime(requestTimestamp).getMillis());
+				Timestamp timestamp = new Timestamp(dtfmt.parseDateTime(iote2eRequest.getRequestTimestamp().toString()).getMillis());
 				pstmt.setTimestamp(offset++, timestamp);
 				// Next value(s)/types are specific to the table
 				// For this simple example, assume one value passed as string

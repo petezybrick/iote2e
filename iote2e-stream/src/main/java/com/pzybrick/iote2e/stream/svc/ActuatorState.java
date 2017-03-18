@@ -1,6 +1,9 @@
 package com.pzybrick.iote2e.stream.svc;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.annotation.Generated;
 
@@ -104,6 +107,20 @@ public class ActuatorState implements Serializable {
 	public ActuatorState setLoginName(String loginName) {
 		this.loginName = loginName;
 		return this;
+	}
+
+	@Override
+	public ActuatorState clone() throws CloneNotSupportedException {
+		ActuatorState clone = new ActuatorState();
+		clone.loginName = this.loginName;
+		clone.sourceName = this.sourceName;
+		clone.sensorName = this.sensorName;
+		clone.actuatorName = this.actuatorName;
+		clone.actuatorValue = this.actuatorValue;
+		clone.actuatorDesc = this.actuatorDesc;
+		clone.actuatorValueUpdatedAt = this.actuatorValueUpdatedAt;
+		clone.pk = this.pk;
+		return clone;
 	}
 	
 }

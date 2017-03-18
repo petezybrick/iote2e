@@ -10,7 +10,7 @@
 	scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@192.168.1.6:iote2epyclient-1.0.0.tar.gz
 * Login to target system and `cd` to target directory
 * Execute the following commands:
-sudo rm -rf iote2epyclient-1.0.0
+rm -rf iote2epyclient-1.0.0
 tar -xvzf iote2epyclient-1.0.0.tar.gz
 cd iote2epyclient-1.0.0
 sudo python setup.py install
@@ -21,18 +21,22 @@ sudo rm -rf iote2epyclient-1.0.0
 				* import iote2epyclient 
 				* print iote2epyclient.version
 		* Should display "1.0.0" - if not, then research the error
+		* Enter `exit()` to exit the python interpreter
 		
 ##Running Simulators
-###Temp to Fan
-python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'temp1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi_999' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' 'temp1'
-
+###Prereqs###
 Create folders on target system
 	mkdir iote2epyclient
 	mkdir iote2epyclient/avro-schemas
 	mkdir iote2epyclient/log-configs
-scp -r /home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/ pete@192.168.1.6:/home/pete/iote2epyclient/avro-schemas/
-scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf pete@192.168.1.6:/home/pete/iote2epyclient/log-configs/client_consoleonly.conf
+scp -r /home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/ pete@192.168.1.5:/home/pete/iote2epyclient/avro-schemas/
+scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf pete@192.168.1.5:/home/pete/iote2epyclient/log-configs/client_consoleonly.conf
 
+###Temp to Fan
+**Running on python under Docker, i.e. on iote2e-demomgr**
+python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'temp1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-002' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' 'temp1'
+
+**Running on RPi**
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'temp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi_001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'temp1'
 
 ###Humidity to Mister
@@ -41,7 +45,7 @@ python -m iote2epyclient.launch.clientlauncher 'ProcessSimHumidityToMister' 'hum
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimHumidityToMister' 'humidity1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi_001' '//home/ubuntu/iote2epyclient/log-configs/client_consoleonly.conf' 'humidity1'
 
 ###LedGreen
-python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'switch0' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi_999' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' 'switch0'
+python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'switch0' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-999' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' 'switch0'
 
 ##Installation RPi
 Install Ubuntu Mate 
@@ -49,28 +53,25 @@ Install Ubuntu Mate
 	Copy to microSDHC - I used Etcher on MacBook, worked great
 	Plug the microSDHC into the RPi and power up
 	Follow the prompts
+	**CRITICAL** name each RPi distinctly, use rpi-001, rpi-002 to start, since this matches the SourceName's in rule_login_source_sensor.json
 Start Ubuntu Mate
-	Open the ssh port
-		sudo wfw allow 22
+	Login for the first time
+	Open terminal session
+		sudo apt-get update
+		sudo apt-get --purge autoremove
+		sudo ufw enable
+		sudo ufw allow 22
+		sudo systemctl enable ssh.socket
 		sudo systemctl restart ssh
-install Python add ons
-	sudo apt-get update
-	sudo pip install --upgrade pip
-	sudo pip install enum
-	pip install websocket-client
-Install Avro for Python
-	Note that the steps below assume Release 1.8.1, if you are using a newer/older version then adjust accordingly
-	Review the steps on the Avro Python installation page, i.e. https://avro.apache.org/docs/1.8.1/gettingstartedpython.html
-	Download the Avro install tgz.  Ensure it is the same version as the dependency in the pom.xml in the iote2e-schema project, currently 1.8.1sudo 
-		A download mirror can be found on the Avro downloads page, update the below URL with the mirror's name and execute the wget
-		wget http://apache.spinellicreations.com/avro/avro-1.8.1/py/avro-1.8.1.tar.gz
-	tar xvf avro-1.8.1.tar.gz
-	cd avro-1.8.1
-	sudo python setup.py install
-	python
-		import avro -> should not throw exception
-		exit()
-Install Python Websocket client support
+	SCP the RPi initialization script to the RPi instance
+		Enter: scp /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts/rpi-init.sh pete@192.168.1.5:rpi-init.sh
+	SSH into the RPi and run the init script
+		ssh pete@192.168.1.5
+		sudo ./rpi-init.sh
+	Verify Avro installed
+		python
+			import avro -> should not throw exception
+			exit()
 	
 	
 sudo shutdown -P now

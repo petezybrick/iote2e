@@ -4,6 +4,7 @@ Created on Feb 18, 2017
 @author: pete
 '''
 import sys
+import datetime
 from cassandra.cluster import Cluster
 
 def main(conf_file):
@@ -11,7 +12,7 @@ def main(conf_file):
     logging.config.fileConfig( conf_file, disable_existing_loggers=False)
     logger = logging.getLogger(__name__)
     logger.info('Starting')
-    
+
     cluster = Cluster('127.0.0.1')
     session = cluster.connect('iote2e')
     

@@ -1,7 +1,9 @@
 package com.pzybrick.iote2e.stream.svc;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -35,15 +37,11 @@ public class RuleSvcJsonImpl extends RuleSvc {
 			ActuatorStateDao.dropTable();
 			ActuatorStateDao.createTable();
 			String rawJson = ConfigDao.findConfigJson(masterConfig.getActuatorStateKey());
-			List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
-					new TypeToken<List<ActuatorState>>() {
-					}.getType());
+			List<ActuatorState> actuatorStates = ActuatorStateDao.createActuatorStatesFromJson(rawJson);
 			ActuatorStateDao.insertActuatorStateBatch(actuatorStates);
 		} else if( masterConfig.isForceResetActuatorState()) {
 			String rawJson = ConfigDao.findConfigJson(masterConfig.getActuatorStateKey());
-			List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
-					new TypeToken<List<ActuatorState>>() {
-					}.getType());
+			List<ActuatorState> actuatorStates = ActuatorStateDao.createActuatorStatesFromJson(rawJson);
 			ActuatorStateDao.resetActuatorStateBatch(actuatorStates);
 		}
 
@@ -51,6 +49,9 @@ public class RuleSvcJsonImpl extends RuleSvc {
 		ruleLoginSourceSensors = Iote2eUtils.getGsonInstance().fromJson(rawJson,
 				new TypeToken<List<RuleLoginSourceSensor>>() {
 				}.getType());
+		// same rule def can apply to multiple sourcenames, i.e. rpi-001, rpi-002, etc.
+		// If source name is pipe delimited, then create a separate source for each distinct sourcename
+		expandSourceNames();
 		for (RuleLoginSourceSensor ruleLoginSourceSensor : ruleLoginSourceSensors) {
 			String key = ruleLoginSourceSensor.getLoginName() + "|" + ruleLoginSourceSensor.getSourceName();
 			Map<String, RuleLoginSourceSensor> mapBySensorName = rssByLoginSourceUuid
@@ -88,6 +89,22 @@ public class RuleSvcJsonImpl extends RuleSvc {
 				ruleDefCondItem.setRuleComparatorActuator(ruleDefCondItem.ruleComparatorFromString(ruleDefCondItem.getActuatorComparator())); 
 			}
 			rdiByRuleUuid.put(ruleDefItem.getRuleUuid(), ruleDefItem );
+		}
+	}
+	
+	protected void expandSourceNames() throws Exception {
+		ListIterator<RuleLoginSourceSensor> lit = ruleLoginSourceSensors.listIterator();
+		while( lit.hasNext() ) {
+			RuleLoginSourceSensor ruleLoginSourceSensor = lit.next();
+			if(ruleLoginSourceSensor.getSourceName().indexOf("|") > -1 ) {
+				lit.remove();
+				List<String> sourceNames = Arrays.asList( ruleLoginSourceSensor.getSourceName().split("[|]"));
+				for( String sourceName : sourceNames ) {
+					RuleLoginSourceSensor clone = ruleLoginSourceSensor.clone();
+					clone.setSourceName(sourceName);
+					lit.add(clone);
+				}
+			}
 		}
 	}
 

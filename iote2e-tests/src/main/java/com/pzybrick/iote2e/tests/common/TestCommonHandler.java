@@ -16,13 +16,13 @@ public abstract class TestCommonHandler {
 	protected static MasterConfig masterConfig;
 
 	public static final String testHumidityLoginName = "pzybrick1";
-	public static final String testHumiditySourceName = "rpi_999";
+	public static final String testHumiditySourceName = "rpi-999";
 	public static final String testHumiditySourceType = "humidity";
 	public static final String testHumiditySensorName = "humidity1";
 	public static final String testHumidityFilterKey = testHumidityLoginName + "|" + testHumiditySourceName + "|" + testHumiditySensorName + "|";
 
 	public static final String testLedLoginName = "pzybrick1";
-	public static final String testLedSourceName = "rpi_999";
+	public static final String testLedSourceName = "rpi-999";
 	public static final String testLedSourceType = "switch";
 	public static final String testLedSensorNameGreen = "switch0";
 	public static final String testLedGreenFilterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameGreen + "|";
@@ -32,7 +32,7 @@ public abstract class TestCommonHandler {
 	public static final String testLedYellowFilterKey = testLedLoginName + "|" + testLedSourceName + "|" + testLedSensorNameYellow + "|";
 	
 	public static final String testTempToFanLoginName = "pzybrick1";
-	public static final String testTempToFanSourceName = "rpi_999";
+	public static final String testTempToFanSourceName = "rpi-999";
 	public static final String testTempToFanSourceType = "temperature";
 	public static final String testTempToFanSensorName = "temp1";
 	public static final String testTempToFanFilterKey = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName + "|";

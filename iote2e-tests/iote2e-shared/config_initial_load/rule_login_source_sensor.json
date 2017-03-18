@@ -1,35 +1,35 @@
 [
   {
     "loginName": "pzybrick1",
-    "sourceName": "rpi_999",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
     "sensorName": "temp1",
     "ruleUuid": "rule_temp_to_fan",
     "desc": "TempToFan"
   },
   {
     "loginName": "pzybrick1",
-    "sourceName": "rpi_999",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
     "sensorName": "humidity1",
     "ruleUuid": "rule_humidity_to_mister",
     "desc": "HumidityToMister"
   },
   {
     "loginName": "pzybrick1",
-    "sourceName": "rpi_999",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
     "sensorName": "switch0",
     "ruleUuid": "rule_led_green",
     "desc": "Switch0ToLedGreen"
   },
   {
     "loginName": "pzybrick1",
-    "sourceName": "rpi_999",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
     "sensorName": "switch1",
     "ruleUuid": "rule_led_red",
     "desc": "Switch1ToLedRed"
   },
   {
     "loginName": "pzybrick1",
-    "sourceName": "rpi_999",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
     "sensorName": "switch2",
     "ruleUuid": "rule_led_yellow",
     "desc": "Switch2ToLedYellow"

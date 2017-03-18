@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +21,7 @@ import com.pzybrick.iote2e.common.persist.ConfigVo;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.stream.svc.ActuatorState;
+import com.pzybrick.iote2e.stream.svc.RuleLoginSourceSensor;
 
 public class ConfigInitialLoad {
 	private static final Logger logger = LogManager.getLogger(ConfigInitialLoad.class);
@@ -59,9 +62,7 @@ public class ConfigInitialLoad {
 			ActuatorStateDao.dropTable();
 			ActuatorStateDao.createTable();
 			String rawJson = ConfigDao.findConfigJson("actuator_state");
-			List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
-					new TypeToken<List<ActuatorState>>() {
-					}.getType());
+			List<ActuatorState> actuatorStates = ActuatorStateDao.createActuatorStatesFromJson(rawJson);
 			ActuatorStateDao.insertActuatorStateBatch(actuatorStates);
 		} catch( Exception e ) {
 			throw e;
@@ -70,6 +71,7 @@ public class ConfigInitialLoad {
 			ActuatorStateDao.disconnect();
 		}
 	}
+
 	
 	private static String getStringFromInputStream(InputStream is) {
 		BufferedReader br = null;

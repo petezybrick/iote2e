@@ -45,7 +45,7 @@ public class ClientKsiInjector {
 	protected ThreadSparkRun threadSparkRun;
 	protected IotClientSocketThread iotClientSocketThread;
 	private static Utf8 TEST_SOURCE_LOGIN = new Utf8("pzybrick1");
-	private static Utf8 TEST_SOURCE_NAME = new Utf8("rpi_999");
+	private static Utf8 TEST_SOURCE_NAME = new Utf8("rpi-999");
 	private static Utf8 TEST_SOURCE_TYPE = new Utf8("temp");
 	private static Utf8 TEST_SENSOR_NAME = new Utf8("temp1");	// fan
     
