@@ -44,8 +44,8 @@ public class Iote2eRequestSparkProcessor implements Serializable {
 
     public void processIote2eRequestRecord(MessageAndMetadata messageAndMetadata, Router router) {
         try {
-        	logger.debug("Processing message with key: {}", new String(messageAndMetadata.getKey()) );
         	Iote2eRequest iote2eRequest = iote2eRequestReuseItem.fromByteArray(messageAndMetadata.getPayload() );
+        	logger.debug("Adding iote2eRequest: {}", iote2eRequest.toString() );
             router.add(iote2eRequest);
         } catch (Exception e) {
             logger.error("Error processing record : " + e.getMessage(), e);

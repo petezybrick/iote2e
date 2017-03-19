@@ -19,9 +19,6 @@ services:
       SPARK_WORKER_MEMORY: 16G
       SPARK_DRIVER_MEMORY: 16G
       SPARK_DAEMON_MEMORY: 16G
-#     CASSANDRA_CONTACT_POINT: iote2e-cassandra1
-#     CASSANDRA_KEYSPACE_NAME: iote2e
-#     MASTER_CONFIG_JSON_KEY: master_spark_unit_test_docker_config
     expose:
       - 6066
       - 7001
@@ -67,9 +64,6 @@ services:
       SPARK_EXECUTOR_MEMORY: 16G
       SPARK_DRIVER_MEMORY: 16G
       SPARK_DAEMON_MEMORY: 16G
-#     CASSANDRA_CONTACT_POINT: iote2e-cassandra1
-#     CASSANDRA_KEYSPACE_NAME: iote2e
-#     MASTER_CONFIG_JSON_KEY: master_spark_unit_test_docker_config
     links:
       - iote2e-spark-master
     expose:
@@ -113,9 +107,6 @@ services:
       SPARK_EXECUTOR_MEMORY: 16G
       SPARK_DRIVER_MEMORY: 16G
       SPARK_DAEMON_MEMORY: 16G
-#     CASSANDRA_CONTACT_POINT: iote2e-cassandra1
-#     CASSANDRA_KEYSPACE_NAME: iote2e
-#     MASTER_CONFIG_JSON_KEY: master_spark_unit_test_docker_config
     links:
       - iote2e-spark-master
     expose:
@@ -159,9 +150,6 @@ services:
       SPARK_EXECUTOR_MEMORY: 16G
       SPARK_DRIVER_MEMORY: 16G
       SPARK_DAEMON_MEMORY: 16G
-#     CASSANDRA_CONTACT_POINT: iote2e-cassandra1
-#     CASSANDRA_KEYSPACE_NAME: iote2e
-#     MASTER_CONFIG_JSON_KEY: master_spark_unit_test_docker_config
     links:
       - iote2e-spark-master
     expose:
@@ -205,9 +193,6 @@ services:
       SPARK_EXECUTOR_MEMORY: 16G
       SPARK_DRIVER_MEMORY: 16G
       SPARK_DAEMON_MEMORY: 16G
-#     CASSANDRA_CONTACT_POINT: iote2e-cassandra1
-#     CASSANDRA_KEYSPACE_NAME: iote2e
-#     MASTER_CONFIG_JSON_KEY: master_spark_unit_test_docker_config
     links:
       - iote2e-spark-master
     expose:
@@ -224,6 +209,49 @@ services:
       - 49112
     ports:
       - 8184:8184
+    volumes:
+      - ./conf/worker:/conf
+      - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
+      
+  iote2e-spark-worker5:
+    image: spark:2.0.2
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://iote2e-spark-master:7077
+    hostname: iote2e-spark-worker5
+    container_name: iote2e-spark-worker5
+    mem_limit: 16G
+    memswap_limit: 16G
+    networks:
+      default:
+        ipv4_address: 192.168.21.25
+    environment:
+      SPARK_CONF_DIR: /conf
+      SPARK_WORKER_CORES: 4
+      SPARK_WORKER_MEMORY: 16G
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8185
+      SPARK_PUBLIC_DNS: localhost
+      SPARK_EXECUTOR_INSTANCES: 2
+      SPARK_EXECUTOR_CORES: 2
+      SPARK_EXECUTOR_MEMORY: 16G
+      SPARK_DRIVER_MEMORY: 16G
+      SPARK_DAEMON_MEMORY: 16G
+    links:
+      - iote2e-spark-master
+    expose:
+      - 7012
+      - 7013
+      - 7014
+      - 7015
+      - 7016
+      - 8881
+# Ignite
+      - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
+    ports:
+      - 8185:8185
     volumes:
       - ./conf/worker:/conf
       - ./data:/tmp/data

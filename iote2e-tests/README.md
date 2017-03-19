@@ -97,7 +97,7 @@ Run Spark unit tests under Docker
   --master spark://localhost:6066 \
   --executor-memory 8G \
   --executor-cores 2 \
-  --total-executor-cores 4 \
+  --total-executor-cores 6 \
   /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
   master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
 
@@ -108,7 +108,15 @@ Run Spark unit tests under Docker
   --master spark://localhost:6066 \
   --executor-memory 8G \
   --executor-cores 2 \
-  --total-executor-cores 4 \
+  --total-executor-cores 8 \
+  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
+  master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
+
+ ./bin/spark-submit \
+  --class com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer \
+  --deploy-mode cluster \
+  --master spark://localhost:6066 \
+  --executor-memory 8G \
   /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
   master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
 
