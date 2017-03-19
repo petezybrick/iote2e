@@ -22,16 +22,16 @@ public class ResetPyClientActuatorState {
 		try {
 			logger.info("Resetting Actuator table for: {}",args[2]);
 			ActuatorStateDao.connect(args[0], args[1]);
-			if("temp".equalsIgnoreCase(args[2]) )
-				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
-			else if("humidity".equalsIgnoreCase(args[2]) )
-				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
-			else if("ledgreen".equalsIgnoreCase(args[2]) )
-				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
-			else if( "all".equalsIgnoreCase(args[2]) ) {
-				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
-				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
-				ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
+			if("temp".equalsIgnoreCase(args[2]) ) {
+				resetTemp();
+			} else if("humidity".equalsIgnoreCase(args[2]) ) {
+				resetHumidity();
+			} else if("ledgreen".equalsIgnoreCase(args[2]) ) {
+				resetLedGreen();
+			} else if( "all".equalsIgnoreCase(args[2]) ) {
+				resetTemp();
+				resetHumidity();
+				resetLedGreen();
 			} else throw new Exception("Invalid request, must be temp|humidity|ledgreen, was: " + args[2]);
 		} catch( Exception e ) {
 			logger.error(e.getMessage(), e);
@@ -39,6 +39,33 @@ public class ResetPyClientActuatorState {
 			ActuatorStateDao.disconnect();
 		}
 		
+	}
+	
+	// Hacks
+	private void resetHumidity() throws Exception {
+		ActuatorStateDao.updateActuatorValue(TestCommonHandler.testHumidityFilterKey, null);
+		for( int i=1 ; i<4 ; i++ ) {
+			String key = TestCommonHandler.testHumidityLoginName + "|rpi-00" + i + "|" + TestCommonHandler.testHumiditySensorName + "|";
+			ActuatorStateDao.updateActuatorValue(key, null);
+		}
+	}
+	
+	// Hacks
+	private void resetTemp() throws Exception {
+		ActuatorStateDao.updateActuatorValue(TestCommonHandler.testTempToFanFilterKey, null);
+		for( int i=1 ; i<4 ; i++ ) {
+			String key = TestCommonHandler.testTempToFanLoginName + "|rpi-00" + i + "|" + TestCommonHandler.testTempToFanSensorName + "|";
+			ActuatorStateDao.updateActuatorValue(key, null);
+		}
+	}
+	
+	// Hacks
+	private void resetLedGreen() throws Exception {
+		ActuatorStateDao.updateActuatorValue(TestCommonHandler.testLedGreenFilterKey, null);
+		for( int i=1 ; i<4 ; i++ ) {
+			String key = TestCommonHandler.testLedLoginName + "|rpi-00" + i + "|" + TestCommonHandler.testLedSensorNameGreen + "|";
+			ActuatorStateDao.updateActuatorValue(key, null);
+		}
 	}
 
 }

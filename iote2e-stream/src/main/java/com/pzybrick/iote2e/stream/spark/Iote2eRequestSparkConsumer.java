@@ -92,10 +92,11 @@ public class Iote2eRequestSparkConsumer {
         // consumer optional 
         kafkaProps.put("consumer.forcefromstart", "false");
         kafkaProps.put("consumer.fetchsizebytes", "1048576");
-        kafkaProps.put("consumer.fillfreqms", "250");
+        kafkaProps.put("consumer.fillfreqms", String.valueOf(sparkStreamDurationMs) );
         kafkaProps.put("consumer.backpressure.enabled", "true");
-        
-        kafkaProps.put( Config.KAFKA_PARTITIONS_NUMBER, 3 );
+        //kafkaProps.put("consumer.num_fetch_to_buffer", "10");
+                
+        kafkaProps.put( Config.KAFKA_PARTITIONS_NUMBER, 4 );
         
         kafkaProps.put("zookeeper.session.timeout.ms", "400");
         kafkaProps.put("zookeeper.sync.time.ms", "200");

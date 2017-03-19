@@ -29,7 +29,7 @@
 	"ruleSvcClassName": "com.pzybrick.iote2e.stream.svc.RuleSvcJsonImpl",
 	"sparkAppName": "iote2e-batch-db",
 	"sparkMaster": "spark://iote2e-spark-master:7077",
-	"sparkStreamDurationMs": "10000",
+	"sparkStreamDurationMs": "30000",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestToKafkaImpl",
 	"wsServerListenPort": "8090"
 }

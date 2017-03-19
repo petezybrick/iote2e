@@ -101,7 +101,7 @@ Run Spark unit tests under Docker
   /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
   master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
 
-**Speed layer - runs rules
+**Speed layer - runs rules**
 ./bin/spark-submit \
   --class com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer \
   --deploy-mode cluster \
