@@ -13,6 +13,7 @@ import logging
 from Queue import Queue
 from iote2epyclient.ws.loginvo import LoginVo
 from iote2epyclient.ws.socketstate import SocketState
+from iote2epyclient.process.processledgreen import ProcessLedGreen
 from iote2epyclient.process.processtemptofan import ProcessTempToFan
 from iote2epyclient.processsim.processsimtemptofan import ProcessSimTempToFan
 from iote2epyclient.processsim.processsimhumiditytomister import ProcessSimHumidityToMister

@@ -153,7 +153,7 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 	 */
 	private PreparedStatement getPreparedStatement( String tableName, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
 		if( cachePrepStmtsByTableName.containsKey(tableName) ) return cachePrepStmtsByTableName.get(tableName);
-		final String sqlTemperature = "INSERT INTO temperature (request_uuid,login_name,source_name,request_timestamp,degrees_f) VALUES (?,?,?,?,?)";
+		final String sqlTemperature = "INSERT INTO temperature (request_uuid,login_name,source_name,request_timestamp,degrees_c) VALUES (?,?,?,?,?)";
 		final String sqlHumidity = "INSERT INTO humidity (request_uuid,login_name,source_name,request_timestamp,pct_humidity) VALUES (?,?,?,?,?)";
 		final String sqlSwitch = "INSERT INTO switch (request_uuid,login_name,source_name,request_timestamp,switch_state) VALUES (?,?,?,?,?)";
 		final String sqlHeartbeat = "INSERT INTO heartbeat (request_uuid,login_name,source_name,request_timestamp,heartbeat_state) VALUES (?,?,?,?,?)";
