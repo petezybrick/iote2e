@@ -73,8 +73,18 @@ Start Ubuntu Mate
 		python
 			import avro -> should not throw exception
 			exit()
-	
-	
+	Optionally install gedit
+		sudo apt install gedit
+	Install git
+		sudo apt install git
+		Create a local repo, i.e. /home/pete/developmet/gitrepo
+		cd to that local repo, i.e. cd /home/pete/developmet/gitrepo
+		git init
+		git clone https://github.com/petezybrick/iote2e.git
+		git pull https://github.com/petezybrick/iote2e.git
+		git branch develop >>> really need this?
+		git checkout develop
+		git pull https://github.com/petezybrick/iote2e.git
+
 sudo shutdown -P now
 
-Watson, come here. I need you.
