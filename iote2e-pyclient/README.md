@@ -77,14 +77,21 @@ Start Ubuntu Mate
 		sudo apt install gedit
 	Install git
 		sudo apt install git
-		Create a local repo, i.e. /home/pete/developmet/gitrepo
-		cd to that local repo, i.e. cd /home/pete/developmet/gitrepo
+		Create a local repo, i.e. /home/pete/development/gitrepo
+		cd to that local repo, i.e. cd /home/pete/development/gitrepo
 		git init
+		git config --global push.default simple
 		git clone https://github.com/petezybrick/iote2e.git
 		git pull https://github.com/petezybrick/iote2e.git
 		git branch develop >>> really need this?
 		git checkout develop
 		git pull https://github.com/petezybrick/iote2e.git
+	Install HAT Python support
+		sudo apt-get update
+		sudo apt-get upgrade
+		sudo apt-get install sense-hat
+		Reboot the RPi
+		API Reference: https://pythonhosted.org/sense-hat/api/
 
 sudo shutdown -P now
 

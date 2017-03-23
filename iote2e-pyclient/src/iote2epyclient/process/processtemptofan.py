@@ -8,6 +8,8 @@ import time
 import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
+from sense_hat import SenseHat
+
 
 logger = logging.getLogger(__name__)
 
@@ -20,15 +22,18 @@ class ProcessTempToFan(object):
     def __init__(self, loginVo, sensorName):
         self.loginVo = loginVo
         self.sensorName = sensorName
+        self.sense = SenseHat()
+
         
     def process(self):
         logger.info('process');
         
+        
     def createIote2eRequest(self ):
-        time.sleep(2)
+        time.sleep(1)
         logger.info('ProcessTempToFan createIote2eRequest:')
-        # TODO: read temp from sensor here
-        pairs = { self.sensorName:'78.5' }
+        tempC = str(round(self.sense.get_temperature(),2))
+        pairs = { self.sensorName: tempC }
 
         iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='temp', 
                                        request_uuid=str(uuid.uuid4()), 
