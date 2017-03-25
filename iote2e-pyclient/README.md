@@ -63,11 +63,17 @@ Start Ubuntu Mate
 	Login for the first time
 	Open terminal session
 		sudo apt-get update
+		sudo apt-get upgrade
+			This will run for a few minutes, accept all defaults
+			Note: occasionally received: E: Could note get lock /var/lib/dpkg/lock
+			Did this: sudo lsof /var/lib/dpkg/lock
+			Found the pid, killed the process, then re-ran the apt-get
 		sudo apt-get --purge autoremove
 		sudo ufw enable
 		sudo ufw allow 22
 		sudo systemctl enable ssh.socket
 		sudo systemctl restart ssh
+		sudo apt-get update
 	SCP the RPi initialization script to the RPi instance
 		Enter: scp /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts/rpi-init.sh pete@192.168.1.5:rpi-init.sh
 	SSH into the RPi and run the init script
@@ -91,11 +97,18 @@ Start Ubuntu Mate
 		git checkout develop
 		git pull https://github.com/petezybrick/iote2e.git
 	Install HAT Python support
-		sudo apt-get update
-		sudo apt-get upgrade
 		sudo apt-get install sense-hat
 		Reboot the RPi
 		API Reference: https://pythonhosted.org/sense-hat/api/
+	Install Motor Python Support
+		sudo pip install pi-plates
+		sudo apt-get install python-spidev
+		sudo raspi-config
+			3 Interfacing Options
+			P3 SPI
+				enable SPI
+			Reboot
+		Motor Reference: https://pi-plates.com/downloads/MOTORplate%20Quick%20Reference%20Guide.pdf
 
 sudo shutdown -P now
 
