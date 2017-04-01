@@ -74,6 +74,9 @@ Start Ubuntu Mate
 		sudo systemctl enable ssh.socket
 		sudo systemctl restart ssh
 		sudo apt-get update
+	Determine the IP address of the RPi instance
+		ifconfig
+			Look for "encap:Ethernet"
 	SCP the RPi initialization script to the RPi instance
 		Enter: scp /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts/rpi-init.sh pete@192.168.1.5:rpi-init.sh
 	SSH into the RPi and run the init script
@@ -91,9 +94,11 @@ Start Ubuntu Mate
 		cd to that local repo, i.e. cd /home/pete/development/gitrepo
 		git init
 		git config --global push.default simple
+		git config --global user.email "pzybrick@gmail.com"
+		git config --global user.name "Pete Zybrick"
 		git clone https://github.com/petezybrick/iote2e.git
 		git pull https://github.com/petezybrick/iote2e.git
-		git branch develop >>> really need this?
+		git branch develop
 		git checkout develop
 		git pull https://github.com/petezybrick/iote2e.git
 	Install HAT Python support

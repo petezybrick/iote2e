@@ -1,5 +1,5 @@
 import time
-from processpilldispenser import ProcessPillDispenser
+from iote2epyclient.process.processpilldispenser import ProcessPillDispenser
 
 def main():
     processPillDispenser = ProcessPillDispenser()
