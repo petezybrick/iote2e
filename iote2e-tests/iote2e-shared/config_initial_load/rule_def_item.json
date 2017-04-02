@@ -16,7 +16,7 @@
       },
       {
         "sensorComparator": "LE",
-        "sensorCompareValue": "40",
+        "sensorCompareValue": "35",
         "sensorTypeValue": "dbl",
         "actuatorComparator": "EQ",
         "actuatorCompareValue": "on",
