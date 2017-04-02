@@ -9,6 +9,7 @@ import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
 from sense_hat import SenseHat
+import piplates.MOTORplate as MOTOR
 
 
 logger = logging.getLogger(__name__)
@@ -23,7 +24,8 @@ class ProcessTempToFan(object):
         self.loginVo = loginVo
         self.sensorName = sensorName
         self.sense = SenseHat()
-
+        MOTOR.dcCONFIG(0,3,'cw',100, 1)
+        
         
     def process(self):
         logger.info('process');
@@ -42,7 +44,12 @@ class ProcessTempToFan(object):
         return iote2eRequest
         
     def handleIote2eResult(self, iote2eResult ):
-        # TODO: turn on/off actuator (fan) here
-        logger.info('ProcessTempToFan handleIote2eResult: ' + str(iote2eResult))
+        actuatorValue = iote2eResult.pairs['actuatorValue'];
+        logger.info('actuatorValue {}'.format(actuatorValue))
+        if 'off' == actuatorValue:
+            MOTOR.dcSTOP(0,3)
+        elif 'on' == actuatorValue:
+            MOTOR.dcSTART(0,3)
+        
         
         

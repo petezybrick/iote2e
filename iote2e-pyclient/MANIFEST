@@ -8,6 +8,7 @@ src/iote2epyclient/launch/clientutils.py
 src/iote2epyclient/launch/testexit.py
 src/iote2epyclient/process/__init__.py
 src/iote2epyclient/process/processledgreen.py
+src/iote2epyclient/process/processpilldispenser.py
 src/iote2epyclient/process/processtemptofan.py
 src/iote2epyclient/processsim/__init__.py
 src/iote2epyclient/processsim/processsimhumiditytomister.py
@@ -20,6 +21,7 @@ src/iote2epyclient/schema/iote2eresult.py
 src/iote2epyclient/test/__init__.py
 src/iote2epyclient/test/testcassandra.py
 src/iote2epyclient/test/testhatsensors.py
+src/iote2epyclient/test/testprocesspilldispenser.py
 src/iote2epyclient/test/testrequest.py
 src/iote2epyclient/test/testresult.py
 src/iote2epyclient/ws/__init__.py

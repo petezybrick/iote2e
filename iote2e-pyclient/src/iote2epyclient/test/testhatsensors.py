@@ -18,9 +18,9 @@ def main(conf_file):
     #showMessages(sense)
     #showLetters(sense)
     #showPixels(sense)
-    #showTemperature(sense)
+    showTemperature(sense)
     #showJoystickPoll(sense)
-    showJoystickWait(sense)
+    #showJoystickWait(sense)
     sense.clear()
 
     logger.info('Done')
@@ -46,11 +46,11 @@ def showJoystickWait(sense):
 
     
 def showTemperature(sense):
-    for i in range(0,20):
+    for i in range(0,5):
         t = round(sense.get_temperature(),2)
         print(t)
-        sense.show_message("temp (c)={}".format(t), scroll_speed=.025)
-        sleep(1.5)
+        sense.show_message("{}".format(t), scroll_speed=.1)
+        sleep(1)
 
 
 def showMessages(sense):
