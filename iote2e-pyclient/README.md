@@ -40,7 +40,7 @@ python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'temp1' '/h
 **Running on RPi**
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'temp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi-002' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'temp1'
 
-python -m iote2epyclient.launch.clientlauncher 'ProcessTempToFan' 'temp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi-002' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'temp1'
+python -m iote2epyclient.launch.clientlauncher 'ProcessTempToFan' 'temp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'temp1'
 
 ###Humidity to Mister
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimHumidityToMister' 'humidity1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi_001' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' 'humidity1'
