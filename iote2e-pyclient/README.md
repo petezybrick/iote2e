@@ -6,16 +6,10 @@
 * Run setup.py with the parms: sdist --formats-gztar
 * Verify build succeeded: Gzip should be created: ./dist/awsext-1.1.tar.gz
 * Copy iote2epyclient-1.0.0.tar.gz to target location (i.e. SCP to an RPi or EC2 instance)
-	scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@192.168.1.6:/home/pete/iote2epyclient-1.0.0.tar.gz
-	scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@192.168.1.3:iote2epyclient-1.0.0.tar.gz
+	scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@192.168.1.6:iote2epyclient-1.0.0.tar.gz
 * Login to target system and `cd` to target directory
-* Execute the following commands:
-rm -rf iote2epyclient-1.0.0
-tar -xvzf iote2epyclient-1.0.0.tar.gz
-cd iote2epyclient-1.0.0
-sudo python setup.py install
-cd ..
-sudo rm -rf iote2epyclient-1.0.0
+* Run install script: sudo ~/development/gitrepo/iote2e/iote2e-pyclient/scripts/install-pyclient.sh
+* python -m iote2epyclient.test.testprocesspilldispenser 
 * Verify successful installation
 		* Start Python interactive and enter:
 				* import iote2epyclient 
@@ -30,8 +24,8 @@ Create folders on target system
 	mkdir iote2epyclient
 	mkdir iote2epyclient/avro-schemas
 	mkdir iote2epyclient/log-configs
-scp -r /home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/ pete@192.168.1.5:/home/pete/iote2epyclient/avro-schemas/
-scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf pete@192.168.1.5:/home/pete/iote2epyclient/log-configs/client_consoleonly.conf
+scp -r /home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/ pete@192.168.1.3:/home/pete/iote2epyclient/avro-schemas/
+scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf pete@192.168.1.3:/home/pete/iote2epyclient/log-configs/client_consoleonly.conf
 
 ###Temp to Fan
 **Running on python under Docker, i.e. on iote2e-demomgr**
@@ -97,10 +91,10 @@ Start Ubuntu Mate
 		git config --global user.email "pzybrick@gmail.com"
 		git config --global user.name "Pete Zybrick"
 		git clone https://github.com/petezybrick/iote2e.git
-		git pull https://github.com/petezybrick/iote2e.git
+		cd iote2e
+		git pull https://github.com/petezybrick/iote2e.git develop
 		git branch develop
 		git checkout develop
-		git pull https://github.com/petezybrick/iote2e.git
 	Install HAT Python support
 		sudo apt-get install sense-hat
 		Reboot the RPi
@@ -114,6 +108,12 @@ Start Ubuntu Mate
 				enable SPI
 			Reboot
 		Motor Reference: https://pi-plates.com/downloads/MOTORplate%20Quick%20Reference%20Guide.pdf
+	Enable Camera support
+		sudo raspi-config
+			3 Interfacing Options
+			P3 SPI
+				enable SPI
+			Reboot
 
 sudo shutdown -P now
 
