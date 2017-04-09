@@ -1,6 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<!-- Separate test project for iote2e, based on this maven best practice: https://maven.apache.org/plugins/maven-jar-plugin/examples/create-test-jar.html -->
+	<!-- Separate test project for iote2e, based on this maven best practice: 
+		https://maven.apache.org/plugins/maven-jar-plugin/examples/create-test-jar.html -->
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.pzybrick.iote2e</groupId>
 	<artifactId>iote2e-tests</artifactId>
@@ -88,7 +89,7 @@
 					<skipTests>false</skipTests>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -247,7 +248,7 @@
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-streaming-kafka_2.11</artifactId>
 			<version>1.6.3</version>
-			<!-- <scope>provided</scope>  -->
+			<!-- <scope>provided</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>kafka.spark.consumer</groupId>
@@ -258,7 +259,13 @@
 			<groupId>org.scala-lang</groupId>
 			<artifactId>scala-library</artifactId>
 			<version>${scala.version}</version>
-			<!-- <scope>compile</scope>  -->
+			<!-- <scope>compile</scope> -->
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.boofcv/io -->
+		<dependency>
+			<groupId>org.boofcv</groupId>
+			<artifactId>all</artifactId>
+			<version>0.26</version>
 		</dependency>
 
 		<dependency>
@@ -293,7 +300,7 @@
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.pzybrick.iote2e</groupId>
 			<artifactId>iote2e-stream</artifactId>
