@@ -12,7 +12,7 @@ Start
 	run start script: ./unit-test-env-start.sh /home/pete/development/server/kafka_2.10-0.10.0.0 /home/pete/development/server/apache-cassandra-3.9 /home/pete/development/server/apache-ignite-fabric-1.8.0-bin /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/config_ignite/ignite-iote2e-local-peer-false.xml
 	open another terminal session/tab
 	cd to scripts folder
-Run
+Run  
 	run tests, i.e. ./run-junit-tests-ksi.sh
 Stop
 	open terminal session
