@@ -63,7 +63,12 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 	}
 
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
-			String sensorValue) throws Exception {
+			String sensorValue ) throws Exception {
+		commonRun( loginName, sourceName, sourceType, sensorName, sensorValue, (Map<CharSequence, CharSequence>)null );
+	}
+
+	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
+			String sensorValue, Map<CharSequence, CharSequence> metadata ) throws Exception {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
 				sourceName, sourceType, sensorName, sensorValue));
 		try {
@@ -72,7 +77,7 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 			Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(loginName).setSourceName(sourceName)
 					.setSourceType(sourceType).setRequestUuid(UUID.randomUUID().toString())
 					.setRequestTimestamp(Iote2eUtils.getDateNowUtc8601()).setOperation(OPERATION.SENSORS_VALUES)
-					.setPairs(pairs).build();
+					.setPairs(pairs).setMetadata(metadata).build();
 			iote2eRequestHandler.addIote2eRequest(iote2eRequest);
 
 		} catch (Exception e) {

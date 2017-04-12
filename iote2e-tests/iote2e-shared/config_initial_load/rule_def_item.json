@@ -138,5 +138,12 @@
         "stopEvalOnMatch": true
       }
     ]
+  },
+  {
+    "ruleUuid": "rule_custom_pill_image",
+    "ruleName": "CustomPillImage",
+    "ruleCustomClassName": "com.pzybrick.iote2e.stream.svc.RuleCustomPillImageImpl"
   }
 ]
+
+

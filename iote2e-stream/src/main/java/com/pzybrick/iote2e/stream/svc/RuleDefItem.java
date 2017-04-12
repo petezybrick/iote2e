@@ -16,25 +16,22 @@ public class RuleDefItem implements Serializable {
 	@Expose
 	private String ruleName;
 	@Expose
-	private String customPkgClass;
+	private String ruleCustomClassName;
 	@Expose
 	private List<RuleDefCondItem> ruleDefCondItems;
+	
+	private RuleCustom ruleCustom;
 	
 	public RuleDefItem() {
 		
 	}
 	
-	public String getCustomPkgClass() {
-		return customPkgClass;
-	}
+
 	public List<RuleDefCondItem> getRuleDefCondItems() {
 		return ruleDefCondItems;
 	}
 
-	public RuleDefItem setCustomPkgClass(String customPkgClass) {
-		this.customPkgClass = customPkgClass;
-		return this;
-	}
+
 	public RuleDefItem setRuleDefCondItems(List<RuleDefCondItem> ruleDefCondItems) {
 		this.ruleDefCondItems = ruleDefCondItems;
 		return this;
@@ -42,8 +39,9 @@ public class RuleDefItem implements Serializable {
 
 	@Override
 	public String toString() {
-		return "RuleDefItem [ruleUuid=" + ruleUuid + ", ruleName=" + ruleName + ", customPkgClass=" + customPkgClass
-				+ ", ruleDefCondItems=" + ruleDefCondItems + "]";
+		return "RuleDefItem [ruleUuid=" + ruleUuid + ", ruleName=" + ruleName + ", ruleCustomClassName="
+				+ ruleCustomClassName + ", ruleDefCondItems=" + ruleDefCondItems + ", ruleCustomClass="
+				+ ruleCustom + "]";
 	}
 
 	public String getRuleUuid() {
@@ -63,6 +61,28 @@ public class RuleDefItem implements Serializable {
 
 	public RuleDefItem setRuleName(String ruleName) {
 		this.ruleName = ruleName;
+		return this;
+	}
+
+
+	public String getRuleCustomClassName() {
+		return ruleCustomClassName;
+	}
+
+
+	public RuleCustom getRuleCustom() {
+		return ruleCustom;
+	}
+
+
+	public RuleDefItem setRuleCustomClassName(String ruleCustomClassName) {
+		this.ruleCustomClassName = ruleCustomClassName;
+		return this;
+	}
+
+
+	public RuleDefItem setRuleCustom(RuleCustom ruleCustom) {
+		this.ruleCustom = ruleCustom;
 		return this;
 	}
 

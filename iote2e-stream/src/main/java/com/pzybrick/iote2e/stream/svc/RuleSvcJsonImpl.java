@@ -68,25 +68,33 @@ public class RuleSvcJsonImpl extends RuleSvc {
 				new TypeToken<List<RuleDefItem>>() {
 				}.getType());
 		for( RuleDefItem ruleDefItem : ruleDefItems ) {
-			for( RuleDefCondItem ruleDefCondItem : ruleDefItem.getRuleDefCondItems() ) {
-				// convert the compare and actuator values once to improve rule evaluation performance
-				// sensor
-				if( "dbl".equals(ruleDefCondItem.getSensorTypeValue())) {
-					ruleDefCondItem.setDblSensorCompareValue( Double.parseDouble(ruleDefCondItem.getSensorCompareValue()));
+			// Cache the custom rule class, if specified
+			if( ruleDefItem.getRuleCustomClassName() != null ) {
+				Class cls = Class.forName(ruleDefItem.getRuleCustomClassName());
+				RuleCustom ruleCustom = (RuleCustom) cls.newInstance();
+				ruleDefItem.setRuleCustom(ruleCustom);
+			}
+			if( ruleDefItem.getRuleDefCondItems() != null ) {
+				for( RuleDefCondItem ruleDefCondItem : ruleDefItem.getRuleDefCondItems() ) {
+					// convert the compare and actuator values once to improve rule evaluation performance
+					// sensor
+					if( "dbl".equals(ruleDefCondItem.getSensorTypeValue())) {
+						ruleDefCondItem.setDblSensorCompareValue( Double.parseDouble(ruleDefCondItem.getSensorCompareValue()));
+						
+					} else if( "int".equals(ruleDefCondItem.getSensorTypeValue())) {
+						ruleDefCondItem.setIntSensorCompareValue( Integer.parseInt(ruleDefCondItem.getSensorCompareValue()));
+					}
+					// actuator
+					if( "dbl".equals(ruleDefCondItem.getActuatorTypeValue())) {
+						ruleDefCondItem.setDblActuatorCompareValue( Double.parseDouble(ruleDefCondItem.getActuatorCompareValue()));
+						
+					} else if( "int".equals(ruleDefCondItem.getActuatorTypeValue())) {
+						ruleDefCondItem.setIntActuatorCompareValue( Integer.parseInt(ruleDefCondItem.getActuatorCompareValue()));
+					}
 					
-				} else if( "int".equals(ruleDefCondItem.getSensorTypeValue())) {
-					ruleDefCondItem.setIntSensorCompareValue( Integer.parseInt(ruleDefCondItem.getSensorCompareValue()));
+					ruleDefCondItem.setRuleComparatorSensor(ruleDefCondItem.ruleComparatorFromString(ruleDefCondItem.getSensorComparator())); 
+					ruleDefCondItem.setRuleComparatorActuator(ruleDefCondItem.ruleComparatorFromString(ruleDefCondItem.getActuatorComparator())); 
 				}
-				// actuator
-				if( "dbl".equals(ruleDefCondItem.getActuatorTypeValue())) {
-					ruleDefCondItem.setDblActuatorCompareValue( Double.parseDouble(ruleDefCondItem.getActuatorCompareValue()));
-					
-				} else if( "int".equals(ruleDefCondItem.getActuatorTypeValue())) {
-					ruleDefCondItem.setIntActuatorCompareValue( Integer.parseInt(ruleDefCondItem.getActuatorCompareValue()));
-				}
-				
-				ruleDefCondItem.setRuleComparatorSensor(ruleDefCondItem.ruleComparatorFromString(ruleDefCondItem.getSensorComparator())); 
-				ruleDefCondItem.setRuleComparatorActuator(ruleDefCondItem.ruleComparatorFromString(ruleDefCondItem.getActuatorComparator())); 
 			}
 			rdiByRuleUuid.put(ruleDefItem.getRuleUuid(), ruleDefItem );
 		}

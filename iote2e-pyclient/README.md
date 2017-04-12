@@ -103,17 +103,21 @@ Start Ubuntu Mate
 		sudo pip install pi-plates
 		sudo apt-get install python-spidev
 		sudo raspi-config
+			NOTE: you can enable the SPI and Camera at the same time and do only a single reboot
 			3 Interfacing Options
 			P3 SPI
 				enable SPI
 			Reboot
 		Motor Reference: https://pi-plates.com/downloads/MOTORplate%20Quick%20Reference%20Guide.pdf
 	Enable Camera support
+		sudo apt-get install python-picamera
 		sudo raspi-config
 			3 Interfacing Options
-			P3 SPI
-				enable SPI
+			P1 Camera
+				enable Camera
 			Reboot
-
+			Test the camera: raspistill -e png -w 100 -h 100 -o first.png
+		picamera doc: http://picamera.readthedocs.io/en/release-1.13/
+			
 sudo shutdown -P now
 

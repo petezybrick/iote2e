@@ -11,8 +11,6 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.stream.svc.RuleDefCondItem.RuleComparator;
 
-import scala.tools.jline_embedded.internal.Log;
-
 public abstract class RuleSvc {
 	private static final Logger logger = LogManager.getLogger(RuleSvc.class);
 
@@ -40,7 +38,11 @@ public abstract class RuleSvc {
 				if( ruleDefItem == null ) throw new Exception ("Missing RuleDefItem for ruleUuid=" + ruleSourceSensor.getRuleName());
 				logger.debug(ruleDefItem);
 				String sensorValue = entry.getValue().toString();
-				ruleEvalResults = ruleEval( loginName, sourceName, sensorName, sensorValue, ruleDefItem, ruleEvalResults);
+				if( ruleDefItem.getRuleCustom() == null ) {
+					ruleEval( loginName, sourceName, sensorName, sensorValue, ruleDefItem, ruleEvalResults);
+				} else {
+					ruleDefItem.getRuleCustom().ruleEval(loginName, sourceName, sensorName, sensorValue, ruleEvalResults, iote2eRequest);
+				}
 			} else {
 				if( logger.isDebugEnabled()) logger.debug("ruleSourceSensor doesn't exist for sourceName=" + sourceName + ", sensorName=" + sensorName );
 			}
@@ -48,7 +50,7 @@ public abstract class RuleSvc {
 		return ruleEvalResults;
 	}
 	
-	protected List<RuleEvalResult> ruleEval(String loginUuid, String sourceUuid, String sensorName, String sensorValue,
+	protected void ruleEval(String loginUuid, String sourceUuid, String sensorName, String sensorValue,
 			RuleDefItem ruleDefItem, List<RuleEvalResult> ruleEvalResults) throws Exception {
 		for (RuleDefCondItem ruleDefCondItem : ruleDefItem.getRuleDefCondItems()) {
 			logger.debug(ruleDefCondItem);
@@ -70,7 +72,6 @@ public abstract class RuleSvc {
 			}
 		}
 		logger.debug(ruleEvalResults);
-		return ruleEvalResults;
 	}
 
 	private boolean evalRuleSensor(String sensorValue, RuleDefCondItem ruleDefCondItem, RuleDefItem ruleDefItem)
