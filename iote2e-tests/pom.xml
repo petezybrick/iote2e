@@ -261,13 +261,6 @@
 			<version>${scala.version}</version>
 			<!-- <scope>compile</scope> -->
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.boofcv/io -->
-		<dependency>
-			<groupId>org.boofcv</groupId>
-			<artifactId>all</artifactId>
-			<version>0.26</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.scala-lang</groupId>
 			<artifactId>scala-compiler</artifactId>

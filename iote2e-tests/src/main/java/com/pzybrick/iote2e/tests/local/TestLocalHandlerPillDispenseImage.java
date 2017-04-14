@@ -1,5 +1,6 @@
 package com.pzybrick.iote2e.tests.local;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +14,12 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import com.pzybrick.iote2e.stream.svc.RuleEvalResult;
+import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestLocalHandlerPillDispenseImage extends TestLocalHandlerBase {
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerPillDispenseImage.class);	
+	public static String PATH_TEST_PNG = "/home/pete/development/gitrepo/iote2e/iote2e-tests/images/iote2e-test.png";
 
 	public TestLocalHandlerPillDispenseImage() throws Exception {
 		super();
@@ -28,7 +31,8 @@ public class TestLocalHandlerPillDispenseImage extends TestLocalHandlerBase {
 
 		Map<CharSequence, CharSequence> metadata = new HashMap<CharSequence, CharSequence>();
 		metadata.put( new Utf8("num_pills_to_dispense"), new Utf8("3"));
-		String testByte64Image = "test-image";
+		byte[] imageBytes = TestCommonHandler.fileToByteArray(PATH_TEST_PNG);
+		String testByte64Image = Base64.getEncoder().encodeToString(imageBytes);
 		commonRun( testPillDispenseImageLoginName, testPillDispenseImageSourceName, testPillDispenseImageSourceType, testPillDispenseImageSensorName, testByte64Image, metadata );
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );
@@ -42,7 +46,8 @@ public class TestLocalHandlerPillDispenseImage extends TestLocalHandlerBase {
 
 		Map<CharSequence, CharSequence> metadata = new HashMap<CharSequence, CharSequence>();
 		metadata.put( new Utf8("num_pills_to_dispense"), new Utf8("2"));
-		String testByte64Image = "test-image";
+		byte[] imageBytes = TestCommonHandler.fileToByteArray(PATH_TEST_PNG);
+		String testByte64Image = Base64.getEncoder().encodeToString(imageBytes);
 		commonRun( testPillDispenseImageLoginName, testPillDispenseImageSourceName, testPillDispenseImageSourceType, testPillDispenseImageSensorName, testByte64Image, metadata );
 		List<RuleEvalResult> ruleEvalResults = commonGetRuleEvalResults( 2000 );
 		Assert.assertNotNull("ruleEvalResults is null", ruleEvalResults == null );

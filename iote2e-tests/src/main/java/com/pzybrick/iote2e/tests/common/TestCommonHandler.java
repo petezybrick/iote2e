@@ -1,5 +1,7 @@
 package com.pzybrick.iote2e.tests.common;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -80,5 +82,14 @@ public abstract class TestCommonHandler {
 		return iote2eResults;
 	}
 
-
+	
+	public static byte[] fileToByteArray( String path ) throws Exception {
+		File file = new File(path);
+		byte[] bytes = new byte[(int) file.length()];
+		FileInputStream fis = new FileInputStream(file);
+		fis.read(bytes); //read file into bytes[]
+		fis.close();
+		return bytes;
+	}
+	
 }

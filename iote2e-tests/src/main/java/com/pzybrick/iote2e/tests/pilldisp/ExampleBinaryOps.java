@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.tests.boofcv;
+package com.pzybrick.iote2e.tests.pilldisp;
 
 import java.awt.image.BufferedImage;
 import java.util.List;

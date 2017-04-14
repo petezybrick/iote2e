@@ -292,7 +292,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.41</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.boofcv/io -->
+		<dependency>
+			<groupId>org.boofcv</groupId>
+			<artifactId>all</artifactId>
+			<version>0.26</version>
+		</dependency>
 
 	</dependencies>
 

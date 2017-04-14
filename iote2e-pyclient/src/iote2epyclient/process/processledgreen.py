@@ -31,14 +31,14 @@ class ProcessLedGreen(object):
             event = self.sense.stick.wait_for_event()
             if 'middle' == event.direction:
                 if 'pressed' == event.action:
-                    ledGreenState = '1'
+                    btnPressed = '1'
                 elif 'released' == event.action:
-                    ledGreenState = '0'
+                    btnPressed = '0'
                 else: 
                     continue
-                logger.info( "ProcessSimLedGreen createIote2eRequest ledGreenState: {}".format(ledGreenState))
+                logger.info( "ProcessSimLedGreen createIote2eRequest {}: {}".format(self.sensorName,btnPressed))
         
-                pairs = { self.sensorName: str(ledGreenState)}
+                pairs = { self.sensorName: str(btnPressed)}
                 iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='switch', 
                                                request_uuid=str(uuid.uuid4()), 
                                                request_timestamp=ClientUtils.nowIso8601(), 

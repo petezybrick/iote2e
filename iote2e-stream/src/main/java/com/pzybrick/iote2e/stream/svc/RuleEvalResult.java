@@ -10,14 +10,14 @@ public class RuleEvalResult implements Serializable {
 	private boolean ruleActuatorHit;
 	private String actuatorTargetValue;
 	private ActuatorState actuatorState;
-	private Map<String,String> metadata;
+	private Map<CharSequence,CharSequence> metadata;
 
 	public RuleEvalResult() {
 		this.sensorName = null;
 		this.ruleActuatorHit = false;
 		this.actuatorState = null;
 		this.actuatorTargetValue = null;
-		this.metadata = new HashMap<String,String>();
+		this.metadata = new HashMap<CharSequence,CharSequence>();
 	}
 
 	public RuleEvalResult(boolean ruleActuatorHit, ActuatorState actuatorState) {
@@ -25,7 +25,7 @@ public class RuleEvalResult implements Serializable {
 		this.ruleActuatorHit = ruleActuatorHit;
 		this.actuatorState = actuatorState;
 		this.actuatorTargetValue = null;
-		this.metadata = new HashMap<String,String>();
+		this.metadata = new HashMap<CharSequence,CharSequence>();
 	}
 
 	public RuleEvalResult(String sensorName, boolean ruleActuatorHit, ActuatorState actuatorState) {
@@ -33,10 +33,10 @@ public class RuleEvalResult implements Serializable {
 		this.ruleActuatorHit = ruleActuatorHit;
 		this.actuatorState = actuatorState;
 		this.actuatorTargetValue = null;
-		this.metadata = new HashMap<String,String>();
+		this.metadata = new HashMap<CharSequence,CharSequence>();
 	}
 
-	public RuleEvalResult(String sensorName, String actuatorTargetValue, Map<String,String> metadata) {
+	public RuleEvalResult(String sensorName, String actuatorTargetValue, Map<CharSequence,CharSequence> metadata) {
 		this.sensorName = sensorName;
 		this.ruleActuatorHit = true;
 		this.actuatorState = null;
@@ -65,8 +65,8 @@ public class RuleEvalResult implements Serializable {
 	@Override
 	public String toString() {
 		return "RuleEvalResult [sensorName=" + sensorName + ", ruleActuatorHit=" + ruleActuatorHit
-				+ ", actuatorTargetValue=" + actuatorTargetValue + ", actuatorState=" + actuatorState
-				+ "]";
+				+ ", actuatorTargetValue=" + actuatorTargetValue + ", actuatorState=" + actuatorState + ", metadata="
+				+ metadata + "]";
 	}
 
 	public String getActuatorTargetValue() {
@@ -84,6 +84,20 @@ public class RuleEvalResult implements Serializable {
 
 	public RuleEvalResult setSensorName(String sensorName) {
 		this.sensorName = sensorName;
+		return this;
+	}
+
+	public Map<CharSequence, CharSequence> getMetadata() {
+		return metadata;
+	}
+
+	public RuleEvalResult setActuatorState(ActuatorState actuatorState) {
+		this.actuatorState = actuatorState;
+		return this;
+	}
+
+	public RuleEvalResult setMetadata(Map<CharSequence, CharSequence> metadata) {
+		this.metadata = metadata;
 		return this;
 	}
 
