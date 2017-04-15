@@ -58,7 +58,9 @@ insert into pills_dispensed (pills_dispensed_uuid,login_name,actuator_name,dispe
 			when avg(bp.diastolic) < 90 THEN 2 
 			else 3 
 		end as num_to_dispense
-	from subject subj, bp_series as bp where bp.login_name=subj.login_name group by subj.login_name;
+	from subject as subj, bp_series as bp 
+	where bp.login_name=subj.login_name 
+	group by subj.login_name;
 
 insert into pills_dispensed (pills_dispensed_uuid,login_name,actuator_name,dispense_state,num_to_dispense)
 	select uuid() as pills_dispensed_uuid, subj.login_name, 'pilldisp1' as actuator_name, 'PENDING' as dispense_state, 
@@ -67,5 +69,7 @@ insert into pills_dispensed (pills_dispensed_uuid,login_name,actuator_name,dispe
 			when avg(bp.diastolic) < 90 THEN 2 
 			else 3 
 		end as num_to_dispense
-	from subject subj, bp_series as bp where bp.login_name=subj.login_name group by subj.login_name;
+	from subject as subj, bp_series as bp 
+	where bp.login_name=subj.login_name 
+	group by subj.login_name;
 
