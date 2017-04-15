@@ -1,7 +1,11 @@
 import logging
 import time
 import threading
-from cassandra.cqltypes import EMPTY
+import uuid
+from iote2epyclient.launch.clientutils import ClientUtils
+from iote2epyclient.schema.iote2erequest import Iote2eRequest
+from sense_hat import SenseHat
+from iote2epyclient.pilldispenser.handlepilldispenser import HandlePillDispenser
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +23,9 @@ class ProcessPillDispenser(object):
         self.pillsDispensedUuid = None
         self.pillsDispensedDelta = 9999
         self.lockDispenser = threading.RLock()
+        self.handlePillDispenser = HandlePillDispenser()
+        self.sense = SenseHat()
+        self.sense.clear()
         
         
     def createIote2eRequest(self ):
@@ -26,9 +33,11 @@ class ProcessPillDispenser(object):
         self.lockDispenser.acquire()
         if 'PILLDISP_DISPENSE' == self.dispenseState:
             # Tell the pill dispenser to dispense the number of pills
+            self.handlePillDispenser.dispensePills(self.numPillsToDispense)
             # Sleep for half a second, then take a picture
+            time.sleep(.5)
             # Byte64 encode the picture
-            imageByte64 = 'test b64 image'
+            imageByte64 = self.handlePillDispenser.captureImageBase64()
             # Create Iote2eRequest that contains the confirmation image
             pairs = { self.sensorName: imageByte64}
             metadata = { 'PILLS_DISPENSED_UUID': self.pillsDispensedUuid}
@@ -38,30 +47,23 @@ class ProcessPillDispenser(object):
                                pairs=pairs, metadata=metadata, operation='SENSORS_VALUES')
         elif 'PILLDISP_CONFIRM' == self.dispenseState:
             if self.pillsDispensedDelta == 0:
-                pass
+                for i in range(0,3):
+                    self.sense.clear(0,255,0)
+                    time.sleep(1.5)
+                    self.sense.clear()
+                    time.sleep(.5)
             else:
-                pass             
-            
+                if self.pillsDispensedDelta < 0:
+                    msg = "Not enough pills dispensed"
+                else:
+                    msg = "Too many pills dispensed"
+                for i in range(0,3):
+                    self.sense.show_message(msg, scroll_speed=.025);
+                    self.sense.clear(255,0,0)
+                    time.sleep(1.5)
+                    self.sense.clear()
+                    time.sleep(.5)            
         self.lockDispenser.release()
-        
-        while True:
-            event = self.sense.stick.wait_for_event()
-            if 'middle' == event.direction:
-                if 'pressed' == event.action:
-                    btnPressed = '1'
-                elif 'released' == event.action:
-                    btnPressed = '0'
-                else: 
-                    continue
-                logger.info( "ProcessSimLedGreen createIote2eRequest {}: {}".format(self.sensorName,btnPressed))
-        
-                pairs = { self.sensorName: str(btnPressed)}
-                iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='switch', 
-                                               request_uuid=str(uuid.uuid4()), 
-                                               request_timestamp=ClientUtils.nowIso8601(), 
-                                               pairs=pairs, operation='SENSORS_VALUES')
-                break
-            
         return iote2eRequest
 
 
