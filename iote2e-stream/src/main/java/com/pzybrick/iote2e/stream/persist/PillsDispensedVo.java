@@ -31,10 +31,14 @@ public class PillsDispensedVo implements Serializable {
 		this.dispenseState = rs.getString("dispense_state");
 		this.numToDispense = rs.getInt("num_to_dispense");
 		this.numDispensed = rs.getInt("num_dispensed");
+		if( rs.wasNull()) this.numDispensed = null;
 		this.delta = rs.getInt("delta");
+		if( rs.wasNull()) this.delta = null;
 		this.statePendingTs = rs.getTimestamp("state_pending_ts");
 		this.stateDispensingTs = rs.getTimestamp("state_dispensing_ts");
+		if( rs.wasNull()) this.stateDispensingTs = null;
 		this.stateCompleteTs = rs.getTimestamp("state_complete_ts");
+		if( rs.wasNull()) this.stateCompleteTs = null;
 		this.insertTs = rs.getTimestamp("insert_ts");
 	}
 

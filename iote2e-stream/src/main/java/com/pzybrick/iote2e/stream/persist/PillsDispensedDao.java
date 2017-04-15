@@ -1,6 +1,8 @@
 package com.pzybrick.iote2e.stream.persist;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +20,9 @@ public class PillsDispensedDao {
 	private static String sqlUpdateDispensingToComplete = "UPDATE pills_dispensed SET dispense_state=?,state_complete_ts=now(),num_dispensed=?,delta=? WHERE pills_dispensed_uuid=?";
 	private static String sqlInsertImage = "INSERT INTO pills_dispensed_image (pills_dispensed_uuid,image_png,insert_ts) VALUES(?,?,now())";
 	private static String sqlFindByPillsDispensedUuid = "SELECT * FROM pills_dispensed WHERE pills_dispensed_uuid=?";
+	private static String sqlFindImageBytesByPillsDispensedUuid = "SELECT image_png FROM pills_dispensed_image WHERE pills_dispensed_uuid=?";
+	private static String sqlDeletePillsDispensedByPillsDispensedUuid = "DELETE FROM pills_dispensed WHERE pills_dispensed_uuid=?";
+	private static String sqlDeleteImageBytesByPillsDispensedUuid = "DELETE FROM pills_dispensed_image WHERE pills_dispensed_uuid=?";
 	
 	
 	public static void updateDispensingToComplete(MasterConfig masterConfig, String pillsDispensedUuid, Integer numDispensed, Integer delta, byte[] imagePng ) throws Exception {
@@ -39,6 +44,7 @@ public class PillsDispensedDao {
 			pstmtInsertImage.setString(1, pillsDispensedUuid);
 			ByteArrayInputStream bais = new ByteArrayInputStream(imagePng);
 			pstmtInsertImage.setBinaryStream(2, bais);
+			pstmtInsertImage.execute();
 			
 			con.commit();
 		} catch (Exception e) {
@@ -68,7 +74,7 @@ public class PillsDispensedDao {
 	}
 
 	
-	public static void updatePendingToInProgress(MasterConfig masterConfig, String pillsDispensedUuid) throws Exception {
+	public static void updatePendingToDispensing(MasterConfig masterConfig, String pillsDispensedUuid) throws Exception {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -131,6 +137,7 @@ public class PillsDispensedDao {
 			}
 		}
 	}
+
 	
 	public static PillsDispensedVo findByPillsDispensedUuid(MasterConfig masterConfig, String pillsDispensedUuid ) throws Exception {
 		Connection con = null;
@@ -146,6 +153,105 @@ public class PillsDispensedDao {
 			PillsDispensedVo pillsDispensedVo = new PillsDispensedVo(rs);
 			rs.close();
 			return pillsDispensedVo;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				logger.warn(e);
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception exCon) {
+				logger.warn(exCon.getMessage());
+			}
+		}
+	}
+	
+	
+	public static byte[] findImageBytesByPillsDispensedUuid(MasterConfig masterConfig, String pillsDispensedUuid ) throws Exception {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = PooledDataSource.getInstance(masterConfig).getConnection();
+			con.setAutoCommit(true);
+			pstmt = con.prepareStatement(sqlFindImageBytesByPillsDispensedUuid);
+			int offset = 1;
+			pstmt.setString(offset++, pillsDispensedUuid);
+			ResultSet rs = pstmt.executeQuery();
+			if( !rs.next() ) throw new Exception("Row not found for pillsDispensedUuid=" + pillsDispensedUuid);
+			InputStream is = rs.getBinaryStream("image_png");
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			int buffByte;
+			while( ( buffByte = is.read()) != -1 ) baos.write(buffByte);
+			byte[] imageBytes = baos.toByteArray();
+			baos.close();
+			rs.close();
+			return imageBytes;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				logger.warn(e);
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception exCon) {
+				logger.warn(exCon.getMessage());
+			}
+		}
+	}	
+	
+	
+	public static void deletePillsDispensedByPillsDispensedUuid(MasterConfig masterConfig, String pillsDispensedUuid ) throws Exception {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = PooledDataSource.getInstance(masterConfig).getConnection();
+			con.setAutoCommit(true);
+			pstmt = con.prepareStatement(sqlDeletePillsDispensedByPillsDispensedUuid);
+			int offset = 1;
+			pstmt.setString(offset++, pillsDispensedUuid);
+			pstmt.execute();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				logger.warn(e);
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception exCon) {
+				logger.warn(exCon.getMessage());
+			}
+		}
+	}	
+	
+	
+	public static void deleteImageBytesByPillsDispensedUuid(MasterConfig masterConfig, String pillsDispensedUuid ) throws Exception {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = PooledDataSource.getInstance(masterConfig).getConnection();
+			con.setAutoCommit(true);
+			pstmt = con.prepareStatement(sqlDeleteImageBytesByPillsDispensedUuid);
+			int offset = 1;
+			pstmt.setString(offset++, pillsDispensedUuid);
+			pstmt.execute();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			throw e;
