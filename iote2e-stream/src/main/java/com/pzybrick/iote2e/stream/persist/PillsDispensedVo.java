@@ -6,9 +6,10 @@ import java.sql.Timestamp;
 
 public class PillsDispensedVo implements Serializable {
 	private static final long serialVersionUID = -7663024167514190346L;
-	public enum DispenseState {PENDING, DISPENSING, COMPLETE};
+	public enum DispenseState {PENDING, DISPENSING, DISPENSED, CONFIRMED};
 	private String pillsDispensedUuid;
 	private String loginName;
+	private String sourceName;
 	private String actuatorName;
 	private String dispenseState;
 	private Integer numToDispense;
@@ -16,7 +17,8 @@ public class PillsDispensedVo implements Serializable {
 	private Integer delta;
 	private Timestamp statePendingTs;
 	private Timestamp stateDispensingTs;
-	private Timestamp stateCompleteTs;
+	private Timestamp stateDispensedTs;
+	private Timestamp stateConfirmedTs;
 	private Timestamp insertTs;
 	
 	
@@ -27,6 +29,7 @@ public class PillsDispensedVo implements Serializable {
 	public PillsDispensedVo( ResultSet rs ) throws Exception {
 		this.pillsDispensedUuid = rs.getString("pills_dispensed_uuid");
 		this.loginName = rs.getString("login_name");
+		this.sourceName = rs.getString("source_name");
 		this.actuatorName = rs.getString("actuator_name");
 		this.dispenseState = rs.getString("dispense_state");
 		this.numToDispense = rs.getInt("num_to_dispense");
@@ -37,9 +40,15 @@ public class PillsDispensedVo implements Serializable {
 		this.statePendingTs = rs.getTimestamp("state_pending_ts");
 		this.stateDispensingTs = rs.getTimestamp("state_dispensing_ts");
 		if( rs.wasNull()) this.stateDispensingTs = null;
-		this.stateCompleteTs = rs.getTimestamp("state_complete_ts");
-		if( rs.wasNull()) this.stateCompleteTs = null;
+		this.stateDispensedTs = rs.getTimestamp("state_dispensed_ts");
+		if( rs.wasNull()) this.stateDispensedTs = null;
+		this.stateConfirmedTs = rs.getTimestamp("state_confirmed_ts");
+		if( rs.wasNull()) this.stateConfirmedTs = null;
 		this.insertTs = rs.getTimestamp("insert_ts");
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public String getPillsDispensedUuid() {
@@ -78,8 +87,12 @@ public class PillsDispensedVo implements Serializable {
 		return stateDispensingTs;
 	}
 
-	public Timestamp getStateCompleteTs() {
-		return stateCompleteTs;
+	public Timestamp getStateDispensedTs() {
+		return stateDispensedTs;
+	}
+
+	public Timestamp getStateConfirmedTs() {
+		return stateConfirmedTs;
 	}
 
 	public Timestamp getInsertTs() {
@@ -131,8 +144,13 @@ public class PillsDispensedVo implements Serializable {
 		return this;
 	}
 
-	public PillsDispensedVo setStateCompleteTs(Timestamp stateCompleteTs) {
-		this.stateCompleteTs = stateCompleteTs;
+	public PillsDispensedVo setStateDispensedTs(Timestamp stateDispensedTs) {
+		this.stateDispensedTs = stateDispensedTs;
+		return this;
+	}
+
+	public PillsDispensedVo setStateConfirmedTs(Timestamp stateConfirmedTs) {
+		this.stateConfirmedTs = stateConfirmedTs;
 		return this;
 	}
 
@@ -144,16 +162,21 @@ public class PillsDispensedVo implements Serializable {
 	@Override
 	public String toString() {
 		return "PillsDispensedVo [pillsDispensedUuid=" + pillsDispensedUuid + ", loginName=" + loginName
-				+ ", sourceName=" + actuatorName + ", dispenseState=" + dispenseState + ", numToDispense=" + numToDispense
-				+ ", numDispensed=" + numDispensed + ", delta=" + delta + ", statePendingTs=" + statePendingTs
-				+ ", stateDispensingTs=" + stateDispensingTs + ", stateCompleteTs=" + stateCompleteTs + ", insertTs="
-				+ insertTs + ", getPillsDispensedUuid()=" + getPillsDispensedUuid() + ", getLoginName()="
-				+ getLoginName() + ", getSourceName()=" + getActuatorName() + ", getDispenseState()=" + getDispenseState()
-				+ ", getNumToDispense()=" + getNumToDispense() + ", getNumDispensed()=" + getNumDispensed()
-				+ ", getDelta()=" + getDelta() + ", getStatePendingTs()=" + getStatePendingTs()
-				+ ", getStateDispensingTs()=" + getStateDispensingTs() + ", getStateCompleteTs()="
-				+ getStateCompleteTs() + ", getInsertTs()=" + getInsertTs() + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+				+ ", sourceName=" + sourceName + ", actuatorName=" + actuatorName + ", dispenseState=" + dispenseState
+				+ ", numToDispense=" + numToDispense + ", numDispensed=" + numDispensed + ", delta=" + delta
+				+ ", statePendingTs=" + statePendingTs + ", stateDispensingTs=" + stateDispensingTs
+				+ ", stateDispensedTs=" + stateDispensedTs + ", stateConfirmedTs=" + stateConfirmedTs + ", insertTs="
+				+ insertTs + "]";
 	}
+
+	public String getSourceName() {
+		return sourceName;
+	}
+
+	public PillsDispensedVo setSourceName(String sourceName) {
+		this.sourceName = sourceName;
+		return this;
+	}
+
 
 }

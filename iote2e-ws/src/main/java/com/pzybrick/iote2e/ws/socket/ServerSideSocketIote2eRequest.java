@@ -83,7 +83,7 @@ public class ServerSideSocketIote2eRequest {
 					//			returned to the source system (i.e. RPi #1) over the same socket, and the program listening on that socket (i.e. 
 					//			a Python program running on an RPi) will need to look at the sensor name in each Iote2eResult and decide what to do with it
 					//		1.3 This key structure is used when the attribute LoginVo.optionalFilterSensorName is null or an empty string
-					//	2. login|soruceName|sensorName
+					//	2. login|sourceName|sensorName
 					//		2.1 This implies that the code running on the sourceName device is a single program managing a single sensor,
 					//			the code on the sensor will look at the returned Iote2eResult's and decide how to route the response.
 					//		2.2 for example, if the filter is pzybrick1|rpi_001|temp1, then all Iote2eResult's that are keyed with 
