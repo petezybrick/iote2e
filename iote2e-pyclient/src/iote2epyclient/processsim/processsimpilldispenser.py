@@ -31,7 +31,7 @@ class ProcessSimPillDispenser(object):
             # Sleep for half a second, then take a picture
             time.sleep(.5)
             # Byte64 encode the picture
-            with open("yourfile.ext", "rb") as image_file:
+            with open("/tmp/iote2e-shared/images/iote2e-test.png", "rb") as image_file:
                 imageByte64 = base64.b64encode(image_file.read())
             # Create Iote2eRequest that contains the confirmation image
             pairs = { self.sensorName: imageByte64}
