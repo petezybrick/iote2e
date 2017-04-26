@@ -1,16 +1,14 @@
 import logging
 import time
-import threading
+import base64
 import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
-from sense_hat import SenseHat
-from iote2epyclient.pilldispenser.handlepilldispenser import HandlePillDispenser
 
 logger = logging.getLogger(__name__)
 
 
-class ProcessPillDispenser(object):
+class ProcessSimPillDispenser(object):
     '''
     classdocs
     '''
@@ -22,8 +20,6 @@ class ProcessPillDispenser(object):
         self.numPillsToDispense = -1
         self.pillsDispensedUuid = None
         self.pillsDispensedDelta = 9999
-        self.handlePillDispenser = HandlePillDispenser()
-        self.sense = SenseHat()
         self.sense.clear()
         
         
@@ -31,11 +27,12 @@ class ProcessPillDispenser(object):
         iote2eRequest = None
         if 'DISPENSING' == self.dispenseState:
             # Tell the pill dispenser to dispense the number of pills
-            self.handlePillDispenser.dispensePills(self.numPillsToDispense)
+            # self.handlePillDispenser.dispensePills(self.numPillsToDispense)
             # Sleep for half a second, then take a picture
             time.sleep(.5)
             # Byte64 encode the picture
-            imageByte64 = self.handlePillDispenser.captureImageBase64()
+            with open("yourfile.ext", "rb") as image_file:
+                imageByte64 = base64.b64encode(image_file.read())
             # Create Iote2eRequest that contains the confirmation image
             pairs = { self.sensorName: imageByte64}
             metadata = { 'PILLS_DISPENSED_UUID': self.pillsDispensedUuid}

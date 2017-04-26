@@ -35,6 +35,8 @@ import boofcv.struct.image.GrayU8;
 public class PillDispenser {
 	private static final Logger logger = LogManager.getLogger(PillDispenser.class);
 	public static final String SOURCE_TYPE = "pilldisp";
+	public static final CharSequence KEY_PILLS_DISPENSED_UUID =  new Utf8("pills_dispensed_uuid");
+	public static final CharSequence KEY_PILLS_DISPENSED_STATE =  new Utf8("pills_dispensed_state");
 
 	public static void main( String[] args ) {
 		try {
@@ -60,7 +62,8 @@ public class PillDispenser {
 				String pkIgnite = pillsDispensedVo.getLoginName()+"|"+pillsDispensedVo.getSourceName()+"|";
 				
 				Map<CharSequence,CharSequence> metadata = new HashMap<CharSequence,CharSequence>();
-				metadata.put( new Utf8("pills_dispensed_uuid"), new Utf8(pillsDispensedVo.getPillsDispensedUuid()));
+				metadata.put(KEY_PILLS_DISPENSED_UUID, new Utf8(pillsDispensedVo.getPillsDispensedUuid()));
+				metadata.put(KEY_PILLS_DISPENSED_STATE, new Utf8(DispenseState.DISPENSING.toString()));
 				
 				Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
 				pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME), new Utf8("NA"));

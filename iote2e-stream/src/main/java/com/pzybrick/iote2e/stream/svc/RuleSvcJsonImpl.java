@@ -72,6 +72,7 @@ public class RuleSvcJsonImpl extends RuleSvc {
 			if( ruleDefItem.getRuleCustomClassName() != null ) {
 				Class cls = Class.forName(ruleDefItem.getRuleCustomClassName());
 				RuleCustom ruleCustom = (RuleCustom) cls.newInstance();
+				ruleCustom.setMasterConfig(masterConfig);
 				ruleDefItem.setRuleCustom(ruleCustom);
 			}
 			if( ruleDefItem.getRuleDefCondItems() != null ) {
