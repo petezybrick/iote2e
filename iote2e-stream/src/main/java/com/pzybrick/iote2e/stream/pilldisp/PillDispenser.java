@@ -35,8 +35,8 @@ import boofcv.struct.image.GrayU8;
 public class PillDispenser {
 	private static final Logger logger = LogManager.getLogger(PillDispenser.class);
 	public static final String SOURCE_TYPE = "pilldisp";
-	public static final CharSequence KEY_PILLS_DISPENSED_UUID =  new Utf8("pills_dispensed_uuid");
-	public static final CharSequence KEY_PILLS_DISPENSED_STATE =  new Utf8("pills_dispensed_state");
+	public static final CharSequence KEY_PILLS_DISPENSED_UUID =  new Utf8("PILLS_DISPENSED_UUID");
+	public static final CharSequence KEY_PILLS_DISPENSED_STATE =  new Utf8("PILLS_DISPENSED_STATE");
 
 	public static void main( String[] args ) {
 		try {
@@ -55,6 +55,7 @@ public class PillDispenser {
 	
 	public void dispensePending( MasterConfig masterConfig ) throws Exception {
 		List<PillsDispensedVo> pillsDispensedVos = PillsDispensedDao.sqlFindByDispenseState(masterConfig, DispenseState.PENDING );
+		logger.info("Processing {} pills_dispensed Pending entries", pillsDispensedVos.size());
 		if( !pillsDispensedVos.isEmpty() ) {
 			IgniteGridConnection igniteGridConnection = new IgniteGridConnection().connect(masterConfig);
 			Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
@@ -73,6 +74,7 @@ public class PillDispenser {
 				
 				Iote2eResult iote2eResult = Iote2eResult.newBuilder()
 					.setPairs(pairs)
+					.setMetadata(metadata)
 					.setLoginName(new Utf8(pillsDispensedVo.getLoginName()))
 					.setSourceName(new Utf8(pillsDispensedVo.getSourceName()))
 					.setSourceType(new Utf8(SOURCE_TYPE))

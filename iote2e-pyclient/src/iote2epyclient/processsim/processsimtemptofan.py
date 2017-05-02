@@ -21,11 +21,11 @@ class ProcessSimTempToFan(object):
     def __init__(self, loginVo, sensorName):
         self.loginVo = loginVo
         self.sensorName = sensorName
-        self.tempNow = 74
+        self.tempNow = 25
         self.tempDirectionIncrease = True
-        self.TEMP_MIN = 74
-        self.TEMP_MAX = 84
-        self.TEMP_INCR = .5
+        self.TEMP_MIN = 25
+        self.TEMP_MAX = 60
+        self.TEMP_INCR = 3
         
         
     def createIote2eRequest(self ):

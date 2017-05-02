@@ -4,6 +4,7 @@ import base64
 import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
+from sense_hat import SenseHat
 
 logger = logging.getLogger(__name__)
 
@@ -20,22 +21,27 @@ class ProcessSimPillDispenser(object):
         self.numPillsToDispense = -1
         self.pillsDispensedUuid = None
         self.pillsDispensedDelta = 9999
+        self.sense = SenseHat()
         self.sense.clear()
         
         
     def createIote2eRequest(self ):
+        logger.info('ProcessPillDispenser dispenseState: ' + str(self.dispenseState) )
         iote2eRequest = None
-        if 'DISPENSING' == self.dispenseState:
+        if None == self.dispenseState:
+            time.sleep(1)
+        elif 'DISPENSING' == self.dispenseState:
             # Tell the pill dispenser to dispense the number of pills
             # self.handlePillDispenser.dispensePills(self.numPillsToDispense)
             # Sleep for half a second, then take a picture
             time.sleep(.5)
             # Byte64 encode the picture
-            with open("/tmp/iote2e-shared/images/iote2e-test.png", "rb") as image_file:
+            with open("/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test.png", "rb") as image_file:
                 imageByte64 = base64.b64encode(image_file.read())
             # Create Iote2eRequest that contains the confirmation image
+            self.dispenseState = None
             pairs = { self.sensorName: imageByte64}
-            metadata = { 'PILLS_DISPENSED_UUID': self.pillsDispensedUuid}
+            metadata = { 'PILLS_DISPENSED_UUID': self.pillsDispensedUuid, 'PILLS_DISPENSED_STATE' : 'DISPENSED'}
             iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='pill_dispenser', 
                                request_uuid=str(uuid.uuid4()), 
                                request_timestamp=ClientUtils.nowIso8601(), 
@@ -67,8 +73,9 @@ class ProcessSimPillDispenser(object):
                     if 'CONFIRMED' == self.dispenseState:
                         break
         elif 'CONFIRMED' == self.dispenseState:
-                    self.sense.clear()
-                    time.sleep(.25)
+            self.dispenseState = None
+            self.sense.clear()
+            time.sleep(.25)
         return iote2eRequest
 
 

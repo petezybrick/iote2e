@@ -112,7 +112,8 @@ Run Spark unit tests under Docker
   /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
   master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
 
- ./bin/spark-submit \
+
+DELETE THIS ONE ./bin/spark-submit \
   --class com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer \
   --deploy-mode cluster \
   --master spark://localhost:6066 \
@@ -211,3 +212,20 @@ Initializing
 	source /tmp/iote2e-shared/sql/mysql_create_batch_tables.sql
 6. Exit from mysql command line, enter: exit
 7. Exit from iote2e-mysql-master, enter: exit
+
+
+**Pill Dispenser**
+1. Truncate the pill_dispenser table
+2. Populate pill_dispenser table as per the sql in mysql_create_pills_dispensed_tables.sql
+3. Start the Python PillDispenser or PillDispenser simulator on RPi  
+4. Bring up demomgr: docker exec -it iote2e-demomgr1 /bin/bash 
+4. Start the PillDispenser - this will read the pill_dispenser table and start the sequence
+	java -cp /tmp/iote2e-shared/jars/iote2e-tests-1.0.0.jar -Xms512m -Xmx512m com.pzybrick.iote2e.stream.pilldisp.PillDispenser master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
+	
+	
+	
+	
+	
+	
+	
+	

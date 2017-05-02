@@ -60,6 +60,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 				
 				Iote2eResult iote2eResult = Iote2eResult.newBuilder()
 					.setPairs(pairs)
+					.setMetadata(ruleEvalResult.getMetadata())
 					.setLoginName(iote2eRequest.getLoginName())
 					.setSourceName(iote2eRequest.getSourceName())
 					.setSourceType(iote2eRequest.getSourceType())

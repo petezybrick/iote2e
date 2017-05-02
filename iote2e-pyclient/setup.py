@@ -17,6 +17,6 @@ setup(name='iote2epyclient',
       author='Pete Zybrick',
       author_email='pzybrick@gmail.com',
       url='https://github.com/petezybrick/iote2e',
-      packages=['iote2epyclient', 'iote2epyclient.launch', 'iote2epyclient.process', 'iote2epyclient.processsim', 'iote2epyclient.schema', 'iote2epyclient.test', 'iote2epyclient.ws'],
+      packages=['iote2epyclient', 'iote2epyclient.launch', 'iote2epyclient.process', 'iote2epyclient.processsim', 'iote2epyclient.pilldispenser', 'iote2epyclient.schema', 'iote2epyclient.test', 'iote2epyclient.ws'],
       package_dir = {'': 'src'},
      )

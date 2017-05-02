@@ -33,7 +33,7 @@ public class RuleCustomPillImageImpl implements RuleCustom {
 		String pillsDispensedState = iote2eRequest.getMetadata().get(PillDispenser.KEY_PILLS_DISPENSED_STATE).toString();
 		CharSequence pillsDispensedUuid = iote2eRequest.getMetadata().get(PillDispenser.KEY_PILLS_DISPENSED_UUID);
 		
-		if( "DISPENSED".equals(PillsDispensedVo.DispenseState.DISPENSED.toString() ) ) {
+		if( pillsDispensedState.equals(PillsDispensedVo.DispenseState.DISPENSED.toString() ) ) {
 			// Convert Byte64 string to image, then process the image to count the circles, return number of circles as actuator value
 			// The pill dispenser will blink LEDs green if delta=0, else blink LEDs red until subject presses button to confirm 
 			int numPillsToDispense = -1;
@@ -55,7 +55,7 @@ public class RuleCustomPillImageImpl implements RuleCustom {
 			ruleEvalResults.add(ruleEvalResult);
 			PillsDispensedDao.updateDispensingToDispensed(masterConfig, pillsDispensedUuid.toString(), numPillsActualDispense, delta, imageBytesFromB64);
 		
-		} else if( "CONFIRMED".equals(PillsDispensedVo.DispenseState.CONFIRMED.toString() ) ) {
+		} else if( pillsDispensedState.equals(PillsDispensedVo.DispenseState.CONFIRMED.toString() ) ) {
 			// Subject pressed the button to confirm pills dispensed, now return Iote2eResult to turn off the flashing LED's 
 			Map<CharSequence,CharSequence> metadata = new HashMap<CharSequence,CharSequence>();
 			metadata.put(PillDispenser.KEY_PILLS_DISPENSED_UUID, pillsDispensedUuid);
