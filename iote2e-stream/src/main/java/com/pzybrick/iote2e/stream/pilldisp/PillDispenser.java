@@ -37,7 +37,8 @@ public class PillDispenser {
 	public static final String SOURCE_TYPE = "pilldisp";
 	public static final CharSequence KEY_PILLS_DISPENSED_UUID =  new Utf8("PILLS_DISPENSED_UUID");
 	public static final CharSequence KEY_PILLS_DISPENSED_STATE =  new Utf8("PILLS_DISPENSED_STATE");
-
+	public static final CharSequence KEY_NUM_PILLS_TO_DISPENSE =  new Utf8("NUM_PILLS_TO_DISPENSE");
+	
 	public static void main( String[] args ) {
 		try {
 			String masterConfigJsonKey = args[0];
@@ -65,6 +66,7 @@ public class PillDispenser {
 				Map<CharSequence,CharSequence> metadata = new HashMap<CharSequence,CharSequence>();
 				metadata.put(KEY_PILLS_DISPENSED_UUID, new Utf8(pillsDispensedVo.getPillsDispensedUuid()));
 				metadata.put(KEY_PILLS_DISPENSED_STATE, new Utf8(DispenseState.DISPENSING.toString()));
+				metadata.put(KEY_NUM_PILLS_TO_DISPENSE, new Utf8( String.valueOf(pillsDispensedVo.getNumToDispense()) ));
 				
 				Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
 				pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME), new Utf8("NA"));

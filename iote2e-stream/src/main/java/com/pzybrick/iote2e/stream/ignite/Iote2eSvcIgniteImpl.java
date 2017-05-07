@@ -40,23 +40,28 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 		for (RuleEvalResult ruleEvalResult : ruleEvalResults) {
 			logger.debug( ruleEvalResult.toString() );
 			if( ruleEvalResult.isRuleActuatorHit() ) {
-				logger.info("Updating Actuator: loginName="+ iote2eRequest.getLoginName().toString() + 
-						", sourceName="+ iote2eRequest.getSourceName().toString() + 
-						", actuatorName=" + ruleEvalResult.getActuatorState().getActuatorName() +
-						", old value=" + ruleEvalResult.getActuatorState().getActuatorValue() + 
-						", new value=" + ruleEvalResult.getActuatorTargetValue() );
-				// Update the SourceSensorActuator
-				ruleEvalResult.getActuatorState().setActuatorValue(ruleEvalResult.getActuatorTargetValue());
-				ruleEvalResult.getActuatorState().setActuatorValueUpdatedAt(Iote2eUtils.getDateNowUtc8601() );
-				String pkActuatorState = iote2eRequest.getLoginName().toString()+"|"+iote2eRequest.getSourceName().toString() +
-						"|"+ruleEvalResult.getSensorName()+"|";
-				String pkIgnite = pkActuatorState+ruleEvalResult.getActuatorState().getActuatorName();
-				
 				Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
-				pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME), new Utf8(ruleEvalResult.getActuatorState().getSensorName() ));
-				pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME), new Utf8(ruleEvalResult.getActuatorState().getActuatorName() ));
-				pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE), new Utf8(ruleEvalResult.getActuatorState().getActuatorValue() ));
-				pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE_UPDATED_AT), new Utf8(ruleEvalResult.getActuatorState().getActuatorValueUpdatedAt() ));
+				if( ruleEvalResult.isUpdateActuatorState() ) {
+					logger.info("Updating Actuator: loginName="+ iote2eRequest.getLoginName().toString() + 
+							", sourceName="+ iote2eRequest.getSourceName().toString() + 
+							", actuatorName=" + ruleEvalResult.getActuatorState().getActuatorName() +
+							", old value=" + ruleEvalResult.getActuatorState().getActuatorValue() + 
+							", new value=" + ruleEvalResult.getActuatorTargetValue() );
+					// Update the SourceSensorActuator
+					ruleEvalResult.getActuatorState().setActuatorValue(ruleEvalResult.getActuatorTargetValue());
+					ruleEvalResult.getActuatorState().setActuatorValueUpdatedAt(Iote2eUtils.getDateNowUtc8601() );
+					pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME), new Utf8(ruleEvalResult.getActuatorState().getSensorName() ));
+					pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_NAME), new Utf8(ruleEvalResult.getActuatorState().getActuatorName() ));
+					pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE), new Utf8(ruleEvalResult.getActuatorState().getActuatorValue() ));
+					pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE_UPDATED_AT), new Utf8(ruleEvalResult.getActuatorState().getActuatorValueUpdatedAt() ));
+				} else {
+					logger.info("Processing Actuator: loginName="+ iote2eRequest.getLoginName().toString() + 
+							", sourceName="+ iote2eRequest.getSourceName().toString() + 
+							", value=" + ruleEvalResult.getActuatorTargetValue() );
+					pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE), new Utf8(ruleEvalResult.getActuatorTargetValue()));
+					pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_ACTUATOR_VALUE_UPDATED_AT), new Utf8(Iote2eUtils.getDateNowUtc8601()));
+				}
+				
 				
 				Iote2eResult iote2eResult = Iote2eResult.newBuilder()
 					.setPairs(pairs)
@@ -69,7 +74,7 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 					.setOperation(OPERATION.ACTUATOR_VALUES)
 					.setResultCode(0)
 					.setResultTimestamp( new Utf8(Iote2eUtils.getDateNowUtc8601()))
-					.setResultUuid(  new Utf8(UUID.randomUUID().toString()))
+					.setResultUuid( new Utf8(UUID.randomUUID().toString()))
 					.build();
 				
 				if( logger.isDebugEnabled() ) logger.debug("iote2eResult: " + iote2eResult.toString());
@@ -79,11 +84,19 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 				Exception lastException = null;
 				long timeoutAt = System.currentTimeMillis() + (15*1000L);
 				int cntRetry = 0;
+				String pkIgnite = null;
+				if( ruleEvalResult.isUseLongIgniteKey() ) {
+					pkIgnite = iote2eRequest.getLoginName().toString()+"|"+iote2eRequest.getSourceName().toString() +
+						"|"+ruleEvalResult.getSensorName()+"|"+ruleEvalResult.getActuatorState().getActuatorName();
+				} else {
+					pkIgnite = iote2eRequest.getLoginName().toString()+"|"+iote2eRequest.getSourceName().toString() + "|";
+				}
+
 				while( System.currentTimeMillis() < timeoutAt ) {
 					try {
 						igniteGridConnection.getCache().put(pkIgnite, iote2eResultReuseItem.toByteArray(iote2eResult));
 						isSuccess = true;
-						logger.info("cache.put successful, cache name={}, pk={}, value={}", igniteGridConnection.getCache().getName(), pkIgnite, ruleEvalResult.getActuatorState().getActuatorValue());
+						logger.info("cache.put successful, cache name={}, pk={}, value={}", igniteGridConnection.getCache().getName(), pkIgnite, ruleEvalResult.getActuatorTargetValue());
 						break;
 					} catch( CacheException cacheException ) {
 						lastException = cacheException;
@@ -96,30 +109,35 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 					}
 				}
 				if( !isSuccess ) {
-					logger.error("Ignite cache write failure, pk={}, value={}, lastException: {}", pkIgnite, ruleEvalResult.getActuatorState().getActuatorValue(), lastException.getLocalizedMessage(), lastException);
+					logger.error("Ignite cache write failure, pk={}, value={}, lastException: {}", pkIgnite, ruleEvalResult.getActuatorTargetValue(), lastException.getLocalizedMessage(), lastException);
 					throw new Exception( lastException);
 				}
+				
 				// TODO: need better mechanism to do the Ignite and Cassandra updates
 				// Update Cassandra
-				isSuccess = false;
-				lastException = null;
-				timeoutAt = System.currentTimeMillis() + (15*1000L);
-				cntRetry = 0;
-				while( System.currentTimeMillis() < timeoutAt ) {
-					try {
-						ActuatorStateDao.updateActuatorValue(pkActuatorState, ruleEvalResult.getActuatorState().getActuatorValue());
-						isSuccess = true;
-						logger.debug("actuator_state updated, pk={}, value={}", pkActuatorState, ruleEvalResult.getActuatorState().getActuatorValue());
-						break;
-					} catch( Exception e ) {
-						logger.error(e.getMessage(),e);
-						throw e;
+				if( ruleEvalResult.isUpdateActuatorState() ) {
+					isSuccess = false;
+					lastException = null;
+					timeoutAt = System.currentTimeMillis() + (15*1000L);
+					cntRetry = 0;
+					String pkActuatorState = iote2eRequest.getLoginName().toString()+"|"+iote2eRequest.getSourceName().toString() +
+							"|"+ruleEvalResult.getSensorName()+"|";
+					while( System.currentTimeMillis() < timeoutAt ) {
+						try {
+							ActuatorStateDao.updateActuatorValue(pkActuatorState, ruleEvalResult.getActuatorState().getActuatorValue());
+							isSuccess = true;
+							logger.debug("actuator_state updated, pk={}, value={}", pkActuatorState, ruleEvalResult.getActuatorState().getActuatorValue());
+							break;
+						} catch( Exception e ) {
+							logger.error(e.getMessage(),e);
+							throw e;
+						}
 					}
-				}
-				if( !isSuccess ) {
-					logger.error("actuator_state update failure, pk={}, value={}, lastException: {}", lastException.getLocalizedMessage(), 
-							pkActuatorState, ruleEvalResult.getActuatorState().getActuatorValue(), lastException);
-					throw new Exception( lastException);
+					if( !isSuccess ) {
+						logger.error("actuator_state update failure, pk={}, value={}, lastException: {}", lastException.getLocalizedMessage(), 
+								pkActuatorState, ruleEvalResult.getActuatorState().getActuatorValue(), lastException);
+						throw new Exception( lastException);
+					}
 				}
 			}
 		}

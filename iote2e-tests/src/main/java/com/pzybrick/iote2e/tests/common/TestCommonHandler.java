@@ -41,8 +41,8 @@ public abstract class TestCommonHandler {
 	
 	public static final String testPillDispenseImageLoginName = "pzybrick1";
 	public static final String testPillDispenseImageSourceName = "rpi-999";
-	public static final String testPillDispenseImageSourceType = "pill_image";
-	public static final String testPillDispenseImageSensorName = "pill_image1";
+	public static final String testPillDispenseImageSourceType = "pill_dispenser";
+	public static final String testPillDispenseImageSensorName = "pilldisp1";
 	public static final String testPillDispenseImageFilterKey = testPillDispenseImageLoginName + "|" + testPillDispenseImageSourceName + "|" + testPillDispenseImageSensorName + "|";
 	
 	public TestCommonHandler() throws Exception {

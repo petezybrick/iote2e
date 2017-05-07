@@ -7,6 +7,7 @@ Created on Jul 30, 2016
 import sys
 import signal
 from iote2epyclient.launch.clientrun import ClientRun
+from sense_hat import SenseHat
 
 clientRun = None
 
@@ -14,6 +15,12 @@ def main( processClassName, sensorName, schemaSourceFolder, endpoint_url, loginN
     import logging.config
     logging.config.fileConfig( loggingConfig, disable_existing_loggers=False)
     logger = logging.getLogger(__name__)
+    
+    logger.info('>>>>>>>>>>>>>>>>>>>>>> BEFORE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+    sense = SenseHat()
+    sense.show_message('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', scroll_speed=.025);
+    logger.info('>>>>>>>>>>>>>>>>>>>>>> AFTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+    
     clientRun = ClientRun(processClassName, sensorName, schemaSourceFolder, endpoint_url, loginName, sourceName, optionalFilterSensorName)
     def signal_handler(signal, frame):
         logger.info('ClientRun main shutdown - start')

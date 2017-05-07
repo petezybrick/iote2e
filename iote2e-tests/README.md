@@ -113,15 +113,6 @@ Run Spark unit tests under Docker
   master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
 
 
-DELETE THIS ONE ./bin/spark-submit \
-  --class com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer \
-  --deploy-mode cluster \
-  --master spark://localhost:6066 \
-  --executor-memory 8G \
-  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
-  master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
-
-  
 - review the returned json for "success":true
 		17/02/04 12:41:01 INFO RestSubmissionClient: Server responded with CreateSubmissionResponse:
 		{
@@ -218,6 +209,7 @@ Initializing
 1. Truncate the pill_dispenser table
 2. Populate pill_dispenser table as per the sql in mysql_create_pills_dispensed_tables.sql
 3. Start the Python PillDispenser or PillDispenser simulator on RPi  
+python -m iote2epyclient.launch.clientlauncher 'ProcessSimPillDispenser' 'pill_image1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' ''
 4. Bring up demomgr: docker exec -it iote2e-demomgr1 /bin/bash 
 4. Start the PillDispenser - this will read the pill_dispenser table and start the sequence
 	java -cp /tmp/iote2e-shared/jars/iote2e-tests-1.0.0.jar -Xms512m -Xmx512m com.pzybrick.iote2e.stream.pilldisp.PillDispenser master_spark_run_docker_batch_config iote2e-cassandra1 iote2e

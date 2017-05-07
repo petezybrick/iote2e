@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 public class PillsDispensedVo implements Serializable {
 	private static final long serialVersionUID = -7663024167514190346L;
-	public enum DispenseState {PENDING, DISPENSING, DISPENSED, CONFIRMED};
+	public enum DispenseState {PENDING, DISPENSING, DISPENSED, CONFIRMING, CONFIRMED};
 	private String pillsDispensedUuid;
 	private String loginName;
 	private String sourceName;

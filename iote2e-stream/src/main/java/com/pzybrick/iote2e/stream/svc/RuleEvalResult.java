@@ -11,6 +11,8 @@ public class RuleEvalResult implements Serializable {
 	private String actuatorTargetValue;
 	private ActuatorState actuatorState;
 	private Map<CharSequence,CharSequence> metadata;
+	private boolean updateActuatorState;
+	private boolean useLongIgniteKey;
 
 	public RuleEvalResult() {
 		this.sensorName = null;
@@ -18,6 +20,8 @@ public class RuleEvalResult implements Serializable {
 		this.actuatorState = null;
 		this.actuatorTargetValue = null;
 		this.metadata = new HashMap<CharSequence,CharSequence>();
+		this.updateActuatorState = false;
+		this.useLongIgniteKey = false;
 	}
 
 	public RuleEvalResult(boolean ruleActuatorHit, ActuatorState actuatorState) {
@@ -26,6 +30,8 @@ public class RuleEvalResult implements Serializable {
 		this.actuatorState = actuatorState;
 		this.actuatorTargetValue = null;
 		this.metadata = new HashMap<CharSequence,CharSequence>();
+		this.updateActuatorState = true;
+		this.useLongIgniteKey = true;
 	}
 
 	public RuleEvalResult(String sensorName, boolean ruleActuatorHit, ActuatorState actuatorState) {
@@ -34,6 +40,8 @@ public class RuleEvalResult implements Serializable {
 		this.actuatorState = actuatorState;
 		this.actuatorTargetValue = null;
 		this.metadata = new HashMap<CharSequence,CharSequence>();
+		this.updateActuatorState = true;
+		this.useLongIgniteKey = true;
 	}
 
 	public RuleEvalResult(String sensorName, String actuatorTargetValue, Map<CharSequence,CharSequence> metadata) {
@@ -42,6 +50,8 @@ public class RuleEvalResult implements Serializable {
 		this.actuatorState = null;
 		this.actuatorTargetValue = actuatorTargetValue;
 		this.metadata = metadata;
+		this.updateActuatorState = false;
+		this.useLongIgniteKey = false;
 	}
 
 	public boolean isRuleActuatorHit() {
@@ -98,6 +108,24 @@ public class RuleEvalResult implements Serializable {
 
 	public RuleEvalResult setMetadata(Map<CharSequence, CharSequence> metadata) {
 		this.metadata = metadata;
+		return this;
+	}
+
+	public boolean isUpdateActuatorState() {
+		return updateActuatorState;
+	}
+
+	public boolean isUseLongIgniteKey() {
+		return useLongIgniteKey;
+	}
+
+	public RuleEvalResult setUpdateActuatorState(boolean updateActuatorState) {
+		this.updateActuatorState = updateActuatorState;
+		return this;
+	}
+
+	public RuleEvalResult setUseLongIgniteKey(boolean useLongIgniteKey) {
+		this.useLongIgniteKey = useLongIgniteKey;
 		return this;
 	}
 

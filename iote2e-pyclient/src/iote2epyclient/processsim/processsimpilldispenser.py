@@ -8,7 +8,6 @@ from sense_hat import SenseHat
 
 logger = logging.getLogger(__name__)
 
-
 class ProcessSimPillDispenser(object):
     '''
     classdocs
@@ -21,8 +20,8 @@ class ProcessSimPillDispenser(object):
         self.numPillsToDispense = -1
         self.pillsDispensedUuid = None
         self.pillsDispensedDelta = 9999
-        self.sense = SenseHat()
-        self.sense.clear()
+        #self.sense = SenseHat()
+        #self.sense.clear()
         
         
     def createIote2eRequest(self ):
@@ -41,40 +40,56 @@ class ProcessSimPillDispenser(object):
             # Create Iote2eRequest that contains the confirmation image
             self.dispenseState = None
             pairs = { self.sensorName: imageByte64}
-            metadata = { 'PILLS_DISPENSED_UUID': self.pillsDispensedUuid, 'PILLS_DISPENSED_STATE' : 'DISPENSED'}
+            metadata = { 'PILLS_DISPENSED_UUID': self.pillsDispensedUuid, 'PILLS_DISPENSED_STATE' : 'DISPENSED', 'NUM_PILLS_TO_DISPENSE' : str(self.numPillsToDispense) }
             iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='pill_dispenser', 
                                request_uuid=str(uuid.uuid4()), 
                                request_timestamp=ClientUtils.nowIso8601(), 
                                pairs=pairs, metadata=metadata, operation='SENSORS_VALUES')
         elif 'DISPENSED' == self.dispenseState:
+            sense = SenseHat()        
             if self.pillsDispensedDelta == 0:
+                msg = 'Correct number of pills dispensed'
+                logger.info( msg )
                 for i in range(0,3):
-                    if 'CONFIRMED' == self.dispenseState:
+                    if 'CONFIRMING' == self.dispenseState:
                         break
-                    self.sense.clear(0,255,0)
+                    sense.show_message(msg, scroll_speed=.025);
+                    sense.clear(0,255,0)
                     time.sleep(.5)
-                    self.sense.clear()
+                    sense.clear()
                     time.sleep(.5)
-                    if 'CONFIRMED' == self.dispenseState:
+                    if 'CONFIRMING' == self.dispenseState:
                         break
             else:
                 if self.pillsDispensedDelta < 0:
                     msg = "Not enough pills dispensed"
                 else:
                     msg = "Too many pills dispensed"
+                logger.info( msg )
                 for i in range(0,3):
-                    if 'CONFIRMED' == self.dispenseState:
+                    if 'CONFIRMING' == self.dispenseState:
                         break                    
-                    self.sense.show_message(msg, scroll_speed=.025);
-                    self.sense.clear(255,0,0)
+                    sense.show_message(msg, scroll_speed=.025);
+                    sense.clear(255,0,0)
                     time.sleep(.5)
-                    self.sense.clear()
+                    sense.clear()
                     time.sleep(.5)
-                    if 'CONFIRMED' == self.dispenseState:
+                    if 'CONFIRMING' == self.dispenseState:
                         break
+            # Simulate button being pushed on separate thread
+            self.dispenseState = 'CONFIRMING'
+
+        elif 'CONFIRMING' == self.dispenseState:
+            pairs = { self.sensorName: '' }
+            metadata = { 'PILLS_DISPENSED_UUID': self.pillsDispensedUuid, 'PILLS_DISPENSED_STATE' : 'CONFIRMED'}
+            iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='pill_dispenser', 
+                               request_uuid=str(uuid.uuid4()), 
+                               request_timestamp=ClientUtils.nowIso8601(), 
+                               pairs=pairs, metadata=metadata, operation='ACTUATOR_CONFIRM')
+            self.dispenseState = None
+            time.sleep(.25)
         elif 'CONFIRMED' == self.dispenseState:
             self.dispenseState = None
-            self.sense.clear()
             time.sleep(.25)
         return iote2eRequest
 

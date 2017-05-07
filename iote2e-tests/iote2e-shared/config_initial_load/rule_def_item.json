@@ -140,9 +140,9 @@
     ]
   },
   {
-    "ruleUuid": "rule_custom_pill_image",
-    "ruleName": "CustomPillImage",
-    "ruleCustomClassName": "com.pzybrick.iote2e.stream.svc.RuleCustomPillImageImpl"
+    "ruleUuid": "rule_custom_pill_dispenser",
+    "ruleName": "CustomPillDispenser",
+    "ruleCustomClassName": "com.pzybrick.iote2e.stream.svc.RuleCustomPillDispenserImpl"
   }
 ]
 

@@ -37,8 +37,8 @@
   {
     "loginName": "pzybrick1",
     "sourceName": "rpi-001|rpi-002|rpi-003|rpi-004|rpi-999",
-    "sensorName": "pill_image1",
-    "ruleUuid": "rule_custom_pill_image",
-    "desc": "VerifyPillImage"
+    "sensorName": "pilldisp1",
+    "ruleUuid": "rule_custom_pill_dispenser",
+    "desc": "PillDispenser"
   }
 ]
