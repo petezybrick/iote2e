@@ -1,12 +1,12 @@
 import time
-from iote2epyclient.process.processpilldispenser import ProcessPillDispenser
+from iote2epyclient.pilldispenser.handlepilldispenser import HandlePillDispenser
 
 def main():
-    processPillDispenser = ProcessPillDispenser()
+    handlePillDispenser = HandlePillDispenser()
 
-    for i in range(0,16):
+    for i in range(1,16):
         print('pill ' + str(i))
-        processPillDispenser.dispensePill()
+        handlePillDispenser.dispensePills(i)
         time.sleep(.25)
 
 
