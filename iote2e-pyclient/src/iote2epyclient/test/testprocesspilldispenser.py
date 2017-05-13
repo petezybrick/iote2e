@@ -3,12 +3,12 @@ from iote2epyclient.pilldispenser.handlepilldispenser import HandlePillDispenser
 
 def main():
     handlePillDispenser = HandlePillDispenser()
+    testDispensePills(handlePillDispenser)
+    print('done')
 
-    for i in range(1,16):
-        print('pill ' + str(i))
-        handlePillDispenser.dispensePills(i)
-        time.sleep(.25)
-
+def testDispensePills(handlePillDispenser):
+    print('dispensing 4 pills')
+    handlePillDispenser.dispensePills(4)
 
 if __name__ == '__main__':
     main()
