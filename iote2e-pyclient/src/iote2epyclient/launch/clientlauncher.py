@@ -40,7 +40,7 @@ if __name__ == '__main__':
     print('>>>>>>>>>>>>>>>>>>>>>> BEFORE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
     sense = SenseHat()
     sense.clear()
-    sense.show_message('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', scroll_speed=.025);
+    sense.show_message('Watson, come here. I need you', scroll_speed=.025);
     print('>>>>>>>>>>>>>>>>>>>>>> AFTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
 
     if( len(sys.argv) < 8 ):
