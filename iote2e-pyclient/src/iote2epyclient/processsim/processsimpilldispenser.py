@@ -22,7 +22,8 @@ class ProcessSimPillDispenser(object):
         self.pillsDispensedDelta = 9999
         #self.sense = SenseHat()
         #self.sense.clear()
-        
+        sense = SenseHat()        
+        sense.show_message('Watson, come here. I need you.', scroll_speed=.025);
         
     def createIote2eRequest(self ):
         logger.info('ProcessPillDispenser dispenseState: ' + str(self.dispenseState) )
