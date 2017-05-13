@@ -16,11 +16,6 @@ def main( processClassName, sensorName, schemaSourceFolder, endpoint_url, loginN
     logging.config.fileConfig( loggingConfig, disable_existing_loggers=False)
     logger = logging.getLogger(__name__)
     
-    logger.info('>>>>>>>>>>>>>>>>>>>>>> BEFORE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-    sense = SenseHat()
-    sense.show_message('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', scroll_speed=.025);
-    logger.info('>>>>>>>>>>>>>>>>>>>>>> AFTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-    
     clientRun = ClientRun(processClassName, sensorName, schemaSourceFolder, endpoint_url, loginName, sourceName, optionalFilterSensorName)
     def signal_handler(signal, frame):
         logger.info('ClientRun main shutdown - start')
@@ -41,6 +36,12 @@ def main( processClassName, sensorName, schemaSourceFolder, endpoint_url, loginN
 
 
 if __name__ == '__main__':
+        
+    logger.info('>>>>>>>>>>>>>>>>>>>>>> BEFORE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+    sense = SenseHat()
+    sense.show_message('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', scroll_speed=.025);
+    logger.info('>>>>>>>>>>>>>>>>>>>>>> AFTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+
     if( len(sys.argv) < 8 ):
         print('Invalid format, execution cancelled')
         print('Correct format: python endpoint_url loginName sourceName consoleConfigFile.conf optionalFilterSensorName')
