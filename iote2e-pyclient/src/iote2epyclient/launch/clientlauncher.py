@@ -37,10 +37,11 @@ def main( processClassName, sensorName, schemaSourceFolder, endpoint_url, loginN
 
 if __name__ == '__main__':
         
-    logger.info('>>>>>>>>>>>>>>>>>>>>>> BEFORE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+    print('>>>>>>>>>>>>>>>>>>>>>> BEFORE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
     sense = SenseHat()
+    sense.clear()
     sense.show_message('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', scroll_speed=.025);
-    logger.info('>>>>>>>>>>>>>>>>>>>>>> AFTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+    print('>>>>>>>>>>>>>>>>>>>>>> AFTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
 
     if( len(sys.argv) < 8 ):
         print('Invalid format, execution cancelled')
