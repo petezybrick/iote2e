@@ -21,13 +21,13 @@ def main():
     
 def leds():
     for i in range(0,6):
-        DAQC.setLED(0,0)
+        DAQC.setLED(1,0)
         time.sleep(.25)
-        DAQC.clrLED(0)
+        DAQC.clrLED(1,0)
     for i in range(0,6):
-        DAQC.setLED(0,1)
+        DAQC.setLED(1,1)
         time.sleep(.25)
-        DAQC.clrLED(0)
+        DAQC.clrLED(1,0)
 
 def dispensePills(handlePillDispenser):
     print('dispensing 1 pills')
