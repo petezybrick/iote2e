@@ -3,6 +3,7 @@ from iote2epyclient.pilldispenser.handlepilldispenser import HandlePillDispenser
 import base64
 from io import BytesIO
 from picamera import PiCamera
+import piplates.DAQCplate as DAQC
 
 
 def main():
@@ -15,11 +16,22 @@ def main():
     
     dispensePills(handlePillDispenser)
     takePicture(camera, imageStream)
+    leds()
     print('done')
+    
+def leds():
+    for i in range(0,6):
+        DAQC.setLED(0,0)
+        time.sleep(.25)
+        DAQC.clrLED(0)
+    for i in range(0,6):
+        DAQC.setLED(0,1)
+        time.sleep(.25)
+        DAQC.clrLED(0)
 
 def dispensePills(handlePillDispenser):
-    print('dispensing 4 pills')
-    handlePillDispenser.dispensePills(4)
+    print('dispensing 1 pills')
+    handlePillDispenser.dispensePills(1)
     
 def takePicture(camera, imageStream):
     print('Taking picture')
