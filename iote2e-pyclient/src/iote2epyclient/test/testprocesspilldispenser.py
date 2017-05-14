@@ -24,10 +24,12 @@ def leds():
         DAQC.setLED(0,0)
         time.sleep(.25)
         DAQC.clrLED(0,0)
+        time.sleep(.25)
     for i in range(0,6):
         DAQC.setLED(0,1)
         time.sleep(.25)
         DAQC.clrLED(0,0)
+        time.sleep(.25)
 
 def dispensePills(handlePillDispenser):
     print('dispensing 1 pills')
