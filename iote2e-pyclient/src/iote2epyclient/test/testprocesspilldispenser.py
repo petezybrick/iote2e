@@ -20,16 +20,22 @@ def main():
     print('done')
     
 def leds():
-    for i in range(0,6):
+    DAQC.enableSWint(0)
+    DAQC.intEnable(0)
+    while True:
         DAQC.setLED(0,0)
+        if DAQC.getINTflags(0) == 256:
+            break
         time.sleep(.25)
+        if DAQC.getINTflags(0) == 256:
+            break
         DAQC.clrLED(0,0)
+        if DAQC.getINTflags(0) == 256:
+            break
         time.sleep(.25)
-    for i in range(0,6):
-        DAQC.setLED(0,1)
-        time.sleep(.25)
-        DAQC.clrLED(0,0)
-        time.sleep(.25)
+        if DAQC.getINTflags(0) == 256:
+            break
+
 
 def dispensePills(handlePillDispenser):
     print('dispensing 1 pills')
