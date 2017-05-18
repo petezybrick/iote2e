@@ -25,14 +25,6 @@ class ProcessLedGreen(object):
         self.sensorName = sensorName
         self.btnPressed = '0'
         DAQC.clrLED(0,0)
-
-        DAQC.setLED(0,0)
-        if DAQC.getINTflags(0) == 256:
-            break
-        time.sleep(.25)
-        if DAQC.getINTflags(0) == 256:
-            break
-        
         
         
     def createIote2eRequest(self ):
