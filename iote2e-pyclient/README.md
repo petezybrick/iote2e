@@ -100,11 +100,7 @@ Start Ubuntu Mate
 		git pull https://github.com/petezybrick/iote2e.git develop
 		git branch develop
 		git checkout develop
-	Install HAT Python support
-		sudo apt-get install sense-hat
-		Reboot the RPi
-		API Reference: https://pythonhosted.org/sense-hat/api/
-	Install Motor Python Support
+	Install PiPlates Python Support - MOTOR and DAQC
 		sudo pip install pi-plates
 		sudo apt-get install python-spidev
 		sudo raspi-config

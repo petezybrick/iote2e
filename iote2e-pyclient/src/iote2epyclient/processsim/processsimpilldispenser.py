@@ -4,7 +4,6 @@ import base64
 import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
-from sense_hat import SenseHat
 
 logger = logging.getLogger(__name__)
 
@@ -20,10 +19,6 @@ class ProcessSimPillDispenser(object):
         self.numPillsToDispense = -1
         self.pillsDispensedUuid = None
         self.pillsDispensedDelta = 9999
-        #self.sense = SenseHat()
-        #self.sense.clear()
-        sense = SenseHat()        
-        sense.show_message('Watson, come here. I need you.', scroll_speed=.025);
         
     def createIote2eRequest(self ):
         logger.info('ProcessPillDispenser dispenseState: ' + str(self.dispenseState) )
@@ -47,18 +42,13 @@ class ProcessSimPillDispenser(object):
                                request_timestamp=ClientUtils.nowIso8601(), 
                                pairs=pairs, metadata=metadata, operation='SENSORS_VALUES')
         elif 'DISPENSED' == self.dispenseState:
-            sense = SenseHat()        
             if self.pillsDispensedDelta == 0:
                 msg = 'Correct number of pills dispensed'
                 logger.info( msg )
                 for i in range(0,3):
                     if 'CONFIRMING' == self.dispenseState:
                         break
-                    sense.show_message(msg, scroll_speed=.025);
-                    sense.clear(0,255,0)
-                    time.sleep(.5)
-                    sense.clear()
-                    time.sleep(.5)
+                    #TODO: blink LED green
                     if 'CONFIRMING' == self.dispenseState:
                         break
             else:
@@ -70,11 +60,7 @@ class ProcessSimPillDispenser(object):
                 for i in range(0,3):
                     if 'CONFIRMING' == self.dispenseState:
                         break                    
-                    sense.show_message(msg, scroll_speed=.025);
-                    sense.clear(255,0,0)
-                    time.sleep(.5)
-                    sense.clear()
-                    time.sleep(.5)
+                    #TODO: blink red 
                     if 'CONFIRMING' == self.dispenseState:
                         break
             # Simulate button being pushed on separate thread

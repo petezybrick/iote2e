@@ -7,7 +7,6 @@ Created on Jul 30, 2016
 import sys
 import signal
 from iote2epyclient.launch.clientrun import ClientRun
-from sense_hat import SenseHat
 
 clientRun = None
 
@@ -36,13 +35,6 @@ def main( processClassName, sensorName, schemaSourceFolder, endpoint_url, loginN
 
 
 if __name__ == '__main__':
-        
-    print('>>>>>>>>>>>>>>>>>>>>>> BEFORE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-    sense = SenseHat()
-    sense.clear()
-    sense.show_message('Watson, come here. I need you', scroll_speed=.025);
-    print('>>>>>>>>>>>>>>>>>>>>>> AFTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-
     if( len(sys.argv) < 8 ):
         print('Invalid format, execution cancelled')
         print('Correct format: python endpoint_url loginName sourceName consoleConfigFile.conf optionalFilterSensorName')

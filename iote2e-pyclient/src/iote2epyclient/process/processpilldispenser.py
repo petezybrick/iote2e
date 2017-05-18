@@ -4,7 +4,6 @@ import threading
 import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
-from sense_hat import SenseHat
 from iote2epyclient.pilldispenser.handlepilldispenser import HandlePillDispenser
 
 logger = logging.getLogger(__name__)
@@ -23,8 +22,6 @@ class ProcessPillDispenser(object):
         self.pillsDispensedUuid = None
         self.pillsDispensedDelta = 9999
         self.handlePillDispenser = HandlePillDispenser()
-        self.sense = SenseHat()
-        self.sense.clear()
         
         
     def createIote2eRequest(self ):
@@ -48,10 +45,7 @@ class ProcessPillDispenser(object):
                 for i in range(0,3):
                     if 'CONFIRMED' == self.dispenseState:
                         break
-                    self.sense.clear(0,255,0)
-                    time.sleep(.5)
-                    self.sense.clear()
-                    time.sleep(.5)
+                    #TODO: blink LED green
                     if 'CONFIRMED' == self.dispenseState:
                         break
             else:
@@ -62,15 +56,11 @@ class ProcessPillDispenser(object):
                 for i in range(0,3):
                     if 'CONFIRMED' == self.dispenseState:
                         break                    
-                    self.sense.show_message(msg, scroll_speed=.025);
-                    self.sense.clear(255,0,0)
-                    time.sleep(.5)
-                    self.sense.clear()
-                    time.sleep(.5)
+                    #TODO: blink LED red
                     if 'CONFIRMED' == self.dispenseState:
                         break
         elif 'CONFIRMED' == self.dispenseState:
-                    self.sense.clear()
+                    #TODO: turn off the LED
                     time.sleep(.25)
         return iote2eRequest
 

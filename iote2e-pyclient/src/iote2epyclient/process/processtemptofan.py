@@ -8,7 +8,6 @@ import time
 import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
-from sense_hat import SenseHat
 import piplates.MOTORplate as MOTOR
 
 
@@ -23,7 +22,6 @@ class ProcessTempToFan(object):
     def __init__(self, loginVo, sensorName):
         self.loginVo = loginVo
         self.sensorName = sensorName
-        self.sense = SenseHat()
         MOTOR.dcCONFIG(0,3,'cw',100, 1)
         
         
@@ -34,7 +32,8 @@ class ProcessTempToFan(object):
     def createIote2eRequest(self ):
         time.sleep(1)
         logger.info('ProcessTempToFan createIote2eRequest:')
-        tempC = str(round(self.sense.get_temperature(),2))
+        #TODO: get temp from DAQC
+        tempC = str(round(DAQC.get_temperature(),2))
         pairs = { self.sensorName: tempC }
 
         iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='temperature', 
