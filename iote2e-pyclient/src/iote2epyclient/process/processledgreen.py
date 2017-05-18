@@ -21,36 +21,54 @@ class ProcessLedGreen(object):
     '''
 
     def __init__(self, loginVo, sensorName):
+        logger.info( 'ProcessLedGreen init')
         self.loginVo = loginVo
         self.sensorName = sensorName
-        self.btnPressed = '0'
         DAQC.clrLED(0,0)
+        DAQC.clrLED(0,1)
+        DAQC.enableSWint(0)
+        DAQC.intEnable(0)
+        self.ledColor = 'green'
+        self.btnPressed = '0'
         
         
     def createIote2eRequest(self ):
-        swState = DAQC.getSWstate(0) 
-        while True:
-            if (self.btnPressed == '0' and swState == 1 ) or (self.btnPressed == '1' and swState == 0):
-                self.btnPressed = str(swState)
-                logger.info( "ProcessLedGreen createIote2eRequest {}: {}".format(self.sensorName,self.btnPressed))
-        
-                pairs = { self.sensorName: str(self.btnPressed)}
-                iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='switch', 
-                                               request_uuid=str(uuid.uuid4()), 
-                                               request_timestamp=ClientUtils.nowIso8601(), 
-                                               pairs=pairs, operation='SENSORS_VALUES')
-                break
-            
+        iote2eRequest = None
+        if DAQC.getINTflags(0) == 256:
+            logger.info( "ProcessLedGreen createIote2eRequest {}".format(self.sensorName))    
+            pairs = { self.sensorName : self.btnPressed }
+            iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='switch', 
+                                           request_uuid=str(uuid.uuid4()), 
+                                           request_timestamp=ClientUtils.nowIso8601(), 
+                                           pairs=pairs, operation='SENSORS_VALUES')
+            if self.btnPressed == '1':
+                self.btnPressed = '0';
+            else:
+                self.btnPressed = '1';
         return iote2eRequest
 
 
     def handleIote2eResult(self, iote2eResult ):
-        logger.info('ProcessSimHumidityToMister handleIote2eResult: ' + str(iote2eResult))
+        logger.info('ProcessLedGreen handleIote2eResult: ' + str(iote2eResult))
         actuatorValue = iote2eResult.pairs['actuatorValue'];
         logger.info('actuatorValue {}'.format(actuatorValue))
-        if 'off' == actuatorValue:
-            DAQC.clrLED(0,0)
-        elif 'green' == actuatorValue:
-            DAQC.setLED(0,1)
+        if self.ledColor == 'green':
+            logger.info('set led green')
+            for i in range(0,100):
+                DAQC.clrLED(0,0)
+                DAQC.clrLED(0,1)
+            #time.sleep(.25)
+            for i in range(0,100):
+                DAQC.setLED(0,1)
+            self.ledColor = 'red'
+        elif self.ledColor == 'red':
+            logger.info('set led red')
+            for i in range(0,100):
+                DAQC.clrLED(0,0)
+                DAQC.clrLED(0,1)
+            #time.sleep(.25)
+            for i in range(0,100):
+                DAQC.setLED(0,0)
+            self.ledColor = 'green'               
 
         
