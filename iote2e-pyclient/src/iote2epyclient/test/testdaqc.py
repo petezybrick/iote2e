@@ -14,8 +14,8 @@ def main():
     print('Done')
 
     
-def showTemperature(sense):
-    for i in range(0,5):
+def showTemperature():
+    for i in range(0,10):
         t = round(DAQC.getTEMP(0,0,'c'),2)
         print(t)
         sleep(1)
