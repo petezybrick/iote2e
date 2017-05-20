@@ -27,7 +27,7 @@ CREATE TABLE switch (
 	login_name VARCHAR(128) NOT NULL,
 	source_name VARCHAR(128) NOT NULL,
 	request_timestamp datetime(3) NOT NULL,
-	switch_state TINYINT(1) NOT NULL,
+	switch_state INTEGER NOT NULL,
 	insert_ts timestamp  DEFAULT CURRENT_TIMESTAMP,
 	KEY ix_switch_request_ts(request_timestamp)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

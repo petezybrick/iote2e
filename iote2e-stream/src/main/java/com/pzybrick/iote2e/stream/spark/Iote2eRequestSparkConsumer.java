@@ -92,7 +92,8 @@ public class Iote2eRequestSparkConsumer {
         // consumer optional 
         kafkaProps.put("consumer.forcefromstart", "false");
         kafkaProps.put("consumer.fetchsizebytes", "1048576");
-        kafkaProps.put("consumer.fillfreqms", String.valueOf(sparkStreamDurationMs) );
+        kafkaProps.put("consumer.fillfreqms", "200" );
+        // kafkaProps.put("consumer.fillfreqms", String.valueOf(sparkStreamDurationMs) );
         kafkaProps.put("consumer.backpressure.enabled", "true");
         //kafkaProps.put("consumer.num_fetch_to_buffer", "10");
                 

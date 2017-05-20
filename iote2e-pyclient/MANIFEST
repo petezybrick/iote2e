@@ -11,6 +11,7 @@ src/iote2epyclient/pilldispenser/handlepilldispenser.py
 src/iote2epyclient/process/__init__.py
 src/iote2epyclient/process/processledgreen.py
 src/iote2epyclient/process/processpilldispenser.py
+src/iote2epyclient/process/processswitch.py
 src/iote2epyclient/process/processtemptofan.py
 src/iote2epyclient/processsim/__init__.py
 src/iote2epyclient/processsim/processsimhumiditytomister.py

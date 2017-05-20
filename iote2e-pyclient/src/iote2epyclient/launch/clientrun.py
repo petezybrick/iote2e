@@ -21,6 +21,7 @@ from iote2epyclient.processsim.processsimhumiditytomister import ProcessSimHumid
 from iote2epyclient.processsim.processsimledgreen import ProcessSimLedGreen
 from iote2epyclient.processsim.processsimpilldispenser import ProcessSimPillDispenser
 from iote2epyclient.pilldispenser.handlepilldispenser import HandlePillDispenser
+from iote2epyclient.process.processswitch import ProcessSwitch
 
 logger = logging.getLogger(__name__)
 

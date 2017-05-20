@@ -119,6 +119,13 @@ Start Ubuntu Mate
 			Reboot
 			Test the camera: raspistill -e png -w 100 -h 100 -o first.png
 		picamera doc: http://picamera.readthedocs.io/en/release-1.13/
+	Optionally configure SSH keys
+		Run ssh-keygen on your development (client) machine - only need to do this once
+		Accept default file location
+		Passphrase: anything you want, i.e. iote2e
+		Copy to remote RPi: ssh-copy-id -i ~/.ssh/id_rsa.pub pete@rpi-001
+		Enter: ssh pete@rpi-001
+			First attempt will cause password prompt - use passphrase from above
 			
 sudo shutdown -P now
 
