@@ -9,6 +9,7 @@ import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
 import piplates.MOTORplate as MOTOR
+import piplates.DAQCplate as DAQC
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,7 @@ class ProcessTempToFan(object):
         time.sleep(1)
         logger.info('ProcessTempToFan createIote2eRequest:')
         #TODO: get temp from DAQC
-        tempC = str(round(DAQC.get_temperature(),2))
+        tempC = str(round(DAQC.getTEMP(0,0,'c'),2))
         pairs = { self.sensorName: tempC }
 
         iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='temperature', 
