@@ -28,11 +28,11 @@ class BlinkLedThread( threading.Thread):
             if self.isShutdown: 
                 break
             for i in range(0,100):
-                DAQC.clrLed(self.daqcBoard, 0)
-                DAQC.clrLed(self.daqcBoard, 1)
+                DAQC.clrLED(self.daqcBoard, 0)
+                DAQC.clrLED(self.daqcBoard, 1)
             time.sleep(.25)           
             for i in range(0,100):
-                DAQC.setLed(self.daqcBoard, self.led)
+                DAQC.setLED(self.daqcBoard, self.led)
             time.sleep(.25)
 
         
