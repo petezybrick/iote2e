@@ -13,7 +13,7 @@ class HandlePillDispenser(object):
     def dispensePills(self, numPills=1):
         for i in range(0,numPills):
             self.dispensePill()
-            time.sleep(.25)
+            time.sleep(.1)
 
     def dispensePill(self):
         numSteps = 102
