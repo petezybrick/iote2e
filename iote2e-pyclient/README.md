@@ -46,10 +46,10 @@ python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'switch0' '
 
 python -m iote2epyclient.launch.clientlauncher 'ProcessLedGreen' 'switch0' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi-002' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'switch0'
 
-###PillDispesner
+###PillDispenser
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimPillDispenser' 'pilldisp1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-999' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' ''
 
-python -m iote2epyclient.launch.clientlauncher 'ProcessSimPillDispenser' 'pilldisp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' ''
+python -m iote2epyclient.launch.clientlauncher 'ProcessSimPillDispenser' 'pilldisp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' ''
 
 ##Installation RPi
 Install Ubuntu Mate 
