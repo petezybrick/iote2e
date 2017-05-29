@@ -34,6 +34,9 @@ class BlinkLedThread( threading.Thread):
             for i in range(0,100):
                 DAQC.setLED(self.daqcBoard, self.led)
             time.sleep(.25)
+        for i in range(0,100):
+            DAQC.clrLED(self.daqcBoard, 0)
+            DAQC.clrLED(self.daqcBoard, 1)            
 
         
     def shutdown(self):
