@@ -16,7 +16,7 @@ class HandlePillDispenser(object):
             time.sleep(.1)
 
     def dispensePill(self):
-        numSteps = 102
+        numSteps = 103
         self.resetMotor()
         MOTOR.stepperCONFIG(self.plateAddr, self.plateMotor, 'ccw', 3, 500, .02)
         MOTOR.stepperMOVE(self.plateAddr, self.plateMotor, numSteps)
