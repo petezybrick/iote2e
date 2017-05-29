@@ -25,6 +25,7 @@ src/iote2epyclient/schema/iote2eresult.py
 src/iote2epyclient/test/__init__.py
 src/iote2epyclient/test/testcamera.py
 src/iote2epyclient/test/testcassandra.py
+src/iote2epyclient/test/testdaqc.py
 src/iote2epyclient/test/testhatsensors.py
 src/iote2epyclient/test/testprocesspilldispenser.py
 src/iote2epyclient/test/testrequest.py

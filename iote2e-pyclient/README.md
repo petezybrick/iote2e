@@ -6,7 +6,7 @@
 * Run setup.py with the parms: sdist --formats-gztar
 * Verify build succeeded: Gzip should be created: ./dist/awsext-1.1.tar.gz
 * Copy iote2epyclient-1.0.0.tar.gz to target location (i.e. SCP to an RPi or EC2 instance)
-	scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@192.168.1.6:iote2epyclient-1.0.0.tar.gz
+	scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@rpi-001:iote2epyclient-1.0.0.tar.gz
 * Login to target system and `cd` to target directory
 * Run install script: sudo ~/development/gitrepo/iote2e/iote2e-pyclient/scripts/install-pyclient.sh
 * python -m iote2epyclient.test.testprocesspilldispenser 
@@ -32,9 +32,9 @@ scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleo
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'temp1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-002' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' 'temp1'
 
 **Running on RPi**
-python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'temp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'temp1'
+python -m iote2epyclient.launch.clientlauncher 'ProcessSimTempToFan' 'temp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'temp1'
 
-python -m iote2epyclient.launch.clientlauncher 'ProcessTempToFan' 'temp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'temp1'
+python -m iote2epyclient.launch.clientlauncher 'ProcessTempToFan' 'temp1' '/home/pete/iote2epyclient/avro-schemas/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/iote2epyclient/log-configs/client_consoleonly.conf' 'temp1'
 
 ###Humidity to Mister
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimHumidityToMister' 'humidity1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://192.168.1.7:8090/iote2e/' 'pzybrick1' 'rpi_001' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' 'humidity1'
@@ -73,6 +73,7 @@ Start Ubuntu Mate
 		sudo systemctl enable ssh.socket
 		sudo systemctl restart ssh
 		sudo apt-get update
+	Optionally set the RPi IP address to a fixed address, see TODO: **Master Network Setup**
 	Determine the IP address of the RPi instance
 		ifconfig
 			Look for "encap:Ethernet"

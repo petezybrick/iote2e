@@ -215,9 +215,27 @@ python -m iote2epyclient.launch.clientlauncher 'ProcessSimPillDispenser' 'pill_i
 	java -cp /tmp/iote2e-shared/jars/iote2e-tests-1.0.0.jar -Xms512m -Xmx512m com.pzybrick.iote2e.stream.pilldisp.PillDispenser master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
 	
 	
-	
-	
-	
-	
+**TODO: Master Network Setup**
+I think it's easier for development to have fixed IP's and system names. I have a router at 192.168.1.1. 
+Note that these exact settings might not work for you and you may need to adjust them. This is my setup:
+	192.168.1.239 (pz-win7-1) - Win7 for presentations
+	192.168.1.240 (hp-lt-ubunutu-1) Ubuntu - primary development/run machine, this is where Docker is running
+	192.168.1.241 (rpi-001) RPi 1
+	192.168.1.242 (rpi-002) RPi 2
+	192.168.1.243 (rpi-003) RPi 3
+	192.168.1.244 (rpi-004) RPi 4
+Netmask: 255.255.255.0 (aka 24)
+Gateway: 192.168.1.1
+DNS Servers: 192.168.1.1
+Search domains: home
+
+Update the /etc/hosts file to reference the "other" systems, i.e. for rpi-002:
+	127.0.0.1		localhost
+	127.0.1.1		rpi-002
+	192.168.1.239	pz-win7-1
+	192.168.1.240	hp-lt-ubuntu-1
+	192.168.1.241	rpi-001
+	192.168.1.243	rpi-003
+	192.168.1.244	rpi-004
 	
 	
