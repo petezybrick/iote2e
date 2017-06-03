@@ -12,12 +12,15 @@ import piplates.DAQCplate as DAQC
 logger = logging.getLogger(__name__)
 
 class BlinkLedThread( threading.Thread):
-    
-    def __init__(self, daqcBoard=0, led=1):
+    # Red=0, Green=1
+    def __init__(self, daqcBoard=0, ledColor='green'):
         logger.info("Constructing")
         threading.Thread.__init__(self)
         self.daqcBoard = daqcBoard
-        self.led = led
+        if ledColor == 'green':
+            self.led = 1
+        else:
+            self.led = 0
         self.isShutdown = False
 
     

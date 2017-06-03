@@ -4,6 +4,8 @@ import base64
 import uuid
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
+from iote2epyclient.pilldispenser.blinkledthread import BlinkLedThread
+from iote2epyclient.pilldispenser.buttonpushedthread import ButtonPushedThread
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +21,9 @@ class ProcessSimPillDispenser(object):
         self.numPillsToDispense = -1
         self.pillsDispensedUuid = None
         self.pillsDispensedDelta = 9999
+        self.blinkLedThread = None
+        self.buttonPushedThread = None
+        
         
     def createIote2eRequest(self ):
         logger.info('ProcessPillDispenser dispenseState: ' + str(self.dispenseState) )
@@ -45,26 +50,20 @@ class ProcessSimPillDispenser(object):
             if self.pillsDispensedDelta == 0:
                 msg = 'Correct number of pills dispensed'
                 logger.info( msg )
-                for i in range(0,3):
-                    if 'CONFIRMING' == self.dispenseState:
-                        break
-                    #TODO: blink LED green
-                    if 'CONFIRMING' == self.dispenseState:
-                        break
+                self.blinkLedThread = BlinkLedThread(ledColor='green')
+                self.blinkLedThread.start()
             else:
                 if self.pillsDispensedDelta < 0:
                     msg = "Not enough pills dispensed"
                 else:
                     msg = "Too many pills dispensed"
                 logger.info( msg )
-                for i in range(0,3):
-                    if 'CONFIRMING' == self.dispenseState:
-                        break                    
-                    #TODO: blink red 
-                    if 'CONFIRMING' == self.dispenseState:
-                        break
-            # Simulate button being pushed on separate thread
-            self.dispenseState = 'CONFIRMING'
+                self.blinkLedThread = BlinkLedThread(ledColor='red')
+                self.blinkLedThread.start()
+            # Wait for button being pushed on separate thread
+            self.dispenseState = 'CONFIRMING_PENDING'
+            self.buttonPushedThread = ButtonPushedThread( self )
+            self.buttonPushedThread.start()
 
         elif 'CONFIRMING' == self.dispenseState:
             pairs = { self.sensorName: '' }
@@ -73,7 +72,7 @@ class ProcessSimPillDispenser(object):
                                request_uuid=str(uuid.uuid4()), 
                                request_timestamp=ClientUtils.nowIso8601(), 
                                pairs=pairs, metadata=metadata, operation='ACTUATOR_CONFIRM')
-            self.dispenseState = None
+            self.dispenseState = 'CONFIRMED_PENDING'
             time.sleep(.25)
         elif 'CONFIRMED' == self.dispenseState:
             self.dispenseState = None
@@ -92,6 +91,13 @@ class ProcessSimPillDispenser(object):
             self.pillsDispensedDelta = iote2eResult.pairs['actuatorValue']
             self.dispenseState = 'DISPENSED'
         elif 'CONFIRMED' == pills_dispensed_state:
-            self.pillsDispensedDelta = iote2eResult.pairs['actuatorValue']
+            if self.blinkLedThread != None:
+                self.blinkLedThread.shutdown()
+                self.blinkLedThread = None
+            self.pillsDispensedDelta = 9999
             self.dispenseState = 'CONFIRMED'
 
+
+    def setDispenseState( self, dispenseState ):
+        self.dispenseState = dispenseState
+        

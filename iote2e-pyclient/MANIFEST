@@ -7,6 +7,8 @@ src/iote2epyclient/launch/clientrun.py
 src/iote2epyclient/launch/clientutils.py
 src/iote2epyclient/launch/testexit.py
 src/iote2epyclient/pilldispenser/__init__.py
+src/iote2epyclient/pilldispenser/blinkledthread.py
+src/iote2epyclient/pilldispenser/buttonpushedthread.py
 src/iote2epyclient/pilldispenser/handlepilldispenser.py
 src/iote2epyclient/process/__init__.py
 src/iote2epyclient/process/processledgreen.py
