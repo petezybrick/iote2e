@@ -34,6 +34,10 @@ import boofcv.struct.image.GrayU8;
 
 public class PillDispenser {
 	private static final Logger logger = LogManager.getLogger(PillDispenser.class);
+	public static final float PIXEL_THRESHOLD = 200;
+	public static final int PIXELS_PER_PILL = 585;
+	public static final float PIXELS_PER_PILL_FUDGE_FACTOR = 1.10f;
+	public static final int CHECK_MAX_NUM_PILLS = 7;
 	public static final String SOURCE_TYPE = "pilldisp";
 	public static final CharSequence KEY_PILLS_DISPENSED_UUID =  new Utf8("PILLS_DISPENSED_UUID");
 	public static final CharSequence KEY_PILLS_DISPENSED_STATE =  new Utf8("PILLS_DISPENSED_STATE");
@@ -127,16 +131,44 @@ public class PillDispenser {
 	
 	
 	public static int countPills( BufferedImage image ) throws Exception {
-		final float PIXEL_THRESHOLD = 225;
 		GrayF32 input = ConvertBufferedImage.convertFromSingle(image, null, GrayF32.class);
 		GrayU8 binary = new GrayU8(input.width,input.height);
+		int totPixels = 0;
 		for( int x = 0 ; x<input.width ; x++ ) {
 			for( int y=0 ; y<input.height ; y++ ) {
 				int binout = input.get(x, y) < PIXEL_THRESHOLD ? 0 : 1;
 				binary.set(x, y, binout );
+				totPixels += binout;
 			}
 		}
-		List<Contour> contours = BinaryImageOps.contour(binary, ConnectRule.EIGHT,null);
-		return contours.size();
+		dumpImage(binary, input.width, input.height );
+		
+		int numPills = -1;
+		for( int checkNumPills=1 ; checkNumPills<CHECK_MAX_NUM_PILLS ; checkNumPills++ ) {
+			int checkMaxPixels = (int)(checkNumPills * PIXELS_PER_PILL * PIXELS_PER_PILL_FUDGE_FACTOR);
+			if( totPixels <= checkMaxPixels ) {
+				numPills = checkNumPills;
+				break;
+			}
+		}
+		System.out.println(numPills); 
+		return numPills;
+		
+		//List<Contour> contours = BinaryImageOps.contour(binary, ConnectRule.EIGHT,null);
+		//return contours.size();
+	}
+	
+	public static void dumpImage( GrayU8 binaryImage, int width, int height ) throws Exception {
+		int totPixels = 0;
+		for( int x = 0 ; x<width ; x++ ) {
+			for( int y=0 ; y<height ; y++ ) {
+				int pixel = binaryImage.get(x, y );
+				totPixels += pixel;
+				System.out.print(pixel);
+			}
+			System.out.println("");
+		}
+		System.out.println(PIXEL_THRESHOLD + " " + totPixels + " " + (totPixels/3));
+		
 	}
 }
