@@ -36,7 +36,7 @@ class ProcessSimPillDispenser(object):
             # Sleep for half a second, then take a picture
             time.sleep(.5)
             # Byte64 encode the picture
-            with open("/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test.png", "rb") as image_file:
+            with open("/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test2.png", "rb") as image_file:
                 imageByte64 = base64.b64encode(image_file.read())
             # Create Iote2eRequest that contains the confirmation image
             self.dispenseState = None
