@@ -8,10 +8,10 @@ import piplates.DAQCplate as DAQC
 
 
 def main():
-    blinkLedThread = BlinkLedThread()
-    blinkLedThread.start()
-    time.sleep(5)
-    blinkLedThread.shutdown()
+    #blinkLedThread = BlinkLedThread()
+    #blinkLedThread.start()
+    #time.sleep(5)
+    #blinkLedThread.shutdown()
     
     handlePillDispenser = HandlePillDispenser()
     imageStream = BytesIO()
@@ -19,9 +19,9 @@ def main():
     camera.contrast = 0
     camera.sharpness = 100
    
-    dispensePills(handlePillDispenser)
+    #dispensePills(handlePillDispenser)
     takePicture(camera, imageStream)
-    leds()
+   # leds()
     print('done')
     
 def leds():
