@@ -45,7 +45,7 @@ public class RuleCustomPillDispenserImpl implements RuleCustom {
 			BufferedImage bufferedImage = ImageIO.read(in);
 			int numPillsActualDispense = PillDispenser.countPills( bufferedImage );
 			// If correct number of pills dispensed, then return 0, if fewer dispensed then negative, if too many then positive
-			int delta = numPillsToDispense - numPillsActualDispense;
+			int delta = numPillsActualDispense - numPillsToDispense;
 			logger.debug( ">>>> delta={}, numPillsToDispense={}, numPillsActualDispense={}", delta, numPillsToDispense, numPillsActualDispense );
 			String actuatorTargetValue = String.valueOf( delta );
 			Map<CharSequence,CharSequence> metadata = new HashMap<CharSequence,CharSequence>();

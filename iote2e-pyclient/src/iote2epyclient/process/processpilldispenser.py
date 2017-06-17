@@ -2,6 +2,8 @@ import logging
 import time
 import base64
 import uuid
+from io import BytesIO
+from picamera import PiCamera
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
 from iote2epyclient.pilldispenser.blinkledthread import BlinkLedThread
@@ -26,6 +28,9 @@ class ProcessPillDispenser(object):
         self.blinkLedThread = None
         self.buttonPushedThread = None
         self.handlePillDispenser = HandlePillDispenser()
+        self.camera = PiCamera(resolution=(200,200))
+        self.camera.contrast = 0
+        self.camera.sharpness = 100
 
         
     def createIote2eRequest(self ):
@@ -39,8 +44,9 @@ class ProcessPillDispenser(object):
             # Sleep for half a second, then take a picture
             time.sleep(.5)
             # Byte64 encode the picture
-            with open("/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test.png", "rb") as image_file:
-                imageByte64 = base64.b64encode(image_file.read())
+            imageByte64 = self.takePicture()
+            #with open("/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test4.png", "rb") as image_file:
+            #    imageByte64 = base64.b64encode(image_file.read())
             # Create Iote2eRequest that contains the confirmation image
             self.dispenseState = 'DISPENSED_PENDING'
             pairs = { self.sensorName: imageByte64}
@@ -103,6 +109,15 @@ class ProcessPillDispenser(object):
             self.pillsDispensedDelta = 9999
             self.dispenseState = 'CONFIRMED'
 
+
+    def takePicture(self):
+        logger.info('ProcessPillDispenser taking picture of dispensed pills')
+        imageStream = BytesIO()
+        self.camera.capture( imageStream, 'png' )
+        imageByte64 = base64.b64encode(imageStream.getvalue() )
+        imageStream.close()
+        return imageByte64;
+        
 
     def setDispenseState( self, dispenseState ):
         self.dispenseState = dispenseState

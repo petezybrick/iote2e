@@ -51,6 +51,7 @@ public class ServerSideSocketIote2eRequest {
 	@OnOpen
 	public void onWebSocketConnect(Session session) {
 		this.session = session;
+		session.setMaxBinaryMessageBufferSize(1024 * 256); // 256K
 		logger.info("Socket Connected: " + session.getId());
 	}
 

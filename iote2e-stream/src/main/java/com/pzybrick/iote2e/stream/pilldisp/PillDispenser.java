@@ -34,8 +34,9 @@ import boofcv.struct.image.GrayU8;
 
 public class PillDispenser {
 	private static final Logger logger = LogManager.getLogger(PillDispenser.class);
-	public static final float PIXEL_THRESHOLD = 200;
-	public static final int PIXELS_PER_PILL = 585;
+	private static final boolean IS_DISPLAY_BINARY_IMAGE = false;
+	public static final float PIXEL_THRESHOLD = 160;
+	public static final int PIXELS_PER_PILL = 1100;
 	public static final float PIXELS_PER_PILL_FUDGE_FACTOR = 1.10f;
 	public static final int CHECK_MAX_NUM_PILLS = 7;
 	public static final String SOURCE_TYPE = "pilldisp";
@@ -151,11 +152,8 @@ public class PillDispenser {
 				break;
 			}
 		}
-		System.out.println(numPills); 
+		logger.info("NumPills found in image: {}", numPills);
 		return numPills;
-		
-		//List<Contour> contours = BinaryImageOps.contour(binary, ConnectRule.EIGHT,null);
-		//return contours.size();
 	}
 	
 	public static void dumpImage( GrayU8 binaryImage, int width, int height ) throws Exception {
@@ -164,11 +162,10 @@ public class PillDispenser {
 			for( int y=0 ; y<height ; y++ ) {
 				int pixel = binaryImage.get(x, y );
 				totPixels += pixel;
-				System.out.print(pixel);
+				if( IS_DISPLAY_BINARY_IMAGE ) System.out.print(pixel);
 			}
-			System.out.println("");
+			if( IS_DISPLAY_BINARY_IMAGE ) System.out.println("");
 		}
-		System.out.println(PIXEL_THRESHOLD + " " + totPixels + " " + (totPixels/3));
-		
+		if( IS_DISPLAY_BINARY_IMAGE ) System.out.println(PIXEL_THRESHOLD + " " + totPixels );
 	}
 }

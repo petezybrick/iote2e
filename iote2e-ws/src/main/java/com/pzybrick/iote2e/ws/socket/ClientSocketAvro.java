@@ -33,6 +33,7 @@ public class ClientSocketAvro {
 
 	@OnOpen
 	public void onWebSocketConnect(Session session) {
+		session.setMaxBinaryMessageBufferSize(1024 * 256); // 256K
 		logger.debug("Socket Connected: " + session.getId());
 	}
 

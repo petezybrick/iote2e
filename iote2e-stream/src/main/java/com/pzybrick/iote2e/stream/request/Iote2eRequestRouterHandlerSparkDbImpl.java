@@ -98,36 +98,40 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 		String request_uuid = null;
 		PreparedStatement pstmt = null;
 		try {
+			int cntToCommit = 0;
 			for( Iote2eRequest iote2eRequest : iote2eRequests) {
 				tableName = iote2eRequest.getSourceType().toString();
-				request_uuid = iote2eRequest.getRequestUuid().toString();
 				pstmt = getPreparedStatement( tableName, con, cachePrepStmtsByTableName );
-				int offset = 1;
-				// First set of values are the same on every table
-				pstmt.setString(offset++, request_uuid );
-				pstmt.setString(offset++, iote2eRequest.getLoginName().toString());
-				pstmt.setString(offset++, iote2eRequest.getSourceName().toString());
-				Timestamp timestamp = new Timestamp(dtfmt.parseDateTime(iote2eRequest.getRequestTimestamp().toString()).getMillis());
-				pstmt.setTimestamp(offset++, timestamp);
-				// Next value(s)/types are specific to the table
-				// For this simple example, assume one value passed as string
-				String value = iote2eRequest.getPairs().values().iterator().next().toString();
-				if( "temperature".compareToIgnoreCase(tableName) == 0) {
-					// temp_f
-					pstmt.setFloat(offset++, new Float(value));
-				}else if( "humidity".compareToIgnoreCase(tableName) == 0) {
-					// pct_humidity
-					pstmt.setFloat(offset++, new Float(value));
-				}else if( "switch".compareToIgnoreCase(tableName) == 0) {
-					// switch_state
-					pstmt.setInt(offset++, Integer.parseInt(value));
-				}else if( "heartbeat".compareToIgnoreCase(tableName) == 0) {
-					// heartbeat_state
-					pstmt.setInt(offset++, Integer.parseInt(value));
+				if( pstmt != null ) {
+					cntToCommit++;
+					request_uuid = iote2eRequest.getRequestUuid().toString();
+					int offset = 1;
+					// First set of values are the same on every table
+					pstmt.setString(offset++, request_uuid );
+					pstmt.setString(offset++, iote2eRequest.getLoginName().toString());
+					pstmt.setString(offset++, iote2eRequest.getSourceName().toString());
+					Timestamp timestamp = new Timestamp(dtfmt.parseDateTime(iote2eRequest.getRequestTimestamp().toString()).getMillis());
+					pstmt.setTimestamp(offset++, timestamp);
+					// Next value(s)/types are specific to the table
+					// For this simple example, assume one value passed as string
+					String value = iote2eRequest.getPairs().values().iterator().next().toString();
+					if( "temperature".compareToIgnoreCase(tableName) == 0) {
+						// temp_f
+						pstmt.setFloat(offset++, new Float(value));
+					}else if( "humidity".compareToIgnoreCase(tableName) == 0) {
+						// pct_humidity
+						pstmt.setFloat(offset++, new Float(value));
+					}else if( "switch".compareToIgnoreCase(tableName) == 0) {
+						// switch_state
+						pstmt.setInt(offset++, Integer.parseInt(value));
+					}else if( "heartbeat".compareToIgnoreCase(tableName) == 0) {
+						// heartbeat_state
+						pstmt.setInt(offset++, Integer.parseInt(value));
+					}
+					pstmt.execute();
 				}
-				pstmt.execute();
 			}
-			con.commit();
+			if( cntToCommit > 0 ) con.commit();
 		} catch( SQLException sqlEx ) {
 			con.rollback();
 			// Suppress duplicate rows, assume the are the same and were sent over Kafka > 1 time
@@ -163,10 +167,15 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 		else if( "humidity".compareToIgnoreCase(tableName) == 0) sql = sqlHumidity;
 		else if( "switch".compareToIgnoreCase(tableName) == 0) sql = sqlSwitch;
 		else if( "heartbeat".compareToIgnoreCase(tableName) == 0) sql = sqlHeartbeat;
+		else if( "pill_dispenser".compareToIgnoreCase(tableName) == 0) sql = null;
 		else throw new Exception("Invalid table name: " + tableName);
 
-		PreparedStatement pstmt = con.prepareStatement(sql);
-		cachePrepStmtsByTableName.put(tableName, pstmt);
+		PreparedStatement pstmt = null;
+		if( sql != null ) { 
+			con.prepareStatement(sql);
+			cachePrepStmtsByTableName.put(tableName, pstmt);
+		}
+		
 		return pstmt;
 	}
 

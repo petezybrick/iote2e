@@ -15,7 +15,7 @@ import com.pzybrick.iote2e.stream.pilldisp.PillDispenser;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
 public class TestPillDispenser {
-	public static String PATH_TEST_PNG = "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test2.png";
+	public static String PATH_TEST_PNG = "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test1.png";
 
 	@Before
 	public void setUp() throws Exception {
