@@ -36,10 +36,10 @@ class ProcessSimPillDispenser(object):
             # Sleep for half a second, then take a picture
             time.sleep(.5)
             # Byte64 encode the picture
-            with open("/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test2.png", "rb") as image_file:
+            with open("/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test.png", "rb") as image_file:
                 imageByte64 = base64.b64encode(image_file.read())
             # Create Iote2eRequest that contains the confirmation image
-            self.dispenseState = None
+            self.dispenseState = 'DISPENSED_PENDING'
             pairs = { self.sensorName: imageByte64}
             metadata = { 'PILLS_DISPENSED_UUID': self.pillsDispensedUuid, 'PILLS_DISPENSED_STATE' : 'DISPENSED', 'NUM_PILLS_TO_DISPENSE' : str(self.numPillsToDispense) }
             iote2eRequest = Iote2eRequest( login_name=self.loginVo.loginName,source_name=self.loginVo.sourceName, source_type='pill_dispenser', 
@@ -47,6 +47,7 @@ class ProcessSimPillDispenser(object):
                                request_timestamp=ClientUtils.nowIso8601(), 
                                pairs=pairs, metadata=metadata, operation='SENSORS_VALUES')
         elif 'DISPENSED' == self.dispenseState:
+            logger.info('self.pillsDispensedDelta: ' + str(self.pillsDispensedDelta) )
             if self.pillsDispensedDelta == 0:
                 msg = 'Correct number of pills dispensed'
                 logger.info( msg )
@@ -61,7 +62,7 @@ class ProcessSimPillDispenser(object):
                 self.blinkLedThread = BlinkLedThread(ledColor='red')
                 self.blinkLedThread.start()
             # Wait for button being pushed on separate thread
-            self.dispenseState = 'CONFIRMING_PENDING'
+            self.dispenseState = 'CONFIRMED_PENDING'
             self.buttonPushedThread = ButtonPushedThread( self )
             self.buttonPushedThread.start()
 
@@ -77,6 +78,8 @@ class ProcessSimPillDispenser(object):
         elif 'CONFIRMED' == self.dispenseState:
             self.dispenseState = None
             time.sleep(.25)
+        else:
+            time.sleep(1)
         return iote2eRequest
 
 
@@ -84,11 +87,11 @@ class ProcessSimPillDispenser(object):
         logger.info('ProcessPillDispenser handleIote2eResult: ' + str(iote2eResult))
         pills_dispensed_state = iote2eResult.metadata['PILLS_DISPENSED_STATE']
         if 'DISPENSING' == pills_dispensed_state:
-            self.numPillsToDispense = iote2eResult.pairs['actuatorValue']
+            self.numPillsToDispense = int(iote2eResult.pairs['actuatorValue'])
             self.pillsDispensedUuid = iote2eResult.metadata['PILLS_DISPENSED_UUID']
             self.dispenseState = 'DISPENSING'
         elif 'DISPENSED' == pills_dispensed_state:
-            self.pillsDispensedDelta = iote2eResult.pairs['actuatorValue']
+            self.pillsDispensedDelta = int(iote2eResult.pairs['actuatorValue'])
             self.dispenseState = 'DISPENSED'
         elif 'CONFIRMED' == pills_dispensed_state:
             if self.blinkLedThread != None:

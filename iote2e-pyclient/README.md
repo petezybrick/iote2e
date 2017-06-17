@@ -41,7 +41,7 @@ python -m iote2epyclient.launch.clientlauncher 'ProcessLedGreen' 'switch0' '/hom
 ###PillDispenser
 python -m iote2epyclient.launch.clientlauncher 'ProcessSimPillDispenser' 'pilldisp1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-999' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' ''
 
-python -m iote2epyclient.launch.clientlauncher 'ProcessSimPillDispenser' 'pilldisp1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' ''
+python -m iote2epyclient.launch.clientlauncher 'ProcessPillDispenser' 'pilldisp1' '/home/pete/development/gitrepo/iote2e/iote2e-schema/src/main/avro/' 'ws://hp-lt-ubuntu-1:8090/iote2e/' 'pzybrick1' 'rpi-001' '/home/pete/development/gitrepo/iote2e/iote2e-pyclient/config/client_consoleonly.conf' ''
 
 ##RPi Installation
 Install Ubuntu Mate 

@@ -12,7 +12,7 @@ import piplates.DAQCplate as DAQC
 logger = logging.getLogger(__name__)
 
 class ButtonPushedThread( threading.Thread):
-    def __init__(self, daqcBoard=0, pillDispenser ):
+    def __init__(self, pillDispenser, daqcBoard=0 ):
         logger.info("Constructing")
         threading.Thread.__init__(self)
         self.daqcBoard = daqcBoard
