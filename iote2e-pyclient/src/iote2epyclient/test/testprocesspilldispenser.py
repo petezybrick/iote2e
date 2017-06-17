@@ -66,7 +66,7 @@ def takePicture(camera, imageStream):
     print("Decoded=" + decoded )
     print("Decoded=" +  str( len(decoded)))
     
-    with open('/tmp/iote2e-test.png', 'wb') as output:
+    with open('/tmp/iote2e-test3.png', 'wb') as output:
         output.write(decoded)
         output.close()
 
