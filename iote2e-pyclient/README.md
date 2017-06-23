@@ -65,12 +65,13 @@ Start Ubuntu Mate
 		sudo systemctl enable ssh.socket
 		sudo systemctl restart ssh
 		sudo apt-get update
+		sudo apt install ntpdate
 	Optionally set the RPi IP address to a fixed address, see TODO: **Master Network Setup**
 	Determine the IP address of the RPi instance
 		ifconfig
 			Look for "encap:Ethernet"
 	SCP the RPi initialization script to the RPi instance
-		Enter: scp /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts/rpi-init.sh pete@192.168.1.5:rpi-init.sh
+		Enter: scp /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts/rpi-init.sh pete@rpi-003:rpi-init.sh
 	SSH into the RPi and run the init script
 		ssh pete@192.168.1.5
 		sudo ./rpi-init.sh
@@ -93,6 +94,18 @@ Start Ubuntu Mate
 		git pull https://github.com/petezybrick/iote2e.git develop
 		git branch develop
 		git checkout develop
+	Configure NTP to set time - https://askubuntu.com/questions/254826/how-to-force-a-clock-update-using-ntp
+		Set now
+			sudo service ntp stop
+			sudo ntpdate -s time.nist.gov
+			sudo service ntp start
+		Update /etc/rc.local to set at startup
+		( /etc/init.d/ntp stop
+		until ping -nq -c3 8.8.8.8; do
+		   echo "Waiting for network..."
+		done
+		ntpdate -s time.nist.gov
+		/etc/init.d/ntp start )&
 	Install PiPlates Python Support - MOTOR and DAQC
 		sudo pip install pi-plates
 		sudo apt-get install python-spidev
