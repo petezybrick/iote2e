@@ -49,9 +49,9 @@ public class RuleSvcJsonImpl extends RuleSvc {
 		ruleLoginSourceSensors = Iote2eUtils.getGsonInstance().fromJson(rawJson,
 				new TypeToken<List<RuleLoginSourceSensor>>() {
 				}.getType());
-		// same rule def can apply to multiple sourcenames, i.e. rpi-001, rpi-002, etc.
-		// If source name is pipe delimited, then create a separate source for each distinct sourcename
-		expandSourceNames();
+		// same rule def can apply to multiple logins and/or sourcenames, i.e. pzybrick1, joe2, rpi-001, rpi-002, etc.
+		// If login and/or source name are pipe delimited, then create a separate source for each distinct login sourcename
+		expandLoginsSourceNames();
 		for (RuleLoginSourceSensor ruleLoginSourceSensor : ruleLoginSourceSensors) {
 			String key = ruleLoginSourceSensor.getLoginName() + "|" + ruleLoginSourceSensor.getSourceName();
 			Map<String, RuleLoginSourceSensor> mapBySensorName = rssByLoginSourceUuid
@@ -101,17 +101,21 @@ public class RuleSvcJsonImpl extends RuleSvc {
 		}
 	}
 	
-	protected void expandSourceNames() throws Exception {
+	protected void expandLoginsSourceNames() throws Exception {
 		ListIterator<RuleLoginSourceSensor> lit = ruleLoginSourceSensors.listIterator();
 		while( lit.hasNext() ) {
 			RuleLoginSourceSensor ruleLoginSourceSensor = lit.next();
-			if(ruleLoginSourceSensor.getSourceName().indexOf("|") > -1 ) {
+			if(ruleLoginSourceSensor.getLoginName().indexOf("|") > -1 || ruleLoginSourceSensor.getSourceName().indexOf("|") > -1 ) {
 				lit.remove();
+				List<String> loginNames = Arrays.asList( ruleLoginSourceSensor.getLoginName().split("[|]"));
 				List<String> sourceNames = Arrays.asList( ruleLoginSourceSensor.getSourceName().split("[|]"));
-				for( String sourceName : sourceNames ) {
-					RuleLoginSourceSensor clone = ruleLoginSourceSensor.clone();
-					clone.setSourceName(sourceName);
-					lit.add(clone);
+				for( String loginName : loginNames ) {
+					for( String sourceName : sourceNames ) {
+						RuleLoginSourceSensor clone = ruleLoginSourceSensor.clone();
+						clone.setLoginName(loginName);
+						clone.setSourceName(sourceName);
+						lit.add(clone);
+					}
 				}
 			}
 		}

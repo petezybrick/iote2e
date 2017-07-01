@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class PillsDispensedDao {
 	private static String sqlUpdateDispensingToDispensed = "UPDATE pills_dispensed SET dispense_state=?,state_dispensed_ts=now(),num_dispensed=?,delta=? WHERE pills_dispensed_uuid=?";
 	private static String sqlUpdateDispensedToConfirmed = "UPDATE pills_dispensed SET dispense_state=?,state_confirmed_ts=now() WHERE pills_dispensed_uuid=?";
 	private static String sqlInsertImage = "INSERT INTO pills_dispensed_image (pills_dispensed_uuid,image_png,insert_ts) VALUES(?,?,now())";
+	private static String sqlFindAllPillsDispensedUuids = "SELECT pills_dispensed_uuid FROM pills_dispensed";
 	private static String sqlFindByPillsDispensedUuid = "SELECT * FROM pills_dispensed WHERE pills_dispensed_uuid=?";
 	private static String sqlFindByDispenseState = "SELECT * FROM pills_dispensed WHERE dispense_state=?";
 	private static String sqlFindImageBytesByPillsDispensedUuid = "SELECT image_png FROM pills_dispensed_image WHERE pills_dispensed_uuid=?";
@@ -290,6 +292,39 @@ public class PillsDispensedDao {
 			}
 		}
 	}	
+	
+	
+	public static List<String> findAllPillsDispensedUuids( MasterConfig masterConfig ) throws Exception {
+		List<String> allUuids = new ArrayList<String>();
+		Connection con = null;
+		Statement stmt = null;
+		try {
+			con = PooledDataSource.getInstance(masterConfig).getConnection();
+			con.setAutoCommit(true);
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sqlFindAllPillsDispensedUuids);
+			while( rs.next() ) {
+				allUuids.add( rs.getString(1));
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (Exception e) {
+				logger.warn(e);
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception exCon) {
+				logger.warn(exCon.getMessage());
+			}
+		}
+		return allUuids;
+	}
 	
 	
 	public static void deletePillsDispensedByPillsDispensedUuid(MasterConfig masterConfig, String pillsDispensedUuid ) throws Exception {

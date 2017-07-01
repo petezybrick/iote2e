@@ -7,8 +7,10 @@
 * Run setup.py with the parms: sdist --formats-gztar
 * Verify build succeeded: Gzip should be created: ./dist/awsext-1.1.tar.gz
 * Copy iote2epyclient-1.0.0.tar.gz to target location (i.e. SCP to an RPi or EC2 instance)
-	scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@rpi-001:iote2epyclient-1.0.0.tar.gz
-* Login to target system and `cd` to target directory
+scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@rpi-001:iote2epyclient-1.0.0.tar.gz
+scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@rpi-002:iote2epyclient-1.0.0.tar.gz
+scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@rpi-003:iote2epyclient-1.0.0.tar.gz
+* Login to each target system and `cd` to target directory
 * Run install script: sudo ~/development/gitrepo/iote2e/iote2e-pyclient/scripts/install-pyclient.sh
 * Verify successful installation
 		* Start Python interactive and enter:
@@ -65,6 +67,7 @@ Start Ubuntu Mate
 		sudo systemctl enable ssh.socket
 		sudo systemctl restart ssh
 		sudo apt-get update
+		sudo apt-install ntp
 		sudo apt install ntpdate
 	Optionally set the RPi IP address to a fixed address, see TODO: **Master Network Setup**
 	Determine the IP address of the RPi instance

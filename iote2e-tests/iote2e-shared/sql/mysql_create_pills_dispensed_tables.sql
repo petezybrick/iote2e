@@ -41,11 +41,14 @@ CREATE TABLE subject (
 
 insert into subject (subject_uuid,login_name,source_name,age,gender) VALUE( UUID(), 'pzybrick1', 'rpi-001', 56, 'M');
 insert into subject (subject_uuid,login_name,source_name,age,gender) VALUE( UUID(), 'jdoe2', 'rpi-002', 35, 'F');
+insert into subject (subject_uuid,login_name,source_name,age,gender) VALUE( UUID(), 'sjones3', 'rpi-003', 42, 'M');
 
 insert into bp_series (bp_series_uuid,login_name,systolic,diastolic,bp_series_ts) VALUES( UUID(), 'pzybrick1', 118, 80, '2017-04-01T00:00:00.000');
 insert into bp_series (bp_series_uuid,login_name,systolic,diastolic,bp_series_ts) VALUES( UUID(), 'pzybrick1', 122, 84, '2017-04-02T00:00:00.000');
 insert into bp_series (bp_series_uuid,login_name,systolic,diastolic,bp_series_ts) VALUES( UUID(), 'jdoe2', 110, 70, '2017-04-01T00:00:00.000');
 insert into bp_series (bp_series_uuid,login_name,systolic,diastolic,bp_series_ts) VALUES( UUID(), 'jdoe2', 114, 74, '2017-04-02T00:00:00.000');
+insert into bp_series (bp_series_uuid,login_name,systolic,diastolic,bp_series_ts) VALUES( UUID(), 'sjones3', 122, 84, '2017-04-01T00:00:00.000');
+insert into bp_series (bp_series_uuid,login_name,systolic,diastolic,bp_series_ts) VALUES( UUID(), 'sjones3', 126, 88, '2017-04-02T00:00:00.000');
 
 select * from bp_series;
 select login_name, avg(diastolic) from bp_series group by login_name;

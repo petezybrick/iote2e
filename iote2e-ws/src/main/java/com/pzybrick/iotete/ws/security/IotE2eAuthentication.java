@@ -9,6 +9,8 @@ public class IotE2eAuthentication {
 	static {
 		mapLoginToUuid = new HashMap<String,String>();
 		mapLoginToUuid.put("pzybrick1", "pz1-pz1-pz1-pz1");
+		mapLoginToUuid.put("jdoe2", "jd1-jd1-jd1-jd1");
+		mapLoginToUuid.put("sjones3", "sj1-sj1-sj1-sj1");
 		mapLoginToUuid.put("test0001", "t1-t1-t1-t1");
 		mapLoginToUuid.put("test0002", "t2-t2-t2-t2");
 		mapLoginToUuid.put("test0003", "t3-t3-t3-t3");

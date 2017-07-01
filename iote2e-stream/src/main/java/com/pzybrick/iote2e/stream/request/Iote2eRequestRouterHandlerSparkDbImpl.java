@@ -172,9 +172,10 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 
 		PreparedStatement pstmt = null;
 		if( sql != null ) { 
-			con.prepareStatement(sql);
-			cachePrepStmtsByTableName.put(tableName, pstmt);
-		}
+			logger.debug("Creating pstmt for {}",  tableName);
+			pstmt = con.prepareStatement(sql);
+			cachePrepStmtsByTableName.put(tableName, pstmt );
+		} else logger.debug("NOT Creating pstmt for {}", tableName);
 		
 		return pstmt;
 	}
