@@ -199,21 +199,25 @@ public class ActuatorStateDao extends CassandraBaseDao {
 		List<ActuatorState> actuatorStates = Iote2eUtils.getGsonInstance().fromJson(rawJson,
 				new TypeToken<List<ActuatorState>>() {
 				}.getType());
-		expandSourceNames(actuatorStates);
+		expandLoginsSourceNames(actuatorStates);
 		return actuatorStates;
 	}
 	
-	public static void expandSourceNames(List<ActuatorState> actuatorStates) throws Exception {
+	public static void expandLoginsSourceNames(List<ActuatorState> actuatorStates) throws Exception {
 		ListIterator<ActuatorState> lit = actuatorStates.listIterator();
 		while( lit.hasNext() ) {
 			ActuatorState actuatorState = lit.next();
-			if(actuatorState.getSourceName().indexOf("|") > -1 ) {
+			if(actuatorState.getLoginName().indexOf("|") > -1 || actuatorState.getSourceName().indexOf("|") > -1 ) {
 				lit.remove();
+				List<String> loginNames = Arrays.asList( actuatorState.getLoginName().split("[|]"));
 				List<String> sourceNames = Arrays.asList( actuatorState.getSourceName().split("[|]"));
-				for( String sourceName : sourceNames ) {
-					ActuatorState clone = actuatorState.clone();
-					clone.setSourceName(sourceName);
-					lit.add(clone);
+				for( String loginName : loginNames ) {
+					for( String sourceName : sourceNames ) {
+						ActuatorState clone = actuatorState.clone();
+						clone.setLoginName(loginName);
+						clone.setSourceName(sourceName);
+						lit.add(clone);
+					}
 				}
 			}
 		}
