@@ -16,6 +16,10 @@ import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
 public class TestPillDispenser {
 	public static String PATH_TEST_PNG = "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test1.png";
+	//public static String PATH_TEST_PNG = "/tmp/d48421c2-5e98-11e7-b5bb-0242c0a8153c.png"; 
+	//public static String PATH_TEST_PNG = "/tmp/d4841ff8-5e98-11e7-b5bb-0242c0a8153c.png";
+	//public static String PATH_TEST_PNG = "/tmp/d48422c3-5e98-11e7-b5bb-0242c0a8153c.png";
+	// /tmp/d48421c2-5e98-11e7-b5bb-0242c0a8153c.png
 
 	@Before
 	public void setUp() throws Exception {
