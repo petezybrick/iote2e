@@ -20,9 +20,9 @@ import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
+import com.pzybrick.iote2e.ws.security.IotE2eAuthentication;
 import com.pzybrick.iote2e.ws.security.LoginVo;
-import com.pzybrick.iotete.ws.security.IotE2eAuthentication;
-import com.pzybrick.iotete.ws.security.IotE2eAuthentication.IotAuthenticationException;
+import com.pzybrick.iote2e.ws.security.IotE2eAuthentication.IotAuthenticationException;
 
 @ClientEndpoint
 @ServerEndpoint(value = "/iote2e/")

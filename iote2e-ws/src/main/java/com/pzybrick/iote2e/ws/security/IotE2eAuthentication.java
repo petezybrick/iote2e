@@ -1,4 +1,4 @@
-package com.pzybrick.iotete.ws.security;
+package com.pzybrick.iote2e.ws.security;
 
 import java.util.HashMap;
 import java.util.Map;
