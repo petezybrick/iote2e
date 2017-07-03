@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.websocket.server.ServerContainer;
 
-import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -27,8 +26,8 @@ import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.ws.route.RouteIote2eRequest;
 
-public class EntryPointIote2eRequest {
-	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
+public class ThreadEntryPointIote2eRequest extends Thread {
+	private static final Logger logger = LogManager.getLogger(ThreadEntryPointIote2eRequest.class);
 	public static final Map<String, ServerSideSocketIote2eRequest> serverSideSocketIote2eRequest = new ConcurrentHashMap<String, ServerSideSocketIote2eRequest>();
 	public static final ConcurrentLinkedQueue<Iote2eResult> toClientIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
 	public static final ConcurrentLinkedQueue<Iote2eRequest> fromClientIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
@@ -38,80 +37,53 @@ public class EntryPointIote2eRequest {
 	public static MasterConfig masterConfig;
 	
 	
-	public EntryPointIote2eRequest( ) {
-	}
-	
-	
-	public static void main(String[] args) {
-		logger.info("Starting");
-		try {
-			masterConfigWithRetries( args );
-			EntryPointIote2eRequest entryPointIote2eRequest = new EntryPointIote2eRequest();
-			entryPointIote2eRequest.process( );
-		} catch( Exception e ) {
-			logger.error(e.getMessage(),e);
-		}
+	public ThreadEntryPointIote2eRequest( MasterConfig masterConfig ) {
+		ThreadEntryPointIote2eRequest.masterConfig = masterConfig;
 	}
 
-	/*
-	 * Give Cassandra a minute to start
-	 */
-	private static void masterConfigWithRetries( String args[] ) throws Exception {
-		final int RETRY_MINUTES = 10;
-		long maxWait = System.currentTimeMillis() + (RETRY_MINUTES * 60 * 1000);
-		Exception exception = null;
-		while( true ) {
-			try {
-				masterConfig = MasterConfig.getInstance( args[0], args[1], args[2] );
-				return;
-			} catch(Exception e ) {
-				exception = e;
-			}
-			if( System.currentTimeMillis() > maxWait ) break;
-			logger.debug("retrying Cassandra connection");
-			try { Thread.sleep(5000); } catch(Exception e) {}
-		}
-		throw exception;
-	}
 
-	public void process( ) throws Exception {
+	public void run( ) {
 		logger.info(masterConfig.toString());
-		String routerImplClassName = masterConfig.getWsRouterImplClassName();
-		if( null == routerImplClassName || routerImplClassName.length() == 0 ) 
-			throw new Exception("routerImplClassName is required entry in MasterConfig but is null");
-		Class clazz = Class.forName(routerImplClassName);
-		routeIote2eRequest = (RouteIote2eRequest)clazz.newInstance();
-		routeIote2eRequest.init(masterConfig);
-		server = new Server();
-		connector = new ServerConnector(server);
-		connector.setPort(masterConfig.getWsServerListenPort());
-		server.addConnector(connector);
-
-		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-		context.setContextPath("/");
-		server.setHandler(context);
-
 		try {
-			ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);
-			wscontainer.addEndpoint(ServerSideSocketIote2eRequest.class);
-			ThreadFromClientIote2eRequest threadFromClientIote2eRequest = new ThreadFromClientIote2eRequest(
-					routeIote2eRequest);
-			threadFromClientIote2eRequest.start();
-			ThreadToClientLoginIote2eResult threadToClientLoginIote2eResult = new ThreadToClientLoginIote2eResult();
-			threadToClientLoginIote2eResult.start();
-
-			logger.info("Server starting");
-			server.start();
-			logger.info("Server started");
-			server.join();
-			threadToClientLoginIote2eResult.shutdown();
-			threadFromClientIote2eRequest.shutdown();
-			threadToClientLoginIote2eResult.join(15 * 1000L);
-			threadFromClientIote2eRequest.join(15 * 1000L);
-
-		} catch (Throwable t) {
-			logger.error("Server Exception",t);
-		} finally {
+			String routerImplClassName = masterConfig.getWsRouterImplClassName();
+			if( null == routerImplClassName || routerImplClassName.length() == 0 ) 
+				throw new Exception("routerImplClassName is required entry in MasterConfig but is null");
+			Class clazz = Class.forName(routerImplClassName);
+			routeIote2eRequest = (RouteIote2eRequest)clazz.newInstance();
+			routeIote2eRequest.init(masterConfig);
+			server = new Server();
+			connector = new ServerConnector(server);
+			connector.setPort(masterConfig.getWsServerListenPort());
+			server.addConnector(connector);
+	
+			ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+			context.setContextPath("/");
+			server.setHandler(context);
+	
+			try {
+				ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);
+				wscontainer.addEndpoint(ServerSideSocketIote2eRequest.class);
+				ThreadFromClientIote2eRequest threadFromClientIote2eRequest = new ThreadFromClientIote2eRequest(
+						routeIote2eRequest);
+				threadFromClientIote2eRequest.start();
+				ThreadToClientLoginIote2eResult threadToClientLoginIote2eResult = new ThreadToClientLoginIote2eResult();
+				threadToClientLoginIote2eResult.start();
+	
+				logger.info("Server starting");
+				server.start();
+				logger.info("Server started");
+				server.join();
+				threadToClientLoginIote2eResult.shutdown();
+				threadFromClientIote2eRequest.shutdown();
+				threadToClientLoginIote2eResult.join(15 * 1000L);
+				threadFromClientIote2eRequest.join(15 * 1000L);
+	
+			} catch (Throwable t) {
+				logger.error("Server Exception",t);
+			} finally {
+			}
+		} catch( Exception e ) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -234,7 +206,7 @@ public class EntryPointIote2eRequest {
 		return routeIote2eRequest;
 	}
 
-	public EntryPointIote2eRequest setRouteIote2eRequest(RouteIote2eRequest routeLoginSourceSensorValue) {
+	public ThreadEntryPointIote2eRequest setRouteIote2eRequest(RouteIote2eRequest routeLoginSourceSensorValue) {
 		this.routeIote2eRequest = routeLoginSourceSensorValue;
 		return this;
 	}

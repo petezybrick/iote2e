@@ -25,6 +25,7 @@
 	"sparkAppName": "kafka-sandbox",
 	"sparkMaster": "local[*]",
 	"sparkStreamDurationMs": "500",
+	"wsNrtServerListenPort":"8091",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestToKafkaImpl",
 	"wsServerListenPort": "8090"
 }

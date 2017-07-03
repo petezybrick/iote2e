@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chat Client</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+#chatBox {
+	width: 100%;
+	height: 80%;
+	position: absolute;
+	top: 0;
+	overflow: scroll;
+}
+
+#messageForm {
+	width: 100%;
+	height: 20%;
+	position: absolute;
+	bottom: 0;
+}
+
+html body {
+	width: 100%;
+	height: 100%
+}
+</style>
+<script>
+    	var arrSize = 3;
+    	var myValues = [arrSize];
+    	var curOffset = 0;
+    
+      	function addArray() {
+			myValues[curOffset] = document.getElementById("message").value;
+			document.getElementById("message").value = "";
+			dumpValues();
+			curOffset++;
+			if( curOffset == arrSize ) curOffset = 0;
+      	}
+      	function dumpValues( ) {
+      		var i = curOffset;
+      		chatBox.innerHTML = "";
+      		while( true ) {
+      			chatBox.innerHTML = "<b>" + myValues[i] + " " + i + "<br>" + chatBox.innerHTML;
+      			i--;
+      			if( i == -1 ) i = arrSize-1;
+      			if( i == curOffset ) break;
+      		}
+      	}
+
+      window.onload = function () {
+        //document.getElementById("chat").setAttribute("style", "display:none");
+      }
+    </script>
+</head>
+<body>
+	<div id="chat">
+		<div id="chatBox"></div>
+		<div id="messageForm">
+			<input type="text" id="message"> <input type="button"
+				value="send" onclick="addArray();">
+		</div>
+	</div>
+</body>
+</html>

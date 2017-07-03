@@ -30,6 +30,7 @@
 	"sparkAppName": "iote2e-speed-rule",
 	"sparkMaster": "",
 	"sparkStreamDurationMs": "500",
+	"wsNrtServerListenPort":"8091",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestToKafkaImpl",
 	"wsServerListenPort": "8090"
 }

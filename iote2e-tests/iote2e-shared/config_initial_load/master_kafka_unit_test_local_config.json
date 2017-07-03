@@ -18,6 +18,7 @@
 	"ruleDefItemKey": "rule_def_item",
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
 	"ruleSvcClassName": "com.pzybrick.iote2e.stream.svc.RuleSvcJsonImpl",
+	"wsNrtServerListenPort":"8091",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestToKafkaImpl",
 	"wsServerListenPort": "8090"
 }

@@ -3,7 +3,7 @@ version: '2'
 services:
   iote2e-ws1:
     image: demomgr:1.0.0
-    command: java -Xms512m -Xmx1G -cp /tmp/iote2e-shared/jars/iote2e-ws-1.0.0.jar com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest "master_spark_run_docker_speed_config" "iote2e-cassandra1" "iote2e"
+    command: java -Xms512m -Xmx1G -cp /tmp/iote2e-shared/jars/iote2e-ws-1.0.0.jar com.pzybrick.iote2e.ws.launch.ServerLauncher "master_spark_run_docker_speed_config" "iote2e-cassandra1" "iote2e"
     hostname: iote2e-ws1
     container_name: iote2e-ws1
     mem_limit: 8g
@@ -13,8 +13,10 @@ services:
         ipv4_address: 192.168.21.16
     expose:
       - 8090
+      - 8091
     ports:
       - 8090:8090
+      - 8091:8091
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
@@ -24,5 +26,3 @@ networks:
   default:
     external:
       name: iote2enet
-      
-      

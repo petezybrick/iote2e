@@ -93,9 +93,9 @@ public class ServerSideSocketIote2eRequest {
 					//			not need to look at the sensor name in each Iote2eResult because it will always be temp1
 					//		2.3 This key structure is used when the attribute LoginVo.optionalFilterSensorName is not null and not an empty string
 					createkey();
-					EntryPointIote2eRequest.serverSideSocketIote2eRequest.put(keyCommon, this);
-					threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( EntryPointIote2eRequest.masterConfig, keyCommon,
-							EntryPointIote2eRequest.toClientIote2eResults, (Thread)null );
+					ThreadEntryPointIote2eRequest.serverSideSocketIote2eRequest.put(keyCommon, this);
+					threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( ThreadEntryPointIote2eRequest.masterConfig, keyCommon,
+							ThreadEntryPointIote2eRequest.toClientIote2eResults, (Thread)null );
 
 				} catch (IotAuthenticationException e) {
 					logger.error(e.getMessage());
@@ -124,7 +124,7 @@ public class ServerSideSocketIote2eRequest {
 						break; 
 					}
 					logger.debug("iote2eRequest: " + iote2eRequest.toString());
-					EntryPointIote2eRequest.fromClientIote2eRequests.add(iote2eRequest);
+					ThreadEntryPointIote2eRequest.fromClientIote2eRequests.add(iote2eRequest);
 					break;
 				}
 			} catch (Exception e) {
@@ -139,14 +139,14 @@ public class ServerSideSocketIote2eRequest {
 
 	@OnClose
 	public void onWebSocketClose(CloseReason reason) {
-		boolean isRemove = EntryPointIote2eRequest.serverSideSocketIote2eRequest.remove(keyCommon, this);
+		boolean isRemove = ThreadEntryPointIote2eRequest.serverSideSocketIote2eRequest.remove(keyCommon, this);
 		logger.info("Socket Closed: " + reason + ", isRemove=" + isRemove);
 		shutdownThreadIgniteSubscribe();
 	}
 
 	@OnError
 	public void onWebSocketError(Throwable cause) {
-		boolean isRemove = EntryPointIote2eRequest.serverSideSocketIote2eRequest.remove(keyCommon, this);
+		boolean isRemove = ThreadEntryPointIote2eRequest.serverSideSocketIote2eRequest.remove(keyCommon, this);
 		logger.info("Socket Error: " + cause.getMessage() + ", isRemove=" + isRemove);
 		shutdownThreadIgniteSubscribe();
 	}

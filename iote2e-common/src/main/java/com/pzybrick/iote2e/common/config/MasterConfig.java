@@ -83,6 +83,8 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private Integer sparkStreamDurationMs;
 	@Expose
+	private Integer wsNrtServerListenPort;
+	@Expose
 	private String wsRouterImplClassName;
 	@Expose
 	private Integer wsServerListenPort;
@@ -95,20 +97,30 @@ public class MasterConfig implements Serializable {
 		
 	public static MasterConfig getInstance( String masterConfigJsonKey, String contactPoint, String keyspaceName ) throws Exception {
 		MasterConfig masterConfig = null;
-		try {
-			logger.info("Instantiating MasterConfig singleton");
-			if( keyspaceName == null ) keyspaceName = CassandraBaseDao.DEFAULT_KEYSPACE_NAME;
-			ConfigDao.connect(contactPoint, keyspaceName);
-			String rawJson = ConfigDao.findConfigJson(masterConfigJsonKey);
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			masterConfig = gson.fromJson(rawJson, MasterConfig.class);
-			masterConfig.setContactPoint(contactPoint);
-			masterConfig.setKeyspaceName(keyspaceName);				
-		} catch (Throwable t ) {
-			logger.error("Cassandra initialization failure", t);
-			throw t;
+		final int RETRY_MINUTES = 10;
+		long maxWait = System.currentTimeMillis() + (RETRY_MINUTES * 60 * 1000);
+		Exception exception = null;
+		logger.info("Instantiating MasterConfig");
+		if( keyspaceName == null ) keyspaceName = CassandraBaseDao.DEFAULT_KEYSPACE_NAME;
+		
+		while( true ) {
+			try {
+				ConfigDao.connect(contactPoint, keyspaceName);
+				String rawJson = ConfigDao.findConfigJson(masterConfigJsonKey);
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				masterConfig = gson.fromJson(rawJson, MasterConfig.class);
+				masterConfig.setContactPoint(contactPoint);
+				masterConfig.setKeyspaceName(keyspaceName);
+				return masterConfig;
+			} catch(Exception e ) {
+				exception = e;
+				ConfigDao.disconnect();
+			}
+			if( System.currentTimeMillis() > maxWait ) break;
+			logger.debug("retrying Cassandra connection");
+			try { Thread.sleep(5000); } catch(Exception e) {}
 		}
-		return masterConfig;
+		throw exception;
 	}
 	
 	
@@ -281,8 +293,9 @@ public class MasterConfig implements Serializable {
 				+ ", kafkaZookeeperConsumerConnection=" + kafkaZookeeperConsumerConnection
 				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", routerIote2eRequestClassName="
 				+ routerIote2eRequestClassName + ", sparkAppName=" + sparkAppName + ", sparkMaster=" + sparkMaster
-				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", wsRouterImplClassName="
-				+ wsRouterImplClassName + ", wsServerListenPort=" + wsServerListenPort + "]";
+				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", wsNrtServerListenPort="
+				+ wsNrtServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName + ", wsServerListenPort="
+				+ wsServerListenPort + "]";
 	}
 
 	public String getKafkaZookeeperBrokerPath() {
@@ -461,6 +474,17 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setJdbcInsertBlockSize(Integer jdbcInsertBlockSize) {
 		this.jdbcInsertBlockSize = jdbcInsertBlockSize;
+		return this;
+	}
+
+
+	public Integer getWsNrtServerListenPort() {
+		return wsNrtServerListenPort;
+	}
+
+
+	public MasterConfig setWsNrtServerListenPort(Integer wsNrtServerListenPort) {
+		this.wsNrtServerListenPort = wsNrtServerListenPort;
 		return this;
 	}
 

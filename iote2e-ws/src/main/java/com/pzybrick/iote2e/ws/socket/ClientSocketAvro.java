@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 @ClientEndpoint
 @ServerEndpoint(value = "/iote2e/")
 public class ClientSocketAvro {
-	private static final Logger logger = LogManager.getLogger(EntryPointIote2eRequest.class);
+	private static final Logger logger = LogManager.getLogger(ThreadEntryPointIote2eRequest.class);
 	private Thread iote2eRequestReceiveThread;
 	private ConcurrentLinkedQueue<byte[]> iote2eResultBytes;
 	

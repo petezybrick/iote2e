@@ -26,6 +26,7 @@ cd /tmp/iote2e-shared/scripts
 * Open browser
 Spark: http://localhost:8080
 Zeppelin: http://localhost:8081
+NRT Temperature: file:///home/pete/development/gitrepo/iote2e/iote2e-ws/webContent/rt-temperature.html
 
 * Submit Spark jobs for temperature and pill dispenser
 cd to local spark folder

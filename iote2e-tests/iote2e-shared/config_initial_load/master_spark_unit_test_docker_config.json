@@ -25,6 +25,7 @@
 	"sparkAppName": "iote2e-sandbox",
 	"sparkMaster": "spark://iote2e-spark-master:7077",
 	"sparkStreamDurationMs": "1250",
+	"wsNrtServerListenPort":"8091",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestToKafkaImpl",
 	"wsServerListenPort": "8090"
 }

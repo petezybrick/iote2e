@@ -15,7 +15,7 @@ import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
-import com.pzybrick.iote2e.ws.socket.EntryPointIote2eRequest;
+import com.pzybrick.iote2e.ws.socket.ThreadEntryPointIote2eRequest;
 
 
 public class RouteIote2eRequestLoopbackImpl implements RouteIote2eRequest {
@@ -61,7 +61,7 @@ public class RouteIote2eRequestLoopbackImpl implements RouteIote2eRequest {
 				.setResultTimestamp(resultTimestamp)
 				.setPairs(pairs)
 				.build();
-		EntryPointIote2eRequest.toClientIote2eResults.add(iote2eResult);
+		ThreadEntryPointIote2eRequest.toClientIote2eResults.add(iote2eResult);
 	}
 
 }
