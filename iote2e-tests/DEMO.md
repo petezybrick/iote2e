@@ -4,7 +4,7 @@
 
 
 * Terminal for rpi-00x: Open terminal, create 3x tabs, ssh pete@rpi-00x in each session
-* Terminal for launchers: Open termina, create 4x tabs
+* Terminal for launchers: Open terminal, create 4x tabs
 * Rebuild pyclient
 * SSH pyclient into each target system
 scp /home/pete/development/gitrepo/iote2e/iote2e-pyclient/dist/iote2epyclient-1.0.0.tar.gz pete@rpi-001:iote2epyclient-1.0.0.tar.gz
@@ -114,4 +114,7 @@ docker exec -it iote2e-demomgr1 /bin/bash
 cd /tmp/iote2e-shared
 java -cp jars/iote2e-tests-1.0.0.jar com.pzybrick.iote2e.tests.common.ConfigInitialLoad config_initial_load
 
+Dump Images
+docker exec -it iote2e-demomgr1 /bin/bash
+java -cp /tmp/iote2e-shared/jars/iote2e-tests-1.0.0.jar com.pzybrick.iote2e.tests.pilldisp.DumpPillsDispensedImages master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
 

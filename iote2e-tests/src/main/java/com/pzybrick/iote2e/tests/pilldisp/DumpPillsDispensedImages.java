@@ -16,7 +16,7 @@ public class DumpPillsDispensedImages {
 			String contactPoint = args[1];
 			String keyspaceName = args[2];
 			
-			String tmpDir = System.getProperty("java.io.tmpdir") + "/";
+			String tmpDir = "/tmp/iote2e-shared/images/";
 			MasterConfig masterConfig = MasterConfig.getInstance( masterConfigKey, contactPoint, keyspaceName );
 			List<String> allUuids = PillsDispensedDao.findAllPillsDispensedUuids( masterConfig );
 			for( String uuid : allUuids ) {

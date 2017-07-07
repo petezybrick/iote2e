@@ -35,7 +35,7 @@ import boofcv.struct.image.GrayU8;
 public class PillDispenser {
 	private static final Logger logger = LogManager.getLogger(PillDispenser.class);
 	private static final boolean IS_DISPLAY_BINARY_IMAGE = false;
-	public static final float PIXEL_THRESHOLD = 160;
+	public static final float PIXEL_THRESHOLD = 210;
 	public static final int PIXELS_PER_PILL = 1100;
 	public static final float PIXELS_PER_PILL_FUDGE_FACTOR = 1.10f;
 	public static final int CHECK_MAX_NUM_PILLS = 7;

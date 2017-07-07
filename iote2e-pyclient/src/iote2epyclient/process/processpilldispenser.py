@@ -4,6 +4,7 @@ import base64
 import uuid
 from io import BytesIO
 from picamera import PiCamera
+import piplates.DAQCplate as DAQC
 from iote2epyclient.launch.clientutils import ClientUtils
 from iote2epyclient.schema.iote2erequest import Iote2eRequest
 from iote2epyclient.pilldispenser.blinkledthread import BlinkLedThread
@@ -18,7 +19,7 @@ class ProcessPillDispenser(object):
     classdocs
     '''
 
-    def __init__(self, loginVo, sensorName):
+    def __init__(self, loginVo, sensorName, daqcBoard=0):
         self.loginVo = loginVo
         self.sensorName = sensorName
         self.dispenseState = None
@@ -31,6 +32,7 @@ class ProcessPillDispenser(object):
         self.camera = PiCamera(resolution=(200,200))
         self.camera.contrast = 0
         self.camera.sharpness = 100
+        self.daqcBoard = daqcBoard
 
         
     def createIote2eRequest(self ):
@@ -41,10 +43,14 @@ class ProcessPillDispenser(object):
         elif 'DISPENSING' == self.dispenseState:
             # Tell the pill dispenser to dispense the number of pills
             self.handlePillDispenser.dispensePills(self.numPillsToDispense)
+            # Turn on the LED
+            DAQC.setDOUTbit(self.daqcBoard,0)
             # Sleep for half a second, then take a picture
             time.sleep(.5)
             # Byte64 encode the picture
             imageByte64 = self.takePicture()
+            # Turn off the LED
+            DAQC.clrDOUTbit(self.daqcBoard,0)
             #with open("/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/images/iote2e-test4.png", "rb") as image_file:
             #    imageByte64 = base64.b64encode(image_file.read())
             # Create Iote2eRequest that contains the confirmation image
