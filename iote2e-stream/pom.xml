@@ -298,7 +298,16 @@
 			<artifactId>all</artifactId>
 			<version>0.26</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.openmhealth.schema</groupId>
+			<artifactId>omh-schema-sdk</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.7.3</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -311,6 +320,19 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>jcenter</id>
+			<url>http://jcenter.bintray.com </url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
 		</repository>
 	</repositories>
 
