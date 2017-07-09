@@ -1,7 +1,6 @@
 Initial targets
 
 High Level Goals
-+ Avro schema against a set of open mhealth schemas
 + Generate test data via java - one reading per second, configurable patient id sets
 + speed and batch layers just for open mhealth
 + speed layer - 
@@ -16,10 +15,15 @@ High Level Goals
 	subjects, measures on composite graph over time
 	
 Open Questions
-+ need a WS or some other passthru for Docker?
 
 
-Weekend
-+ review the examples
-+ create avro schema encapsulating multiple open mhealth schemas
-+ ?wrap in Iote2eRequest?  That would be the fastest, but maybe not the most accurate
+
+Next Steps
++ WS to accept inbound binary and send to Kafka
++ modify RunSim to connect and send to WS
++ Batch layer - write to separate tables based on OMH Schema
++ Speed Layer
+	1. for a specific user and BP, write the systolic and diastolic to WS #2
+	2. Create WS page to get the systolic and diastolic, plot in real time
+	3. When exceeded, send email to Dr. Zybrick
+	
