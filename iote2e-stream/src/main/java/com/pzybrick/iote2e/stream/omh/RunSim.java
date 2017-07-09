@@ -1,76 +1,112 @@
 package com.pzybrick.iote2e.stream.omh;
 
-import static org.openmhealth.schema.domain.omh.BloodGlucoseUnit.MILLIGRAMS_PER_DECILITER;
-import static org.openmhealth.schema.domain.omh.BloodSpecimenType.WHOLE_BLOOD;
-import static org.openmhealth.schema.domain.omh.DescriptiveStatistic.MEDIAN;
-import static org.openmhealth.schema.domain.omh.TemporalRelationshipToMeal.FASTING;
-import static org.openmhealth.schema.domain.omh.TemporalRelationshipToSleep.BEFORE_SLEEPING;
-
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openmhealth.schema.domain.omh.BloodGlucose;
-import org.openmhealth.schema.domain.omh.BloodGlucoseUnit;
+import org.openmhealth.schema.domain.omh.BloodPressure;
 import org.openmhealth.schema.domain.omh.DataPoint;
 import org.openmhealth.schema.domain.omh.DataPointAcquisitionProvenance;
 import org.openmhealth.schema.domain.omh.DataPointHeader;
 import org.openmhealth.schema.domain.omh.DataPointModality;
-import org.openmhealth.schema.domain.omh.TimeFrame;
-import org.openmhealth.schema.domain.omh.TypedUnitValue;
+import org.openmhealth.schema.domain.omh.HeartRate;
+import org.openmhealth.schema.domain.omh.PhysicalActivity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaAmbientTempImpl;
 import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaBloodGlucoseImpl;
+import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaBloodPressureImpl;
+import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaHeartRateImpl;
+import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaHkWorkoutImpl;
 
 public class RunSim {
 	private static final Logger logger = LogManager.getLogger(RunSim.class);
+	private static long SLEEP_INTERVAL_MS = 1000L;
 	private Map<String,SimSchema> simSchemasByName;
+	private List<String> sortedSimSchemaNames;
+	private Map<String,Object> prevBodiesByNameLogin;
+	private String simUsersFilePath;
+	private Integer simUsersOffset;
+	private Integer sumUsersNumUsers;
+	private List<OmhUser> subsetOmhUsers;
 
+	
 	public static void main(String[] args) {
 		try {
-			RunSim runSim = new RunSim();
+			String simUsersFilePath = "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/data/simOmhUsers.csv";
+			Integer simUsersOffset = 1;
+			Integer sumUsersNumUsers = 5;
+			RunSim runSim = new RunSim( simUsersFilePath, simUsersOffset, sumUsersNumUsers );
 			runSim.process();
 		} catch(Exception e ) {
 			logger.error(e.getMessage(), e);
 		}
 	}
 	
-	public RunSim() throws Exception {
-		simSchemasByName = new HashMap<String,SimSchema>();
-		simSchemasByName.put(BloodGlucose.SCHEMA_ID.getName(), new SimSchemaBloodGlucoseImpl());
+	public RunSim(String simUsersFilePath, Integer simUsersOffset, Integer sumUsersNumUsers) throws Exception {
+		this.simUsersFilePath = simUsersFilePath;
+		this.simUsersOffset = simUsersOffset;
+		this.sumUsersNumUsers = sumUsersNumUsers;
+		this.prevBodiesByNameLogin = new HashMap<String,Object>();
+		this.simSchemasByName = new HashMap<String,SimSchema>();
 		// for some reason AmbientTemperature SCHEMA_ID is private
-		simSchemasByName.put( "ambient-temperature" , new SimSchemaAmbientTempImpl());
+		this.simSchemasByName.put( "ambient-temperature" , new SimSchemaAmbientTempImpl());
+		this.simSchemasByName.put(BloodGlucose.SCHEMA_ID.getName(), new SimSchemaBloodGlucoseImpl());
+		this.simSchemasByName.put(BloodPressure.SCHEMA_ID.getName(), new SimSchemaBloodPressureImpl());
+		this.simSchemasByName.put(HeartRate.SCHEMA_ID.getName(), new SimSchemaHeartRateImpl());
+		this.simSchemasByName.put(PhysicalActivity.SCHEMA_ID.getName(), new SimSchemaHkWorkoutImpl());
+		this.sortedSimSchemaNames = new ArrayList<String>( this.simSchemasByName.keySet());
+		Collections.sort(this.sortedSimSchemaNames);
+		this.subsetOmhUsers = SimOmhUsers.getInstance(simUsersFilePath).getOmhUsers().subList(simUsersOffset, simUsersOffset + sumUsersNumUsers );
 	}
 	
 	public void process() throws Exception {
-        String id = UUID.randomUUID().toString();
-        OffsetDateTime now = OffsetDateTime.now();
-        
-        DataPointHeader header = new DataPointHeader.Builder(id, BloodGlucose.SCHEMA_ID, now)
-        		.setUserId("testUser001")
-                .setAcquisitionProvenance(
-                        new DataPointAcquisitionProvenance.Builder("RunKeeper")
-                                .setSourceCreationDateTime(now)
-                                .setModality(DataPointModality.SENSED)
-                                .build()
-                )
-                .build();
-		
-        TypedUnitValue<BloodGlucoseUnit> bloodGlucoseLevel = new TypedUnitValue<>(MILLIGRAMS_PER_DECILITER, 110);
-        BloodGlucose bloodGlucose = new BloodGlucose.Builder(bloodGlucoseLevel)
-                .setBloodSpecimenType(WHOLE_BLOOD)
-                .setTemporalRelationshipToMeal(FASTING)
-                .setTemporalRelationshipToSleep(BEFORE_SLEEPING)
-                .setEffectiveTimeFrame( new TimeFrame(now) )
-                // .setEffectiveTimeFrame()
-                .setDescriptiveStatistic(MEDIAN)
-                .setUserNotes("feeling fine")
-                .build();
-        
-        DataPoint<BloodGlucose> dataPoint = new DataPoint<BloodGlucose>(header, bloodGlucose);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+		while( true ) {
+			long wakeupAt = System.currentTimeMillis() + SLEEP_INTERVAL_MS;
+			for( OmhUser omhUser : subsetOmhUsers ) {
+		        OffsetDateTime now = OffsetDateTime.now();
+				for( String schemaName : sortedSimSchemaNames ) {
+					SimSchema simSchema = simSchemasByName.get(schemaName);
+			        String id = UUID.randomUUID().toString();
+			        DataPointHeader header = new DataPointHeader.Builder(id, simSchema.getSchemaId(), now)
+			        		.setUserId( omhUser.getEmail() )
+			                .setAcquisitionProvenance(
+			                        new DataPointAcquisitionProvenance.Builder("RunKeeper")
+			                                .setSourceCreationDateTime(now)
+			                                .setModality(DataPointModality.SENSED)
+			                                .build()
+			                )
+			                .build();
+			        
+			        String keyPrevBody = schemaName + "|" + omhUser.getEmail();
+			        Object prevBody = prevBodiesByNameLogin.get( keyPrevBody );
+			        Object body = simSchema.createBody(now, prevBody);
+			        prevBodiesByNameLogin.put( keyPrevBody, body );
+			        
+			        DataPoint dataPoint = new DataPoint( header, body );
+			        String rawJson = objectMapper.writeValueAsString(dataPoint);
+					byte[] compressed = CompressionUtils.compress(rawJson.getBytes());
+					//System.out.println("length before: " + rawJson.length() + ", after: " + compressed.length);
+			        System.out.println(rawJson);
+				}
+			}
+			try {
+				long msSleep = wakeupAt - System.currentTimeMillis();
+				System.out.println(msSleep);
+				Thread.sleep(msSleep);
+			} catch(Exception e ) {}
+			
+		}
 	}
 
 }

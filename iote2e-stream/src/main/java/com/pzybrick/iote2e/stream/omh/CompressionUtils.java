@@ -21,14 +21,11 @@ public class CompressionUtils {
 		deflater.finish();
 		byte[] buffer = new byte[1024];
 		while (!deflater.finished()) {
-			int count = deflater.deflate(buffer); // returns the generated
-													// code... index
+			int count = deflater.deflate(buffer);
 			outputStream.write(buffer, 0, count);
 		}
 		outputStream.close();
 		byte[] output = outputStream.toByteArray();
-		logger.debug("Original: " + data.length / 1024 + " Kb");
-		logger.debug("Compressed: " + output.length / 1024 + " Kb");
 		return output;
 	}
 
@@ -43,8 +40,6 @@ public class CompressionUtils {
 		}
 		outputStream.close();
 		byte[] output = outputStream.toByteArray();
-		logger.debug("Original: " + data.length);
-		logger.debug("Decompressed: " + output.length);
 		return output;
 	}
 }

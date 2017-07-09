@@ -1,0 +1,31 @@
+{
+	"header": {
+		"id": "98d32574-7fe3-42c9-86b2-5aaed3c77742",
+		"creation_date_time": 1499618933.182000000,
+		"acquisition_provenance": {
+			"source_name": "RunKeeper",
+			"source_creation_date_time": 1499618933.182000000,
+			"modality": "sensed"
+		},
+		"user_id": "nicholas.chapman@gmail.com",
+		"schema_id": {
+			"namespace": "omh",
+			"name": "physical-activity",
+			"version": "1.2"
+		}
+	},
+	"body": {
+		"effective_time_frame": {
+			"date_time": 1499618933.196000000
+		},
+		"activity_name": "HKWorkoutActivityTypeCycling",
+		"distance": {
+			"unit": "mi",
+			"value": 5
+		},
+		"kcal_burned": {
+			"unit": "kcal",
+			"value": 250
+		}
+	}
+}
