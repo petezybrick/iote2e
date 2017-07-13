@@ -21,5 +21,5 @@
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
 	"ruleSvcClassName": "com.pzybrick.iote2e.stream.svc.RuleSvcJsonImpl",
 	"wsOmhServerListenPort": "8092",
-	"wsOmhRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteOmhByteBufferToKafkaImpl",
+	"wsOmhRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteOmhByteBufferToKafkaImpl"
 }
