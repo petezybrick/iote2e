@@ -2,20 +2,15 @@ package com.pzybrick.iote2e.tests.simws;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.ignite.Ignite;
-import org.apache.ignite.IgniteCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.common.ignite.IgniteGridConnection;
-import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
-import com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+import com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.tests.common.ThreadSparkRun;
 import com.pzybrick.iote2e.ws.security.LoginVo;
-import com.pzybrick.iote2e.ws.socket.ClientSocketHandler;
 
 public class SimWsClientBase {
 	private static final Logger logger = LogManager.getLogger(SimWsClientBase.class);

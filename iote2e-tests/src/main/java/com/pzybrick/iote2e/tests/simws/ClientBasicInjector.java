@@ -25,7 +25,6 @@ import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.ws.security.LoginVo;
-import com.pzybrick.iote2e.ws.socket.ClientSocketAvro;
 
 public class ClientBasicInjector {
 	private static final Logger logger = LogManager.getLogger(ClientBasicInjector.class);
@@ -105,7 +104,7 @@ public class ClientBasicInjector {
 				for (int i = 45; i < 56; i++) {
 					Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 					pairs.put( TEST_SENSOR_NAME, new Utf8(String.valueOf(i)));
-					ByteBuffer iote2eRequest = ByteBuffer.newBuilder().setLoginName(TEST_SOURCE_LOGIN)
+					Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(TEST_SOURCE_LOGIN)
 							.setSourceName(TEST_SOURCE_NAME)
 							.setSourceType(TEST_SOURCE_TYPE)
 							.setRequestUuid(UUID.randomUUID().toString())

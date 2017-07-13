@@ -20,17 +20,16 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.ignite.ThreadIgniteSubscribe;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
-import com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
+import com.pzybrick.iote2e.stream.spark.Iote2eRequestSparkConsumer;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 import com.pzybrick.iote2e.tests.common.ThreadSparkRun;
 import com.pzybrick.iote2e.ws.security.LoginVo;
-import com.pzybrick.iote2e.ws.socket.ClientSocketAvro;
 
 public class ClientKsiInjector {
 	private static final Logger logger = LogManager.getLogger(ClientKsiInjector.class);
@@ -163,7 +162,7 @@ public class ClientKsiInjector {
 				for (int i = 45; i < 56; i++) {
 					Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 					pairs.put( TEST_SENSOR_NAME, new Utf8(String.valueOf(i)));
-					ByteBuffer iote2eRequest = ByteBuffer.newBuilder().setLoginName(TEST_SOURCE_LOGIN)
+					Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(TEST_SOURCE_LOGIN)
 							.setSourceName(TEST_SOURCE_NAME)
 							.setSourceType(TEST_SOURCE_TYPE)
 							.setRequestUuid(UUID.randomUUID().toString())
