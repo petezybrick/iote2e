@@ -14,9 +14,11 @@ services:
     expose:
       - 8090
       - 8091
+      - 8091
     ports:
       - 8090:8090
       - 8091:8091
+      - 8092:8092
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared

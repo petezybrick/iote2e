@@ -105,7 +105,7 @@ public class ClientBasicInjector {
 				for (int i = 45; i < 56; i++) {
 					Map<CharSequence, CharSequence> pairs = new HashMap<CharSequence, CharSequence>();
 					pairs.put( TEST_SENSOR_NAME, new Utf8(String.valueOf(i)));
-					Iote2eRequest iote2eRequest = Iote2eRequest.newBuilder().setLoginName(TEST_SOURCE_LOGIN)
+					ByteBuffer iote2eRequest = ByteBuffer.newBuilder().setLoginName(TEST_SOURCE_LOGIN)
 							.setSourceName(TEST_SOURCE_NAME)
 							.setSourceType(TEST_SOURCE_TYPE)
 							.setRequestUuid(UUID.randomUUID().toString())

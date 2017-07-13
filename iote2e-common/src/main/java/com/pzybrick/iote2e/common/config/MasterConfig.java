@@ -15,6 +15,7 @@ import com.pzybrick.iote2e.common.persist.ConfigDao;
 
 @Generated("org.jsonschema2pojo")
 public class MasterConfig implements Serializable {
+	private static final long serialVersionUID = 2980557216488140670L;
 	private static final Logger logger = LogManager.getLogger(MasterConfig.class);
 	private String masterConfigJsonKey;
 	private String contactPoint;
@@ -45,8 +46,6 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private boolean forceResetActuatorState;
 	@Expose
-	private String kafkaGroup;
-	@Expose
 	private String jdbcDriverClassName;
 	@Expose
 	private Integer jdbcInsertBlockSize;
@@ -57,7 +56,13 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String jdbcUrl;
 	@Expose
+	private String kafkaGroup;
+	@Expose
+	private String kafkaGroupOmh;
+	@Expose
 	private String kafkaTopic;
+	@Expose
+	private String kafkaTopicOmh;
 	@Expose
 	private String kafkaBootstrapServers;
 	@Expose
@@ -85,7 +90,11 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private Integer wsNrtServerListenPort;
 	@Expose
+	private Integer wsOmhServerListenPort;
+	@Expose
 	private String wsRouterImplClassName;
+	@Expose
+	private String wsOmhRouterImplClassName;
 	@Expose
 	private Integer wsServerListenPort;
 	
@@ -485,6 +494,50 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setWsNrtServerListenPort(Integer wsNrtServerListenPort) {
 		this.wsNrtServerListenPort = wsNrtServerListenPort;
+		return this;
+	}
+
+
+	public String getKafkaTopicOmh() {
+		return kafkaTopicOmh;
+	}
+
+
+	public MasterConfig setKafkaTopicOmh(String kafkaTopicOmh) {
+		this.kafkaTopicOmh = kafkaTopicOmh;
+		return this;
+	}
+
+
+	public String getKafkaGroupOmh() {
+		return kafkaGroupOmh;
+	}
+
+
+	public MasterConfig setKafkaGroupOmh(String kafkaGroupOmh) {
+		this.kafkaGroupOmh = kafkaGroupOmh;
+		return this;
+	}
+
+
+	public String getWsOmhRouterImplClassName() {
+		return wsOmhRouterImplClassName;
+	}
+
+
+	public MasterConfig setWsOmhRouterImplClassName(String wsOmhRouterImplClassName) {
+		this.wsOmhRouterImplClassName = wsOmhRouterImplClassName;
+		return this;
+	}
+
+
+	public Integer getWsOmhServerListenPort() {
+		return wsOmhServerListenPort;
+	}
+
+
+	public MasterConfig setWsOmhServerListenPort(Integer wsOmhServerListenPort) {
+		this.wsOmhServerListenPort = wsOmhServerListenPort;
 		return this;
 	}
 
