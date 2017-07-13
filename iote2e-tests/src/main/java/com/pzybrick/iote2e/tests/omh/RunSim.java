@@ -1,5 +1,6 @@
 package com.pzybrick.iote2e.tests.omh;
 
+import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,26 +37,27 @@ public class RunSim {
 	private Map<String,Object> prevBodiesByNameLogin;
 	private String simUsersFilePath;
 	private Integer simUsersOffset;
-	private Integer sumUsersNumUsers;
+	private Integer simUsersNumUsers;
+	private String wsEndpoint;
 	private List<OmhUser> subsetOmhUsers;
+	private ClientSocketOmhHandler clientSocketOmhHandler;
 
 	
 	public static void main(String[] args) {
 		try {
-			String simUsersFilePath = "../iote2e-tests/iote2e-shared/data/simOmhUsers.csv";
-			Integer simUsersOffset = 1;
-			Integer sumUsersNumUsers = 5;
-			RunSim runSim = new RunSim( simUsersFilePath, simUsersOffset, sumUsersNumUsers );
+			// Args: simUsersFilePath; simUsersOffset; simUsersNumUsers wsEndpoint
+			// Args: "iote2e-shared/data/simOmhUsers.csv" 1 5 "ws://localhost:8092/omh/"
+			ClientSocketOmhHandler clientSocketOmhHandler = new ClientSocketOmhHandler().setUrl(args[3]);
+			RunSim runSim = new RunSim( ).setSimUsersFilePath(args[0]).setSimUsersOffset( Integer.parseInt(args[1]) )
+					.setSimUsersNumUsers( Integer.parseInt(args[2]) ).setWsEndpoint(args[3])
+					.setClientSocketOmhHandler(clientSocketOmhHandler);					
 			runSim.process();
 		} catch(Exception e ) {
 			logger.error(e.getMessage(), e);
 		}
 	}
 	
-	public RunSim(String simUsersFilePath, Integer simUsersOffset, Integer sumUsersNumUsers) throws Exception {
-		this.simUsersFilePath = simUsersFilePath;
-		this.simUsersOffset = simUsersOffset;
-		this.sumUsersNumUsers = sumUsersNumUsers;
+	public RunSim() throws Exception {
 		this.prevBodiesByNameLogin = new HashMap<String,Object>();
 		this.simSchemasByName = new HashMap<String,SimSchema>();
 		// for some reason AmbientTemperature SCHEMA_ID is private
@@ -66,10 +68,11 @@ public class RunSim {
 		this.simSchemasByName.put(PhysicalActivity.SCHEMA_ID.getName(), new SimSchemaHkWorkoutImpl());
 		this.sortedSimSchemaNames = new ArrayList<String>( this.simSchemasByName.keySet());
 		Collections.sort(this.sortedSimSchemaNames);
-		this.subsetOmhUsers = SimOmhUsers.getInstance(simUsersFilePath).getOmhUsers().subList(simUsersOffset, simUsersOffset + sumUsersNumUsers );
 	}
 	
 	public void process() throws Exception {
+		this.subsetOmhUsers = SimOmhUsers.getInstance(simUsersFilePath).getOmhUsers().subList(simUsersOffset, simUsersOffset + simUsersNumUsers );
+		clientSocketOmhHandler.connect();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 		while( true ) {
@@ -97,6 +100,7 @@ public class RunSim {
 			        DataPoint dataPoint = new DataPoint( header, body );
 			        String rawJson = objectMapper.writeValueAsString(dataPoint);
 					byte[] compressed = CompressionUtils.compress(rawJson.getBytes());
+					clientSocketOmhHandler.session.getBasicRemote().sendBinary(ByteBuffer.wrap(compressed));
 					//System.out.println("length before: " + rawJson.length() + ", after: " + compressed.length);
 			        System.out.println(rawJson);
 				}
@@ -108,6 +112,87 @@ public class RunSim {
 			} catch(Exception e ) {}
 			
 		}
+	}
+
+	public Map<String, SimSchema> getSimSchemasByName() {
+		return simSchemasByName;
+	}
+
+	public List<String> getSortedSimSchemaNames() {
+		return sortedSimSchemaNames;
+	}
+
+	public Map<String, Object> getPrevBodiesByNameLogin() {
+		return prevBodiesByNameLogin;
+	}
+
+	public String getSimUsersFilePath() {
+		return simUsersFilePath;
+	}
+
+	public Integer getSimUsersOffset() {
+		return simUsersOffset;
+	}
+
+	public Integer getSimUsersNumUsers() {
+		return simUsersNumUsers;
+	}
+
+	public String getWsEndpoint() {
+		return wsEndpoint;
+	}
+
+	public List<OmhUser> getSubsetOmhUsers() {
+		return subsetOmhUsers;
+	}
+
+	public RunSim setSimSchemasByName(Map<String, SimSchema> simSchemasByName) {
+		this.simSchemasByName = simSchemasByName;
+		return this;
+	}
+
+	public RunSim setSortedSimSchemaNames(List<String> sortedSimSchemaNames) {
+		this.sortedSimSchemaNames = sortedSimSchemaNames;
+		return this;
+	}
+
+	public RunSim setPrevBodiesByNameLogin(Map<String, Object> prevBodiesByNameLogin) {
+		this.prevBodiesByNameLogin = prevBodiesByNameLogin;
+		return this;
+	}
+
+	public RunSim setSimUsersFilePath(String simUsersFilePath) {
+		this.simUsersFilePath = simUsersFilePath;
+		return this;
+	}
+
+	public RunSim setSimUsersOffset(Integer simUsersOffset) {
+		this.simUsersOffset = simUsersOffset;
+		return this;
+	}
+
+	public RunSim setSimUsersNumUsers(Integer simUsersNumUsers) {
+		this.simUsersNumUsers = simUsersNumUsers;
+		return this;
+	}
+
+	public RunSim setWsEndpoint(String wsEndpoint) {
+		this.wsEndpoint = wsEndpoint;
+		return this;
+	}
+
+	public RunSim setSubsetOmhUsers(List<OmhUser> subsetOmhUsers) {
+		this.subsetOmhUsers = subsetOmhUsers;
+		return this;
+	}
+
+	public ClientSocketOmhHandler getClientSocketOmhHandler() {
+		return clientSocketOmhHandler;
+	}
+
+	public RunSim setClientSocketOmhHandler(ClientSocketOmhHandler clientSocketOmhHandler) {
+		this.clientSocketOmhHandler = clientSocketOmhHandler;
+		return this;
 	}
 
 }
