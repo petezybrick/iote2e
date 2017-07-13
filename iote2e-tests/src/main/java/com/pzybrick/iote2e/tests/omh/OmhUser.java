@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.stream.omh;
+package com.pzybrick.iote2e.tests.omh;
 
 public class OmhUser {
 	private String firstName;

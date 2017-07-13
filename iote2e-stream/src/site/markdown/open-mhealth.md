@@ -21,6 +21,7 @@ Open Questions
 Next Steps
 + WS to accept inbound binary and send to Kafka
 + modify RunSim to connect and send to WS
+	+ test WS locally, update MasterConfig, create group/topic in Kafka
 + Batch layer - write to separate tables based on OMH Schema
 + Speed Layer
 	1. for a specific user and BP, write the systolic and diastolic to WS #2

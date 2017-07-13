@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.stream.omh;
+package com.pzybrick.iote2e.tests.omh;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -21,11 +21,12 @@ import org.openmhealth.schema.domain.omh.PhysicalActivity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaAmbientTempImpl;
-import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaBloodGlucoseImpl;
-import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaBloodPressureImpl;
-import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaHeartRateImpl;
-import com.pzybrick.iote2e.stream.omh.SimSchemaImpl.SimSchemaHkWorkoutImpl;
+import com.pzybrick.iote2e.common.utils.CompressionUtils;
+import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaAmbientTempImpl;
+import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaBloodGlucoseImpl;
+import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaBloodPressureImpl;
+import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaHeartRateImpl;
+import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaHkWorkoutImpl;
 
 public class RunSim {
 	private static final Logger logger = LogManager.getLogger(RunSim.class);
@@ -41,7 +42,7 @@ public class RunSim {
 	
 	public static void main(String[] args) {
 		try {
-			String simUsersFilePath = "/home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/data/simOmhUsers.csv";
+			String simUsersFilePath = "../iote2e-tests/iote2e-shared/data/simOmhUsers.csv";
 			Integer simUsersOffset = 1;
 			Integer sumUsersNumUsers = 5;
 			RunSim runSim = new RunSim( simUsersFilePath, simUsersOffset, sumUsersNumUsers );

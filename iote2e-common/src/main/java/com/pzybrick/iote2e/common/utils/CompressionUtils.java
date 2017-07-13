@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.stream.omh;
+package com.pzybrick.iote2e.common.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

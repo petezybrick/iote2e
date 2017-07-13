@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.stream.omh;
+package com.pzybrick.iote2e.tests.omh;
 
 import static java.math.BigDecimal.ONE;
 import static org.openmhealth.schema.domain.omh.DescriptiveStatistic.MEDIAN;
@@ -15,8 +15,6 @@ import org.openmhealth.schema.domain.omh.TypedUnitValue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.pzybrick.iote2e.stream.omhext.HKWorkoutActivity;
-import com.pzybrick.iote2e.stream.omhext.HKWorkoutActivityUnit;
 
 public class TryHkWorkout {
 

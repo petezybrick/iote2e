@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.stream.omh;
+package com.pzybrick.iote2e.tests.omh;
 
 import static java.time.ZoneOffset.UTC;
 import static org.openmhealth.schema.domain.omh.BloodGlucoseUnit.MILLIGRAMS_PER_DECILITER;
