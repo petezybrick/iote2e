@@ -1,6 +1,5 @@
 package com.pzybrick.iote2e.tests.omh;
 
-import static java.math.BigDecimal.ONE;
 import static org.openmhealth.schema.domain.omh.BloodGlucoseUnit.MILLIGRAMS_PER_DECILITER;
 import static org.openmhealth.schema.domain.omh.BloodSpecimenType.WHOLE_BLOOD;
 import static org.openmhealth.schema.domain.omh.DescriptiveStatistic.MEDIAN;
@@ -9,14 +8,18 @@ import static org.openmhealth.schema.domain.omh.TemporalRelationshipToMeal.FASTI
 import static org.openmhealth.schema.domain.omh.TemporalRelationshipToSleep.BEFORE_SLEEPING;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.Random;
 
-import org.openmhealth.schema.domain.omh.AmbientTemperature;
 import org.openmhealth.schema.domain.omh.BloodGlucose;
 import org.openmhealth.schema.domain.omh.BloodGlucoseUnit;
 import org.openmhealth.schema.domain.omh.BloodPressure;
 import org.openmhealth.schema.domain.omh.BloodPressureUnit;
+import org.openmhealth.schema.domain.omh.BodyTemperature;
+import org.openmhealth.schema.domain.omh.BodyTemperature.MeasurementLocation;
+import org.openmhealth.schema.domain.omh.DescriptiveStatistic;
 import org.openmhealth.schema.domain.omh.DiastolicBloodPressure;
 import org.openmhealth.schema.domain.omh.HeartRate;
 import org.openmhealth.schema.domain.omh.HeartRateUnit;
@@ -26,6 +29,8 @@ import org.openmhealth.schema.domain.omh.LengthUnit;
 import org.openmhealth.schema.domain.omh.LengthUnitValue;
 import org.openmhealth.schema.domain.omh.PhysicalActivity;
 import org.openmhealth.schema.domain.omh.PositionDuringMeasurement;
+import org.openmhealth.schema.domain.omh.RespiratoryRate;
+import org.openmhealth.schema.domain.omh.RespiratoryRate.RespirationUnit;
 import org.openmhealth.schema.domain.omh.SchemaId;
 import org.openmhealth.schema.domain.omh.SchemaSupport;
 import org.openmhealth.schema.domain.omh.SystolicBloodPressure;
@@ -79,45 +84,7 @@ public class SimSchemaImpl {
 		}
 		
 	}
-	
-	public static class SimSchemaAmbientTempImpl implements SimSchema {
-		@Override
-		public SchemaId getSchemaId() {
-			// for some reason SCHEMA_ID is private for ambient-temperature
-			return new SchemaId(SchemaSupport.OMH_NAMESPACE, "ambient-temperature", "1.0");
-		}
-		
-		@Override
-		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
-			final long mid = 80;
-			final long max = 90;
-			final long min = 70;
-			final long exceed = 105;
-			final long incr = 2;
-			long value = 0;
-			if( prevBody != null ) {
-				long prevValue = ((AmbientTemperature)prevBody).getAmbientTemperature().getValue().longValue();
-				if( (random.nextInt() % 2) == 1 ) value = prevValue + incr;
-				else value = prevValue - incr;
-				if( value < min ) value = min;
-				else if( value > max ) value = max;
-			} else value = mid;
-			// 5% of the time use exceeded value
-			String userNotes = "Feeling fine";
-			if( random.nextInt(20) == 0 ) {
-				value = exceed;
-				userNotes = "over heating";
-			}
-	        AmbientTemperature ambientTemperature =
-	                new AmbientTemperature.Builder(new TemperatureUnitValue(FAHRENHEIT, value))
-	                        .setDescriptiveStatistic(MEDIAN)
-	                        .setEffectiveTimeFrame(new TimeFrame(now))
-	                        .setUserNotes(userNotes)
-	                        .build();
-	        return ambientTemperature;
-		}
-	}
-	
+
 	
 	public static class SimSchemaBloodPressureImpl implements SimSchema {
 		@Override
@@ -128,10 +95,10 @@ public class SimSchemaImpl {
 		@Override
 		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
 			// Systolic
-			final long midSys = 80;
-			final long maxSys = 90;
-			final long minSys = 70;
-			final long exceedSys = 105;
+			final long midSys = 120;
+			final long maxSys = 130;
+			final long minSys = 110;
+			final long exceedSys = 150;
 			final long incrSys = 2;
 			long valueSys = 0;
 			if( prevBody != null ) {
@@ -180,7 +147,48 @@ public class SimSchemaImpl {
 		}
 		
 	}
-
+	
+	
+	public static class SimSchemaBodyTempImpl implements SimSchema {
+		@Override
+		public SchemaId getSchemaId() {
+			// for some reason SCHEMA_ID is private for body-temperature
+			return new SchemaId(SchemaSupport.OMH_NAMESPACE, "body-temperature", "1.0");
+		}
+		
+		@Override
+		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
+			final double mid = 98.6;
+			final double max = 99.2;
+			final double min = 98.0;
+			final double exceed = 104;
+			final double incr = .2;
+			double value = 0;
+			if( prevBody != null ) {
+				double prevValue = ((BodyTemperature)prevBody).getBodyTemperature().getValue().doubleValue();
+				if( (random.nextInt() % 2) == 1 ) value = prevValue + incr;
+				else value = prevValue - incr;
+				if( value < min ) value = min;
+				else if( value > max ) value = max;
+			} else value = mid;
+			// 5% of the time use exceeded value
+			String userNotes = "Feeling fine";
+			if( random.nextInt(20) == 0 ) {
+				value = exceed;
+				userNotes = "dizzy";
+			}
+			BigDecimal bdValue = new BigDecimal(value).setScale(1,  RoundingMode.HALF_UP);
+			BodyTemperature bodyTemperature =
+	                new BodyTemperature.Builder(new TemperatureUnitValue(FAHRENHEIT, bdValue))
+	                        .setDescriptiveStatistic(DescriptiveStatistic.MAXIMUM)
+	                        .setMeasurementLocation(MeasurementLocation.ORAL)
+	                        .setEffectiveTimeFrame(new TimeFrame(now))
+	                        .setUserNotes(userNotes)
+	                        .build();
+	        return bodyTemperature;
+		}
+	}
+	
 	
 	public static class SimSchemaHeartRateImpl implements SimSchema {
 		@Override
@@ -280,6 +288,46 @@ public class SimSchemaImpl {
 
 	        return physicalActivity;
 		}
-		
 	}
+	
+	
+	public static class SimSchemaRespiratoryRateImpl implements SimSchema {
+		@Override
+		public SchemaId getSchemaId() {
+			// for some reason SCHEMA_ID is private for respiratory-rate
+			return new SchemaId(SchemaSupport.OMH_NAMESPACE, "respiratory-rate", "1.0");
+		}
+		
+		@Override
+		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
+			final double mid = 12;
+			final double max = 9;
+			final double min = 15;
+			final double exceed = 23;
+			final double incr = .5;
+			double value = 0;
+			if( prevBody != null ) {
+				double prevValue = ((RespiratoryRate)prevBody).getRespiratoryRate().getValue().doubleValue();
+				if( (random.nextInt() % 2) == 1 ) value = prevValue + incr;
+				else value = prevValue - incr;
+				if( value < min ) value = min;
+				else if( value > max ) value = max;
+			} else value = mid;
+			// 5% of the time use exceeded value
+			String userNotes = "Feeling fine";
+			if( random.nextInt(20) == 0 ) {
+				value = exceed;
+				userNotes = "short of breath";
+			}
+			RespiratoryRate respiratoryRate =
+	                new RespiratoryRate.Builder(new TypedUnitValue<>(RespirationUnit.BREATHS_PER_MINUTE, value))
+	                        .setDescriptiveStatistic(DescriptiveStatistic.AVERAGE)
+	                        .setTemporalRelationshipToPhysicalActivity(TemporalRelationshipToPhysicalActivity.AT_REST)
+	                        .setEffectiveTimeFrame(new TimeFrame(now))
+	                        .setUserNotes(userNotes)
+	                        .build();
+	        return respiratoryRate;
+		}
+	}
+	
 }

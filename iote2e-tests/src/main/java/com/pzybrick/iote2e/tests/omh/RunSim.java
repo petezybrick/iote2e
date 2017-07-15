@@ -23,11 +23,12 @@ import org.openmhealth.schema.domain.omh.PhysicalActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pzybrick.iote2e.common.utils.CompressionUtils;
-import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaAmbientTempImpl;
 import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaBloodGlucoseImpl;
 import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaBloodPressureImpl;
+import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaBodyTempImpl;
 import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaHeartRateImpl;
 import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaHkWorkoutImpl;
+import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaRespiratoryRateImpl;
 
 public class RunSim {
 	private static final Logger logger = LogManager.getLogger(RunSim.class);
@@ -60,12 +61,14 @@ public class RunSim {
 	public RunSim() throws Exception {
 		this.prevBodiesByNameLogin = new HashMap<String,Object>();
 		this.simSchemasByName = new HashMap<String,SimSchema>();
-		// for some reason AmbientTemperature SCHEMA_ID is private
-		this.simSchemasByName.put( "ambient-temperature" , new SimSchemaAmbientTempImpl());
 		this.simSchemasByName.put(BloodGlucose.SCHEMA_ID.getName(), new SimSchemaBloodGlucoseImpl());
 		this.simSchemasByName.put(BloodPressure.SCHEMA_ID.getName(), new SimSchemaBloodPressureImpl());
+		// for some reason AmbientTemperature SCHEMA_ID is private
+		this.simSchemasByName.put( "body-temperature" , new SimSchemaBodyTempImpl());
 		this.simSchemasByName.put(HeartRate.SCHEMA_ID.getName(), new SimSchemaHeartRateImpl());
 		this.simSchemasByName.put(PhysicalActivity.SCHEMA_ID.getName(), new SimSchemaHkWorkoutImpl());
+		// for some reason RespiratoryRate SCHEMA_ID is private
+		this.simSchemasByName.put( "respiratory-rate" , new SimSchemaRespiratoryRateImpl());
 		this.sortedSimSchemaNames = new ArrayList<String>( this.simSchemasByName.keySet());
 		Collections.sort(this.sortedSimSchemaNames);
 	}
