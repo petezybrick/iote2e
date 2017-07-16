@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-public class HkWorkoutVo {
+public class HkWorkoutVo implements OmhVo  {
 	private static final Logger logger = LogManager.getLogger(HkWorkoutVo.class);
 	private String hkWorkoutUuid;
 	private String hdrSourceName;

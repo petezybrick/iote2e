@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-public class HeartRateVo {
+public class HeartRateVo implements OmhVo  {
 	private static final Logger logger = LogManager.getLogger(HeartRateVo.class);
 	private String heartRateUuid;
 	private String hdrSourceName;

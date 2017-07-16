@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-public class RespiratoryRateVo {
+public class RespiratoryRateVo implements OmhVo  {
 	private static final Logger logger = LogManager.getLogger(RespiratoryRateVo.class);
 	private String respiratoryRateUuid;
 	private String hdrSourceName;

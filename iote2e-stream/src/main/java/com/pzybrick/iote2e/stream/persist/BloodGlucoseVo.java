@@ -4,11 +4,12 @@ package com.pzybrick.iote2e.stream.persist;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-public class BloodGlucoseVo {
+public class BloodGlucoseVo implements OmhVo {
 	private static final Logger logger = LogManager.getLogger(BloodGlucoseVo.class);
 	private String bloodGlucoseUuid;
 	private String hdrSourceName;

@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-public class BodyTemperatureVo {
+public class BodyTemperatureVo implements OmhVo  {
 	private static final Logger logger = LogManager.getLogger(BodyTemperatureVo.class);
 	private String bodyTemperatureUuid;
 	private String hdrSourceName;

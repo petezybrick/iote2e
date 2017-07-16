@@ -1,0 +1,217 @@
+package com.pzybrick.iote2e.stream.omh;
+
+import java.nio.ByteBuffer;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+import org.openmhealth.schema.domain.omh.BloodGlucose;
+import org.openmhealth.schema.domain.omh.DataPoint;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.utils.CompressionUtils;
+import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
+import com.pzybrick.iote2e.stream.persist.PooledDataSource;
+
+public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
+	private static final Logger logger = LogManager.getLogger(OmhRouterHandlerSparkDbImpl.class);
+	private MasterConfig masterConfig;
+	// TODO have a cached pool of objectMapper's
+	private ObjectMapper objectMapper;
+
+
+	public OmhRouterHandlerSparkDbImpl( ) throws Exception {
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
+	}
+	
+	
+	public void init(MasterConfig masterConfig) throws Exception {
+		try {
+			this.masterConfig = masterConfig;
+		} catch( Exception e ) {
+			logger.error(e.getMessage(),e);
+			throw e;
+		}
+	}
+	
+	public void processRequests( List<ByteBuffer> byteBuffers ) throws Exception {
+		Connection con = null;
+		Map<String,PreparedStatement> cachePrepStmtsByTableName = new HashMap<String,PreparedStatement>();
+		try {
+			if( byteBuffers != null && byteBuffers.size() > 0 ) {
+				con = PooledDataSource.getInstance(masterConfig).getConnection();
+				insertAllBlocks( byteBuffers, con, cachePrepStmtsByTableName );
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			try {
+				if( con != null ) 
+					con.rollback();
+			} catch( Exception exRoll ) {
+				logger.warn(exRoll.getMessage());
+			}
+		} finally {
+			for( PreparedStatement pstmt : cachePrepStmtsByTableName.values() ) {
+				try {
+					pstmt.close();
+				} catch( Exception e ) {
+					logger.warn(e);
+				}
+			}
+			if( con != null ) {
+				try {
+					con.close();
+				} catch(Exception exCon ) {
+					logger.warn(exCon.getMessage());
+				}
+			}
+		}
+	}
+	
+	
+	private void insertAllBlocks( List<ByteBuffer> byteBuffers, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
+		Integer insertBlockSize = masterConfig.getJdbcInsertBlockSize();
+		for( int i=0 ;; i+=insertBlockSize ) {
+			int startNextBlock = i + insertBlockSize;
+			if( startNextBlock > byteBuffers.size() ) 
+				startNextBlock = byteBuffers.size();
+			try {
+				insertEachBlock(byteBuffers.subList(i, startNextBlock), con, cachePrepStmtsByTableName);
+			} catch( Exception e ) {
+				// At least one failure, reprocess one by one
+				for( ByteBuffer byteBuffer : byteBuffers.subList(i, startNextBlock) ) {
+					insertEachBlock( Arrays.asList(byteBuffer), con, cachePrepStmtsByTableName);
+				}
+				
+			}
+			if( startNextBlock == byteBuffers.size() ) break;
+		}
+	}
+	
+	
+	private void insertEachBlock( List<ByteBuffer> byteBuffers, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
+		final DateTimeFormatter dtfmt = ISODateTimeFormat.dateTime();
+		String tableName = null;
+		String request_uuid = null;
+		PreparedStatement pstmt = null;
+		try {
+			int cntToCommit = 0;
+			for( ByteBuffer byteBuffer : byteBuffers) {
+				// Decompress the JSON string
+				String rawJson = CompressionUtils.decompress(byteBuffer.array()).toString();
+				// JSON into Datapoint
+				try {
+			        DataPoint dataPoint = objectMapper.readValue(rawJson, DataPoint.class);
+			        logger.info( "OMH Datapoint: {} {}, userId={}, uuid=[]", dataPoint.getHeader().getBodySchemaId().getName(),
+			        		dataPoint.getHeader().getBodySchemaId().getVersion(), dataPoint.getHeader().getUserId(),
+			        		dataPoint.getHeader().getId() );
+					// Body into Schema object
+			        String rawJsonBody = objectMapper.writeValueAsString(dataPoint.getBody());
+					// VO from Schema raw JSON
+					// Insert VO
+			        System.out.println(dataPoint.getBody());
+			        
+			        
+			        BloodGlucose bgAfter = objectMapper.readValue(rawJsonBody, BloodGlucose.class);
+				} catch(Exception e ) {
+					logger.error(e.getMessage(), e);
+					throw e;
+				}
+
+
+				
+				
+				tableName = iote2eRequest.getSourceType().toString();
+				pstmt = getPreparedStatement( tableName, con, cachePrepStmtsByTableName );
+				if( pstmt != null ) {
+					cntToCommit++;
+					request_uuid = iote2eRequest.getRequestUuid().toString();
+					int offset = 1;
+					// First set of values are the same on every table
+					pstmt.setString(offset++, request_uuid );
+					pstmt.setString(offset++, iote2eRequest.getLoginName().toString());
+					pstmt.setString(offset++, iote2eRequest.getSourceName().toString());
+					Timestamp timestamp = new Timestamp(dtfmt.parseDateTime(iote2eRequest.getRequestTimestamp().toString()).getMillis());
+					pstmt.setTimestamp(offset++, timestamp);
+					// Next value(s)/types are specific to the table
+					// For this simple example, assume one value passed as string
+					String value = iote2eRequest.getPairs().values().iterator().next().toString();
+					if( "temperature".compareToIgnoreCase(tableName) == 0) {
+						// temp_f
+						pstmt.setFloat(offset++, new Float(value));
+					}else if( "humidity".compareToIgnoreCase(tableName) == 0) {
+						// pct_humidity
+						pstmt.setFloat(offset++, new Float(value));
+					}else if( "switch".compareToIgnoreCase(tableName) == 0) {
+						// switch_state
+						pstmt.setInt(offset++, Integer.parseInt(value));
+					}else if( "heartbeat".compareToIgnoreCase(tableName) == 0) {
+						// heartbeat_state
+						pstmt.setInt(offset++, Integer.parseInt(value));
+					}
+					pstmt.execute();
+				}
+			}
+			if( cntToCommit > 0 ) con.commit();
+		} catch( SQLException sqlEx ) {
+			con.rollback();
+			// Suppress duplicate rows, assume the are the same and were sent over Kafka > 1 time
+			if( iote2eRequests.size() == 1 ) {
+				if( sqlEx.getSQLState() != null && sqlEx.getSQLState().startsWith("23") )
+					logger.debug("Skipping duplicate row, table={}, request_uuid={}", tableName, request_uuid);
+				else {
+					logger.error("Error on insert for pstmt: {}", pstmt.toString());
+					throw sqlEx;
+				}
+			} else {
+				throw sqlEx;
+			}
+		} catch( Exception e2 ) {
+			con.rollback();
+			throw e2;
+		}
+	}
+	
+	
+	/*
+	 * A bit of a hack
+	 */
+	private PreparedStatement getPreparedStatement( String tableName, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
+		if( cachePrepStmtsByTableName.containsKey(tableName) ) return cachePrepStmtsByTableName.get(tableName);
+		final String sqlTemperature = "INSERT INTO temperature (request_uuid,login_name,source_name,request_timestamp,degrees_c) VALUES (?,?,?,?,?)";
+		final String sqlHumidity = "INSERT INTO humidity (request_uuid,login_name,source_name,request_timestamp,pct_humidity) VALUES (?,?,?,?,?)";
+		final String sqlSwitch = "INSERT INTO switch (request_uuid,login_name,source_name,request_timestamp,switch_state) VALUES (?,?,?,?,?)";
+		final String sqlHeartbeat = "INSERT INTO heartbeat (request_uuid,login_name,source_name,request_timestamp,heartbeat_state) VALUES (?,?,?,?,?)";
+		
+		String sql = null;
+		if( "temperature".compareToIgnoreCase(tableName) == 0) sql = sqlTemperature;
+		else if( "humidity".compareToIgnoreCase(tableName) == 0) sql = sqlHumidity;
+		else if( "switch".compareToIgnoreCase(tableName) == 0) sql = sqlSwitch;
+		else if( "heartbeat".compareToIgnoreCase(tableName) == 0) sql = sqlHeartbeat;
+		else if( "pill_dispenser".compareToIgnoreCase(tableName) == 0) sql = null;
+		else throw new Exception("Invalid table name: " + tableName);
+
+		PreparedStatement pstmt = null;
+		if( sql != null ) { 
+			logger.debug("Creating pstmt for {}",  tableName);
+			pstmt = con.prepareStatement(sql);
+			cachePrepStmtsByTableName.put(tableName, pstmt );
+		} else logger.debug("NOT Creating pstmt for {}", tableName);
+		
+		return pstmt;
+	}
+
+}
+		
