@@ -273,14 +273,17 @@ public class SimSchemaImpl {
 				else if( valueKcals > maxKcals ) valueKcals = maxKcals;
 			} else valueKcals = midKcals;
 			// 5% of the time use exceeded value
+			String userNotes = "Feeling fine";
 			if( random.nextInt(20) == 0 ) {
 				valueKcals = exceedKcals;
+				userNotes = "dizzy";
 			}
 
 	        LengthUnitValue distance = new LengthUnitValue(LengthUnit.MILE, new BigDecimal(valueDistance));
 	        KcalUnitValue caloriesBurned = new KcalUnitValue(KcalUnit.KILOCALORIE, new BigDecimal(valueKcals));
 	        TimeFrame timeFrame = new TimeFrame(OffsetDateTime.now() );
 	        PhysicalActivity physicalActivity = new PhysicalActivity.Builder("HKWorkoutActivityTypeCycling")
+	        		.setUserNotes(userNotes)
 	                .setDistance(distance)
 	                .setEffectiveTimeFrame(timeFrame)
 	                .setCaloriesBurned(caloriesBurned)

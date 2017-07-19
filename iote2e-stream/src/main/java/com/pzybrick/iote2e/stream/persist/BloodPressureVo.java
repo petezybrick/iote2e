@@ -4,19 +4,16 @@ package com.pzybrick.iote2e.stream.persist;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openmhealth.schema.domain.omh.BloodPressure;
+import org.openmhealth.schema.domain.omh.DataPointHeader;
 
 
-public class BloodPressureVo {
+public class BloodPressureVo extends OmhVo {
 	private static final Logger logger = LogManager.getLogger(BloodPressureVo.class);
 	private String bloodPressureUuid;
-	private String hdrSourceName;
-	private Timestamp hdrSourceCreationDateTime;
-	private String hdrUserId;
-	private String hdrModality;
-	private String hdrSchemaNamespace;
-	private String hdrSchemaVersion;
 	private Timestamp effectiveTimeFrame;
 	private String descriptiveStatistic;
 	private String userNotes;
@@ -29,6 +26,20 @@ public class BloodPressureVo {
 
 
 	public BloodPressureVo() {
+	}
+
+
+	public BloodPressureVo( DataPointHeader header, BloodPressure bloodPressure ) throws SQLException {
+		this.bloodPressureUuid = header.getId();
+		setHeaderCommon(header);
+		this.effectiveTimeFrame = new Timestamp( offsetDateTimeToMillis( bloodPressure.getEffectiveTimeFrame().getDateTime() ));
+		this.descriptiveStatistic = bloodPressure.getDescriptiveStatistic().name();
+		this.userNotes = bloodPressure.getUserNotes();
+		this.positionDuringMeasurement = bloodPressure.getPositionDuringMeasurement().name();
+		this.systolicBloodPressureUnit = bloodPressure.getSystolicBloodPressure().getUnit();
+		this.systolicBloodPressureValue = bloodPressure.getSystolicBloodPressure().getValue().intValue();
+		this.diastolicBloodPressureUnit = bloodPressure.getDiastolicBloodPressure().getUnit();
+		this.diastolicBloodPressureValue = bloodPressure.getDiastolicBloodPressure().getValue().intValue();
 	}
 
 
@@ -53,223 +64,142 @@ public class BloodPressureVo {
 
 
 	public String getBloodPressureUuid() {
-		return this.bloodPressureUuid;
+		return bloodPressureUuid;
 	}
-	public String getHdrSourceName() {
-		return this.hdrSourceName;
-	}
-	public Timestamp getHdrSourceCreationDateTime() {
-		return this.hdrSourceCreationDateTime;
-	}
-	public String getHdrUserId() {
-		return this.hdrUserId;
-	}
-	public String getHdrModality() {
-		return this.hdrModality;
-	}
-	public String getHdrSchemaNamespace() {
-		return this.hdrSchemaNamespace;
-	}
-	public String getHdrSchemaVersion() {
-		return this.hdrSchemaVersion;
-	}
+
+
 	public Timestamp getEffectiveTimeFrame() {
-		return this.effectiveTimeFrame;
+		return effectiveTimeFrame;
 	}
+
+
 	public String getDescriptiveStatistic() {
-		return this.descriptiveStatistic;
+		return descriptiveStatistic;
 	}
+
+
 	public String getUserNotes() {
-		return this.userNotes;
+		return userNotes;
 	}
+
+
 	public String getPositionDuringMeasurement() {
-		return this.positionDuringMeasurement;
+		return positionDuringMeasurement;
 	}
+
+
 	public String getSystolicBloodPressureUnit() {
-		return this.systolicBloodPressureUnit;
+		return systolicBloodPressureUnit;
 	}
+
+
 	public int getSystolicBloodPressureValue() {
-		return this.systolicBloodPressureValue;
+		return systolicBloodPressureValue;
 	}
+
+
 	public String getDiastolicBloodPressureUnit() {
-		return this.diastolicBloodPressureUnit;
+		return diastolicBloodPressureUnit;
 	}
+
+
 	public int getDiastolicBloodPressureValue() {
-		return this.diastolicBloodPressureValue;
+		return diastolicBloodPressureValue;
 	}
+
+
 	public Timestamp getInsertTs() {
-		return this.insertTs;
+		return insertTs;
 	}
 
 
-	public BloodPressureVo setBloodPressureUuid( String bloodPressureUuid ) {
+	public BloodPressureVo setBloodPressureUuid(String bloodPressureUuid) {
 		this.bloodPressureUuid = bloodPressureUuid;
 		return this;
 	}
-	public BloodPressureVo setHdrSourceName( String hdrSourceName ) {
-		this.hdrSourceName = hdrSourceName;
-		return this;
-	}
-	public BloodPressureVo setHdrSourceCreationDateTime( Timestamp hdrSourceCreationDateTime ) {
-		this.hdrSourceCreationDateTime = hdrSourceCreationDateTime;
-		return this;
-	}
-	public BloodPressureVo setHdrUserId( String hdrUserId ) {
-		this.hdrUserId = hdrUserId;
-		return this;
-	}
-	public BloodPressureVo setHdrModality( String hdrModality ) {
-		this.hdrModality = hdrModality;
-		return this;
-	}
-	public BloodPressureVo setHdrSchemaNamespace( String hdrSchemaNamespace ) {
-		this.hdrSchemaNamespace = hdrSchemaNamespace;
-		return this;
-	}
-	public BloodPressureVo setHdrSchemaVersion( String hdrSchemaVersion ) {
-		this.hdrSchemaVersion = hdrSchemaVersion;
-		return this;
-	}
-	public BloodPressureVo setEffectiveTimeFrame( Timestamp effectiveTimeFrame ) {
+
+
+	public BloodPressureVo setEffectiveTimeFrame(Timestamp effectiveTimeFrame) {
 		this.effectiveTimeFrame = effectiveTimeFrame;
 		return this;
 	}
-	public BloodPressureVo setDescriptiveStatistic( String descriptiveStatistic ) {
+
+
+	public BloodPressureVo setDescriptiveStatistic(String descriptiveStatistic) {
 		this.descriptiveStatistic = descriptiveStatistic;
 		return this;
 	}
-	public BloodPressureVo setUserNotes( String userNotes ) {
+
+
+	public BloodPressureVo setUserNotes(String userNotes) {
 		this.userNotes = userNotes;
 		return this;
 	}
-	public BloodPressureVo setPositionDuringMeasurement( String positionDuringMeasurement ) {
+
+
+	public BloodPressureVo setPositionDuringMeasurement(String positionDuringMeasurement) {
 		this.positionDuringMeasurement = positionDuringMeasurement;
 		return this;
 	}
-	public BloodPressureVo setSystolicBloodPressureUnit( String systolicBloodPressureUnit ) {
+
+
+	public BloodPressureVo setSystolicBloodPressureUnit(String systolicBloodPressureUnit) {
 		this.systolicBloodPressureUnit = systolicBloodPressureUnit;
 		return this;
 	}
-	public BloodPressureVo setSystolicBloodPressureValue( int systolicBloodPressureValue ) {
+
+
+	public BloodPressureVo setSystolicBloodPressureValue(int systolicBloodPressureValue) {
 		this.systolicBloodPressureValue = systolicBloodPressureValue;
 		return this;
 	}
-	public BloodPressureVo setDiastolicBloodPressureUnit( String diastolicBloodPressureUnit ) {
+
+
+	public BloodPressureVo setDiastolicBloodPressureUnit(String diastolicBloodPressureUnit) {
 		this.diastolicBloodPressureUnit = diastolicBloodPressureUnit;
 		return this;
 	}
-	public BloodPressureVo setDiastolicBloodPressureValue( int diastolicBloodPressureValue ) {
+
+
+	public BloodPressureVo setDiastolicBloodPressureValue(int diastolicBloodPressureValue) {
 		this.diastolicBloodPressureValue = diastolicBloodPressureValue;
 		return this;
 	}
-	public BloodPressureVo setInsertTs( Timestamp insertTs ) {
+
+
+	public BloodPressureVo setInsertTs(Timestamp insertTs) {
 		this.insertTs = insertTs;
 		return this;
 	}
 
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((bloodPressureUuid == null) ? 0 : bloodPressureUuid.hashCode());
-		result = prime * result + ((descriptiveStatistic == null) ? 0 : descriptiveStatistic.hashCode());
-		result = prime * result + ((diastolicBloodPressureUnit == null) ? 0 : diastolicBloodPressureUnit.hashCode());
-		result = prime * result + diastolicBloodPressureValue;
-		result = prime * result + ((effectiveTimeFrame == null) ? 0 : effectiveTimeFrame.hashCode());
-		result = prime * result + ((hdrModality == null) ? 0 : hdrModality.hashCode());
-		result = prime * result + ((hdrSchemaNamespace == null) ? 0 : hdrSchemaNamespace.hashCode());
-		result = prime * result + ((hdrSchemaVersion == null) ? 0 : hdrSchemaVersion.hashCode());
-		result = prime * result + ((hdrSourceCreationDateTime == null) ? 0 : hdrSourceCreationDateTime.hashCode());
-		result = prime * result + ((hdrSourceName == null) ? 0 : hdrSourceName.hashCode());
-		result = prime * result + ((hdrUserId == null) ? 0 : hdrUserId.hashCode());
-		result = prime * result + ((positionDuringMeasurement == null) ? 0 : positionDuringMeasurement.hashCode());
-		result = prime * result + ((systolicBloodPressureUnit == null) ? 0 : systolicBloodPressureUnit.hashCode());
-		result = prime * result + systolicBloodPressureValue;
-		result = prime * result + ((userNotes == null) ? 0 : userNotes.hashCode());
-		return result;
+	public BloodPressureVo setHdrSourceName(String hdrSourceName) {
+		this.hdrSourceName = hdrSourceName;
+		return this;
 	}
 
+	public BloodPressureVo setHdrSourceCreationDateTime(Timestamp hdrSourceCreationDateTime) {
+		this.hdrSourceCreationDateTime = hdrSourceCreationDateTime;
+		return this;
+	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BloodPressureVo other = (BloodPressureVo) obj;
-		if (bloodPressureUuid == null) {
-			if (other.bloodPressureUuid != null)
-				return false;
-		} else if (!bloodPressureUuid.equals(other.bloodPressureUuid))
-			return false;
-		if (descriptiveStatistic == null) {
-			if (other.descriptiveStatistic != null)
-				return false;
-		} else if (!descriptiveStatistic.equals(other.descriptiveStatistic))
-			return false;
-		if (diastolicBloodPressureUnit == null) {
-			if (other.diastolicBloodPressureUnit != null)
-				return false;
-		} else if (!diastolicBloodPressureUnit.equals(other.diastolicBloodPressureUnit))
-			return false;
-		if (diastolicBloodPressureValue != other.diastolicBloodPressureValue)
-			return false;
-		if (effectiveTimeFrame == null) {
-			if (other.effectiveTimeFrame != null)
-				return false;
-		} else if (!effectiveTimeFrame.equals(other.effectiveTimeFrame))
-			return false;
-		if (hdrModality == null) {
-			if (other.hdrModality != null)
-				return false;
-		} else if (!hdrModality.equals(other.hdrModality))
-			return false;
-		if (hdrSchemaNamespace == null) {
-			if (other.hdrSchemaNamespace != null)
-				return false;
-		} else if (!hdrSchemaNamespace.equals(other.hdrSchemaNamespace))
-			return false;
-		if (hdrSchemaVersion == null) {
-			if (other.hdrSchemaVersion != null)
-				return false;
-		} else if (!hdrSchemaVersion.equals(other.hdrSchemaVersion))
-			return false;
-		if (hdrSourceCreationDateTime == null) {
-			if (other.hdrSourceCreationDateTime != null)
-				return false;
-		} else if (!hdrSourceCreationDateTime.equals(other.hdrSourceCreationDateTime))
-			return false;
-		if (hdrSourceName == null) {
-			if (other.hdrSourceName != null)
-				return false;
-		} else if (!hdrSourceName.equals(other.hdrSourceName))
-			return false;
-		if (hdrUserId == null) {
-			if (other.hdrUserId != null)
-				return false;
-		} else if (!hdrUserId.equals(other.hdrUserId))
-			return false;
-		if (positionDuringMeasurement == null) {
-			if (other.positionDuringMeasurement != null)
-				return false;
-		} else if (!positionDuringMeasurement.equals(other.positionDuringMeasurement))
-			return false;
-		if (systolicBloodPressureUnit == null) {
-			if (other.systolicBloodPressureUnit != null)
-				return false;
-		} else if (!systolicBloodPressureUnit.equals(other.systolicBloodPressureUnit))
-			return false;
-		if (systolicBloodPressureValue != other.systolicBloodPressureValue)
-			return false;
-		if (userNotes == null) {
-			if (other.userNotes != null)
-				return false;
-		} else if (!userNotes.equals(other.userNotes))
-			return false;
-		return true;
+	public BloodPressureVo setHdrUserId(String hdrUserId) {
+		this.hdrUserId = hdrUserId;
+		return this;
+	}
+
+	public BloodPressureVo setHdrModality(String hdrModality) {
+		this.hdrModality = hdrModality;
+		return this;
+	}
+
+	public BloodPressureVo setHdrSchemaNamespace(String hdrSchemaNamespace) {
+		this.hdrSchemaNamespace = hdrSchemaNamespace;
+		return this;
+	}
+
+	public BloodPressureVo setHdrSchemaVersion(String hdrSchemaVersion) {
+		this.hdrSchemaVersion = hdrSchemaVersion;
+		return this;
 	}
 }
 

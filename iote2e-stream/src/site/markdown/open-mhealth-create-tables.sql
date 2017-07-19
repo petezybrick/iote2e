@@ -15,7 +15,7 @@ CREATE TABLE blood_glucose (
 	temporal_relationship_to_sleep VARCHAR(255),
 	blood_glucose_unit VARCHAR(255) NOT NULL,
 	blood_glucose_value INTEGER NOT NULL,
-	insert_ts timestamp  DEFAULT CURRENT_TIMESTAMP,
+	insert_ts timestamp(3)  DEFAULT CURRENT_TIMESTAMP(3),
 	KEY ix_blood_glucose_user_ts(hdr_user_id,effective_time_frame)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -36,7 +36,7 @@ CREATE TABLE blood_pressure (
 	systolic_blood_pressure_value INTEGER NOT NULL,
 	diastolic_blood_pressure_unit VARCHAR(255) NOT NULL,
 	diastolic_blood_pressure_value INTEGER NOT NULL,
-	insert_ts timestamp  DEFAULT CURRENT_TIMESTAMP,
+	insert_ts timestamp(3)  DEFAULT CURRENT_TIMESTAMP(3),
 	KEY ix_blood_pressure_user_ts(hdr_user_id,effective_time_frame)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -55,7 +55,7 @@ CREATE TABLE body_temperature (
 	measurement_location VARCHAR(255),
 	body_temperature_unit VARCHAR(255) NOT NULL,
 	body_temperature_value DECIMAL(4,1) NOT NULL,
-	insert_ts timestamp  DEFAULT CURRENT_TIMESTAMP,
+	insert_ts timestamp(3)  DEFAULT CURRENT_TIMESTAMP(3),
 	KEY ix_body_temperature_user_ts(hdr_user_id,effective_time_frame)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -73,7 +73,7 @@ CREATE TABLE heart_rate (
 	temporal_relationship_to_physical_activity VARCHAR(255),
 	heart_rate_unit VARCHAR(255) NOT NULL,
 	heart_rate_value INTEGER NOT NULL,
-	insert_ts timestamp  DEFAULT CURRENT_TIMESTAMP,
+	insert_ts timestamp(3)  DEFAULT CURRENT_TIMESTAMP(3),
 	KEY ix_heart_rate_user_ts(hdr_user_id,effective_time_frame)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -93,7 +93,7 @@ CREATE TABLE hk_workout (
 	distance_value INTEGER NOT NULL,
 	kcal_burned_unit VARCHAR(255) NOT NULL,
 	kcal_burned_value INTEGER NOT NULL,
-	insert_ts timestamp  DEFAULT CURRENT_TIMESTAMP,
+	insert_ts timestamp(3)  DEFAULT CURRENT_TIMESTAMP(3),
 	KEY ix_hk_workout_user_ts(hdr_user_id,effective_time_frame)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -112,6 +112,6 @@ CREATE TABLE respiratory_rate (
 	temporal_relationship_to_physical_activity VARCHAR(255),
 	respiratory_rate_unit VARCHAR(255) NOT NULL,
 	respiratory_rate_value DECIMAL(4,1) NOT NULL,
-	insert_ts timestamp  DEFAULT CURRENT_TIMESTAMP,
+	insert_ts timestamp(3)  DEFAULT CURRENT_TIMESTAMP(3),
 	KEY ix_respiratory_rate_user_ts(hdr_user_id,effective_time_frame)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

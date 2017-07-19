@@ -27,6 +27,7 @@ public class TestBloodGlucose {
 	@Test
 	public void test001Insert() throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
+		BloodGlucoseVo xxx = new BloodGlucoseVo();
 		BloodGlucoseVo bloodGlucoseVo = new BloodGlucoseVo()
 			 .setBloodGlucoseUuid(uuid)
 			 .setHdrSourceName("aaa")

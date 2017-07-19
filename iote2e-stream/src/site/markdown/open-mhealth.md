@@ -28,4 +28,6 @@ Next Steps
 	1. for a specific user and BP, write the systolic and diastolic to WS #2
 	2. Create WS page to get the systolic and diastolic, plot in real time
 	3. rule: When exceeded, send email to doctor_email - create drzybrick@gmail.com
++ omh_physical_activity with lat/long
+	timescaledb
 	
