@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 
 
-public class BloodPressureDao implements OmhDao  {
+public class BloodPressureDao extends OmhDao  {
 	private static final Logger logger = LogManager.getLogger(BloodPressureDao.class);
 	private static String sqlDeleteByPk = "DELETE FROM blood_pressure WHERE blood_pressure_uuid=?";
 	private static String sqlInsert = "INSERT INTO blood_pressure (blood_pressure_uuid,hdr_source_name,hdr_source_creation_date_time,hdr_user_id,hdr_modality,hdr_schema_namespace,hdr_schema_version,effective_time_frame,descriptive_statistic,user_notes,position_during_measurement,systolic_blood_pressure_unit,systolic_blood_pressure_value,diastolic_blood_pressure_unit,diastolic_blood_pressure_value) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 
 
-public class HeartRateDao implements OmhDao  {
+public class HeartRateDao extends OmhDao  {
 	private static final Logger logger = LogManager.getLogger(HeartRateDao.class);
 	private static String sqlDeleteByPk = "DELETE FROM heart_rate WHERE heart_rate_uuid=?";
 	private static String sqlInsert = "INSERT INTO heart_rate (heart_rate_uuid,hdr_source_name,hdr_source_creation_date_time,hdr_user_id,hdr_modality,hdr_schema_namespace,hdr_schema_version,effective_time_frame,user_notes,temporal_relationship_to_physical_activity,heart_rate_unit,heart_rate_value) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";

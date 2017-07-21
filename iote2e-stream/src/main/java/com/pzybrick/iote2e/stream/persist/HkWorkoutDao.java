@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 
 
-public class HkWorkoutDao implements OmhDao  {
+public class HkWorkoutDao extends OmhDao  {
 	private static final Logger logger = LogManager.getLogger(HkWorkoutDao.class);
 	private static String sqlDeleteByPk = "DELETE FROM hk_workout WHERE hk_workout_uuid=?";
 	private static String sqlInsert = "INSERT INTO hk_workout (hk_workout_uuid,hdr_source_name,hdr_source_creation_date_time,hdr_user_id,hdr_modality,hdr_schema_namespace,hdr_schema_version,effective_time_frame,user_notes,activity_name,distance_unit,distance_value,kcal_burned_unit,kcal_burned_value) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";

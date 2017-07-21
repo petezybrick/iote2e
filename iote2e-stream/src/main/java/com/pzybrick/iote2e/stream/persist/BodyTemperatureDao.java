@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 
 
-public class BodyTemperatureDao implements OmhDao  {
+public class BodyTemperatureDao extends OmhDao  {
 	private static final Logger logger = LogManager.getLogger(BodyTemperatureDao.class);
 	private static String sqlDeleteByPk = "DELETE FROM body_temperature WHERE body_temperature_uuid=?";
 	private static String sqlInsert = "INSERT INTO body_temperature (body_temperature_uuid,hdr_source_name,hdr_source_creation_date_time,hdr_user_id,hdr_modality,hdr_schema_namespace,hdr_schema_version,effective_time_frame,descriptive_statistic,user_notes,measurement_location,body_temperature_unit,body_temperature_value) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";

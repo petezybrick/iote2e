@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 
 
-public class BloodGlucoseDao implements OmhDao  {
+public class BloodGlucoseDao extends OmhDao  {
 	private static final Logger logger = LogManager.getLogger(BloodGlucoseDao.class);
 	private static String sqlDeleteByPk = "DELETE FROM blood_glucose WHERE blood_glucose_uuid=?";
 	private static String sqlInsert = "INSERT INTO blood_glucose (blood_glucose_uuid,hdr_source_name,hdr_source_creation_date_time,hdr_user_id,hdr_modality,hdr_schema_namespace,hdr_schema_version,effective_time_frame,descriptive_statistic,user_notes,blood_specimen_type,temporal_relationship_to_meal,temporal_relationship_to_sleep,blood_glucose_unit,blood_glucose_value) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";

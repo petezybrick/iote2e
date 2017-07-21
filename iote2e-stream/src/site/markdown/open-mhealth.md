@@ -23,7 +23,7 @@ Next Steps
 + Batch layer
 	+ create tables
 	+ write to separate tables based on OMH Schema
-		>>> 2016-07-18 batch insert tests, then integrate into spark code
+		>>> 2016-07-20 integrate into spark code
 + Speed Layer
 	1. for a specific user and BP, write the systolic and diastolic to WS #2
 	2. Create WS page to get the systolic and diastolic, plot in real time

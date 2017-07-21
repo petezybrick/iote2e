@@ -12,30 +12,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openmhealth.schema.domain.omh.BloodGlucose;
 import org.openmhealth.schema.domain.omh.BloodPressure;
-import org.openmhealth.schema.domain.omh.BodyTemperature;
 import org.openmhealth.schema.domain.omh.DataPoint;
 import org.openmhealth.schema.domain.omh.DataPointAcquisitionProvenance;
 import org.openmhealth.schema.domain.omh.DataPointHeader;
 import org.openmhealth.schema.domain.omh.DataPointModality;
 import org.openmhealth.schema.domain.omh.HeartRate;
 import org.openmhealth.schema.domain.omh.PhysicalActivity;
-import org.openmhealth.schema.domain.omh.RespiratoryRate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.stream.persist.BloodGlucoseDao;
-import com.pzybrick.iote2e.stream.persist.BloodGlucoseVo;
-import com.pzybrick.iote2e.stream.persist.BloodPressureDao;
-import com.pzybrick.iote2e.stream.persist.BloodPressureVo;
-import com.pzybrick.iote2e.stream.persist.BodyTemperatureDao;
-import com.pzybrick.iote2e.stream.persist.BodyTemperatureVo;
-import com.pzybrick.iote2e.stream.persist.HeartRateDao;
-import com.pzybrick.iote2e.stream.persist.HeartRateVo;
-import com.pzybrick.iote2e.stream.persist.HkWorkoutDao;
-import com.pzybrick.iote2e.stream.persist.HkWorkoutVo;
-import com.pzybrick.iote2e.stream.persist.RespiratoryRateDao;
-import com.pzybrick.iote2e.stream.persist.RespiratoryRateVo;
+import com.pzybrick.iote2e.stream.persist.OmhDao;
 import com.pzybrick.iote2e.tests.omh.OmhUser;
 import com.pzybrick.iote2e.tests.omh.SimOmhUsers;
 import com.pzybrick.iote2e.tests.omh.SimSchema;
@@ -117,7 +104,7 @@ public class TestOmhSingleInsert {
 			        prevBodiesByNameLogin.put( keyPrevBody, body );
 			        
 			        DataPoint dataPoint = new DataPoint( header, body );
-					insertEach( dataPoint );
+					OmhDao.insertEach( masterConfig, dataPoint );
 					//System.out.println("length before: " + rawJson.length() + ", after: " + compressed.length);
 			        System.out.println("inserting: " + dataPoint.getHeader().getBodySchemaId().getName());
 				}
@@ -135,43 +122,7 @@ public class TestOmhSingleInsert {
 	/*
 	 * TODO: This is a hack, ok for small number of vo's, needs to be refactored
 	 */
-	private void insertEach( DataPoint dataPoint ) throws Exception {
-        String rawJsonBody = objectMapper.writeValueAsString(dataPoint.getBody());
-		if( BloodGlucose.SCHEMA_ID.getName().equals( dataPoint.getHeader().getBodySchemaId().getName()) ) {
-	        BloodGlucose bloodGlucose = objectMapper.readValue(rawJsonBody, BloodGlucose.class);
-	        BloodGlucoseVo bloodGlucoseVo = new BloodGlucoseVo( dataPoint.getHeader(), bloodGlucose );
-	        BloodGlucoseDao.insert(masterConfig, bloodGlucoseVo);
-		} else if( BloodPressure.SCHEMA_ID.getName().equals( dataPoint.getHeader().getBodySchemaId().getName()) ) {
-	        BloodPressure bloodPressure = objectMapper.readValue(rawJsonBody, BloodPressure.class);
-	        BloodPressureVo bloodPressureVo = new BloodPressureVo( dataPoint.getHeader(), bloodPressure );
-	        BloodPressureDao.insert(masterConfig, bloodPressureVo);
-		} else if( "body-temperature".equals( dataPoint.getHeader().getBodySchemaId().getName()) ) {
-	        BodyTemperature bodyTemperature = objectMapper.readValue(rawJsonBody, BodyTemperature.class);
-	        BodyTemperatureVo bodyTemperatureVo = new BodyTemperatureVo( dataPoint.getHeader(), bodyTemperature );
-	        BodyTemperatureDao.insert(masterConfig, bodyTemperatureVo);
-		} else if( HeartRate.SCHEMA_ID.getName().equals( dataPoint.getHeader().getBodySchemaId().getName()) ) {
-	        HeartRate heartRate = objectMapper.readValue(rawJsonBody, HeartRate.class);
-	        HeartRateVo heartRateVo = new HeartRateVo( dataPoint.getHeader(), heartRate );
-	        HeartRateDao.insert(masterConfig, heartRateVo);
-		} else if( PhysicalActivity.SCHEMA_ID.getName().equals( dataPoint.getHeader().getBodySchemaId().getName()) ) {
-	        PhysicalActivity physicalActivity = objectMapper.readValue(rawJsonBody, PhysicalActivity.class);
-	        HkWorkoutVo hkWorkoutVo = new HkWorkoutVo( dataPoint.getHeader(), physicalActivity );
-	        HkWorkoutDao.insert(masterConfig, hkWorkoutVo);
-		} else if( "respiratory-rate".equals( dataPoint.getHeader().getBodySchemaId().getName()) ) {
-	        RespiratoryRate RespiratoryRate = objectMapper.readValue(rawJsonBody, RespiratoryRate.class);
-	        RespiratoryRateVo RespiratoryRateVo = new RespiratoryRateVo( dataPoint.getHeader(), RespiratoryRate );
-	        RespiratoryRateDao.insert(masterConfig, RespiratoryRateVo);
-		}
-//				BloodGlucoseDao.insert(masterConfig, bloodGlucoseVo);
-//		this.simSchemasByName.put(BloodPressure.SCHEMA_ID.getName(), new SimSchemaBloodPressureImpl());
-//		// for some reason AmbientTemperature SCHEMA_ID is private
-//		this.simSchemasByName.put( "body-temperature" , new SimSchemaBodyTempImpl());
-//		this.simSchemasByName.put(HeartRate.SCHEMA_ID.getName(), new SimSchemaHeartRateImpl());
-//		this.simSchemasByName.put(PhysicalActivity.SCHEMA_ID.getName(), new SimSchemaHkWorkoutImpl());
-//		// for some reason RespiratoryRate SCHEMA_ID is private
-//		this.simSchemasByName.put( "respiratory-rate" , new SimSchemaRespiratoryRateImpl());
-//		if( )
-	}
+
 
 	public Map<String, SimSchema> getSimSchemasByName() {
 		return simSchemasByName;

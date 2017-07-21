@@ -14,14 +14,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.openmhealth.schema.domain.omh.BloodGlucose;
 import org.openmhealth.schema.domain.omh.DataPoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.utils.CompressionUtils;
-import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
+import com.pzybrick.iote2e.stream.persist.OmhDao;
 import com.pzybrick.iote2e.stream.persist.PooledDataSource;
 
 public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
@@ -103,76 +102,34 @@ public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
 	
 	private void insertEachBlock( List<ByteBuffer> byteBuffers, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
 		final DateTimeFormatter dtfmt = ISODateTimeFormat.dateTime();
-		String tableName = null;
-		String request_uuid = null;
-		PreparedStatement pstmt = null;
+		DataPoint dataPoint = null;
 		try {
-			int cntToCommit = 0;
 			for( ByteBuffer byteBuffer : byteBuffers) {
 				// Decompress the JSON string
 				String rawJson = CompressionUtils.decompress(byteBuffer.array()).toString();
 				// JSON into Datapoint
 				try {
-			        DataPoint dataPoint = objectMapper.readValue(rawJson, DataPoint.class);
-			        logger.info( "OMH Datapoint: {} {}, userId={}, uuid=[]", dataPoint.getHeader().getBodySchemaId().getName(),
+			        dataPoint = objectMapper.readValue(rawJson, DataPoint.class);
+			        logger.debug( "OMH Datapoint: {} {}, userId={}, uuid={}", dataPoint.getHeader().getBodySchemaId().getName(),
 			        		dataPoint.getHeader().getBodySchemaId().getVersion(), dataPoint.getHeader().getUserId(),
 			        		dataPoint.getHeader().getId() );
-					// Body into Schema object
-			        String rawJsonBody = objectMapper.writeValueAsString(dataPoint.getBody());
-					// VO from Schema raw JSON
-					// Insert VO
-			        System.out.println(dataPoint.getBody());
-			        
-			        
-			        BloodGlucose bgAfter = objectMapper.readValue(rawJsonBody, BloodGlucose.class);
+			        OmhDao.insertBatch( con, dataPoint );
 				} catch(Exception e ) {
 					logger.error(e.getMessage(), e);
 					throw e;
 				}
-
-
-				
-				
-				tableName = iote2eRequest.getSourceType().toString();
-				pstmt = getPreparedStatement( tableName, con, cachePrepStmtsByTableName );
-				if( pstmt != null ) {
-					cntToCommit++;
-					request_uuid = iote2eRequest.getRequestUuid().toString();
-					int offset = 1;
-					// First set of values are the same on every table
-					pstmt.setString(offset++, request_uuid );
-					pstmt.setString(offset++, iote2eRequest.getLoginName().toString());
-					pstmt.setString(offset++, iote2eRequest.getSourceName().toString());
-					Timestamp timestamp = new Timestamp(dtfmt.parseDateTime(iote2eRequest.getRequestTimestamp().toString()).getMillis());
-					pstmt.setTimestamp(offset++, timestamp);
-					// Next value(s)/types are specific to the table
-					// For this simple example, assume one value passed as string
-					String value = iote2eRequest.getPairs().values().iterator().next().toString();
-					if( "temperature".compareToIgnoreCase(tableName) == 0) {
-						// temp_f
-						pstmt.setFloat(offset++, new Float(value));
-					}else if( "humidity".compareToIgnoreCase(tableName) == 0) {
-						// pct_humidity
-						pstmt.setFloat(offset++, new Float(value));
-					}else if( "switch".compareToIgnoreCase(tableName) == 0) {
-						// switch_state
-						pstmt.setInt(offset++, Integer.parseInt(value));
-					}else if( "heartbeat".compareToIgnoreCase(tableName) == 0) {
-						// heartbeat_state
-						pstmt.setInt(offset++, Integer.parseInt(value));
-					}
-					pstmt.execute();
-				}
 			}
-			if( cntToCommit > 0 ) con.commit();
+			con.commit();
 		} catch( SQLException sqlEx ) {
 			con.rollback();
 			// Suppress duplicate rows, assume the are the same and were sent over Kafka > 1 time
-			if( iote2eRequests.size() == 1 ) {
+			if( byteBuffers.size() == 1 ) {
 				if( sqlEx.getSQLState() != null && sqlEx.getSQLState().startsWith("23") )
-					logger.debug("Skipping duplicate row, table={}, request_uuid={}", tableName, request_uuid);
+					logger.debug("Skipping duplicate row, schemaName={}, schemaUuid={}", dataPoint.getSchemaId().getName(), dataPoint.getSchemaId().getSchemaId() );
 				else {
-					logger.error("Error on insert for pstmt: {}", pstmt.toString());
+					if( dataPoint != null ) 
+						logger.error("Error on insert for schemaName={}, schemaUuid={}", dataPoint.getSchemaId().getName(), dataPoint.getSchemaId().getSchemaId() );
+					else logger.error("Error on insert: {}", sqlEx.getMessage() );
 					throw sqlEx;
 				}
 			} else {
