@@ -60,12 +60,12 @@ public class OmhSparkConsumer {
     	
     public void process(MasterConfig masterConfig) throws Exception {
     	logger.info(masterConfig.toString());
-    	String sparkAppName = masterConfig.getSparkAppName();
+    	String sparkAppNameOmh = masterConfig.getSparkAppNameOmh();
     	String sparkMaster = masterConfig.getSparkMaster();
     	Integer kafkaConsumerNumThreads = masterConfig.getKafkaConsumerNumThreads();
     	Integer sparkStreamDurationMs = masterConfig.getSparkStreamDurationMs();
-    	String kafkaGroup = masterConfig.getKafkaGroup();
-    	String kafkaTopic = masterConfig.getKafkaTopic();
+    	String kafkaGroupOmh = masterConfig.getKafkaGroupOmh();
+    	String kafkaTopicOmh = masterConfig.getKafkaTopicOmh();
     	String kafkaZookeeperHosts = masterConfig.getKafkaZookeeperHosts();
     	Integer kafkaZookeeperPort = masterConfig.getKafkaZookeeperPort();
     	String kafkaZookeeperBrokerPath = masterConfig.getKafkaZookeeperBrokerPath();
@@ -74,19 +74,19 @@ public class OmhSparkConsumer {
     	String kafkaZookeeperConsumerPath = masterConfig.getKafkaZookeeperConsumerPath();
 
         conf = new SparkConf()
-                .setAppName(sparkAppName);
+                .setAppName(sparkAppNameOmh);
         if( sparkMaster != null && sparkMaster.length() > 0 ) conf.setMaster( sparkMaster );
         ssc = new JavaStreamingContext(conf, new Duration(sparkStreamDurationMs));
 
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put(kafkaTopic, new Integer(kafkaConsumerNumThreads));
+        topicCountMap.put(kafkaTopicOmh, new Integer(kafkaConsumerNumThreads));
         Properties kafkaProps = new Properties();
-        kafkaProps.put("group.id", kafkaGroup);
+        kafkaProps.put("group.id", kafkaGroupOmh);
         // Spark Kafka Consumer https://github.com/dibbhatt/kafka-spark-consumer
         kafkaProps.put("zookeeper.hosts", kafkaZookeeperHosts);
         kafkaProps.put("zookeeper.port", String.valueOf(kafkaZookeeperPort) );
         kafkaProps.put("zookeeper.broker.path", kafkaZookeeperBrokerPath );
-        kafkaProps.put("kafka.topic", kafkaTopic);
+        kafkaProps.put("kafka.topic", kafkaTopicOmh);
         kafkaProps.put("kafka.consumer.id", kafkaConsumerId );
         kafkaProps.put("zookeeper.consumer.connection", kafkaZookeeperConsumerConnection);
         kafkaProps.put("zookeeper.consumer.path", kafkaZookeeperConsumerPath);

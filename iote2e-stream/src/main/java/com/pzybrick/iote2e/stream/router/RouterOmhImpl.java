@@ -25,7 +25,7 @@ public class RouterOmhImpl implements RouterOmh {
         this.batchSize = DEFAULT_BATCH_SIZE;
         this.byteBuffers = new ArrayList<ByteBuffer>();
         if( omhRouterHandler == null ) {
-			Class cls = Class.forName(masterConfig.getRouterIote2eRequestClassName());
+			Class cls = Class.forName(masterConfig.getRouterOmhClassName());
 			OmhRouterHandler handler = (OmhRouterHandler)cls.newInstance();
 			handler.init(masterConfig);
 			RouterOmhImpl.omhRouterHandler = handler;

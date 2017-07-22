@@ -17,6 +17,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.utils.CompressionUtils;
 import com.pzybrick.iote2e.ws.route.RouteOmhByteBuffer;
 
 public class ThreadEntryPointOmh extends Thread {
@@ -103,6 +104,7 @@ public class ThreadEntryPointOmh extends Thread {
 						if( byteBuffer != null ) byteBuffers.add(byteBuffer);
 					}
 					for (ByteBuffer byteBuffer : byteBuffers) {
+						logger.debug(">>> bytebuffer length {}",  byteBuffer.array().length );
 						routeOmhByteBuffer.routeToTarget(byteBuffer);
 					}
 					try {

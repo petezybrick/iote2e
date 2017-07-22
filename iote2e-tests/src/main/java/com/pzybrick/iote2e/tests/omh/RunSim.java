@@ -40,6 +40,7 @@ public class RunSim {
 	private Integer simUsersOffset;
 	private Integer simUsersNumUsers;
 	private String wsEndpoint;
+	private Integer maxLoops;
 	private List<OmhUser> subsetOmhUsers;
 	private ClientSocketOmhHandler clientSocketOmhHandler;
 
@@ -48,9 +49,9 @@ public class RunSim {
 		try {
 			// Args: simUsersFilePath; simUsersOffset; simUsersNumUsers wsEndpoint
 			// Args: "iote2e-shared/data/simOmhUsers.csv" 1 5 "ws://localhost:8092/omh/"
-			ClientSocketOmhHandler clientSocketOmhHandler = new ClientSocketOmhHandler().setUrl(args[3]);
+			ClientSocketOmhHandler clientSocketOmhHandler = new ClientSocketOmhHandler().setUrl(args[4]);
 			RunSim runSim = new RunSim( ).setSimUsersFilePath(args[0]).setSimUsersOffset( Integer.parseInt(args[1]) )
-					.setSimUsersNumUsers( Integer.parseInt(args[2]) ).setWsEndpoint(args[3])
+					.setSimUsersNumUsers( Integer.parseInt(args[2]) ).setMaxLoops(Integer.parseInt(args[3])).setWsEndpoint(args[4])
 					.setClientSocketOmhHandler(clientSocketOmhHandler);					
 			runSim.process();
 		} catch(Exception e ) {
@@ -78,6 +79,7 @@ public class RunSim {
 		clientSocketOmhHandler.connect();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
+        int numLoops = 0;
 		while( true ) {
 			long wakeupAt = System.currentTimeMillis() + SLEEP_INTERVAL_MS;
 			for( OmhUser omhUser : subsetOmhUsers ) {
@@ -104,8 +106,8 @@ public class RunSim {
 			        String rawJson = objectMapper.writeValueAsString(dataPoint);
 					byte[] compressed = CompressionUtils.compress(rawJson.getBytes());
 					clientSocketOmhHandler.session.getBasicRemote().sendBinary(ByteBuffer.wrap(compressed));
-					//System.out.println("length before: " + rawJson.length() + ", after: " + compressed.length);
-			        System.out.println(rawJson);
+					logger.debug("length before: {}, after: {}" + rawJson.length(), compressed.length);
+					logger.debug("rawJson {}", rawJson );
 				}
 			}
 			try {
@@ -113,6 +115,8 @@ public class RunSim {
 				System.out.println(msSleep);
 				Thread.sleep(msSleep);
 			} catch(Exception e ) {}
+			numLoops++;
+			if( maxLoops > 0 && numLoops == maxLoops ) break;
 			
 		}
 	}
@@ -195,6 +199,15 @@ public class RunSim {
 
 	public RunSim setClientSocketOmhHandler(ClientSocketOmhHandler clientSocketOmhHandler) {
 		this.clientSocketOmhHandler = clientSocketOmhHandler;
+		return this;
+	}
+
+	public Integer getMaxLoops() {
+		return maxLoops;
+	}
+
+	public RunSim setMaxLoops(Integer maxLoops) {
+		this.maxLoops = maxLoops;
 		return this;
 	}
 

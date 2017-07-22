@@ -2,18 +2,13 @@ package com.pzybrick.iote2e.stream.omh;
 
 import java.nio.ByteBuffer;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+import org.openmhealth.schema.domain.omh.BloodGlucose;
 import org.openmhealth.schema.domain.omh.DataPoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,11 +42,10 @@ public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
 	
 	public void processRequests( List<ByteBuffer> byteBuffers ) throws Exception {
 		Connection con = null;
-		Map<String,PreparedStatement> cachePrepStmtsByTableName = new HashMap<String,PreparedStatement>();
 		try {
 			if( byteBuffers != null && byteBuffers.size() > 0 ) {
 				con = PooledDataSource.getInstance(masterConfig).getConnection();
-				insertAllBlocks( byteBuffers, con, cachePrepStmtsByTableName );
+				insertAllBlocks( byteBuffers, con );
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
@@ -62,13 +56,6 @@ public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
 				logger.warn(exRoll.getMessage());
 			}
 		} finally {
-			for( PreparedStatement pstmt : cachePrepStmtsByTableName.values() ) {
-				try {
-					pstmt.close();
-				} catch( Exception e ) {
-					logger.warn(e);
-				}
-			}
 			if( con != null ) {
 				try {
 					con.close();
@@ -80,18 +67,18 @@ public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
 	}
 	
 	
-	private void insertAllBlocks( List<ByteBuffer> byteBuffers, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
+	private void insertAllBlocks( List<ByteBuffer> byteBuffers, Connection con ) throws Exception {
 		Integer insertBlockSize = masterConfig.getJdbcInsertBlockSize();
 		for( int i=0 ;; i+=insertBlockSize ) {
 			int startNextBlock = i + insertBlockSize;
 			if( startNextBlock > byteBuffers.size() ) 
 				startNextBlock = byteBuffers.size();
 			try {
-				insertEachBlock(byteBuffers.subList(i, startNextBlock), con, cachePrepStmtsByTableName);
+				insertEachBlock(byteBuffers.subList(i, startNextBlock), con );
 			} catch( Exception e ) {
 				// At least one failure, reprocess one by one
 				for( ByteBuffer byteBuffer : byteBuffers.subList(i, startNextBlock) ) {
-					insertEachBlock( Arrays.asList(byteBuffer), con, cachePrepStmtsByTableName);
+					insertEachBlock( Arrays.asList(byteBuffer), con );
 				}
 				
 			}
@@ -100,20 +87,23 @@ public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
 	}
 	
 	
-	private void insertEachBlock( List<ByteBuffer> byteBuffers, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
-		final DateTimeFormatter dtfmt = ISODateTimeFormat.dateTime();
+	private void insertEachBlock( List<ByteBuffer> byteBuffers, Connection con ) throws Exception {
 		DataPoint dataPoint = null;
 		try {
 			for( ByteBuffer byteBuffer : byteBuffers) {
 				// Decompress the JSON string
-				String rawJson = CompressionUtils.decompress(byteBuffer.array()).toString();
+				String rawJson = new String( CompressionUtils.decompress(byteBuffer.array()) );
 				// JSON into Datapoint
 				try {
 			        dataPoint = objectMapper.readValue(rawJson, DataPoint.class);
 			        logger.debug( "OMH Datapoint: {} {}, userId={}, uuid={}", dataPoint.getHeader().getBodySchemaId().getName(),
 			        		dataPoint.getHeader().getBodySchemaId().getVersion(), dataPoint.getHeader().getUserId(),
 			        		dataPoint.getHeader().getId() );
-			        OmhDao.insertBatch( con, dataPoint );
+			        // TODO: for some reason can get the generic on the Body to work on local tests, but not after streaming through kafka, maybe some jackson version issue
+			        //		the error: java.util.LinkedHashMap cannot be cast to org.openmhealth.schema.domain.omh.BloodGlucose
+			        // For now, this works - turn Body into string, then turn that string into the correct class, seems like a hack that using generics should avoid
+			        String rawBody = objectMapper.writeValueAsString(dataPoint.getBody());
+			        OmhDao.insertBatch( con, dataPoint, objectMapper, rawBody );
 				} catch(Exception e ) {
 					logger.error(e.getMessage(), e);
 					throw e;
@@ -141,34 +131,5 @@ public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
 		}
 	}
 	
-	
-	/*
-	 * A bit of a hack
-	 */
-	private PreparedStatement getPreparedStatement( String tableName, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
-		if( cachePrepStmtsByTableName.containsKey(tableName) ) return cachePrepStmtsByTableName.get(tableName);
-		final String sqlTemperature = "INSERT INTO temperature (request_uuid,login_name,source_name,request_timestamp,degrees_c) VALUES (?,?,?,?,?)";
-		final String sqlHumidity = "INSERT INTO humidity (request_uuid,login_name,source_name,request_timestamp,pct_humidity) VALUES (?,?,?,?,?)";
-		final String sqlSwitch = "INSERT INTO switch (request_uuid,login_name,source_name,request_timestamp,switch_state) VALUES (?,?,?,?,?)";
-		final String sqlHeartbeat = "INSERT INTO heartbeat (request_uuid,login_name,source_name,request_timestamp,heartbeat_state) VALUES (?,?,?,?,?)";
-		
-		String sql = null;
-		if( "temperature".compareToIgnoreCase(tableName) == 0) sql = sqlTemperature;
-		else if( "humidity".compareToIgnoreCase(tableName) == 0) sql = sqlHumidity;
-		else if( "switch".compareToIgnoreCase(tableName) == 0) sql = sqlSwitch;
-		else if( "heartbeat".compareToIgnoreCase(tableName) == 0) sql = sqlHeartbeat;
-		else if( "pill_dispenser".compareToIgnoreCase(tableName) == 0) sql = null;
-		else throw new Exception("Invalid table name: " + tableName);
-
-		PreparedStatement pstmt = null;
-		if( sql != null ) { 
-			logger.debug("Creating pstmt for {}",  tableName);
-			pstmt = con.prepareStatement(sql);
-			cachePrepStmtsByTableName.put(tableName, pstmt );
-		} else logger.debug("NOT Creating pstmt for {}", tableName);
-		
-		return pstmt;
-	}
-
 }
 		

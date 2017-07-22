@@ -82,7 +82,11 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String routerIote2eRequestClassName;
 	@Expose
+	private String routerOmhClassName;
+	@Expose
 	private String sparkAppName;
+	@Expose
+	private String sparkAppNameOmh;
 	@Expose
 	private String sparkMaster;
 	@Expose
@@ -293,17 +297,20 @@ public class MasterConfig implements Serializable {
 				+ igniteCacheName + ", igniteConfigFile=" + igniteConfigFile + ", igniteConfigName=" + igniteConfigName
 				+ ", igniteClientMode=" + igniteClientMode + ", igniteConfigPath=" + igniteConfigPath
 				+ ", forceRefreshActuatorState=" + forceRefreshActuatorState + ", forceResetActuatorState="
-				+ forceResetActuatorState + ", kafkaGroup=" + kafkaGroup + ", jdbcDriverClassName="
-				+ jdbcDriverClassName + ", jdbcInsertBlockSize=" + jdbcInsertBlockSize + ", jdbcLogin=" + jdbcLogin
-				+ ", jdbcPassword=" + jdbcPassword + ", jdbcUrl=" + jdbcUrl + ", kafkaTopic=" + kafkaTopic
-				+ ", kafkaBootstrapServers=" + kafkaBootstrapServers + ", kafkaZookeeperHosts=" + kafkaZookeeperHosts
-				+ ", kafkaZookeeperPort=" + kafkaZookeeperPort + ", kafkaConsumerNumThreads=" + kafkaConsumerNumThreads
-				+ ", kafkaZookeeperBrokerPath=" + kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
+				+ forceResetActuatorState + ", jdbcDriverClassName=" + jdbcDriverClassName + ", jdbcInsertBlockSize="
+				+ jdbcInsertBlockSize + ", jdbcLogin=" + jdbcLogin + ", jdbcPassword=" + jdbcPassword + ", jdbcUrl="
+				+ jdbcUrl + ", kafkaGroup=" + kafkaGroup + ", kafkaGroupOmh=" + kafkaGroupOmh + ", kafkaTopic="
+				+ kafkaTopic + ", kafkaTopicOmh=" + kafkaTopicOmh + ", kafkaBootstrapServers=" + kafkaBootstrapServers
+				+ ", kafkaZookeeperHosts=" + kafkaZookeeperHosts + ", kafkaZookeeperPort=" + kafkaZookeeperPort
+				+ ", kafkaConsumerNumThreads=" + kafkaConsumerNumThreads + ", kafkaZookeeperBrokerPath="
+				+ kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
 				+ ", kafkaZookeeperConsumerConnection=" + kafkaZookeeperConsumerConnection
 				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", routerIote2eRequestClassName="
-				+ routerIote2eRequestClassName + ", sparkAppName=" + sparkAppName + ", sparkMaster=" + sparkMaster
-				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", wsNrtServerListenPort="
-				+ wsNrtServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName + ", wsServerListenPort="
+				+ routerIote2eRequestClassName + ", sparkAppName=" + sparkAppName + ", sparkAppNameOmh="
+				+ sparkAppNameOmh + ", sparkMaster=" + sparkMaster + ", sparkStreamDurationMs=" + sparkStreamDurationMs
+				+ ", wsNrtServerListenPort=" + wsNrtServerListenPort + ", wsOmhServerListenPort="
+				+ wsOmhServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName
+				+ ", wsOmhRouterImplClassName=" + wsOmhRouterImplClassName + ", wsServerListenPort="
 				+ wsServerListenPort + "]";
 	}
 
@@ -538,6 +545,28 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setWsOmhServerListenPort(Integer wsOmhServerListenPort) {
 		this.wsOmhServerListenPort = wsOmhServerListenPort;
+		return this;
+	}
+
+
+	public String getSparkAppNameOmh() {
+		return sparkAppNameOmh;
+	}
+
+
+	public MasterConfig setSparkAppNameOmh(String sparkAppNameOmh) {
+		this.sparkAppNameOmh = sparkAppNameOmh;
+		return this;
+	}
+
+
+	public String getRouterOmhClassName() {
+		return routerOmhClassName;
+	}
+
+
+	public MasterConfig setRouterOmhClassName(String routerOmhClassName) {
+		this.routerOmhClassName = routerOmhClassName;
 		return this;
 	}
 

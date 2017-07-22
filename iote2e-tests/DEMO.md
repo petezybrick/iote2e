@@ -17,6 +17,9 @@ sudo ~/development/gitrepo/iote2e/iote2e-pyclient/scripts/install-pyclient.sh
 open first launcher terminal tab
 cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
 ./docker-env-start.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
+	* Stop docker sessions
+	cd /home/pete/development/gitrepo/iote2e/iote2e-tests/iote2e-shared/scripts
+	./docker-env-stop.sh /home/pete/development/gitrepo/iote2e/iote2e-tests/docker
 
 * Reset actuator state before running any tests
 docker exec -it iote2e-demomgr1 /bin/bash
@@ -107,6 +110,58 @@ insert into pills_dispensed (pills_dispensed_uuid,login_name,source_name,actuato
 	where bp.login_name=subj.login_name 
 	group by subj.login_name;
 
+
+**Open mHealth**
+* Assume: iote2e-ws is already up and running
+* Submit the Spark Batch and Speed jobs
+cd to local spark folder
+cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7
+
+* Batch layer - writes to db
+./bin/spark-submit \
+  --class com.pzybrick.iote2e.stream.spark.OmhSparkConsumer \
+  --deploy-mode cluster \
+  --master spark://localhost:6066 \
+  --executor-memory 8G \
+  --executor-cores 2 \
+  --total-executor-cores 6 \
+  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
+  master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
+
+* Speed layer - runs rules
+./bin/spark-submit \
+  --class com.pzybrick.iote2e.stream.spark.OmhSparkConsumer \
+  --deploy-mode cluster \
+  --master spark://localhost:6066 \
+  --executor-memory 8G \
+  --executor-cores 2 \
+  --total-executor-cores 8 \
+  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
+  master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
+  
+* Optionally run single OMH simulator to verify end to end
+docker exec -it iote2e-demomgr1 /bin/bash
+
+* SQL to query and truncate the tables
+select * from blood_pressure order by insert_ts;
+select * from blood_glucose order by insert_ts;
+select * from body_temperature order by insert_ts;
+select * from heart_rate order by insert_ts;
+select * from hk_workout order by insert_ts;
+select * from respiratory_rate order by insert_ts;
+
+
+truncate blood_pressure;
+truncate blood_glucose;
+truncate body_temperature;
+truncate heart_rate;
+truncate hk_workout;
+truncate respiratory_rate;
+
+* Copy OMH simulator jar to RPi's
+
+
+* Launch simulators
 
 ** Additional steps as necessary **
 Reload the configuration tables in Cassandra, including rules and config files
