@@ -106,7 +106,7 @@ public class RunSim {
 			        String rawJson = objectMapper.writeValueAsString(dataPoint);
 					byte[] compressed = CompressionUtils.compress(rawJson.getBytes());
 					clientSocketOmhHandler.session.getBasicRemote().sendBinary(ByteBuffer.wrap(compressed));
-					logger.debug("length before: {}, after: {}" + rawJson.length(), compressed.length);
+					logger.debug("length before: {}, after: {}", rawJson.length(), compressed.length);
 					logger.debug("rawJson {}", rawJson );
 				}
 			}

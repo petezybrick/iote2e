@@ -18,14 +18,14 @@ import com.pzybrick.iote2e.common.utils.CompressionUtils;
 import com.pzybrick.iote2e.stream.persist.OmhDao;
 import com.pzybrick.iote2e.stream.persist.PooledDataSource;
 
-public class OmhRouterHandlerSparkDbImpl implements OmhRouterHandler {
-	private static final Logger logger = LogManager.getLogger(OmhRouterHandlerSparkDbImpl.class);
+public class OmhRouterHandlerSparkBatchImpl implements OmhRouterHandler {
+	private static final Logger logger = LogManager.getLogger(OmhRouterHandlerSparkBatchImpl.class);
 	private MasterConfig masterConfig;
 	// TODO have a cached pool of objectMapper's
 	private ObjectMapper objectMapper;
 
 
-	public OmhRouterHandlerSparkDbImpl( ) throws Exception {
+	public OmhRouterHandlerSparkBatchImpl( ) throws Exception {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
 	}

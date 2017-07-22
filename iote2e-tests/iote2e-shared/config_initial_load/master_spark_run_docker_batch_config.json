@@ -26,7 +26,7 @@
 	"kafkaZookeeperPort": "2181",
 	"requestSvcClassName": "com.pzybrick.iote2e.stream.ignite.Iote2eSvcIgniteImpl",
 	"routerIote2eRequestClassName": "com.pzybrick.iote2e.stream.request.Iote2eRequestRouterHandlerSparkDbImpl",
-	"routerOmhClassName": "com.pzybrick.iote2e.stream.omh.OmhRouterHandlerSparkDbImpl",
+	"routerOmhClassName": "com.pzybrick.iote2e.stream.omh.OmhRouterHandlerSparkBatchImpl",
 	"ruleDefItemKey": "rule_def_item",
 	"ruleLoginSourceSensorKey": "rule_login_source_sensor",
 	"ruleSvcClassName": "com.pzybrick.iote2e.stream.svc.RuleSvcJsonImpl",
