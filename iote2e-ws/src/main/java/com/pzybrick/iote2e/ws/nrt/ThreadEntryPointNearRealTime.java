@@ -85,26 +85,50 @@ public class ThreadEntryPointNearRealTime extends Thread {
 
 		@Override
 		public void run() {
+			final CharSequence checkTemp = new Utf8("temp");
+			final CharSequence checkBloodPressure = new Utf8("blood-pressure");
+			final CharSequence checkSystolic = new Utf8("SYSTOLIC");
+			final CharSequence checkDiastolic = new Utf8("DIASTOLIC");
 			TemperatureSensorItem temperatureSensorItem = new TemperatureSensorItem();
+			BloodPressureSensorItem bloodPressureSensorItem = new BloodPressureSensorItem();
 			logger.info("ThreadToBrowserNrtMonitor Run");
 			try {
 				while (true) {
+					logger.info("ThreadToBrowserNrtMonitor alive");
 					while (!toClientIote2eResults.isEmpty()) {
 						Iote2eResult iote2eResult = toClientIote2eResults.poll();
 						if( iote2eResult != null ) {
+							logger.debug("sourceType {}", iote2eResult.getSourceType() );
 							ServerSideSocketNearRealTime socket = null;
-							socket = serverSideSocketNearRealTimes.get(Iote2eConstants.IGNITE_KEY_NRT_TEMPERATURE);						
+							socket = serverSideSocketNearRealTimes.get(Iote2eConstants.SOCKET_KEY_NRT);
+							logger.debug("socket {}", socket );
 							if( socket != null ) {
 								try {
-									// Create TemperatureSensorItem from values in Iote2eResult
-									float degreesC = Float.parseFloat(iote2eResult.getPairs().get(new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_VALUE)).toString());
-									temperatureSensorItem
-											.setSourceName(iote2eResult.getSourceName().toString())
-											.setDegreesC(degreesC)
-											.setTimeMillis( Instant.parse( iote2eResult.getRequestTimestamp() ).toEpochMilli());
-									String rawJson = Iote2eUtils.getGsonInstance().toJson(temperatureSensorItem);
-									socket.getSession().getBasicRemote().sendText(rawJson);
-								} catch (Exception e) {
+									if( checkTemp.equals(iote2eResult.getSourceType())) {
+										logger.debug("processing temperature");
+										// Create TemperatureSensorItem from values in Iote2eResult
+										float degreesC = Float.parseFloat(iote2eResult.getPairs().get(new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_VALUE)).toString());
+										temperatureSensorItem
+												.setSourceName(iote2eResult.getSourceName().toString())
+												.setDegreesC(degreesC)
+												.setTimeMillis( Instant.parse( iote2eResult.getRequestTimestamp() ).toEpochMilli());
+										String rawJson = Iote2eUtils.getGsonInstance().toJson(temperatureSensorItem);
+										socket.getSession().getBasicRemote().sendText(rawJson);
+									} else if( checkBloodPressure.equals(iote2eResult.getSourceType())) {
+										logger.debug("processing blood pressure systolic: {}", iote2eResult.getPairs().get(checkSystolic));
+										int systolic = Integer.parseInt(iote2eResult.getPairs().get(checkSystolic).toString());
+										int diastolic = Integer.parseInt(iote2eResult.getPairs().get(checkDiastolic).toString());
+										logger.debug("systolic {}, diastolic {}", systolic, diastolic);
+										bloodPressureSensorItem
+												.setSourceName(iote2eResult.getSourceName().toString())
+												.setTimeMillis( Instant.parse( iote2eResult.getRequestTimestamp() ).toEpochMilli())
+												.setSystolic(systolic)
+												.setDiastolic(diastolic);
+										String rawJson = Iote2eUtils.getGsonInstance().toJson(bloodPressureSensorItem);
+										logger.debug("blood pressure raw json: {}", rawJson );
+										socket.getSession().getBasicRemote().sendText(rawJson);
+									} else logger.warn("No match on sourceType: {} ", iote2eResult.getSourceType());
+								} catch (Throwable e) {
 									logger.error("Exception sending text message",e);
 									break;
 								} finally {

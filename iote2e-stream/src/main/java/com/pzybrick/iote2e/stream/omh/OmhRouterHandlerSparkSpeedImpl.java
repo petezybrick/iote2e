@@ -1,28 +1,40 @@
 package com.pzybrick.iote2e.stream.omh;
 
 import java.nio.ByteBuffer;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
+import javax.cache.CacheException;
+
+import org.apache.avro.util.Utf8;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openmhealth.schema.domain.omh.BloodGlucose;
+import org.openmhealth.schema.domain.omh.BloodPressure;
 import org.openmhealth.schema.domain.omh.DataPoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.ignite.IgniteGridConnection;
 import com.pzybrick.iote2e.common.utils.CompressionUtils;
-import com.pzybrick.iote2e.stream.persist.OmhDao;
-import com.pzybrick.iote2e.stream.persist.PooledDataSource;
+import com.pzybrick.iote2e.common.utils.Iote2eConstants;
+import com.pzybrick.iote2e.common.utils.Iote2eUtils;
+import com.pzybrick.iote2e.schema.avro.Iote2eResult;
+import com.pzybrick.iote2e.schema.avro.OPERATION;
+import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 	private static final Logger logger = LogManager.getLogger(OmhRouterHandlerSparkSpeedImpl.class);
 	private MasterConfig masterConfig;
+	private IgniteGridConnection igniteGridConnection;
+	private Iote2eResultReuseItem iote2eResultReuseItem;
 	// TODO have a cached pool of objectMapper's
 	private ObjectMapper objectMapper;
+	private Set<String> nrtFilterBloodPressure = new HashSet<String>();
 
 
 	public OmhRouterHandlerSparkSpeedImpl( ) throws Exception {
@@ -34,6 +46,12 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 	public void init(MasterConfig masterConfig) throws Exception {
 		try {
 			this.masterConfig = masterConfig;
+			this.igniteGridConnection = new IgniteGridConnection().connect(masterConfig);
+			this.iote2eResultReuseItem = new Iote2eResultReuseItem();
+			// TODO: dynamically update this list based on inbound request(s)
+			// For now, one user and one schema
+			this.nrtFilterBloodPressure = new HashSet<String>();
+			this.nrtFilterBloodPressure.add( "nicholas.chapman@gmail.com|blood-pressure" );
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);
 			throw e;
@@ -53,11 +71,9 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 				        logger.debug( "OMH Datapoint: {} {}, userId={}, uuid={}", dataPoint.getHeader().getBodySchemaId().getName(),
 				        		dataPoint.getHeader().getBodySchemaId().getVersion(), dataPoint.getHeader().getUserId(),
 				        		dataPoint.getHeader().getId() );
-				        // TODO: for some reason can get the generic on the Body to work on local tests, but not after streaming through kafka, maybe some jackson version issue
-				        //		the error: java.util.LinkedHashMap cannot be cast to org.openmhealth.schema.domain.omh.BloodGlucose
-				        // For now, this works - turn Body into string, then turn that string into the correct class, seems like a hack that using generics should avoid
-//				        String rawBody = objectMapper.writeValueAsString(dataPoint.getBody());
-//				        OmhDao.insertBatch( con, dataPoint, objectMapper, rawBody );
+				        String nrtKey = dataPoint.getHeader().getUserId() + "|" + dataPoint.getHeader().getBodySchemaId().getName();
+				        if( nrtFilterBloodPressure.contains(nrtKey)) 
+				        	nearRealTimeBloodPressure( dataPoint );
 					} catch(Exception e ) {
 						logger.error(e.getMessage(), e);
 						throw e;
@@ -71,5 +87,57 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 		}
 	}
 	
+	
+	
+	private void nearRealTimeBloodPressure( DataPoint dataPoint ) throws Exception {
+        // TODO: for some reason can get the generic on the Body to work on local tests, but not after streaming through kafka, maybe some jackson version issue
+        //		the error: java.util.LinkedHashMap cannot be cast to org.openmhealth.schema.domain.omh.BloodGlucose
+        // For now, this works - turn Body into string, then turn that string into the correct class, seems like a hack that using generics should avoid
+        String rawBody = objectMapper.writeValueAsString(dataPoint.getBody());
+		BloodPressure bloodPressure = objectMapper.readValue(rawBody, BloodPressure.class);
+		CharSequence systolic = new Utf8( String.valueOf(bloodPressure.getSystolicBloodPressure().getValue().intValue() ));
+		CharSequence diastolic = new Utf8( String.valueOf(bloodPressure.getDiastolicBloodPressure().getValue().intValue() ));
+	
+		Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
+		pairs.put( new Utf8("SYSTOLIC"), systolic );
+		pairs.put( new Utf8("DIASTOLIC"), diastolic );
+
+		Iote2eResult iote2eResult = Iote2eResult.newBuilder()
+				.setPairs(pairs)
+				//.setMetadata(ruleEvalResult.getMetadata())
+				.setLoginName("$omh$")
+				.setSourceName( dataPoint.getHeader().getUserId())
+				.setSourceType("blood-pressure")
+				.setRequestUuid( new Utf8(UUID.randomUUID().toString()))
+				.setRequestTimestamp( new Utf8(Iote2eUtils.getDateNowUtc8601()) )
+				.setOperation(OPERATION.SENSORS_VALUES)
+				.setResultCode(0)
+				.setResultTimestamp( new Utf8(Iote2eUtils.getDateNowUtc8601()))
+				.setResultUuid( new Utf8(UUID.randomUUID().toString()))
+				.build();
+		
+		boolean isSuccess = false;
+		Exception lastException = null;
+		long timeoutAt = System.currentTimeMillis() + (15*1000L);
+		while( System.currentTimeMillis() < timeoutAt ) {
+			try {
+				igniteGridConnection.getCache().put(Iote2eConstants.IGNITE_KEY_NRT_OMH, iote2eResultReuseItem.toByteArray(iote2eResult));
+				isSuccess = true;
+				logger.debug("cache.put successful, cache name={}, pk={}, iote2eResult={}", igniteGridConnection.getCache().getName(), Iote2eConstants.IGNITE_KEY_NRT_OMH, iote2eResult.toString() );
+				break;
+			} catch( CacheException cacheException ) {
+				lastException = cacheException;
+				logger.warn("cache.put failed with CacheException, will retry, cntRetry={}"  );
+				try { Thread.sleep(1000L); } catch(Exception e ) {}
+			} catch( Exception e ) {
+				logger.error(e.getMessage(),e);
+			}
+		}
+		if( !isSuccess ) {
+			logger.error("Ignite cache write failure, pk={}, iote2eResult={}, lastException: {}", Iote2eConstants.IGNITE_KEY_NRT_OMH, iote2eResult.toString(), lastException.getLocalizedMessage(), lastException);
+		}
+		
+	}
+
 }
 		

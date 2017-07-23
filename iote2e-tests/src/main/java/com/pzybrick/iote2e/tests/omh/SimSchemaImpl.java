@@ -41,6 +41,7 @@ import org.openmhealth.schema.domain.omh.TypedUnitValue;
 
 public class SimSchemaImpl {
 	private static Random random = new Random();
+	private static final int MIN_PCT_EXCEED = 2;
 	
 	public static class SimSchemaBloodGlucoseImpl implements SimSchema {
 		@Override
@@ -65,7 +66,7 @@ public class SimSchemaImpl {
 			} else value = mid;
 			// 5% of the time use exceeded value
 			String userNotes = "Feeling fine";
-			if( random.nextInt(20) == 0 ) {
+			if( random.nextInt(100) <= MIN_PCT_EXCEED ) {
 				value = exceed;
 				userNotes = "light headed";
 			}
@@ -110,7 +111,7 @@ public class SimSchemaImpl {
 			} else valueSys = midSys;
 			// 5% of the time use exceeded value
 			String userNotes = "Feeling fine";
-			if( random.nextInt(20) == 0 ) {
+			if( random.nextInt(100) <= MIN_PCT_EXCEED ) {
 				valueSys = exceedSys;
 				userNotes = "dizzy";
 			}
@@ -130,7 +131,7 @@ public class SimSchemaImpl {
 				else if( valueDia > maxDia ) valueDia = maxDia;
 			} else valueDia = midDia;
 			// 5% of the time use exceeded value
-			if( random.nextInt(20) == 0 ) {
+			if( random.nextInt(100) <= MIN_PCT_EXCEED ) {
 				valueDia = exceedDia;
 				userNotes = "dizzy";
 			}
@@ -173,7 +174,7 @@ public class SimSchemaImpl {
 			} else value = mid;
 			// 5% of the time use exceeded value
 			String userNotes = "Feeling fine";
-			if( random.nextInt(20) == 0 ) {
+			if( random.nextInt(100) <= MIN_PCT_EXCEED ) {
 				value = exceed;
 				userNotes = "dizzy";
 			}
@@ -213,7 +214,7 @@ public class SimSchemaImpl {
 			} else value = mid;
 			// 5% of the time use exceeded value
 			String userNotes = "Feeling fine";
-			if( random.nextInt(20) == 0 ) {
+			if( random.nextInt(100) <= MIN_PCT_EXCEED ) {
 				value = exceed;
 				userNotes = "dizzy";
 			}
@@ -254,7 +255,7 @@ public class SimSchemaImpl {
 				else if( valueDistance > maxDistance ) valueDistance = maxDistance;
 			} else valueDistance = midDistance;
 			// 5% of the time use exceeded value
-			if( random.nextInt(20) == 0 ) {
+			if( random.nextInt(100) <= MIN_PCT_EXCEED ) {
 				valueDistance = exceedDistance;
 			}
 			
@@ -274,7 +275,7 @@ public class SimSchemaImpl {
 			} else valueKcals = midKcals;
 			// 5% of the time use exceeded value
 			String userNotes = "Feeling fine";
-			if( random.nextInt(20) == 0 ) {
+			if( random.nextInt(100) <= MIN_PCT_EXCEED ) {
 				valueKcals = exceedKcals;
 				userNotes = "dizzy";
 			}
@@ -318,7 +319,7 @@ public class SimSchemaImpl {
 			} else value = mid;
 			// 5% of the time use exceeded value
 			String userNotes = "Feeling fine";
-			if( random.nextInt(20) == 0 ) {
+			if( random.nextInt(100) <= MIN_PCT_EXCEED ) {
 				value = exceed;
 				userNotes = "short of breath";
 			}

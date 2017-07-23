@@ -35,7 +35,8 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 public class ServerSideSocketNearRealTime {
 	private static final Logger logger = LogManager.getLogger(ServerSideSocketNearRealTime.class);
 	private Session session;
-	private ThreadIgniteSubscribe threadIgniteSubscribe;
+	private ThreadIgniteSubscribe threadIgniteSubscribeTemperature;
+	private ThreadIgniteSubscribe threadIgniteSubscribeOmh;
 
 	public Session getSession() {
 		return session;
@@ -52,8 +53,10 @@ public class ServerSideSocketNearRealTime {
 	@OnOpen
 	public void onWebSocketConnect(Session session) throws Exception {
 		this.session = session;
-		ThreadEntryPointNearRealTime.serverSideSocketNearRealTimes.put(Iote2eConstants.IGNITE_KEY_NRT_TEMPERATURE, this);
-		threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( ThreadEntryPointNearRealTime.masterConfig, Iote2eConstants.IGNITE_KEY_NRT_TEMPERATURE,
+		ThreadEntryPointNearRealTime.serverSideSocketNearRealTimes.put(Iote2eConstants.SOCKET_KEY_NRT, this);
+		threadIgniteSubscribeTemperature = ThreadIgniteSubscribe.startThreadSubscribe( ThreadEntryPointNearRealTime.masterConfig, Iote2eConstants.IGNITE_KEY_NRT_TEMPERATURE,
+				ThreadEntryPointNearRealTime.toClientIote2eResults, (Thread)null );
+		threadIgniteSubscribeOmh = ThreadIgniteSubscribe.startThreadSubscribe( ThreadEntryPointNearRealTime.masterConfig, Iote2eConstants.IGNITE_KEY_NRT_OMH,
 				ThreadEntryPointNearRealTime.toClientIote2eResults, (Thread)null );
 		//new ThreadPumpTestData().start();
 		logger.info("Socket Connected: " + session.getId());
@@ -71,14 +74,14 @@ public class ServerSideSocketNearRealTime {
 
 	@OnClose
 	public void onWebSocketClose(CloseReason reason) {
-		boolean isRemove = ThreadEntryPointNearRealTime.serverSideSocketNearRealTimes.remove(Iote2eConstants.IGNITE_KEY_NRT_TEMPERATURE, this);
+		boolean isRemove = ThreadEntryPointNearRealTime.serverSideSocketNearRealTimes.remove(Iote2eConstants.SOCKET_KEY_NRT, this);
 		logger.info("Socket Closed: " + reason + ", isRemove=" + isRemove);
 		shutdownThreadIgniteSubscribe();
 	}
 
 	@OnError
 	public void onWebSocketError(Throwable cause) {
-		boolean isRemove = ThreadEntryPointNearRealTime.serverSideSocketNearRealTimes.remove(Iote2eConstants.IGNITE_KEY_NRT_TEMPERATURE, this);
+		boolean isRemove = ThreadEntryPointNearRealTime.serverSideSocketNearRealTimes.remove(Iote2eConstants.SOCKET_KEY_NRT, this);
 		logger.info("Socket Error: " + cause.getMessage() + ", isRemove=" + isRemove);
 		shutdownThreadIgniteSubscribe();
 	}
@@ -86,8 +89,10 @@ public class ServerSideSocketNearRealTime {
 	private void shutdownThreadIgniteSubscribe() {
 		logger.debug("Shutting down threadIgniteSubscribe");
 		try {
-			threadIgniteSubscribe.shutdown();
-			threadIgniteSubscribe.join(5000);
+			threadIgniteSubscribeTemperature.shutdown();
+			threadIgniteSubscribeOmh.shutdown();
+			threadIgniteSubscribeTemperature.join(5000);
+			threadIgniteSubscribeOmh.join(5000);
 		} catch( InterruptedException e ) {
 		} catch( Exception e ) {
 			logger.error(e.getMessage());
