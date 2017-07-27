@@ -1,6 +1,12 @@
 package com.pzybrick.iote2e.stream.omh;
 
 import java.nio.ByteBuffer;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +32,7 @@ import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
+import com.pzybrick.iote2e.stream.email.Email;
 
 public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 	private static final Logger logger = LogManager.getLogger(OmhRouterHandlerSparkSpeedImpl.class);
@@ -72,8 +79,16 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 				        		dataPoint.getHeader().getBodySchemaId().getVersion(), dataPoint.getHeader().getUserId(),
 				        		dataPoint.getHeader().getId() );
 				        String nrtKey = dataPoint.getHeader().getUserId() + "|" + dataPoint.getHeader().getBodySchemaId().getName();
-				        if( nrtFilterBloodPressure.contains(nrtKey)) 
-				        	nearRealTimeBloodPressure( dataPoint );
+				        if( nrtFilterBloodPressure.contains(nrtKey)) {
+				            // TODO: for some reason can get the generic on the Body to work on local tests, but not after streaming through kafka, maybe some jackson version issue
+				            //		the error: java.util.LinkedHashMap cannot be cast to org.openmhealth.schema.domain.omh.BloodGlucose
+				            // For now, this works - turn Body into string, then turn that string into the correct class, seems like a hack that using generics should avoid
+				            String rawBody = objectMapper.writeValueAsString(dataPoint.getBody());
+				    		BloodPressure bloodPressure = objectMapper.readValue(rawBody, BloodPressure.class);
+
+				        	nearRealTimeBloodPressure( dataPoint, bloodPressure );
+				        	checkBloodPressureExceeded( dataPoint, bloodPressure );
+				        }
 					} catch(Exception e ) {
 						logger.error(e.getMessage(), e);
 						throw e;
@@ -88,13 +103,27 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 	}
 	
 	
+	/*
+	 * TODO: need a true rule processor here, this is just a simple stub check BP Diastolic exceeded
+	 */
+	private void checkBloodPressureExceeded( DataPoint dataPoint, BloodPressure bloodPressure ) throws Exception {
+		// TODO: get patient's name from login/email address, doctor name and email, and timezone from database
+        //String fmtNow = Instant.now().atZone(ZoneId.of("America/New_York")).toString();
+        //final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss ZZZ");
+        //String fmtNow = now.format(formatter);
+		int systolic = bloodPressure.getSystolicBloodPressure().getValue().intValue();
+		int diastolic = bloodPressure.getDiastolicBloodPressure().getValue().intValue();
+		if( diastolic > 100 ) {
+			String fmtNow = DateTimeFormatter.RFC_1123_DATE_TIME.format(dataPoint.getHeader().getCreationDateTime());
+	        //String fmtNow = DateTimeFormatter.RFC_1123_DATE_TIME.format(Instant.now());
+			String summary = String.format("%s had a Blood Pressure of %d/%d on %s", dataPoint.getHeader().getUserId(), systolic, diastolic, fmtNow );
+			Email.sendEmail("your.personalized.medicine","iote2e2017$", "your.personalized.medicine@gmail.com", "drzybrick@gmail.com", "Dr. Zybrick", summary );
+			//Email.sendEmail("your.personalized.medicine","iote2e2017$", "your.personalized.medicine@gmail.com", "drzybrick@gmail.com", "Dr. Zybrick", "Doe, John had a Blood Pressure of 120/80 at 2017-07-25 12:34:59" );
+		}
+	}
 	
-	private void nearRealTimeBloodPressure( DataPoint dataPoint ) throws Exception {
-        // TODO: for some reason can get the generic on the Body to work on local tests, but not after streaming through kafka, maybe some jackson version issue
-        //		the error: java.util.LinkedHashMap cannot be cast to org.openmhealth.schema.domain.omh.BloodGlucose
-        // For now, this works - turn Body into string, then turn that string into the correct class, seems like a hack that using generics should avoid
-        String rawBody = objectMapper.writeValueAsString(dataPoint.getBody());
-		BloodPressure bloodPressure = objectMapper.readValue(rawBody, BloodPressure.class);
+	
+	private void nearRealTimeBloodPressure( DataPoint dataPoint, BloodPressure bloodPressure ) throws Exception {
 		CharSequence systolic = new Utf8( String.valueOf(bloodPressure.getSystolicBloodPressure().getValue().intValue() ));
 		CharSequence diastolic = new Utf8( String.valueOf(bloodPressure.getDiastolicBloodPressure().getValue().intValue() ));
 	
