@@ -117,8 +117,7 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 			String fmtNow = DateTimeFormatter.RFC_1123_DATE_TIME.format(dataPoint.getHeader().getCreationDateTime());
 	        //String fmtNow = DateTimeFormatter.RFC_1123_DATE_TIME.format(Instant.now());
 			String summary = String.format("%s had a Blood Pressure of %d/%d on %s", dataPoint.getHeader().getUserId(), systolic, diastolic, fmtNow );
-			Email.sendEmail("your.personalized.medicine","iote2e2017$", "your.personalized.medicine@gmail.com", "drzybrick@gmail.com", "Dr. Zybrick", summary );
-			//Email.sendEmail("your.personalized.medicine","iote2e2017$", "your.personalized.medicine@gmail.com", "drzybrick@gmail.com", "Dr. Zybrick", "Doe, John had a Blood Pressure of 120/80 at 2017-07-25 12:34:59" );
+			Email.sendEmail( masterConfig.getSmtpLogin(), masterConfig.getSmtpPassword(), masterConfig.getSmtpEmail(), "drzybrick@gmail.com", "Dr. Zybrick", summary );
 		}
 	}
 	

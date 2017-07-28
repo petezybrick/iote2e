@@ -90,6 +90,12 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String sparkMaster;
 	@Expose
+	private String smtpEmail;
+	@Expose
+	private String smtpLogin;
+	@Expose
+	private String smtpPassword;
+	@Expose
 	private Integer sparkStreamDurationMs;
 	@Expose
 	private Integer wsNrtServerListenPort;
@@ -306,12 +312,13 @@ public class MasterConfig implements Serializable {
 				+ kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
 				+ ", kafkaZookeeperConsumerConnection=" + kafkaZookeeperConsumerConnection
 				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", routerIote2eRequestClassName="
-				+ routerIote2eRequestClassName + ", sparkAppName=" + sparkAppName + ", sparkAppNameOmh="
-				+ sparkAppNameOmh + ", sparkMaster=" + sparkMaster + ", sparkStreamDurationMs=" + sparkStreamDurationMs
-				+ ", wsNrtServerListenPort=" + wsNrtServerListenPort + ", wsOmhServerListenPort="
-				+ wsOmhServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName
-				+ ", wsOmhRouterImplClassName=" + wsOmhRouterImplClassName + ", wsServerListenPort="
-				+ wsServerListenPort + "]";
+				+ routerIote2eRequestClassName + ", routerOmhClassName=" + routerOmhClassName + ", sparkAppName="
+				+ sparkAppName + ", sparkAppNameOmh=" + sparkAppNameOmh + ", sparkMaster=" + sparkMaster
+				+ ", smtpEmail=" + smtpEmail + ", smtpLogin=" + smtpLogin + ", smtpPassword=" + smtpPassword
+				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", wsNrtServerListenPort="
+				+ wsNrtServerListenPort + ", wsOmhServerListenPort=" + wsOmhServerListenPort
+				+ ", wsRouterImplClassName=" + wsRouterImplClassName + ", wsOmhRouterImplClassName="
+				+ wsOmhRouterImplClassName + ", wsServerListenPort=" + wsServerListenPort + "]";
 	}
 
 	public String getKafkaZookeeperBrokerPath() {
@@ -567,6 +574,39 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setRouterOmhClassName(String routerOmhClassName) {
 		this.routerOmhClassName = routerOmhClassName;
+		return this;
+	}
+
+
+	public String getSmtpEmail() {
+		return smtpEmail;
+	}
+
+
+	public String getSmtpLogin() {
+		return smtpLogin;
+	}
+
+
+	public String getSmtpPassword() {
+		return smtpPassword;
+	}
+
+
+	public MasterConfig setSmtpEmail(String smtpEmail) {
+		this.smtpEmail = smtpEmail;
+		return this;
+	}
+
+
+	public MasterConfig setSmtpLogin(String smtpLogin) {
+		this.smtpLogin = smtpLogin;
+		return this;
+	}
+
+
+	public MasterConfig setSmtpPassword(String smtpPassword) {
+		this.smtpPassword = smtpPassword;
 		return this;
 	}
 
