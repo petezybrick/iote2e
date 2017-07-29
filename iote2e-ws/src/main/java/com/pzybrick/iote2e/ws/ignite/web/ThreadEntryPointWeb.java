@@ -42,8 +42,8 @@ public class ThreadEntryPointWeb extends Thread {
 			Server server = new Server(masterConfig.getWebServerPort());
 
 			WebAppContext context = new WebAppContext();
-			context.setDescriptor("../iote2e-ws/WebContent/WEB-INF/web.xml");
-			context.setResourceBase("../iote2e-ws/WebContent");
+			context.setDescriptor( masterConfig.getWebServerContentPath() + "/WEB-INF/web.xml" );
+			context.setResourceBase( masterConfig.getWebServerContentPath() );
 			context.setContextPath( masterConfig.getWebServerContextPath() );
 			context.setParentLoaderPriority(true);
 			server.setHandler(context);
