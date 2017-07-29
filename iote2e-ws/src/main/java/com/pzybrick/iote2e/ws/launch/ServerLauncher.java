@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.ws.ignite.web.ThreadEntryPointWeb;
 import com.pzybrick.iote2e.ws.nrt.ThreadEntryPointNearRealTime;
 import com.pzybrick.iote2e.ws.omh.ThreadEntryPointOmh;
 import com.pzybrick.iote2e.ws.socket.ThreadEntryPointIote2eRequest;
@@ -19,14 +20,17 @@ public class ServerLauncher {
 			ThreadEntryPointIote2eRequest threadEntryPointIote2eRequest = new ThreadEntryPointIote2eRequest(masterConfig);
 			ThreadEntryPointNearRealTime threadEntryPointNearRealTime = new ThreadEntryPointNearRealTime(masterConfig);
 			ThreadEntryPointOmh threadEntryPointOmh = new ThreadEntryPointOmh(masterConfig);
+			ThreadEntryPointWeb threadEntryPointWeb = new ThreadEntryPointWeb(masterConfig);
 
 			threadEntryPointIote2eRequest.start();
 			threadEntryPointNearRealTime.start();
 			threadEntryPointOmh.start();
+			threadEntryPointWeb.start();
 			
 			threadEntryPointIote2eRequest.join();
 			threadEntryPointNearRealTime.join();
 			threadEntryPointOmh.join();
+			threadEntryPointWeb.join();
 			
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);

@@ -12,16 +12,19 @@ services:
       default:
         ipv4_address: 192.168.21.16
     expose:
+      - 8082
       - 8090
       - 8091
       - 8092
     ports:
+      - 8082:8082
       - 8090:8090
       - 8091:8091
       - 8092:8092
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
+      - ./WebContent:/tmp/WebContent
 
   
 networks:

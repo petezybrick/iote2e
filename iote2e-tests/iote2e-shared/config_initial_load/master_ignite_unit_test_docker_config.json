@@ -20,5 +20,8 @@
 	"ruleSvcClassName": "com.pzybrick.iote2e.stream.svc.RuleSvcJsonImpl",
 	"smtpEmail": "your.personalized.medicine@gmail.com",
 	"smtpLogin": "your.personalized.medicine",
-	"smtpPassword": "iote2e2017$"
+	"smtpPassword": "iote2e2017$",
+	"webServerPort": "8082",
+	"webServerContentPath": "/tmp/WebContent",
+	"webServerContextPath": "/iote2e-web/"
 }

@@ -98,6 +98,12 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private Integer sparkStreamDurationMs;
 	@Expose
+	private Integer webServerPort;
+	@Expose
+	private String webServerContentPath;
+	@Expose
+	private String webServerContextPath;
+	@Expose
 	private Integer wsNrtServerListenPort;
 	@Expose
 	private Integer wsOmhServerListenPort;
@@ -315,10 +321,12 @@ public class MasterConfig implements Serializable {
 				+ routerIote2eRequestClassName + ", routerOmhClassName=" + routerOmhClassName + ", sparkAppName="
 				+ sparkAppName + ", sparkAppNameOmh=" + sparkAppNameOmh + ", sparkMaster=" + sparkMaster
 				+ ", smtpEmail=" + smtpEmail + ", smtpLogin=" + smtpLogin + ", smtpPassword=" + smtpPassword
-				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", wsNrtServerListenPort="
-				+ wsNrtServerListenPort + ", wsOmhServerListenPort=" + wsOmhServerListenPort
-				+ ", wsRouterImplClassName=" + wsRouterImplClassName + ", wsOmhRouterImplClassName="
-				+ wsOmhRouterImplClassName + ", wsServerListenPort=" + wsServerListenPort + "]";
+				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", webServerPort=" + webServerPort
+				+ ", webServerContentPath=" + webServerContentPath + ", webServerContextPath=" + webServerContextPath
+				+ ", wsNrtServerListenPort=" + wsNrtServerListenPort + ", wsOmhServerListenPort="
+				+ wsOmhServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName
+				+ ", wsOmhRouterImplClassName=" + wsOmhRouterImplClassName + ", wsServerListenPort="
+				+ wsServerListenPort + "]";
 	}
 
 	public String getKafkaZookeeperBrokerPath() {
@@ -607,6 +615,44 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setSmtpPassword(String smtpPassword) {
 		this.smtpPassword = smtpPassword;
+		return this;
+	}
+
+
+	public Integer getWebServerPort() {
+		return webServerPort;
+	}
+
+
+	public String getWebServerContextPath() {
+		return webServerContextPath;
+	}
+
+
+	public MasterConfig setWebServerPort(Integer webServerPort) {
+		this.webServerPort = webServerPort;
+		return this;
+	}
+
+
+	public MasterConfig setWebServerContextPath(String webServerContextPath) {
+		this.webServerContextPath = webServerContextPath;
+		return this;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+
+	public String getWebServerContentPath() {
+		return webServerContentPath;
+	}
+
+
+	public MasterConfig setWebServerContentPath(String webServerContentPath) {
+		this.webServerContentPath = webServerContentPath;
 		return this;
 	}
 
