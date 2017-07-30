@@ -1,11 +1,10 @@
 package com.pzybrick.iote2e.tests.persist;
 
-import static org.junit.Assert.fail;
-
 import java.sql.Timestamp;
 import java.util.UUID;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -15,8 +14,6 @@ import org.junit.runners.MethodSorters;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.stream.persist.RespiratoryRateDao;
 import com.pzybrick.iote2e.stream.persist.RespiratoryRateVo;
-
-import org.junit.Assert;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestRespiratoryRate {

@@ -24,7 +24,7 @@ services:
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared
-      - ./WebContent:/tmp/WebContent
+      - ../../../iote2e-ws/WebContent:/tmp/WebContent
 
   
 networks:

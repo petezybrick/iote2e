@@ -47,7 +47,9 @@ public class ThreadEntryPointWeb extends Thread {
 			context.setContextPath( masterConfig.getWebServerContextPath() );
 			context.setParentLoaderPriority(true);
 			server.setHandler(context);
+			logger.info("Starting");
 			server.start();
+			logger.info("Started");
 			server.join();
 		} catch( Exception e ) {
 			logger.error(e.getMessage(), e);
