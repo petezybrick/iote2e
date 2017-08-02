@@ -4,6 +4,9 @@ div, span, p, td {
 #content {
 	width: 1200px;
 }
+#content_embed {
+	width: 1000px;
+}
 #chart {
 	display: inline-block;
 }
@@ -41,6 +44,12 @@ div, span, p, td {
 #side_panel {
 	padding: 0 20px 20px 0;
 	width: 240px;
+	display: inline-block;
+	vertical-align: top;
+}
+#side_panel_thin {
+	padding: 0 20px 20px 0;
+	width: 170px;
 	display: inline-block;
 	vertical-align: top;
 }
@@ -133,6 +142,12 @@ label.disabled {
 	vertical-align: top;
 	display: inline-block;
 	width: 45%;
+}
+#interpolation_form_wide,
+#offset_form {
+	vertical-align: top;
+	display: inline-block;
+	width: 100%;
 }
 #interpolation_form label,
 #offset_form label {

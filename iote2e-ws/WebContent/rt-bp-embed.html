@@ -1,0 +1,281 @@
+
+<!doctype html>
+<head>
+	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+	<link type="text/css" rel="stylesheet" href="rickshaw-master/src/css/graph.css">
+	<link type="text/css" rel="stylesheet" href="rickshaw-master/src/css/detail.css">
+	<link type="text/css" rel="stylesheet" href="rickshaw-master/src/css/legend.css">
+	<link type="text/css" rel="stylesheet" href="css/extensions.css?v=2">
+
+	<script src="d3/d3.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script>
+		jQuery.noConflict();
+	</script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
+
+	<script src="rickshaw-master/src/js/Rickshaw.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Class.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Compat.ClassList.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Renderer.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Renderer.Area.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Renderer.Line.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Renderer.Bar.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Renderer.ScatterPlot.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Renderer.Stack.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.RangeSlider.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.RangeSlider.Preview.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.HoverDetail.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Annotate.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Legend.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Axis.Time.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Behavior.Series.Toggle.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Behavior.Series.Order.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Behavior.Series.Highlight.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Smoother.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Fixtures.Time.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Fixtures.Time.Local.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Fixtures.Number.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Fixtures.RandomData.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Fixtures.Color.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Color.Palette.js"></script>
+	<script src="rickshaw-master/src/js/Rickshaw.Graph.Axis.Y.js"></script>
+
+	<script src="js/extensions.js"></script>
+</head>
+<body>
+
+<div id="content_embed">
+
+	<h1>Blood Pressure - Real Time Sensor Data</h1>
+	<form id="side_panel_thin">
+		<input type="hidden" name="renderer" value="line">
+		<input type="hidden" name="offset" value="value">
+		<section><div id="legend"></div></section>
+		<section>
+			<div id="#interpolation_form">
+					<input type="radio" name="interpolation" id="linear" value="linear" checked>
+					<span style="font-size:14px">Linear</span>
+					<input type="radio" name="interpolation" id="step" value="step-after">
+					<span style="font-size:14px">Step</span>				
+			</div>
+		</section>
+		<section>
+			<div id="connectToServer">
+				<input type="button" value="Connect To Server" onclick="connectToServer();">
+			</div>
+		</section>
+		<section>
+			<div id="resetData">
+				<input type="button" value="Reset Series Data" onclick="resetSeriesData();">
+			</div>
+		</section>
+		<section></section>
+	</form>
+
+	<div id="chart_container">
+		<div id="chart"></div>
+		<div id="timeline"></div>
+		<div id="preview"></div>
+	</div>
+
+</div>
+
+<script>
+
+// set up our data series with 150 random data points
+
+var seriesData = [ [], [] ];
+var random = new Rickshaw.Fixtures.RandomData(150);
+var url = "ws://hp-lt-ubuntu-1:8091/nrt/";
+var user;
+var socket;
+var arrSize = 150;
+var numSensors = 2;
+var curOffsetCircFifo = 0;
+var baseMillis = 0;
+
+
+for (var j = 0; j < numSensors; j++) {
+	for (var i = 0; i < arrSize; i++) {
+		seriesData[j][i] = {x:0,y:0};
+	}
+}
+
+var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
+
+// instantiate our graph!
+
+var graph = new Rickshaw.Graph( {
+	element: document.getElementById("chart"),
+	width: 760,
+	height: 200,
+	renderer: 'area',
+	stroke: true,
+	preserve: true,
+	series: [
+		{
+			color: palette.color(),
+			data: seriesData[0],
+			name: 'Systolic'
+		}, {
+			color: palette.color(),
+			data: seriesData[1],
+			name: 'Diastolic'
+		}
+	]
+} );
+
+graph.render();
+
+var preview = new Rickshaw.Graph.RangeSlider( {
+	graph: graph,
+	element: document.getElementById('preview'),
+} );
+
+var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+	graph: graph,
+	xFormatter: function(x) {
+		return new Date(x * 1000).toString();
+	}
+} );
+
+var annotator = new Rickshaw.Graph.Annotate( {
+	graph: graph,
+	element: document.getElementById('timeline')
+} );
+
+var legend = new Rickshaw.Graph.Legend( {
+	graph: graph,
+	element: document.getElementById('legend')
+
+} );
+
+var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+	graph: graph,
+	legend: legend
+} );
+
+var order = new Rickshaw.Graph.Behavior.Series.Order( {
+	graph: graph,
+	legend: legend
+} );
+
+var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
+	graph: graph,
+	legend: legend
+} );
+
+var smoother = new Rickshaw.Graph.Smoother( {
+	graph: graph,
+	element: document.querySelector('#smoother')
+} );
+
+var ticksTreatment = 'glow';
+
+var xAxis = new Rickshaw.Graph.Axis.Time( {
+	graph: graph,
+	ticksTreatment: ticksTreatment,
+	timeFixture: new Rickshaw.Fixtures.Time.Local()
+} );
+
+xAxis.render();
+
+var yAxis = new Rickshaw.Graph.Axis.Y( {
+	graph: graph,
+	tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+	ticksTreatment: ticksTreatment
+} );
+
+yAxis.render();
+
+
+var controls = new RenderControls( {
+	element: document.querySelector('form'),
+	graph: graph
+} );
+
+
+setInterval( function() {
+	graph.update();
+}, 100 );
+
+annotator.update();
+setTimeout( function() { setInterval( 100 ) }, 100 );
+
+var previewXAxis = new Rickshaw.Graph.Axis.Time({
+	graph: preview.previews[0],
+	timeFixture: new Rickshaw.Fixtures.Time.Local(),
+	ticksTreatment: ticksTreatment
+});
+
+previewXAxis.render();
+
+
+
+function updateBloodPressureItemsDisplay( bloodPressureItem ) {
+	// Systolic is offset=0
+	for (var i = 0; i < (arrSize-1); i++) {
+		seriesData[0][i].x = seriesData[0][i+1].x;
+		seriesData[0][i].y = seriesData[0][i+1].y;
+	}
+	seriesData[0][arrSize-1].x = bloodPressureItem.timeMillis;
+	seriesData[0][arrSize-1].y = bloodPressureItem.systolic;
+	// Diastolic is offset=1
+	for (var i = 0; i < (arrSize-1); i++) {
+		seriesData[1][i].x = seriesData[1][i+1].x;
+		seriesData[1][i].y = seriesData[1][i+1].y;
+	}
+	seriesData[1][arrSize-1].x = bloodPressureItem.timeMillis;
+	seriesData[1][arrSize-1].y = bloodPressureItem.diastolic;
+}
+
+function connectToServer() {
+	socket = new WebSocket(url);
+	socket.onmessage = function(msg) {
+		console.log("raw: " + msg.data);
+		var bloodPressureItem = JSON.parse(msg.data);
+		if( baseMillis == 0 ) {
+			baseMillis = bloodPressureItem.timeMillis;
+			initSeriesData();
+		}
+		console.log("recvd: " + bloodPressureItem.timeMillis + " " + bloodPressureItem.systolic + " " + bloodPressureItem.diastolic + " " + bloodPressureItem.sourceName);
+		updateBloodPressureItemsDisplay( bloodPressureItem );
+	};
+	socket.onopen = function() {
+		console.log("socket open");
+	};
+	//document.getElementById("chat").setAttribute("style", "");
+	//document.getElementById("welcome")
+	//		.setAttribute("style", "display:none");
+}
+
+
+function resetSeriesData( ) {
+	console.log("resetSeriesData");
+	baseMillis = 0;
+	for (var j = 0; j < numSensors; j++) {
+		for (var i = 0; i < arrSize; i++) {
+			seriesData[j][i] = {x:0,y:0};
+		}
+	}
+
+}
+
+function initSeriesData( ) {
+		console.log("initSeriesData");
+	for (var j = 0; j < numSensors; j++) {
+		var prevMillis = baseMillis;
+		for (var i = (arrSize-1); i >-1 ; i--) {
+			seriesData[j][i].x = prevMillis;
+			//prevMillis = prevMillis - 1000;
+		}
+	}
+}
+
+</script>
+
+</body>

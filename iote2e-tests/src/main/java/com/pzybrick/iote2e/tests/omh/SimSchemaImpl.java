@@ -100,7 +100,7 @@ public class SimSchemaImpl {
 			final long maxSys = 130;
 			final long minSys = 110;
 			final long exceedSys = 150;
-			final long incrSys = 2;
+			final long incrSys = 5;
 			long valueSys = 0;
 			if( prevBody != null ) {
 				long prevValueSys = ((BloodPressure)prevBody).getSystolicBloodPressure().getValue().longValue();
@@ -121,7 +121,7 @@ public class SimSchemaImpl {
 			final long maxDia = 90;
 			final long minDia = 70;
 			final long exceedDia = 105;
-			final long incrDia = 2;
+			final long incrDia = 5;
 			long valueDia = 0;
 			if( prevBody != null ) {
 				long prevValueDia = ((BloodPressure)prevBody).getDiastolicBloodPressure().getValue().longValue();
