@@ -1,18 +1,22 @@
-package com.pzybrick.iote2e.tests.bdbb;
+package com.pzybrick.iote2e.stream.bdbb;
 
 public class CourseRequest {
 	private String startDesc;
 	private String endDesc;
 	private double startLat;
 	private double startLng;
-	private float startAltFt;
 	private double endLat;
 	private double endLng;
 	private float endAltFt;
+	private float startAltFt;
 	private float cruiseAltFt;
 	private double numWayPts;
 	private long startMsecs;
 	private long freqMSecs;
+	private float takeoffAirspeedKts;
+	private float cruiseAirspeedKts;
+	private float landingAirspeedKts;
+	private float heading;
 
 	public double getStartLat() {
 		return startLat;
@@ -103,6 +107,34 @@ public class CourseRequest {
 	}
 	public CourseRequest setEndDesc(String endDesc) {
 		this.endDesc = endDesc;
+		return this;
+	}
+	public float getTakeoffAirspeedKts() {
+		return takeoffAirspeedKts;
+	}
+	public float getCruiseAirspeedKts() {
+		return cruiseAirspeedKts;
+	}
+	public float getLandingAirspeedKts() {
+		return landingAirspeedKts;
+	}
+	public CourseRequest setTakeoffAirspeedKts(float takeoffAirspeedKts) {
+		this.takeoffAirspeedKts = takeoffAirspeedKts;
+		return this;
+	}
+	public CourseRequest setCruiseAirspeedKts(float cruiseAirspeedKts) {
+		this.cruiseAirspeedKts = cruiseAirspeedKts;
+		return this;
+	}
+	public CourseRequest setLandingAirspeedKts(float landingAirspeedKts) {
+		this.landingAirspeedKts = landingAirspeedKts;
+		return this;
+	}
+	public float getHeading() {
+		return heading;
+	}
+	public CourseRequest setHeading(float heading) {
+		this.heading = heading;
 		return this;
 	}
 	

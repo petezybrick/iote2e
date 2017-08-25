@@ -1,5 +1,7 @@
-package com.pzybrick.iote2e.tests.bdbb;
+package com.pzybrick.iote2e.stream.bdbb;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -9,9 +11,9 @@ import com.google.gson.annotations.Expose;
 @Generated("org.jsonschema2pojo")
 public class FlightStatus {
 	@Expose
-	private String statusUuid;
+	private String flightStatusUuid;
 	@Expose
-	private Long statusTs;
+	private Long flightStatusTs;
 	@Expose
 	private String airframeUuid;
 	@Expose
@@ -27,14 +29,39 @@ public class FlightStatus {
 	@Expose
 	private float alt;
 	@Expose
+	private float airspeed;
+	@Expose
+	private float heading;
+	@Expose
 	private List<EngineStatus> engineStatuss;
 	
 	
-	public String getStatusUuid() {
-		return statusUuid;
+	public FlightStatus( ) {
+		super();
 	}
-	public Long getStatusTs() {
-		return statusTs;
+	
+	public FlightStatus( ResultSet rs ) throws SQLException {
+		super();
+		this.flightStatusUuid = rs.getString("flight_status_uuid");
+		this.airframeUuid = rs.getString("airframe_Uuid");
+		this.flightNumber = rs.getString("flight_number");
+		this.fromAirport = rs.getString("from_airport");
+		this.toAirport = rs.getString("to_airport");
+		this.lat = rs.getFloat("lat");
+		this.lng = rs.getFloat("lng");
+		this.alt = rs.getFloat("alt");
+		this.airspeed = rs.getFloat("airspeed");
+		this.heading = rs.getFloat("heading");
+		this.flightStatusTs = rs.getTimestamp("flight_status_ts").getTime();
+		// this.insertTs = rs.getTimestamp("insert_ts");
+	}
+	
+	
+	public String getFlightStatusUuid() {
+		return flightStatusUuid;
+	}
+	public Long getFlightStatusTs() {
+		return flightStatusTs;
 	}
 	public String getAirframeUuid() {
 		return airframeUuid;
@@ -60,12 +87,12 @@ public class FlightStatus {
 	public List<EngineStatus> getEngineStatuss() {
 		return engineStatuss;
 	}
-	public FlightStatus setStatusUuid(String statusUuid) {
-		this.statusUuid = statusUuid;
+	public FlightStatus setFlightStatusUuid(String flightStatusUuid) {
+		this.flightStatusUuid = flightStatusUuid;
 		return this;
 	}
-	public FlightStatus setStatusTs(Long statusTs) {
-		this.statusTs = statusTs;
+	public FlightStatus setFlightStatusTs(Long flightStatusTs) {
+		this.flightStatusTs = flightStatusTs;
 		return this;
 	}
 	public FlightStatus setAirframeUuid(String airframeUuid) {
@@ -102,9 +129,24 @@ public class FlightStatus {
 	}
 	@Override
 	public String toString() {
-		return "FlightStatus [statusUuid=" + statusUuid + ", statusTs=" + statusTs + ", airframeUuid=" + airframeUuid
+		return "FlightStatus [statusUuid=" + flightStatusUuid + ", statusTs=" + flightStatusTs + ", airframeUuid=" + airframeUuid
 				+ ", flightNumber=" + flightNumber + ", fromAirport=" + fromAirport + ", toAirport=" + toAirport
-				+ ", lat=" + lat + ", lng=" + lng + ", alt=" + alt + ", engineStatuss=" + engineStatuss + "]";
+				+ ", lat=" + lat + ", lng=" + lng + ", alt=" + alt + ", airspeed=" + airspeed + ", heading=" + heading
+				+ ", engineStatuss=" + engineStatuss + "]";
+	}
+	public float getAirspeed() {
+		return airspeed;
+	}
+	public float getHeading() {
+		return heading;
+	}
+	public FlightStatus setAirspeed(float airspeed) {
+		this.airspeed = airspeed;
+		return this;
+	}
+	public FlightStatus setHeading(float heading) {
+		this.heading = heading;
+		return this;
 	}
 	
 }

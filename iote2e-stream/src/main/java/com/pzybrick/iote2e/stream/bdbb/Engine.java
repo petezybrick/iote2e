@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.tests.bdbb;
+package com.pzybrick.iote2e.stream.bdbb;
 
 import javax.annotation.Generated;
 

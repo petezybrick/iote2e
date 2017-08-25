@@ -53,8 +53,7 @@ public class RunOmhSim {
 			RunOmhSim runOmhSim = new RunOmhSim( ).setSimUsersFilePath(args[0]).setSimUsersOffset( Integer.parseInt(args[1]) )
 					.setSimUsersNumUsers( Integer.parseInt(args[2]) ).setMaxLoops(Integer.parseInt(args[3])).setWsEndpoint(args[4])
 					.setClientSocketOmhHandler(clientSocketOmhHandler);					
-			runOmhSim.proce	private static final int MIN_PCT_EXCEED = 2;
-ss();
+			runOmhSim.process();
 		} catch(Exception e ) {
 			logger.error(e.getMessage(), e);
 		}

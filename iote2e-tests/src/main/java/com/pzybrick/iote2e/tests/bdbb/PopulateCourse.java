@@ -9,6 +9,16 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
+import com.pzybrick.iote2e.stream.bdbb.Airframe;
+import com.pzybrick.iote2e.stream.bdbb.CourseRequest;
+import com.pzybrick.iote2e.stream.bdbb.CourseResult;
+import com.pzybrick.iote2e.stream.bdbb.CourseWayPoint;
+import com.pzybrick.iote2e.stream.bdbb.CreateCourse;
+import com.pzybrick.iote2e.stream.bdbb.Engine;
+import com.pzybrick.iote2e.stream.bdbb.EngineStatus;
+import com.pzybrick.iote2e.stream.bdbb.FlightStatus;
+import com.pzybrick.iote2e.stream.bdbb.FlightStatusDao;
+import com.pzybrick.iote2e.stream.bdbb.SimSequenceFloat;
 
 public class PopulateCourse {
 	private static final Logger logger = LogManager.getLogger(PopulateCourse.class);
@@ -25,15 +35,21 @@ public class PopulateCourse {
 			// TODO: 
 			for( int offset=0 ; offset<NUM_ITERATIONS ; offset++ ) {
 				for( List<FlightStatus> flightStatuss : listFlightStatuss ) {
-					FlightStatus flightStatus = flightStatuss.get(offset);
 					System.out.println("====================================================================");
+					FlightStatus flightStatus = flightStatuss.get(offset);
+					// TODO: Populate FlightStatus and EngineStatus tables
+					System.out.println(flightStatus);
+					for( EngineStatus engineStatus : flightStatus.getEngineStatuss() ) {
+						System.out.println("\t" + engineStatus);
+					}
+					
 					String rawJson = Iote2eUtils.getGsonInstance().toJson(flightStatus);
-					System.out.println( rawJson );
+					//System.out.println( rawJson );
 					//System.out.println( flightStatus );
 				}
-				try {
-					Thread.sleep(FREQ_MSECS);
-				} catch(Exception e ) {}
+//				try {
+//					Thread.sleep(FREQ_MSECS);
+//				} catch(Exception e ) {}
 			}
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);
@@ -68,11 +84,12 @@ public class PopulateCourse {
 				.setEngineUuid("af1e2-af1e2-af1e2-af1e2-af1e2")
 				.setModel("GEnx")
 				.setEngineNumber(2) );
-
+		// heading calc http://www.movable-type.co.uk/scripts/latlong.html
 		CourseResult courseResult = CreateCourse.run(
 			new CourseRequest().setStartDesc("LAX").setEndDesc("JFK").setStartMsecs(baseTimeMillis)
 			.setStartLat(33.942791).setStartLng(-118.410042).setStartAltFt(125)
-			.setEndLat(40.6398262).setEndLng(-73.7787443).setEndAltFt(10)
+			.setEndLat(40.6398262).setEndLng(-73.7787443).setEndAltFt(10).setHeading(93.5F)
+			.setTakeoffAirspeedKts(150F).setCruiseAirspeedKts(450F).setLandingAirspeedKts(120F)
 			.setCruiseAltFt(30000).setNumWayPts(NUM_ITERATIONS).setFreqMSecs(FREQ_MSECS));
 		List<FlightStatus> flightStatuss = new ArrayList<FlightStatus>();
 		// list of engine status simulation sequences
@@ -87,11 +104,13 @@ public class PopulateCourse {
 					.setAlt(courseWayPoint.getAlt())
 					.setLat(courseWayPoint.getLat())
 					.setLng(courseWayPoint.getLng())
+					.setAirspeed(courseWayPoint.getAirspeed())
+					.setHeading(courseWayPoint.getHeading())
 					.setFlightNumber("DE111")
 					.setFromAirport("LAX")
 					.setToAirport("JFK")
-					.setStatusTs(courseWayPoint.getTimeMillis())
-					.setStatusUuid(UUID.randomUUID().toString())
+					.setFlightStatusTs(courseWayPoint.getTimeMillis())
+					.setFlightStatusUuid(UUID.randomUUID().toString())
 					.setEngineStatuss( new ArrayList<EngineStatus>() );
 			flightStatuss.add(flightStatus);
 			for( int k=0 ; k<airframe.getEngines().size() ; k++ ) {
@@ -99,6 +118,8 @@ public class PopulateCourse {
 				SimEngineStatus simEngineStatus = simEngineStatuss.get(k);
 				flightStatus.getEngineStatuss().add(
 						new EngineStatus()
+							.setEngineStatusUuid(UUID.randomUUID().toString())
+							.setFlightStatusUuid(flightStatus.getFlightStatusUuid())
 							.setEngineUuid(engine.getEngineUuid())
 							.setEngineNumber(engine.getEngineNumber())
 							.setExhaustGasTempC(simEngineStatus.getExhaustGasTempCSim().nextFloat())
@@ -106,6 +127,7 @@ public class PopulateCourse {
 							.setN2Pct(simEngineStatus.getN2PctSim().nextFloat())
 							.setOilPressure(simEngineStatus.getOilPressureSim().nextFloat())
 							.setOilTempC(simEngineStatus.getOilTempCSim().nextFloat())
+							.setEngineStatusTs(courseWayPoint.getTimeMillis())
 						);
 			}
 		}
@@ -132,7 +154,8 @@ public class PopulateCourse {
 		CourseResult courseResult = CreateCourse.run(
 				new CourseRequest().setStartDesc("SFO").setEndDesc("NRT").setStartMsecs(baseTimeMillis)
 				.setStartLat(37.6188237).setStartLng(-122.3758047).setStartAltFt(13)
-				.setEndLat(35.771987).setEndLng(140.39285).setEndAltFt(130)
+				.setEndLat(35.771987).setEndLng(140.39285).setEndAltFt(130).setHeading(234.5F)
+				.setTakeoffAirspeedKts(160F).setCruiseAirspeedKts(460F).setLandingAirspeedKts(130F)
 				.setCruiseAltFt(34000).setNumWayPts(120).setFreqMSecs(1000));
 		List<FlightStatus> flightStatuss = new ArrayList<FlightStatus>();
 		// list of engine status simulation sequences
@@ -147,11 +170,13 @@ public class PopulateCourse {
 					.setAlt(courseWayPoint.getAlt())
 					.setLat(courseWayPoint.getLat())
 					.setLng(courseWayPoint.getLng())
+					.setAirspeed(courseWayPoint.getAirspeed())
+					.setHeading(courseWayPoint.getHeading())
 					.setFlightNumber("AA222")
 					.setFromAirport("SFO")
 					.setToAirport("NRT")
-					.setStatusTs(courseWayPoint.getTimeMillis())
-					.setStatusUuid(UUID.randomUUID().toString())
+					.setFlightStatusTs(courseWayPoint.getTimeMillis())
+					.setFlightStatusUuid(UUID.randomUUID().toString())
 					.setEngineStatuss( new ArrayList<EngineStatus>() );
 			flightStatuss.add(flightStatus);
 			for( int k=0 ; k<airframe.getEngines().size() ; k++ ) {
@@ -159,6 +184,8 @@ public class PopulateCourse {
 				SimEngineStatus simEngineStatus = simEngineStatuss.get(k);
 				flightStatus.getEngineStatuss().add(
 						new EngineStatus()
+							.setEngineStatusUuid(UUID.randomUUID().toString())
+							.setFlightStatusUuid(flightStatus.getFlightStatusUuid())
 							.setEngineUuid(engine.getEngineUuid())
 							.setEngineNumber(engine.getEngineNumber())
 							.setExhaustGasTempC(simEngineStatus.getExhaustGasTempCSim().nextFloat())
@@ -166,6 +193,7 @@ public class PopulateCourse {
 							.setN2Pct(simEngineStatus.getN2PctSim().nextFloat())
 							.setOilPressure(simEngineStatus.getOilPressureSim().nextFloat())
 							.setOilTempC(simEngineStatus.getOilTempCSim().nextFloat())
+							.setEngineStatusTs(courseWayPoint.getTimeMillis())
 						);
 			}
 		}
@@ -174,7 +202,7 @@ public class PopulateCourse {
 
 	
 	private static List<FlightStatus> simFlightStatusJfkMuc( long baseTimeMillis ) throws Exception {
-		// SFO to NRT
+		// JFK to MUC
 		Airframe airframe = new Airframe()
 				.setAirframeUuid("af3-af3-af3-af3-af3")
 				.setAirlineId("LH")
@@ -193,7 +221,8 @@ public class PopulateCourse {
 		CourseResult courseResult = CreateCourse.run(
 				new CourseRequest().setStartDesc("JFK").setEndDesc("MUC").setStartMsecs(baseTimeMillis)
 				.setStartLat(40.6398262).setStartLng(-73.7787443).setStartAltFt(10)
-				.setEndLat(48.3538888889).setEndLng(11.7861111111).setEndAltFt(1486)
+				.setEndLat(48.3538888889).setEndLng(11.7861111111).setEndAltFt(1486).setHeading(117.12F)
+				.setTakeoffAirspeedKts(170F).setCruiseAirspeedKts(470F).setLandingAirspeedKts(140F)
 				.setCruiseAltFt(32000).setNumWayPts(120).setFreqMSecs(1000));
 		List<FlightStatus> flightStatuss = new ArrayList<FlightStatus>();
 		// list of engine status simulation sequences
@@ -208,11 +237,13 @@ public class PopulateCourse {
 					.setAlt(courseWayPoint.getAlt())
 					.setLat(courseWayPoint.getLat())
 					.setLng(courseWayPoint.getLng())
+					.setHeading(courseWayPoint.getHeading())
+					.setAirspeed(courseWayPoint.getAirspeed())
 					.setFlightNumber("LH411")
 					.setFromAirport("JFK")
-					.setToAirport("M")
-					.setStatusTs(courseWayPoint.getTimeMillis())
-					.setStatusUuid(UUID.randomUUID().toString())
+					.setToAirport("MUC")
+					.setFlightStatusTs(courseWayPoint.getTimeMillis())
+					.setFlightStatusUuid(UUID.randomUUID().toString())
 					.setEngineStatuss( new ArrayList<EngineStatus>() );
 			flightStatuss.add(flightStatus);
 			for( int k=0 ; k<airframe.getEngines().size() ; k++ ) {
@@ -220,6 +251,8 @@ public class PopulateCourse {
 				SimEngineStatus simEngineStatus = simEngineStatuss.get(k);
 				flightStatus.getEngineStatuss().add(
 						new EngineStatus()
+							.setEngineStatusUuid(UUID.randomUUID().toString())
+							.setFlightStatusUuid(flightStatus.getFlightStatusUuid())
 							.setEngineUuid(engine.getEngineUuid())
 							.setEngineNumber(engine.getEngineNumber())
 							.setExhaustGasTempC(simEngineStatus.getExhaustGasTempCSim().nextFloat())
@@ -227,6 +260,7 @@ public class PopulateCourse {
 							.setN2Pct(simEngineStatus.getN2PctSim().nextFloat())
 							.setOilPressure(simEngineStatus.getOilPressureSim().nextFloat())
 							.setOilTempC(simEngineStatus.getOilTempCSim().nextFloat())
+							.setEngineStatusTs(courseWayPoint.getTimeMillis())
 						);
 			}
 		}

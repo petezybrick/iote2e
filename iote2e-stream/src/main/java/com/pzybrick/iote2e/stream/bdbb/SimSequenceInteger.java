@@ -1,20 +1,20 @@
-package com.pzybrick.iote2e.tests.bdbb;
+package com.pzybrick.iote2e.stream.bdbb;
 
 import java.util.Random;
 
-public class SimSequenceLong {
+public class SimSequenceInteger {
 	private static Random random = new Random();
-	private Long mid;
-	private Long max;
-	private Long min;
-	private Long exceed;
-	private Long incr;
-	private Long prev;
+	private Integer mid;
+	private Integer max;
+	private Integer min;
+	private Integer exceed;
+	private Integer incr;
+	private Integer prev;
 	private Integer minPctExceeded;
 
-	public Long nextLong() throws Exception {
-		long value = 0;
-
+	public Integer nextInteger() throws Exception {
+		Integer value = 0;
+		
 		if (prev != null) {
 			if( prev == min ) {
 				value = prev + incr;
@@ -40,27 +40,31 @@ public class SimSequenceLong {
 
 	}
 
-	public Long getMid() {
+	public static Random getRandom() {
+		return random;
+	}
+
+	public Integer getMid() {
 		return mid;
 	}
 
-	public Long getMax() {
+	public Integer getMax() {
 		return max;
 	}
 
-	public Long getMin() {
+	public Integer getMin() {
 		return min;
 	}
 
-	public Long getExceed() {
+	public Integer getExceed() {
 		return exceed;
 	}
 
-	public Long getIncr() {
+	public Integer getIncr() {
 		return incr;
 	}
 
-	public Long getPrev() {
+	public Integer getPrev() {
 		return prev;
 	}
 
@@ -68,37 +72,37 @@ public class SimSequenceLong {
 		return minPctExceeded;
 	}
 
-	public SimSequenceLong setMid(Long mid) {
+	public SimSequenceInteger setMid(Integer mid) {
 		this.mid = mid;
 		return this;
 	}
 
-	public SimSequenceLong setMax(Long max) {
+	public SimSequenceInteger setMax(Integer max) {
 		this.max = max;
 		return this;
 	}
 
-	public SimSequenceLong setMin(Long min) {
+	public SimSequenceInteger setMin(Integer min) {
 		this.min = min;
 		return this;
 	}
 
-	public SimSequenceLong setExceed(Long exceed) {
+	public SimSequenceInteger setExceed(Integer exceed) {
 		this.exceed = exceed;
 		return this;
 	}
 
-	public SimSequenceLong setIncr(Long incr) {
+	public SimSequenceInteger setIncr(Integer incr) {
 		this.incr = incr;
 		return this;
 	}
 
-	public SimSequenceLong setPrev(Long prev) {
+	public SimSequenceInteger setPrev(Integer prev) {
 		this.prev = prev;
 		return this;
 	}
 
-	public SimSequenceLong setMinPctExceeded(Integer minPctExceeded) {
+	public SimSequenceInteger setMinPctExceeded(Integer minPctExceeded) {
 		this.minPctExceeded = minPctExceeded;
 		return this;
 	}
