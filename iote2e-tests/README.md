@@ -31,7 +31,7 @@ create 4x tabs in terminal
 ./bin/zookeeper-server-start.sh config/zookeeper.properties
 Start each server in separate console/process
 Note: must create the properties files ahead of time as per the above URL
-Note: if the topic doesn't already exist, then creat it now:
+Note: if the topic doesn't already exist, then create it now:
 	open another terminal session, cd to kafka folder
 	./bin/kafka-topics.sh  --create --topic com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox --zookeeper localhost:2181 --replication-factor 3  --partitions 3
 	./bin/kafka-topics.sh  --create --topic com.pzybrick.iote2e.ws.omh.ThreadEntryPointOmh-sandbox --zookeeper localhost:2181 --replication-factor 3  --partitions 3
