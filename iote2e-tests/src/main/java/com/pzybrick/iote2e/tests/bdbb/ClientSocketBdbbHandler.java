@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.tests.omh;
+package com.pzybrick.iote2e.tests.bdbb;
 
 import java.net.URI;
 
@@ -14,8 +14,8 @@ import org.eclipse.jetty.util.component.LifeCycle;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ws.security.LoginVo;
 
-public class ClientSocketOmhHandler {
-	private static final Logger logger = LogManager.getLogger(ClientSocketOmhHandler.class);
+public class ClientSocketBdbbHandler {
+	private static final Logger logger = LogManager.getLogger(ClientSocketBdbbHandler.class);
 	private String url;
 	private URI uri;
 	private WebSocketContainer container;
@@ -26,12 +26,12 @@ public class ClientSocketOmhHandler {
 
 	
 	public static void main(String[] args) {
-		// "ws://localhost:8090/iote2e/"
+		// "ws://localhost:8093/bdbb/"
 		try {
-			ClientSocketOmhHandler clientSocketOmhHandler = new ClientSocketOmhHandler();
-			clientSocketOmhHandler.setUrl(args[0]);
-			clientSocketOmhHandler.connect();
-			clientSocketOmhHandler.wait();
+			ClientSocketBdbbHandler clientSocketBdbbHandler = new ClientSocketBdbbHandler();
+			clientSocketBdbbHandler.setUrl(args[0]);
+			clientSocketBdbbHandler.connect();
+			clientSocketBdbbHandler.wait();
 		} catch (Exception e) {
 			logger.info(e);
 			e.printStackTrace();
@@ -47,8 +47,8 @@ public class ClientSocketOmhHandler {
 			container = ContainerProvider.getWebSocketContainer();
 
 			try {
-				ClientSocketOmh clientSocketOmh = new ClientSocketOmh( );
-				session = container.connectToServer(clientSocketOmh, uri);
+				ClientSocketBdbb clientSocketBdbb = new ClientSocketBdbb( );
+				session = container.connectToServer(clientSocketBdbb, uri);
 				session.getBasicRemote().sendText( Iote2eUtils.getGsonInstance().toJson(loginVo));
 				logger.info("loginVo sent for {}", loginVo.getLoginName());
 			} finally {
@@ -89,7 +89,7 @@ public class ClientSocketOmhHandler {
 		return loginVo;
 	}
 
-	public ClientSocketOmhHandler setLoginVo(LoginVo loginVo) {
+	public ClientSocketBdbbHandler setLoginVo(LoginVo loginVo) {
 		this.loginVo = loginVo;
 		return this;
 	}
@@ -98,7 +98,7 @@ public class ClientSocketOmhHandler {
 		return url;
 	}
 
-	public ClientSocketOmhHandler setUrl(String url) {
+	public ClientSocketBdbbHandler setUrl(String url) {
 		this.url = url;
 		return this;
 	}

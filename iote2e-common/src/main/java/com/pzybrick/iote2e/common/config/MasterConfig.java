@@ -20,6 +20,7 @@ public class MasterConfig implements Serializable {
 	private String masterConfigJsonKey;
 	private String contactPoint;
 	private String keyspaceName;
+	private static MasterConfig masterConfig;
 	
 	@Expose
 	private String ruleSvcClassName;
@@ -60,9 +61,13 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String kafkaGroupOmh;
 	@Expose
+	private String kafkaGroupBdbb;
+	@Expose
 	private String kafkaTopic;
 	@Expose
 	private String kafkaTopicOmh;
+	@Expose
+	private String kafkaTopicBdbb;
 	@Expose
 	private String kafkaBootstrapServers;
 	@Expose
@@ -104,11 +109,15 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String webServerContextPath;
 	@Expose
+	private Integer wsBdbbServerListenPort;
+	@Expose
 	private Integer wsNrtServerListenPort;
 	@Expose
 	private Integer wsOmhServerListenPort;
 	@Expose
 	private String wsRouterImplClassName;
+	@Expose
+	private String wsBdbbRouterImplClassName;
 	@Expose
 	private String wsOmhRouterImplClassName;
 	@Expose
@@ -119,9 +128,16 @@ public class MasterConfig implements Serializable {
 		
 	}
 
+	
+	public static MasterConfig getInstance( ) throws Exception {
+		if( MasterConfig.masterConfig == null ) throw new Exception("MasterConfig was never initialized");
+			return MasterConfig.masterConfig;
+	}
+
 		
 	public static MasterConfig getInstance( String masterConfigJsonKey, String contactPoint, String keyspaceName ) throws Exception {
-		MasterConfig masterConfig = null;
+		if( MasterConfig.masterConfig != null ) return MasterConfig.masterConfig;
+		MasterConfig masterConfigNew = null;
 		final int RETRY_MINUTES = 10;
 		long maxWait = System.currentTimeMillis() + (RETRY_MINUTES * 60 * 1000);
 		Exception exception = null;
@@ -133,10 +149,11 @@ public class MasterConfig implements Serializable {
 				ConfigDao.connect(contactPoint, keyspaceName);
 				String rawJson = ConfigDao.findConfigJson(masterConfigJsonKey);
 				Gson gson = new GsonBuilder().setPrettyPrinting().create();
-				masterConfig = gson.fromJson(rawJson, MasterConfig.class);
-				masterConfig.setContactPoint(contactPoint);
-				masterConfig.setKeyspaceName(keyspaceName);
-				return masterConfig;
+				masterConfigNew = gson.fromJson(rawJson, MasterConfig.class);
+				masterConfigNew.setContactPoint(contactPoint);
+				masterConfigNew.setKeyspaceName(keyspaceName);
+				MasterConfig.masterConfig = masterConfigNew;
+				return masterConfigNew;
 			} catch(Exception e ) {
 				exception = e;
 				ConfigDao.disconnect();
@@ -311,8 +328,9 @@ public class MasterConfig implements Serializable {
 				+ ", forceRefreshActuatorState=" + forceRefreshActuatorState + ", forceResetActuatorState="
 				+ forceResetActuatorState + ", jdbcDriverClassName=" + jdbcDriverClassName + ", jdbcInsertBlockSize="
 				+ jdbcInsertBlockSize + ", jdbcLogin=" + jdbcLogin + ", jdbcPassword=" + jdbcPassword + ", jdbcUrl="
-				+ jdbcUrl + ", kafkaGroup=" + kafkaGroup + ", kafkaGroupOmh=" + kafkaGroupOmh + ", kafkaTopic="
-				+ kafkaTopic + ", kafkaTopicOmh=" + kafkaTopicOmh + ", kafkaBootstrapServers=" + kafkaBootstrapServers
+				+ jdbcUrl + ", kafkaGroup=" + kafkaGroup + ", kafkaGroupOmh=" + kafkaGroupOmh + ", kafkaGroupBdbb="
+				+ kafkaGroupBdbb + ", kafkaTopic=" + kafkaTopic + ", kafkaTopicOmh=" + kafkaTopicOmh
+				+ ", kafkaTopicBdbb=" + kafkaTopicBdbb + ", kafkaBootstrapServers=" + kafkaBootstrapServers
 				+ ", kafkaZookeeperHosts=" + kafkaZookeeperHosts + ", kafkaZookeeperPort=" + kafkaZookeeperPort
 				+ ", kafkaConsumerNumThreads=" + kafkaConsumerNumThreads + ", kafkaZookeeperBrokerPath="
 				+ kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
@@ -323,10 +341,11 @@ public class MasterConfig implements Serializable {
 				+ ", smtpEmail=" + smtpEmail + ", smtpLogin=" + smtpLogin + ", smtpPassword=" + smtpPassword
 				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", webServerPort=" + webServerPort
 				+ ", webServerContentPath=" + webServerContentPath + ", webServerContextPath=" + webServerContextPath
-				+ ", wsNrtServerListenPort=" + wsNrtServerListenPort + ", wsOmhServerListenPort="
-				+ wsOmhServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName
-				+ ", wsOmhRouterImplClassName=" + wsOmhRouterImplClassName + ", wsServerListenPort="
-				+ wsServerListenPort + "]";
+				+ ", wsBdbbServerListenPort=" + wsBdbbServerListenPort + ", wsNrtServerListenPort="
+				+ wsNrtServerListenPort + ", wsOmhServerListenPort=" + wsOmhServerListenPort
+				+ ", wsRouterImplClassName=" + wsRouterImplClassName + ", wsBdbbRouterImplClassName="
+				+ wsBdbbRouterImplClassName + ", wsOmhRouterImplClassName=" + wsOmhRouterImplClassName
+				+ ", wsServerListenPort=" + wsServerListenPort + "]";
 	}
 
 	public String getKafkaZookeeperBrokerPath() {
@@ -653,6 +672,50 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setWebServerContentPath(String webServerContentPath) {
 		this.webServerContentPath = webServerContentPath;
+		return this;
+	}
+
+
+	public String getKafkaGroupBdbb() {
+		return kafkaGroupBdbb;
+	}
+
+
+	public String getKafkaTopicBdbb() {
+		return kafkaTopicBdbb;
+	}
+
+
+	public MasterConfig setKafkaGroupBdbb(String kafkaGroupBdbb) {
+		this.kafkaGroupBdbb = kafkaGroupBdbb;
+		return this;
+	}
+
+
+	public MasterConfig setKafkaTopicBdbb(String kafkaTopicBdbb) {
+		this.kafkaTopicBdbb = kafkaTopicBdbb;
+		return this;
+	}
+
+
+	public Integer getWsBdbbServerListenPort() {
+		return wsBdbbServerListenPort;
+	}
+
+
+	public String getWsBdbbRouterImplClassName() {
+		return wsBdbbRouterImplClassName;
+	}
+
+
+	public MasterConfig setWsBdbbServerListenPort(Integer wsBdbbServerListenPort) {
+		this.wsBdbbServerListenPort = wsBdbbServerListenPort;
+		return this;
+	}
+
+
+	public MasterConfig setWsBdbbRouterImplClassName(String wsBdbbRouterImplClassName) {
+		this.wsBdbbRouterImplClassName = wsBdbbRouterImplClassName;
 		return this;
 	}
 

@@ -1,5 +1,8 @@
 package com.pzybrick.iote2e.tests.bdbb;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -7,7 +10,8 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.annotations.Expose;
+import com.pzybrick.iote2e.common.config.MasterConfig;
+import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.stream.bdbb.Airframe;
 import com.pzybrick.iote2e.stream.bdbb.CourseRequest;
@@ -16,22 +20,80 @@ import com.pzybrick.iote2e.stream.bdbb.CourseWayPoint;
 import com.pzybrick.iote2e.stream.bdbb.CreateCourse;
 import com.pzybrick.iote2e.stream.bdbb.Engine;
 import com.pzybrick.iote2e.stream.bdbb.EngineStatus;
+import com.pzybrick.iote2e.stream.bdbb.EngineStatusDao;
 import com.pzybrick.iote2e.stream.bdbb.FlightStatus;
 import com.pzybrick.iote2e.stream.bdbb.FlightStatusDao;
 import com.pzybrick.iote2e.stream.bdbb.SimSequenceFloat;
+import com.pzybrick.iote2e.stream.persist.PooledDataSource;
 
-public class PopulateCourse {
-	private static final Logger logger = LogManager.getLogger(PopulateCourse.class);
+public class TestPopulateCourse {
+	private static final Logger logger = LogManager.getLogger(TestPopulateCourse.class);
 	public static Integer NUM_ITERATIONS = 120;
 	public static Long FREQ_MSECS = 1000L;
 	public static Integer MIN_PCT_EXCEEDED = 5;
+	public static boolean IS_TRUNCATE_TABLES = true;
 
 	
 	public static void main(String[] args) {
 		try {
-			PopulateCourse populateCourse = new PopulateCourse();
-			//populateCourse.process();
-			List<List<FlightStatus>> listFlightStatuss = PopulateCourse.populateSimFlight();
+			MasterConfig.getInstance( args[0], args[1], args[2] );
+			List<List<FlightStatus>> listFlightStatuss = TestPopulateCourse.populateSimFlight();
+			//TestPopulateCourse.dumpToConsole(listFlightStatuss);
+			TestPopulateCourse.populateTables(listFlightStatuss);
+		}  catch( Exception e ) {
+			logger.error(e.getMessage(),e);
+		} finally {
+			ConfigDao.disconnect();
+		}
+	}
+	
+	
+	public static void populateTables( List<List<FlightStatus>> listFlightStatuss ) throws Exception {
+		logger.info("start");
+		try ( Connection con = PooledDataSource.getInstance(MasterConfig.getInstance()).getConnection();
+				Statement stmt = con.createStatement()) {
+
+			con.setAutoCommit(false);
+			try {
+				// Truncate tables
+				if( IS_TRUNCATE_TABLES ) {
+					stmt.execute("SET FOREIGN_KEY_CHECKS=0");
+					stmt.execute("TRUNCATE TABLE engine_status");
+					stmt.execute("TRUNCATE TABLE flight_status");
+					stmt.execute("SET FOREIGN_KEY_CHECKS=1");
+				}
+				for( int offset=0 ; offset<NUM_ITERATIONS ; offset++ ) {
+					for( List<FlightStatus> flightStatuss : listFlightStatuss ) {
+						FlightStatus flightStatus = flightStatuss.get(offset);
+						
+						// This verifies POJO->JSON and JSON->POJO will work ok, i.e. same as when POJO is turned
+						//  into JSON and sent over Kafka, then turned back into POJO in SparkStreaming
+						String rawJson = Iote2eUtils.getGsonInstance().toJson(flightStatus);
+						flightStatus = Iote2eUtils.getGsonInstance().fromJson(rawJson, FlightStatus.class);
+						
+						FlightStatusDao.insertBatchMode(con, flightStatus);
+						for( EngineStatus engineStatus : flightStatus.getEngineStatuss() ) {
+							EngineStatusDao.insertBatchMode(con, engineStatus);
+						}
+
+					}
+				}
+				con.commit();
+				logger.info("done");
+			} catch(SQLException sqlEx ) {
+				con.rollback();
+				throw sqlEx;
+			}
+	
+		} catch( Exception e ) {
+			logger.error(e.getMessage(),e);
+			throw e;
+		}
+	}
+
+	
+	public static void dumpToConsole( List<List<FlightStatus>> listFlightStatuss ) {
+		try {
 			// TODO: 
 			for( int offset=0 ; offset<NUM_ITERATIONS ; offset++ ) {
 				for( List<FlightStatus> flightStatuss : listFlightStatuss ) {
@@ -55,6 +117,7 @@ public class PopulateCourse {
 			logger.error(e.getMessage(),e);
 		}
 	}
+	
 	
 	public static List<List<FlightStatus>> populateSimFlight() throws Exception {
 		long baseTimeMillis = System.currentTimeMillis();

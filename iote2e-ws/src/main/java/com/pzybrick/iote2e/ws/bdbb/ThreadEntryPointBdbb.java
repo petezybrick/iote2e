@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.ws.omh;
+package com.pzybrick.iote2e.ws.bdbb;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -17,36 +17,37 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.ws.route.RouteOmhByteBuffer;
+import com.pzybrick.iote2e.common.utils.CompressionUtils;
+import com.pzybrick.iote2e.ws.route.RouteBdbbByteBuffer;
 
-public class ThreadEntryPointOmh extends Thread {
-	private static final Logger logger = LogManager.getLogger(ThreadEntryPointOmh.class);
-	public static final Map<String, ServerSideSocketOmh> serverSideSocketByteBuffer = new ConcurrentHashMap<String, ServerSideSocketOmh>();
+public class ThreadEntryPointBdbb extends Thread {
+	private static final Logger logger = LogManager.getLogger(ThreadEntryPointBdbb.class);
+	public static final Map<String, ServerSideSocketBdbb> serverSideSocketByteBuffer = new ConcurrentHashMap<String, ServerSideSocketBdbb>();
 	public static final ConcurrentLinkedQueue<ByteBuffer> fromClientByteArrays = new ConcurrentLinkedQueue<ByteBuffer>();
-	private RouteOmhByteBuffer routeOmhByteBuffer;
+	private RouteBdbbByteBuffer routeBdbbByteBuffer;
 	private Server server;
 	private ServerConnector connector;
 	public static MasterConfig masterConfig;
 	
 	
-	public ThreadEntryPointOmh( MasterConfig masterConfig ) {
-		ThreadEntryPointOmh.masterConfig = masterConfig;
+	public ThreadEntryPointBdbb( MasterConfig masterConfig ) {
+		ThreadEntryPointBdbb.masterConfig = masterConfig;
 	}
 
 
 	public void run( ) {
 		logger.info(masterConfig.toString());
 		try {
-			String routerImplClassName = masterConfig.getWsOmhRouterImplClassName();
+			String routerImplClassName = masterConfig.getWsBdbbRouterImplClassName();
 			if( null == routerImplClassName || routerImplClassName.length() == 0 ) 
-				throw new Exception("WS OMH routerImplClassName is required entry in MasterConfig but is null");
+				throw new Exception("WS BDBB routerImplClassName is required entry in MasterConfig but is null");
 			Class clazz = Class.forName(routerImplClassName);
-			routeOmhByteBuffer = (RouteOmhByteBuffer)clazz.newInstance();
-			routeOmhByteBuffer.init(masterConfig);
+			routeBdbbByteBuffer = (RouteBdbbByteBuffer)clazz.newInstance();
+			routeBdbbByteBuffer.init(masterConfig);
 
 			server = new Server();
 			connector = new ServerConnector(server);
-			connector.setPort(masterConfig.getWsOmhServerListenPort());
+			connector.setPort(masterConfig.getWsBdbbServerListenPort());
 			server.addConnector(connector);
 	
 			ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -55,16 +56,16 @@ public class ThreadEntryPointOmh extends Thread {
 	
 			try {
 				ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);
-				wscontainer.addEndpoint(ServerSideSocketOmh.class);
-				ThreadFromClientOmh threadFromClientOmh = new ThreadFromClientOmh( routeOmhByteBuffer );
-				threadFromClientOmh.start();
+				wscontainer.addEndpoint(ServerSideSocketBdbb.class);
+				ThreadFromClientBdbb threadFromClientBdbb = new ThreadFromClientBdbb( routeBdbbByteBuffer );
+				threadFromClientBdbb.start();
 	
 				logger.info("Server starting");
 				server.start();
 				logger.info("Server started");
 				server.join();
-				threadFromClientOmh.shutdown();
-				threadFromClientOmh.join(15 * 1000L);
+				threadFromClientBdbb.shutdown();
+				threadFromClientBdbb.join(15 * 1000L);
 	
 			} catch (Throwable t) {
 				logger.error("Server Exception",t);
@@ -76,13 +77,13 @@ public class ThreadEntryPointOmh extends Thread {
 	}
 
 	
-	public class ThreadFromClientOmh extends Thread {
+	public class ThreadFromClientBdbb extends Thread {
 		private boolean shutdown;
-		private RouteOmhByteBuffer routeOmhByteBuffer;
+		private RouteBdbbByteBuffer routeBdbbByteBuffer;
 
-		public ThreadFromClientOmh( RouteOmhByteBuffer routeOmhByteBuffer ) {
+		public ThreadFromClientBdbb( RouteBdbbByteBuffer routeBdbbByteBuffer ) {
 			super();
-			this.routeOmhByteBuffer = routeOmhByteBuffer;
+			this.routeBdbbByteBuffer = routeBdbbByteBuffer;
 		}
 
 		public void shutdown() {
@@ -93,7 +94,7 @@ public class ThreadEntryPointOmh extends Thread {
 
 		@Override
 		public void run() {
-			logger.info("ThreadFromClientOmh Run");
+			logger.info("ThreadFromClientBdbb Run");
 			List<ByteBuffer> byteBuffers = new ArrayList<ByteBuffer>();
 			try {
 				while (true) {
@@ -104,7 +105,7 @@ public class ThreadEntryPointOmh extends Thread {
 					}
 					for (ByteBuffer byteBuffer : byteBuffers) {
 						logger.debug(">>> bytebuffer length {}",  byteBuffer.array().length );
-						routeOmhByteBuffer.routeToTarget(byteBuffer);
+						routeBdbbByteBuffer.routeToTarget(byteBuffer);
 					}
 					try {
 						sleep(500L);

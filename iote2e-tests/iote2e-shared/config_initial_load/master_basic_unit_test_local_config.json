@@ -23,6 +23,8 @@
 	"webServerPort": "8082",
 	"webServerContentPath": "../iote2e-ws/WebContent",
 	"webServerContextPath": "/iote2e-web/",
+	"wsBdbbServerListenPort": "8093",
+	"wsBdbbRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteBdbbByteBufferToKafkaImpl",
 	"wsNrtServerListenPort": "8091",
 	"wsOmhServerListenPort": "8092",
 	"wsOmhRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteOmhByteBufferToKafkaImpl",
