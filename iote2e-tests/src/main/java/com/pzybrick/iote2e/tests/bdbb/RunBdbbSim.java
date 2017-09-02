@@ -10,9 +10,7 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.CompressionUtils;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
-import com.pzybrick.iote2e.stream.bdbb.EngineStatus;
 import com.pzybrick.iote2e.stream.bdbb.FlightStatus;
-import com.pzybrick.iote2e.tests.omh.ClientSocketOmhHandler;
 
 public class RunBdbbSim {
 	private static final Logger logger = LogManager.getLogger(RunBdbbSim.class);
@@ -20,7 +18,7 @@ public class RunBdbbSim {
 	public static void main(String[] args) {
 		try {
 			MasterConfig.getInstance( args[0], args[1], args[2] );
-			List<List<FlightStatus>> listFlightStatuss = TestPopulateCourse.populateSimFlight();
+			List<List<FlightStatus>> listFlightStatuss = TestPopulateCourse.populateSimFlight(args[4]);
 			RunBdbbSim.injectSimData(listFlightStatuss, args[3]);
 		}  catch( Exception e ) {
 			logger.error(e.getMessage(),e);
@@ -34,8 +32,7 @@ public class RunBdbbSim {
 		try {
 			ClientSocketBdbbHandler clientSocketBdbbHandler = new ClientSocketBdbbHandler().setUrl(wsUrl);
 			clientSocketBdbbHandler.connect();
-			
-			// TODO: 
+
 			for( int offset=0 ; offset<TestPopulateCourse.NUM_ITERATIONS ; offset++ ) {
 				for( List<FlightStatus> flightStatuss : listFlightStatuss ) {
 					System.out.println("====================================================================");

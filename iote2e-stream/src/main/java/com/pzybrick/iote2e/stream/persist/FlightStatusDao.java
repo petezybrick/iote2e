@@ -1,4 +1,4 @@
-package com.pzybrick.iote2e.stream.bdbb;
+package com.pzybrick.iote2e.stream.persist;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
-import com.pzybrick.iote2e.stream.persist.PooledDataSource;
+import com.pzybrick.iote2e.stream.bdbb.FlightStatus;
 
 
 public class FlightStatusDao {

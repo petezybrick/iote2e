@@ -89,17 +89,27 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String routerOmhClassName;
 	@Expose
+	private String routerBdbbClassName;
+	@Expose
 	private String sparkAppName;
+	@Expose
+	private String sparkAppNameBdbb;
 	@Expose
 	private String sparkAppNameOmh;
 	@Expose
 	private String sparkMaster;
 	@Expose
-	private String smtpEmail;
+	private String smtpEmailOmh;
 	@Expose
-	private String smtpLogin;
+	private String smtpLoginOmh;
 	@Expose
-	private String smtpPassword;
+	private String smtpPasswordOmh;
+	@Expose
+	private String smtpEmailBdbb;
+	@Expose
+	private String smtpLoginBdbb;
+	@Expose
+	private String smtpPasswordBdbb;
 	@Expose
 	private Integer sparkStreamDurationMs;
 	@Expose
@@ -336,16 +346,18 @@ public class MasterConfig implements Serializable {
 				+ kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
 				+ ", kafkaZookeeperConsumerConnection=" + kafkaZookeeperConsumerConnection
 				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", routerIote2eRequestClassName="
-				+ routerIote2eRequestClassName + ", routerOmhClassName=" + routerOmhClassName + ", sparkAppName="
-				+ sparkAppName + ", sparkAppNameOmh=" + sparkAppNameOmh + ", sparkMaster=" + sparkMaster
-				+ ", smtpEmail=" + smtpEmail + ", smtpLogin=" + smtpLogin + ", smtpPassword=" + smtpPassword
-				+ ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", webServerPort=" + webServerPort
-				+ ", webServerContentPath=" + webServerContentPath + ", webServerContextPath=" + webServerContextPath
-				+ ", wsBdbbServerListenPort=" + wsBdbbServerListenPort + ", wsNrtServerListenPort="
-				+ wsNrtServerListenPort + ", wsOmhServerListenPort=" + wsOmhServerListenPort
-				+ ", wsRouterImplClassName=" + wsRouterImplClassName + ", wsBdbbRouterImplClassName="
-				+ wsBdbbRouterImplClassName + ", wsOmhRouterImplClassName=" + wsOmhRouterImplClassName
-				+ ", wsServerListenPort=" + wsServerListenPort + "]";
+				+ routerIote2eRequestClassName + ", routerOmhClassName=" + routerOmhClassName + ", routerBdbbClassName="
+				+ routerBdbbClassName + ", sparkAppName=" + sparkAppName + ", sparkAppNameBdbb=" + sparkAppNameBdbb
+				+ ", sparkAppNameOmh=" + sparkAppNameOmh + ", sparkMaster=" + sparkMaster + ", smtpEmailOmh="
+				+ smtpEmailOmh + ", smtpLoginOmh=" + smtpLoginOmh + ", smtpPasswordOmh=" + smtpPasswordOmh
+				+ ", smtpEmailBdbb=" + smtpEmailBdbb + ", smtpLoginBdbb=" + smtpLoginBdbb + ", smtpPasswordBdbb="
+				+ smtpPasswordBdbb + ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", webServerPort="
+				+ webServerPort + ", webServerContentPath=" + webServerContentPath + ", webServerContextPath="
+				+ webServerContextPath + ", wsBdbbServerListenPort=" + wsBdbbServerListenPort
+				+ ", wsNrtServerListenPort=" + wsNrtServerListenPort + ", wsOmhServerListenPort="
+				+ wsOmhServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName
+				+ ", wsBdbbRouterImplClassName=" + wsBdbbRouterImplClassName + ", wsOmhRouterImplClassName="
+				+ wsOmhRouterImplClassName + ", wsServerListenPort=" + wsServerListenPort + "]";
 	}
 
 	public String getKafkaZookeeperBrokerPath() {
@@ -605,35 +617,35 @@ public class MasterConfig implements Serializable {
 	}
 
 
-	public String getSmtpEmail() {
-		return smtpEmail;
+	public String getSmtpEmailOmh() {
+		return smtpEmailOmh;
 	}
 
 
-	public String getSmtpLogin() {
-		return smtpLogin;
+	public String getSmtpLoginOmh() {
+		return smtpLoginOmh;
 	}
 
 
-	public String getSmtpPassword() {
-		return smtpPassword;
+	public String getSmtpPasswordOmh() {
+		return smtpPasswordOmh;
 	}
 
 
-	public MasterConfig setSmtpEmail(String smtpEmail) {
-		this.smtpEmail = smtpEmail;
+	public MasterConfig setSmtpEmailOmh(String smtpEmail) {
+		this.smtpEmailOmh = smtpEmail;
 		return this;
 	}
 
 
-	public MasterConfig setSmtpLogin(String smtpLogin) {
-		this.smtpLogin = smtpLogin;
+	public MasterConfig setSmtpLoginOmh(String smtpLogin) {
+		this.smtpLoginOmh = smtpLogin;
 		return this;
 	}
 
 
-	public MasterConfig setSmtpPassword(String smtpPassword) {
-		this.smtpPassword = smtpPassword;
+	public MasterConfig setSmtpPasswordOmh(String smtpPassword) {
+		this.smtpPasswordOmh = smtpPassword;
 		return this;
 	}
 
@@ -716,6 +728,61 @@ public class MasterConfig implements Serializable {
 
 	public MasterConfig setWsBdbbRouterImplClassName(String wsBdbbRouterImplClassName) {
 		this.wsBdbbRouterImplClassName = wsBdbbRouterImplClassName;
+		return this;
+	}
+
+
+	public String getRouterBdbbClassName() {
+		return routerBdbbClassName;
+	}
+
+
+	public MasterConfig setRouterBdbbClassName(String routerBdbbClassName) {
+		this.routerBdbbClassName = routerBdbbClassName;
+		return this;
+	}
+
+
+	public String getSparkAppNameBdbb() {
+		return sparkAppNameBdbb;
+	}
+
+
+	public MasterConfig setSparkAppNameBdbb(String sparkAppNameBdbb) {
+		this.sparkAppNameBdbb = sparkAppNameBdbb;
+		return this;
+	}
+
+
+	public String getSmtpEmailBdbb() {
+		return smtpEmailBdbb;
+	}
+
+
+	public String getSmtpLoginBdbb() {
+		return smtpLoginBdbb;
+	}
+
+
+	public String getSmtpPasswordBdbb() {
+		return smtpPasswordBdbb;
+	}
+
+
+	public MasterConfig setSmtpEmailBdbb(String smtpEmailBdbb) {
+		this.smtpEmailBdbb = smtpEmailBdbb;
+		return this;
+	}
+
+
+	public MasterConfig setSmtpLoginBdbb(String smtpLoginBdbb) {
+		this.smtpLoginBdbb = smtpLoginBdbb;
+		return this;
+	}
+
+
+	public MasterConfig setSmtpPasswordBdbb(String smtpPasswordBdbb) {
+		this.smtpPasswordBdbb = smtpPasswordBdbb;
 		return this;
 	}
 

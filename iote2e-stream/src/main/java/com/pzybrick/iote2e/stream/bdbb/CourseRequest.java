@@ -1,8 +1,8 @@
 package com.pzybrick.iote2e.stream.bdbb;
 
 public class CourseRequest {
-	private String startDesc;
-	private String endDesc;
+	private String fromAirport;
+	private String toAirport;
 	private double startLat;
 	private double startLng;
 	private double endLat;
@@ -90,23 +90,25 @@ public class CourseRequest {
 	}
 	@Override
 	public String toString() {
-		return "CourseRequest [startDesc=" + startDesc + ", endDesc=" + endDesc + ", startLat=" + startLat
-				+ ", startLng=" + startLng + ", startAltFt=" + startAltFt + ", endLat=" + endLat + ", endLng=" + endLng
-				+ ", endAltFt=" + endAltFt + ", cruiseAltFt=" + cruiseAltFt + ", numWayPts=" + numWayPts
-				+ ", startMsecs=" + startMsecs + ", freqMSecs=" + freqMSecs + "]";
+		return "CourseRequest [fromAirport=" + fromAirport + ", toAirport=" + toAirport + ", startLat=" + startLat
+				+ ", startLng=" + startLng + ", endLat=" + endLat + ", endLng=" + endLng + ", endAltFt=" + endAltFt
+				+ ", startAltFt=" + startAltFt + ", cruiseAltFt=" + cruiseAltFt + ", numWayPts=" + numWayPts
+				+ ", startMsecs=" + startMsecs + ", freqMSecs=" + freqMSecs + ", takeoffAirspeedKts="
+				+ takeoffAirspeedKts + ", cruiseAirspeedKts=" + cruiseAirspeedKts + ", landingAirspeedKts="
+				+ landingAirspeedKts + ", heading=" + heading + "]";
 	}
-	public String getStartDesc() {
-		return startDesc;
+	public String getFromAirport() {
+		return fromAirport;
 	}
-	public String getEndDesc() {
-		return endDesc;
+	public String getToAirport() {
+		return toAirport;
 	}
-	public CourseRequest setStartDesc(String startDesc) {
-		this.startDesc = startDesc;
+	public CourseRequest setFromAirport(String fromAirport) {
+		this.fromAirport = fromAirport;
 		return this;
 	}
-	public CourseRequest setEndDesc(String endDesc) {
-		this.endDesc = endDesc;
+	public CourseRequest setToAirport(String toAirport) {
+		this.toAirport = toAirport;
 		return this;
 	}
 	public float getTakeoffAirspeedKts() {
