@@ -20,20 +20,27 @@ public class Email {
 	 * CRITICAL: to use SMTP w/ gmail, you have to allow less secure apps - https://myaccount.google.com/lesssecureapps
 	 */
 	
-	public static void main(String[] args) throws IOException {
-		try {
-			sendEmail("your.personalized.medicine","iote2e2017$", "your.personalized.medicine@gmail.com", "drzybrick@gmail.com", "Dr. Zybrick", "Doe, John had a Blood Pressure of 120/80 at 2017-07-25 12:34:59" );
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
 
-	public static void sendEmail( String mailUser, String mailPassword, String from, String to, String salutation, String exceededSummary ) throws Exception {
+
+	public static void sendEmailBdbb( String mailUser, String mailPassword, String from, String to, String salutation, String exceededSummary ) throws Exception {
+		String content = String.format( "<html><body><b>Hello %s</b><br>Engine Metric Exceeded: %s<br>"
+				+ "Launch the <a href=\"#\">Engine Dashboard</a><br>"
+				+ "Regards,<br>Big Data Black Box"
+				+ "</body></html>", salutation, exceededSummary);
+		String subject = String.format("Engine Metric Exceeded: %s", exceededSummary);
+		sendEmail( mailUser, mailPassword, from, to, salutation, subject, content );
+	}
+	
+	public static void sendEmailOmh( String mailUser, String mailPassword, String from, String to, String salutation, String exceededSummary ) throws Exception {
 		String content = String.format( "<html><body><b>Hello %s</b><br>Patient Metric Exceeded: %s<br>"
 				+ "Launch the <a href=\"#\">Patient Dashboard</a><br>"
 				+ "Regards,<br>Your Personalized Medicine"
 				+ "</body></html>", salutation, exceededSummary);
+		String subject = String.format("Patient Metric Exceeded: %s", exceededSummary);
+		sendEmail( mailUser, mailPassword, from, to, salutation, subject, content );
+	}
 
+	public static void sendEmail( String mailUser, String mailPassword, String from, String to, String salutation, String subject, String content  ) throws Exception {
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
@@ -48,7 +55,6 @@ public class Email {
 					return new PasswordAuthentication(mailUser, mailPassword);
 				}
 			});
-		String subject = String.format("Patient Metric Exceeded: %s", exceededSummary);
 		try {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress( from ));

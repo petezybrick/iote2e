@@ -2,6 +2,7 @@ package com.pzybrick.iote2e.stream.bdbb;
 
 import java.nio.ByteBuffer;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,10 +71,8 @@ public class BdbbRouterHandlerSparkSpeedImpl implements BdbbRouterHandler {
 					try {
 						flightStatus = Iote2eUtils.getGsonInstance().fromJson(rawJson, FlightStatus.class);
 				        if( nrtFilterOilPressure.contains(flightStatus.getFlightNumber())) {
-							for( EngineStatus engineStatus : flightStatus.getEngineStatuss() ) {
-					        	nearRealTimeOilPressure( flightStatus );
-					        	checkOilPressureExceeded( flightStatus );
-							}
+				        	nearRealTimeOilPressure( flightStatus );
+							checkOilPressureExceeded( flightStatus );
 				        }
 					} catch(Exception e ) {
 						logger.error(e.getMessage(), e);
@@ -97,9 +96,9 @@ public class BdbbRouterHandlerSparkSpeedImpl implements BdbbRouterHandler {
 		for( EngineStatus engineStatus : flightStatus.getEngineStatuss() ) {
 			if( engineStatus.getOilPressure() >= 90f ) {
 				Instant instant = Instant.ofEpochMilli(flightStatus.getFlightStatusTs());
-				String fmtNow = DateTimeFormatter.RFC_1123_DATE_TIME.format(instant);
-				String summary = String.format("FlightNumber %s, Engine %d had an Oil Pressure of %d on %s", flightStatus.getFlightNumber(), engineNumber, engineStatus.getOilPressure() , fmtNow );
-				Email.sendEmail( masterConfig.getSmtpLoginBdbb(), masterConfig.getSmtpPasswordBdbb(), masterConfig.getSmtpEmailBdbb(), "chief.mechanic.zybrick@gmail.com", "Chief Mechanic Zybrick", summary );				
+				String fmtNow = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneId.of("UTC")).format(instant);
+				String summary = String.format("FlightNumber %s, Engine %d had an Oil Pressure of %4.2f on %s", flightStatus.getFlightNumber(), engineNumber, engineStatus.getOilPressure() , fmtNow );
+				Email.sendEmailBdbb( masterConfig.getSmtpLoginBdbb(), masterConfig.getSmtpPasswordBdbb(), masterConfig.getSmtpEmailBdbb(), "chief.mechanic.zybrick@gmail.com", "Chief Mechanic Zybrick", summary );				
 			}
 			engineNumber++;
 		}

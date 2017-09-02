@@ -39,7 +39,7 @@
 	"sparkMaster": "",
 	"sparkStreamDurationMs": "500",
 	"smtpEmailBdbb": "big.data.black.box@gmail.com",
-	"smtpLoginBdbb": "your.personalized.medicine",
+	"smtpLoginBdbb": "big.data.black.box",
 	"smtpPasswordBdbb": "iote2e2017$",
 	"smtpEmailOmh": "your.personalized.medicine@gmail.com",
 	"smtpLoginOmh": "your.personalized.medicine",

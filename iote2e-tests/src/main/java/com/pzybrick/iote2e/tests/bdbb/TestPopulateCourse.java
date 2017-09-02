@@ -33,7 +33,7 @@ public class TestPopulateCourse {
 	private static final Logger logger = LogManager.getLogger(TestPopulateCourse.class);
 	public static Integer NUM_ITERATIONS = 120;
 	public static Long FREQ_MSECS = 1000L;
-	public static Integer MIN_PCT_EXCEEDED = 5;
+	public static Integer MIN_PCT_EXCEEDED = 1;
 	public static boolean IS_TRUNCATE_TABLES = true;
 
 	
