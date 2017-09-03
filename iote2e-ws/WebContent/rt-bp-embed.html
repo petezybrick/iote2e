@@ -142,7 +142,7 @@ var preview = new Rickshaw.Graph.RangeSlider( {
 var hoverDetail = new Rickshaw.Graph.HoverDetail( {
 	graph: graph,
 	xFormatter: function(x) {
-		return new Date(x * 1000).toString();
+		return new Date(x).toString();
 	}
 } );
 

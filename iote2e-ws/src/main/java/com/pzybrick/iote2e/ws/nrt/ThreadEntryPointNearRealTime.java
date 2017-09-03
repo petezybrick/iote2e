@@ -89,8 +89,14 @@ public class ThreadEntryPointNearRealTime extends Thread {
 			final CharSequence checkBloodPressure = new Utf8("blood-pressure");
 			final CharSequence checkSystolic = new Utf8("SYSTOLIC");
 			final CharSequence checkDiastolic = new Utf8("DIASTOLIC");
+			final CharSequence checkEngineOilPressure = new Utf8("oil-pressure");
+			final CharSequence checkEngine1 = new Utf8("engine1");
+			final CharSequence checkEngine2 = new Utf8("engine2");
+			final CharSequence checkEngine3 = new Utf8("engine3");
+			final CharSequence checkEngine4 = new Utf8("engine4");
 			TemperatureSensorItem temperatureSensorItem = new TemperatureSensorItem();
 			BloodPressureSensorItem bloodPressureSensorItem = new BloodPressureSensorItem();
+			EngineOilPressureSensorItem engineOilPressureSensorItem = new EngineOilPressureSensorItem();
 			logger.info("ThreadToBrowserNrtMonitor Run");
 			try {
 				while (true) {
@@ -126,6 +132,35 @@ public class ThreadEntryPointNearRealTime extends Thread {
 												.setDiastolic(diastolic);
 										String rawJson = Iote2eUtils.getGsonInstance().toJson(bloodPressureSensorItem);
 										logger.debug("blood pressure raw json: {}", rawJson );
+										socket.getSession().getBasicRemote().sendText(rawJson);
+									} else if( checkEngineOilPressure.equals(iote2eResult.getSourceType())) {
+										// this is a hack
+										Float engine1 = null;
+										Float engine2 = null;
+										Float engine3 = null;
+										Float engine4 = null;
+										if(iote2eResult.getPairs().containsKey(checkEngine1)) {
+											engine1 = Float.parseFloat(iote2eResult.getPairs().get(checkEngine1).toString());
+										}
+										if(iote2eResult.getPairs().containsKey(checkEngine2)) {
+											engine2 = Float.parseFloat(iote2eResult.getPairs().get(checkEngine2).toString());
+										}
+										if(iote2eResult.getPairs().containsKey(checkEngine3)) {
+											engine3 = Float.parseFloat(iote2eResult.getPairs().get(checkEngine3).toString());
+										}
+										if(iote2eResult.getPairs().containsKey(checkEngine4)) {
+											engine4 = Float.parseFloat(iote2eResult.getPairs().get(checkEngine4).toString());
+										}
+										logger.debug("processing engine oil pressure 1: {}, 2: {}, 3: {}, 4: {}", engine1, engine2, engine3, engine4 );
+										engineOilPressureSensorItem
+												.setFlightNumber(iote2eResult.getSourceName().toString())
+												.setTimeMillis( Instant.parse( iote2eResult.getRequestTimestamp() ).toEpochMilli())
+												.setEngine1(engine1)
+												.setEngine2(engine2)
+												.setEngine3(engine3)
+												.setEngine4(engine4);
+										String rawJson = Iote2eUtils.getGsonInstance().toJson(engineOilPressureSensorItem);
+										logger.debug("engine oil pressure raw json: {}", rawJson );
 										socket.getSession().getBasicRemote().sendText(rawJson);
 									} else logger.warn("No match on sourceType: {} ", iote2eResult.getSourceType());
 								} catch (Throwable e) {

@@ -169,6 +169,9 @@ select * from engine_status order by insert_ts,engine_number;
 delete from engine_status;
 delete from flight_status;
 
+select * from engine_status eng, flight_status flight where eng.flight_status_uuid=flight.flight_status_uuid and flight.flight_number='LH411' and oil_pressure>=90
+
+
 * Assume: iote2e-ws is already up and running
 * Submit the Spark Batch and Speed jobs
 cd to local spark folder
@@ -195,6 +198,9 @@ cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7
   --total-executor-cores 8 \
   /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
   master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
+  
+Bring up the dashboard
+embedded url: http://hp-lt-ubuntu-1:8082/iote2e-web/rt-engine-op-embed.html
   
 * Run single BDBB simulator to verify end to end
 docker exec -it iote2e-demomgr1 /bin/bash

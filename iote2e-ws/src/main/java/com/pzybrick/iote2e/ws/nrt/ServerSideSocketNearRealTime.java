@@ -37,6 +37,7 @@ public class ServerSideSocketNearRealTime {
 	private Session session;
 	private ThreadIgniteSubscribe threadIgniteSubscribeTemperature;
 	private ThreadIgniteSubscribe threadIgniteSubscribeOmh;
+	private ThreadIgniteSubscribe threadIgniteSubscribeBdbb;
 
 	public Session getSession() {
 		return session;
@@ -57,6 +58,8 @@ public class ServerSideSocketNearRealTime {
 		threadIgniteSubscribeTemperature = ThreadIgniteSubscribe.startThreadSubscribe( ThreadEntryPointNearRealTime.masterConfig, Iote2eConstants.IGNITE_KEY_NRT_TEMPERATURE,
 				ThreadEntryPointNearRealTime.toClientIote2eResults, (Thread)null );
 		threadIgniteSubscribeOmh = ThreadIgniteSubscribe.startThreadSubscribe( ThreadEntryPointNearRealTime.masterConfig, Iote2eConstants.IGNITE_KEY_NRT_OMH,
+				ThreadEntryPointNearRealTime.toClientIote2eResults, (Thread)null );
+		threadIgniteSubscribeBdbb = ThreadIgniteSubscribe.startThreadSubscribe( ThreadEntryPointNearRealTime.masterConfig, Iote2eConstants.IGNITE_KEY_NRT_BDBB,
 				ThreadEntryPointNearRealTime.toClientIote2eResults, (Thread)null );
 		//new ThreadPumpTestData().start();
 		logger.info("Socket Connected: " + session.getId());
@@ -91,8 +94,10 @@ public class ServerSideSocketNearRealTime {
 		try {
 			threadIgniteSubscribeTemperature.shutdown();
 			threadIgniteSubscribeOmh.shutdown();
+			threadIgniteSubscribeBdbb.shutdown();
 			threadIgniteSubscribeTemperature.join(5000);
 			threadIgniteSubscribeOmh.join(5000);
+			threadIgniteSubscribeBdbb.join(5000);
 		} catch( InterruptedException e ) {
 		} catch( Exception e ) {
 			logger.error(e.getMessage());
