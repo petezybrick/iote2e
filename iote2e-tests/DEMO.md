@@ -1,6 +1,11 @@
-** Align the cameras
+** Setup
+- open Eclipse on win7
+- open mtputty on win7, connect
 - align each camera
 - restart each RPi
+- open squirrel on win7
+- open 2x Tableau db's on win7
+- open 
 
 
 * Terminal for rpi-00x: Open terminal, create 3x tabs, ssh pete@rpi-00x in each session
@@ -26,10 +31,13 @@ docker exec -it iote2e-demomgr1 /bin/bash
 cd /tmp/iote2e-shared/scripts
 ./reset-pyclient-actuator-state.sh iote2e-cassandra1 iote2e all
 
+* Clear the temperature table
+
 * Open browser
 Spark: http://localhost:8080
 Zeppelin: http://localhost:8081
 NRT Temperature: file:///home/pete/development/gitrepo/iote2e/iote2e-ws/webContent/rt-temperature.html
+
 
 * Submit Spark jobs for temperature and pill dispenser
 cd to local spark folder
@@ -60,6 +68,7 @@ cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7
 * Refresh Spark browser session, ensure up and running
 
 * Temperature Runs
+- Review the Temperature Rule
 Truncate the temperature table from Zeppelin
 Verify the query is there for rpi-001 - rpi-003
 Launch each temperature run
@@ -73,6 +82,7 @@ Query the temperature table, show graphs
 
 ** PillDispensers **
 - Truncate the pill_dispenser table
+- Show the Subjects table
 - Populate pill_dispenser table
 insert into pills_dispensed (pills_dispensed_uuid,login_name,source_name,actuator_name,dispense_state, state_pending_ts, num_to_dispense)
 	select uuid() as pills_dispensed_uuid, subj.login_name, subj.source_name, 'pilldisp1' as actuator_name, 'PENDING' as dispense_state, now() as state_pending_ts, 
@@ -114,6 +124,7 @@ insert into pills_dispensed (pills_dispensed_uuid,login_name,source_name,actuato
 **Open mHealth**
 * Assume: iote2e-ws is already up and running
 * Submit the Spark Batch and Speed jobs
+* Open Tableau and connect RT
 cd to local spark folder
 cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7
 
@@ -141,6 +152,8 @@ cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7
   
 * Optionally run single OMH simulator to verify end to end
 docker exec -it iote2e-demomgr1 /bin/bash
+cd /tmp/iote2e-shared
+java -cp jars/iote2e-tests-1.0.0.jar com.pzybrick.iote2e.tests.omh.RunOmhSim "data/simOmhUsers.csv" 1 5 60 "ws://iote2e-ws1:8092/omh/" 
 
 * SQL to query and truncate the tables
 select * from blood_pressure order by insert_ts;
