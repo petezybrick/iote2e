@@ -18,6 +18,7 @@ Before demo
 - delete emails
 
 ** Defer Questions **
+** Record Presentation **
 
 
 * Terminal for rpi-00x: Open terminal, create 3x tabs, ssh pete@rpi-00x in each session
