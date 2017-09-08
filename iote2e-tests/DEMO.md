@@ -5,7 +5,19 @@
 - restart each RPi
 - open squirrel on win7
 - open 2x Tableau db's on win7
-- open 
+- fill the pill dispensers
+- start docker containers
+- reset actuator states
+- start speed/batch in spark 
+- delete emails
+
+Before demo
+- reset actuator states
+- truncate temperature table
+- truncate pd table
+- delete emails
+
+** Defer Questions **
 
 
 * Terminal for rpi-00x: Open terminal, create 3x tabs, ssh pete@rpi-00x in each session
