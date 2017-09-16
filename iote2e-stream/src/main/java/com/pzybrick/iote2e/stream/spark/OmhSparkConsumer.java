@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.spark;
 
 import java.util.HashMap;
@@ -18,13 +37,31 @@ import consumer.kafka.Config;
 import consumer.kafka.MessageAndMetadata;
 import consumer.kafka.ReceiverLauncher;
 
+
+/**
+ * The Class OmhSparkConsumer.
+ */
 public class OmhSparkConsumer {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(OmhSparkConsumer.class.getName());
+    
+    /** The conf. */
     private SparkConf conf;
+    
+    /** The ssc. */
     private JavaStreamingContext ssc;
+    
+    /** The started. */
     private boolean started = false;
 	
 	
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws Exception the exception
+     */
     public static void main(String[] args) throws Exception {
     	OmhSparkConsumer omhSparkConsumer = new OmhSparkConsumer();
     	MasterConfig masterConfig = MasterConfig.getInstance( args[0], args[1], args[2] );
@@ -39,15 +76,32 @@ public class OmhSparkConsumer {
 
     }
     
+    /**
+     * The Class RunProcess.
+     */
     // local testing
     private static class RunProcess extends Thread {
-    	private OmhSparkConsumer omhSparkConsumer;
-    	private MasterConfig masterConfig;
     	
-    	public RunProcess( OmhSparkConsumer omhSparkConsumer, MasterConfig masterConfig ) {
+	    /** The omh spark consumer. */
+	    private OmhSparkConsumer omhSparkConsumer;
+    	
+	    /** The master config. */
+	    private MasterConfig masterConfig;
+    	
+    	/**
+	     * Instantiates a new run process.
+	     *
+	     * @param omhSparkConsumer the omh spark consumer
+	     * @param masterConfig the master config
+	     */
+	    public RunProcess( OmhSparkConsumer omhSparkConsumer, MasterConfig masterConfig ) {
     		this.omhSparkConsumer = omhSparkConsumer;
     		this.masterConfig = masterConfig;
     	}
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			try {
@@ -58,6 +112,12 @@ public class OmhSparkConsumer {
 		}
     }
     	
+    /**
+     * Process.
+     *
+     * @param masterConfig the master config
+     * @throws Exception the exception
+     */
     public void process(MasterConfig masterConfig) throws Exception {
     	logger.info(masterConfig.toString());
     	String sparkAppNameOmh = masterConfig.getSparkAppNameOmh();
@@ -134,11 +194,21 @@ public class OmhSparkConsumer {
 		
     }
     
+    /**
+     * Stop.
+     *
+     * @throws Exception the exception
+     */
     public void stop() throws Exception {
     	logger.info("Stopping Spark...");
     	ssc.stop(true);
     }
 
+	/**
+	 * Checks if is started.
+	 *
+	 * @return true, if is started
+	 */
 	public boolean isStarted() {
 		return started;
 	}

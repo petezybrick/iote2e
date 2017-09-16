@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.simws;
 
 import java.util.HashMap;
@@ -18,16 +37,39 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 import com.pzybrick.iote2e.ws.security.LoginVo;
 
+
+/**
+ * The Class SimWsClientHumidityToMister.
+ */
 public class SimWsClientHumidityToMister extends SimWsClientBase {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(SimWsClientHumidityToMister.class);
+	
+	/** The Constant HUMIDITY_MIN. */
 	private static final double HUMIDITY_MIN = 82.0;
+	
+	/** The Constant HUMIDITY_MAX. */
 	private static final double HUMIDITY_MAX = 93.0;
+	
+	/** The Constant HUMIDITY_START. */
 	private static final double HUMIDITY_START = 90.0;
+	
+	/** The Constant HUMIDITY_INCR. */
 	private static final double HUMIDITY_INCR = 1.0;
+	
+	/** The Constant HUMIDITY_PUT_FREQ_MS. */
 	private static final long HUMIDITY_PUT_FREQ_MS = 4000;
+	
+	/** The humidity direction increase. */
 	private boolean humidityDirectionIncrease = true;
 
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 		SimWsClientHumidityToMister simWsClientHumidityToMister = new SimWsClientHumidityToMister();
@@ -38,11 +80,21 @@ public class SimWsClientHumidityToMister extends SimWsClientBase {
 	}
 
 	
+	/**
+	 * Instantiates a new sim ws client humidity to mister.
+	 *
+	 * @throws Exception the exception
+	 */
 	public SimWsClientHumidityToMister() throws Exception {
 		super();
 	}
 
 	
+	/**
+	 * Process.
+	 *
+	 * @param args the args
+	 */
 	public void process(String[] args) {
 		try {
 			url = args[0];
@@ -108,11 +160,21 @@ public class SimWsClientHumidityToMister extends SimWsClientBase {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.tests.simws.SimWsClientBase#after()
+	 */
 	public void after() throws Exception {
 		super.after();
 	}
 
+	/**
+	 * The Class SimWsTempToFanShutdownHook.
+	 */
 	private class SimWsTempToFanShutdownHook extends Thread {
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			try {

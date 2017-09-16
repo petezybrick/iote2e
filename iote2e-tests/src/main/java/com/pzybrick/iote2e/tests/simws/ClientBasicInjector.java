@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.simws;
 
 import java.net.URI;
@@ -26,16 +45,39 @@ import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.ws.security.LoginVo;
 
+
+/**
+ * The Class ClientBasicInjector.
+ */
 public class ClientBasicInjector {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ClientBasicInjector.class);
+	
+	/** The uri. */
 	private URI uri;
+	
+	/** The container. */
 	private WebSocketContainer container;
+	
+	/** The test source login. */
 	private static Utf8 TEST_SOURCE_LOGIN = new Utf8("pzybrick1");
+	
+	/** The test source name. */
 	private static Utf8 TEST_SOURCE_NAME = new Utf8("local_t001");
+	
+	/** The test source type. */
 	private static Utf8 TEST_SOURCE_TYPE = new Utf8("testSourceType");
+	
+	/** The test sensor name. */
 	private static Utf8 TEST_SENSOR_NAME = new Utf8("testSensorName");	// fan
 
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		// "ws://localhost:8090/iote2e/"
 		try {
@@ -47,6 +89,12 @@ public class ClientBasicInjector {
 		}
 	}
 
+	/**
+	 * Process.
+	 *
+	 * @param url the url
+	 * @throws Exception the exception
+	 */
 	public void process(String url) throws Exception {
 		try {
 			uri = URI.create(url);
@@ -79,18 +127,41 @@ public class ClientBasicInjector {
 		}
 	}
 	
+	/**
+	 * The Class IotClientSocketThread.
+	 */
 	private static class IotClientSocketThread extends Thread {
+		
+		/** The login. */
 		private String login;
+		
+		/** The uri. */
 		private URI uri;
+		
+		/** The container. */
 		private WebSocketContainer container;
+		
+		/** The shutdown. */
 		private boolean shutdown;
+		
+		/** The iote 2 e request reuse item. */
 		private Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
+		
+		/** The iote 2 e result reuse item. */
 		private Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 
+		/**
+		 * Instantiates a new iot client socket thread.
+		 *
+		 * @throws Exception the exception
+		 */
 		public IotClientSocketThread() throws Exception {
 
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			Session session = null;
@@ -138,33 +209,69 @@ public class ClientBasicInjector {
 			}
 		}
 
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			shutdown = true;
 			interrupt();
 		}
 
+		/**
+		 * Gets the login.
+		 *
+		 * @return the login
+		 */
 		public String getLogin() {
 			return login;
 		}
 
+		/**
+		 * Sets the login.
+		 *
+		 * @param login the login
+		 * @return the iot client socket thread
+		 */
 		public IotClientSocketThread setLogin(String login) {
 			this.login = login;
 			return this;
 		}
 
+		/**
+		 * Gets the uri.
+		 *
+		 * @return the uri
+		 */
 		public URI getUri() {
 			return uri;
 		}
 
+		/**
+		 * Sets the uri.
+		 *
+		 * @param uri the uri
+		 * @return the iot client socket thread
+		 */
 		public IotClientSocketThread setUri(URI uri) {
 			this.uri = uri;
 			return this;
 		}
 
+		/**
+		 * Gets the container.
+		 *
+		 * @return the container
+		 */
 		public WebSocketContainer getContainer() {
 			return container;
 		}
 
+		/**
+		 * Sets the container.
+		 *
+		 * @param container the container
+		 * @return the iot client socket thread
+		 */
 		public IotClientSocketThread setContainer(WebSocketContainer container) {
 			this.container = container;
 			return this;

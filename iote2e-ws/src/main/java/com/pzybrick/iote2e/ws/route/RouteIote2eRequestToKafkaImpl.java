@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.ws.route;
 
 import java.util.Properties;
@@ -15,18 +34,38 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 
+
+/**
+ * The Class RouteIote2eRequestToKafkaImpl.
+ */
 public class RouteIote2eRequestToKafkaImpl implements RouteIote2eRequest {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(RouteIote2eRequestToKafkaImpl.class);
+	
+	/** The kafka producer. */
 	protected KafkaProducer<String, byte[]> kafkaProducer;
+	
+	/** The iote 2 e request reuse item. */
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
+	
+	/** The kafka topic. */
 	protected String kafkaTopic;
+	
+	/** The kafka group. */
 	protected String kafkaGroup;
 	
+	/**
+	 * Instantiates a new route iote 2 e request to kafka impl.
+	 */
 	public RouteIote2eRequestToKafkaImpl(){
 		
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.ws.route.RouteIote2eRequest#init(com.pzybrick.iote2e.common.config.MasterConfig)
+	 */
 	public void init(MasterConfig masterConfig) throws Exception {
 		logger.debug("constructing, connecting to Kafka producer");
 		kafkaTopic = masterConfig.getKafkaTopic();
@@ -41,6 +80,9 @@ public class RouteIote2eRequestToKafkaImpl implements RouteIote2eRequest {
 		logger.debug("kafkaProducer: {}", kafkaProducer.toString());
 	}
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.ws.route.RouteIote2eRequest#routeToTarget(com.pzybrick.iote2e.schema.avro.Iote2eRequest)
+	 */
 	public void routeToTarget( Iote2eRequest iote2eRequest ) throws Exception {
 		logger.debug(iote2eRequest.toString());
 		String key = String.valueOf(System.currentTimeMillis());

@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.ignitemulti;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,19 +41,51 @@ import com.pzybrick.iote2e.common.ignite.Iote2eIgniteCacheEntryEventSingleFilter
 import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
+
+/**
+ * The Class EvalIgniteSubscribeThread.
+ */
 public class EvalIgniteSubscribeThread extends Thread {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(EvalIgniteSubscribeThread.class);
+	
+	/** The ignite filter key. */
 	private String igniteFilterKey;
+	
+	/** The shutdown. */
 	private boolean shutdown;
+	
+	/** The subscribe up. */
 	private boolean subscribeUp;
+	
+	/** The queue iote 2 e results. */
 	private ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
+	
+	/** The poller thread. */
 	private Thread pollerThread;
+	
+	/** The cache. */
 	private IgniteCache<String, byte[]> cache = null;
+	
+	/** The ignite. */
 	private Ignite ignite = null;
 
+	/**
+	 * Instantiates a new eval ignite subscribe thread.
+	 */
 	public EvalIgniteSubscribeThread() {
 	}
 
+	/**
+	 * Start thread subscribe.
+	 *
+	 * @param igniteFilterKey the ignite filter key
+	 * @param queueIote2eResults the queue iote 2 e results
+	 * @param threadPoller the thread poller
+	 * @return the eval ignite subscribe thread
+	 * @throws Exception the exception
+	 */
 	public static EvalIgniteSubscribeThread startThreadSubscribe(String igniteFilterKey,
 			ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults, Thread threadPoller) throws Exception {
 		EvalIgniteSubscribeThread igniteSubscribeThread = new EvalIgniteSubscribeThread()
@@ -53,6 +104,9 @@ public class EvalIgniteSubscribeThread extends Thread {
 		return igniteSubscribeThread;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		try {
@@ -154,6 +208,9 @@ public class EvalIgniteSubscribeThread extends Thread {
 		}
 	}
 
+	/**
+	 * Shutdown.
+	 */
 	public void shutdown() {
 		this.shutdown = true;
 		//cache.close();
@@ -162,46 +219,101 @@ public class EvalIgniteSubscribeThread extends Thread {
 		interrupt();
 	}
 
+	/**
+	 * Gets the ignite filter key.
+	 *
+	 * @return the ignite filter key
+	 */
 	public String getIgniteFilterKey() {
 		return igniteFilterKey;
 	}
 
+	/**
+	 * Checks if is shutdown.
+	 *
+	 * @return true, if is shutdown
+	 */
 	public boolean isShutdown() {
 		return shutdown;
 	}
 
+	/**
+	 * Checks if is subscribe up.
+	 *
+	 * @return true, if is subscribe up
+	 */
 	public boolean isSubscribeUp() {
 		return subscribeUp;
 	}
 
+	/**
+	 * Gets the queue iote 2 e results.
+	 *
+	 * @return the queue iote 2 e results
+	 */
 	public ConcurrentLinkedQueue<Iote2eResult> getQueueIote2eResults() {
 		return queueIote2eResults;
 	}
 
+	/**
+	 * Sets the ignite filter key.
+	 *
+	 * @param igniteFilterKey the ignite filter key
+	 * @return the eval ignite subscribe thread
+	 */
 	public EvalIgniteSubscribeThread setIgniteFilterKey(String igniteFilterKey) {
 		this.igniteFilterKey = igniteFilterKey;
 		return this;
 	}
 
+	/**
+	 * Sets the shutdown.
+	 *
+	 * @param shutdown the shutdown
+	 * @return the eval ignite subscribe thread
+	 */
 	public EvalIgniteSubscribeThread setShutdown(boolean shutdown) {
 		this.shutdown = shutdown;
 		return this;
 	}
 
+	/**
+	 * Sets the subscribe up.
+	 *
+	 * @param subscribeUp the subscribe up
+	 * @return the eval ignite subscribe thread
+	 */
 	public EvalIgniteSubscribeThread setSubscribeUp(boolean subscribeUp) {
 		this.subscribeUp = subscribeUp;
 		return this;
 	}
 
+	/**
+	 * Sets the queue iote 2 e results.
+	 *
+	 * @param iote2eResults the iote 2 e results
+	 * @return the eval ignite subscribe thread
+	 */
 	public EvalIgniteSubscribeThread setQueueIote2eResults(ConcurrentLinkedQueue<Iote2eResult> iote2eResults) {
 		this.queueIote2eResults = iote2eResults;
 		return this;
 	}
 
+	/**
+	 * Gets the poller thread.
+	 *
+	 * @return the poller thread
+	 */
 	public Thread getPollerThread() {
 		return pollerThread;
 	}
 
+	/**
+	 * Sets the poller thread.
+	 *
+	 * @param pollerThread the poller thread
+	 * @return the eval ignite subscribe thread
+	 */
 	public EvalIgniteSubscribeThread setPollerThread(Thread pollerThread) {
 		this.pollerThread = pollerThread;
 		return this;

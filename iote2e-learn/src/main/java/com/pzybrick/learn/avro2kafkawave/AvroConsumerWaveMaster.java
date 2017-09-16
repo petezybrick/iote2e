@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.learn.avro2kafkawave;
 
 import java.util.HashMap;
@@ -17,17 +36,39 @@ import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
+
+/**
+ * The Class AvroConsumerWaveMaster.
+ */
 public class AvroConsumerWaveMaster {
+	
+	/** The Constant log. */
 	private static final Log log = LogFactory.getLog(AvroConsumerWaveMaster.class);
+	
+	/** The consumer. */
 	private final ConsumerConnector consumer;
+	
+	/** The topic. */
 	private final String topic;
+	
+	/** The executor. */
 	private ExecutorService executor;
 
+	/**
+	 * Instantiates a new avro consumer wave master.
+	 *
+	 * @param a_zookeeper the a zookeeper
+	 * @param a_groupId the a group id
+	 * @param a_topic the a topic
+	 */
 	public AvroConsumerWaveMaster(String a_zookeeper, String a_groupId, String a_topic) {
 		consumer = kafka.consumer.Consumer.createJavaConsumerConnector(createConsumerConfig(a_zookeeper, a_groupId));
 		this.topic = a_topic;
 	}
 
+	/**
+	 * Shutdown.
+	 */
 	public void shutdown() {
 		if (consumer != null)
 			consumer.shutdown();
@@ -42,6 +83,11 @@ public class AvroConsumerWaveMaster {
 		}
 	}
 
+	/**
+	 * Run.
+	 *
+	 * @param numThreads the num threads
+	 */
 	public void run(int numThreads) {
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		topicCountMap.put(topic, new Integer(numThreads));
@@ -61,6 +107,13 @@ public class AvroConsumerWaveMaster {
 		}
 	}
 
+	/**
+	 * Creates the consumer config.
+	 *
+	 * @param a_zookeeper the a zookeeper
+	 * @param a_groupId the a group id
+	 * @return the consumer config
+	 */
 	private static ConsumerConfig createConsumerConfig(String a_zookeeper, String a_groupId) {
 		Properties props = new Properties();
 		props.put("zookeeper.connect", a_zookeeper);
@@ -72,6 +125,11 @@ public class AvroConsumerWaveMaster {
 		return new ConsumerConfig(props);
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			LogTool.initConsole();
@@ -101,8 +159,14 @@ public class AvroConsumerWaveMaster {
 		}
 	}
 	
+	/**
+	 * The Class LaunchProducer.
+	 */
 	private static class LaunchProducer extends Thread {
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#start()
+		 */
 		@Override
 		public synchronized void start() {
 			AvroProducerWaveMaster avroProducerWaveMaster = new AvroProducerWaveMaster();

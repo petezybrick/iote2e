@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.pilldisp;
 
 import java.awt.image.BufferedImage;
@@ -32,18 +51,47 @@ import boofcv.struct.ConnectRule;
 import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.GrayU8;
 
+
+/**
+ * The Class PillDispenser.
+ */
 public class PillDispenser {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(PillDispenser.class);
+	
+	/** The Constant IS_DISPLAY_BINARY_IMAGE. */
 	private static final boolean IS_DISPLAY_BINARY_IMAGE = false;
+	
+	/** The Constant PIXEL_THRESHOLD. */
 	public static final float PIXEL_THRESHOLD = 210;
+	
+	/** The Constant PIXELS_PER_PILL. */
 	public static final int PIXELS_PER_PILL = 1100;
+	
+	/** The Constant PIXELS_PER_PILL_FUDGE_FACTOR. */
 	public static final float PIXELS_PER_PILL_FUDGE_FACTOR = 1.10f;
+	
+	/** The Constant CHECK_MAX_NUM_PILLS. */
 	public static final int CHECK_MAX_NUM_PILLS = 7;
+	
+	/** The Constant SOURCE_TYPE. */
 	public static final String SOURCE_TYPE = "pilldisp";
+	
+	/** The Constant KEY_PILLS_DISPENSED_UUID. */
 	public static final CharSequence KEY_PILLS_DISPENSED_UUID =  new Utf8("PILLS_DISPENSED_UUID");
+	
+	/** The Constant KEY_PILLS_DISPENSED_STATE. */
 	public static final CharSequence KEY_PILLS_DISPENSED_STATE =  new Utf8("PILLS_DISPENSED_STATE");
+	
+	/** The Constant KEY_NUM_PILLS_TO_DISPENSE. */
 	public static final CharSequence KEY_NUM_PILLS_TO_DISPENSE =  new Utf8("NUM_PILLS_TO_DISPENSE");
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main( String[] args ) {
 		try {
 			String masterConfigJsonKey = args[0];
@@ -59,6 +107,12 @@ public class PillDispenser {
 		}
 	}
 	
+	/**
+	 * Dispense pending.
+	 *
+	 * @param masterConfig the master config
+	 * @throws Exception the exception
+	 */
 	public void dispensePending( MasterConfig masterConfig ) throws Exception {
 		List<PillsDispensedVo> pillsDispensedVos = PillsDispensedDao.sqlFindByDispenseState(masterConfig, DispenseState.PENDING );
 		logger.info("Processing {} pills_dispensed Pending entries", pillsDispensedVos.size());
@@ -131,6 +185,13 @@ public class PillDispenser {
 	}
 	
 	
+	/**
+	 * Count pills.
+	 *
+	 * @param image the image
+	 * @return the int
+	 * @throws Exception the exception
+	 */
 	public static int countPills( BufferedImage image ) throws Exception {
 		GrayF32 input = ConvertBufferedImage.convertFromSingle(image, null, GrayF32.class);
 		GrayU8 binary = new GrayU8(input.width,input.height);
@@ -156,6 +217,14 @@ public class PillDispenser {
 		return numPills;
 	}
 	
+	/**
+	 * Dump image.
+	 *
+	 * @param binaryImage the binary image
+	 * @param width the width
+	 * @param height the height
+	 * @throws Exception the exception
+	 */
 	public static void dumpImage( GrayU8 binaryImage, int width, int height ) throws Exception {
 		int totPixels = 0;
 		for( int x = 0 ; x<width ; x++ ) {

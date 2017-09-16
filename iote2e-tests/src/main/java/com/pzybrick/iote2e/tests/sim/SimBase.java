@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.sim;
 
 import java.util.HashMap;
@@ -29,24 +48,63 @@ import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.tests.common.Iote2eRequestHandlerIgniteTestThread;
 import com.pzybrick.iote2e.tests.common.ThreadSparkRun;
 
+
+/**
+ * The Class SimBase.
+ */
 public class SimBase {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(SimBase.class);
+	
+	/** The queue iote 2 e requests. */
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
+	
+	/** The queue iote 2 e results. */
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
+	
+	/** The iote 2 e request handler. */
 	protected Iote2eRequestHandlerIgniteTestThread iote2eRequestHandler;
+	
+	/** The iote 2 e svc. */
 	protected Iote2eSvc iote2eSvc;
+	
+	/** The kafka producer. */
 	protected KafkaProducer<String, byte[]> kafkaProducer;
+	
+	/** The iote 2 e request reuse item. */
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem;
+	
+	/** The iote 2 e result reuse item. */
 	protected Iote2eResultReuseItem iote2eResultReuseItem;
+	
+	/** The kafka topic. */
 	protected String kafkaTopic;
+	
+	/** The kafka group. */
 	protected String kafkaGroup;
+	
+	/** The thread ignite subscribe. */
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
+	
+	/** The gson. */
 	protected Gson gson;
+	
+	/** The iote 2 e request spark consumer. */
 	protected static Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
+	
+	/** The thread spark run. */
 	protected static ThreadSparkRun threadSparkRun;
+	
+	/** The master config. */
 	protected static MasterConfig masterConfig;
 
 
+	/**
+	 * Instantiates a new sim base.
+	 *
+	 * @throws Exception the exception
+	 */
 	public SimBase() throws Exception {
 		super();
 		if( SimBase.masterConfig == null )
@@ -54,6 +112,11 @@ public class SimBase {
 					System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME") );
 	}
 
+	/**
+	 * Before.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void before() throws Exception {
 		// cassandra
 		ActuatorStateDao.connect(masterConfig.getContactPoint(), masterConfig.getKeyspaceName());
@@ -84,6 +147,11 @@ public class SimBase {
 		}
 	}
 
+	/**
+	 * After.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void after() throws Exception {
 		logger.info(">>>> Shutdown hook calling after");
 		try {
@@ -104,6 +172,16 @@ public class SimBase {
 	}
 	
 
+	/**
+	 * Kafka send.
+	 *
+	 * @param loginName the login name
+	 * @param sourceName the source name
+	 * @param sourceType the source type
+	 * @param sensorName the sensor name
+	 * @param sensorValue the sensor value
+	 * @throws Exception the exception
+	 */
 	protected void kafkaSend(String loginName, String sourceName, String sourceType, String sensorName,
 			String sensorValue) throws Exception {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,

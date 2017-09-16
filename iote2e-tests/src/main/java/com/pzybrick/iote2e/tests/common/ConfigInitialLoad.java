@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.common;
 
 import java.io.BufferedReader;
@@ -23,10 +42,21 @@ import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.stream.svc.ActuatorState;
 import com.pzybrick.iote2e.stream.svc.RuleLoginSourceSensor;
 
+
+/**
+ * The Class ConfigInitialLoad.
+ */
 public class ConfigInitialLoad {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ConfigInitialLoad.class);
 
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			ConfigInitialLoad configInitialLoad = new ConfigInitialLoad();
@@ -37,6 +67,12 @@ public class ConfigInitialLoad {
 		}
 	}
 	
+	/**
+	 * Initial load.
+	 *
+	 * @param pathToConfigFiles the path to config files
+	 * @throws Exception the exception
+	 */
 	public void initialLoad(String pathToConfigFiles) throws Exception {
 		try {
 			List<ConfigVo> configVos = new ArrayList<ConfigVo>();
@@ -73,6 +109,12 @@ public class ConfigInitialLoad {
 	}
 
 	
+	/**
+	 * Gets the string from input stream.
+	 *
+	 * @param is the is
+	 * @return the string from input stream
+	 */
 	private static String getStringFromInputStream(InputStream is) {
 		BufferedReader br = null;
 		StringBuilder sb = new StringBuilder();

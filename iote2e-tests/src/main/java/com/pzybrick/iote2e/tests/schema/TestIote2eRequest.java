@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.schema;
 
 import java.util.HashMap;
@@ -14,22 +33,46 @@ import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 
+
+/**
+ * The Class TestIote2eRequest.
+ */
 public class TestIote2eRequest {
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 	}
 
+	/**
+	 * Tear down.
+	 *
+	 * @throws Exception the exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Test create.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testCreate() throws Exception {
 		Iote2eRequest iote2eRequest = createTestIote2eRequest();
 		verifyIote2eRequest( iote2eRequest );
 	}
 	
+	/**
+	 * Test encode decode.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testEncodeDecode() throws Exception {
 		Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
@@ -39,6 +82,11 @@ public class TestIote2eRequest {
 		verifyIote2eRequest( iote2eRequestAfter );
 	}
 	
+	/**
+	 * Creates the test iote 2 e request.
+	 *
+	 * @return the iote 2 e request
+	 */
 	private Iote2eRequest createTestIote2eRequest() {
 		Map<CharSequence,CharSequence> metadata = new HashMap<CharSequence,CharSequence>();
 		metadata.put( new Utf8("testMetadataNamea"), new Utf8("testMetadataValuea"));
@@ -59,6 +107,11 @@ public class TestIote2eRequest {
 		return iote2eRequest;
 	}
 	
+	/**
+	 * Verify iote 2 e request.
+	 *
+	 * @param iote2eRequest the iote 2 e request
+	 */
 	private void verifyIote2eRequest( Iote2eRequest iote2eRequest ) {
 		Assert.assertEquals("login name", "testLoginName", iote2eRequest.getLoginName().toString());
 		Assert.assertEquals("source name", "testSourceName", iote2eRequest.getSourceName().toString());

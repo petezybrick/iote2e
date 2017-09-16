@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.common.ignite;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,20 +38,53 @@ import com.pzybrick.iote2e.schema.avro.Iote2eResult;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 
 
+
+/**
+ * The Class ThreadIgniteSubscribe.
+ */
 public class ThreadIgniteSubscribe extends Thread {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ThreadIgniteSubscribe.class);
+	
+	/** The ignite filter key. */
 	private String igniteFilterKey;
+	
+	/** The shutdown. */
 	private boolean shutdown;
+	
+	/** The subscribe up. */
 	private boolean subscribeUp;
+	
+	/** The queue iote 2 e results. */
 	private ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
+	
+	/** The thread poller. */
 	private Thread threadPoller;
+	
+	/** The ignite grid connection. */
 	private IgniteGridConnection igniteGridConnection;
+	
+	/** The master config. */
 	private MasterConfig masterConfig;
 	
 
+	/**
+	 * Instantiates a new thread ignite subscribe.
+	 */
 	public ThreadIgniteSubscribe() {
 	}
 
+	/**
+	 * Start thread subscribe.
+	 *
+	 * @param masterConfig the master config
+	 * @param igniteFilterKey the ignite filter key
+	 * @param queueIote2eResults the queue iote 2 e results
+	 * @param threadPoller the thread poller
+	 * @return the thread ignite subscribe
+	 * @throws Exception the exception
+	 */
 	public static ThreadIgniteSubscribe startThreadSubscribe( MasterConfig masterConfig, String igniteFilterKey,
 			ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults, Thread threadPoller ) throws Exception {
 		ThreadIgniteSubscribe threadIgniteSubscribe = new ThreadIgniteSubscribe()
@@ -53,6 +105,9 @@ public class ThreadIgniteSubscribe extends Thread {
 		return threadIgniteSubscribe;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		try {
@@ -143,64 +198,138 @@ public class ThreadIgniteSubscribe extends Thread {
 		}
 	}
 
+	/**
+	 * Shutdown.
+	 */
 	public void shutdown() {
 		this.shutdown = true;
 		interrupt();
 	}
 
+	/**
+	 * Gets the ignite filter key.
+	 *
+	 * @return the ignite filter key
+	 */
 	public String getIgniteFilterKey() {
 		return igniteFilterKey;
 	}
 
+	/**
+	 * Checks if is shutdown.
+	 *
+	 * @return true, if is shutdown
+	 */
 	public boolean isShutdown() {
 		return shutdown;
 	}
 
+	/**
+	 * Checks if is subscribe up.
+	 *
+	 * @return true, if is subscribe up
+	 */
 	public boolean isSubscribeUp() {
 		return subscribeUp;
 	}
 
+	/**
+	 * Gets the queue iote 2 e results.
+	 *
+	 * @return the queue iote 2 e results
+	 */
 	public ConcurrentLinkedQueue<Iote2eResult> getQueueIote2eResults() {
 		return queueIote2eResults;
 	}
 
+	/**
+	 * Sets the ignite filter key.
+	 *
+	 * @param igniteFilterKey the ignite filter key
+	 * @return the thread ignite subscribe
+	 */
 	public ThreadIgniteSubscribe setIgniteFilterKey(String igniteFilterKey) {
 		this.igniteFilterKey = igniteFilterKey;
 		return this;
 	}
 
+	/**
+	 * Sets the shutdown.
+	 *
+	 * @param shutdown the shutdown
+	 * @return the thread ignite subscribe
+	 */
 	public ThreadIgniteSubscribe setShutdown(boolean shutdown) {
 		this.shutdown = shutdown;
 		return this;
 	}
 
+	/**
+	 * Sets the subscribe up.
+	 *
+	 * @param subscribeUp the subscribe up
+	 * @return the thread ignite subscribe
+	 */
 	public ThreadIgniteSubscribe setSubscribeUp(boolean subscribeUp) {
 		this.subscribeUp = subscribeUp;
 		return this;
 	}
 
+	/**
+	 * Sets the queue iote 2 e results.
+	 *
+	 * @param iote2eResults the iote 2 e results
+	 * @return the thread ignite subscribe
+	 */
 	public ThreadIgniteSubscribe setQueueIote2eResults(ConcurrentLinkedQueue<Iote2eResult> iote2eResults) {
 		this.queueIote2eResults = iote2eResults;
 		return this;
 	}
 
+	/**
+	 * Gets the thread poller.
+	 *
+	 * @return the thread poller
+	 */
 	public Thread getThreadPoller() {
 		return threadPoller;
 	}
 
+	/**
+	 * Sets the thread poller.
+	 *
+	 * @param threadPoller the thread poller
+	 * @return the thread ignite subscribe
+	 */
 	public ThreadIgniteSubscribe setThreadPoller(Thread threadPoller) {
 		this.threadPoller = threadPoller;
 		return this;
 	}
 
+	/**
+	 * Gets the ignite grid connection.
+	 *
+	 * @return the ignite grid connection
+	 */
 	public IgniteGridConnection getIgniteGridConnection() {
 		return igniteGridConnection;
 	}
 
+	/**
+	 * Gets the master config.
+	 *
+	 * @return the master config
+	 */
 	public MasterConfig getMasterConfig() {
 		return masterConfig;
 	}
 
+	/**
+	 * Sets the master config.
+	 *
+	 * @param masterConfig the master config
+	 * @return the thread ignite subscribe
+	 */
 	public ThreadIgniteSubscribe setMasterConfig(MasterConfig masterConfig) {
 		this.masterConfig = masterConfig;
 		return this;

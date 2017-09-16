@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.request;
 
 import java.util.HashMap;
@@ -23,18 +42,40 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.stream.svc.RuleEvalResult;
 import com.pzybrick.iote2e.stream.svc.RuleSvc;
 
+
+/**
+ * The Class Iote2eRequestRouterHandlerSparkRuleImpl.
+ */
 public class Iote2eRequestRouterHandlerSparkRuleImpl implements Iote2eRequestRouterHandler {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(Iote2eRequestRouterHandlerSparkRuleImpl.class);
+	
+	/** The rule svc. */
 	private RuleSvc ruleSvc;
+	
+	/** The iote 2 e svc. */
 	private Iote2eSvc iote2eSvc;
+	
+	/** The ignite grid connection. */
 	private IgniteGridConnection igniteGridConnection;
+	
+	/** The iote 2 e result reuse item. */
 	private Iote2eResultReuseItem iote2eResultReuseItem;
 
+	/**
+	 * Instantiates a new iote 2 e request router handler spark rule impl.
+	 *
+	 * @throws Exception the exception
+	 */
 	public Iote2eRequestRouterHandlerSparkRuleImpl( ) throws Exception {
 
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.request.Iote2eRequestRouterHandler#init(com.pzybrick.iote2e.common.config.MasterConfig)
+	 */
 	public void init(MasterConfig masterConfig) throws Exception {
 		try {
 			Class cls = Class.forName(masterConfig.getRuleSvcClassName());
@@ -55,6 +96,9 @@ public class Iote2eRequestRouterHandlerSparkRuleImpl implements Iote2eRequestRou
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.request.Iote2eRequestRouterHandler#processRequests(java.util.List)
+	 */
 	public void processRequests( List<Iote2eRequest> iote2eRequests ) throws Exception {
 		try {
 			for( Iote2eRequest iote2eRequest : iote2eRequests ) {
@@ -78,6 +122,11 @@ public class Iote2eRequestRouterHandlerSparkRuleImpl implements Iote2eRequestRou
 	}
 	
 	
+	/**
+	 * Near real time temperature.
+	 *
+	 * @param iote2eRequest the iote 2 e request
+	 */
 	private void nearRealTimeTemperature( Iote2eRequest iote2eRequest ) {
 		final Utf8 keyTemp1 = new Utf8("temp1");
 		CharSequence degreesC = iote2eRequest.getPairs().get(keyTemp1);

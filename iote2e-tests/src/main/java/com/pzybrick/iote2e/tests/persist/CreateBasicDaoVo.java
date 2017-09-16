@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.persist;
 
 import java.io.File;
@@ -20,12 +39,28 @@ import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.persist.CassandraBaseDao;
 
+
+/**
+ * The Class CreateBasicDaoVo.
+ */
 public class CreateBasicDaoVo {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(CassandraBaseDao.class);	
+	
+	/** The ds. */
 	private BasicDataSource ds;
+	
+	/** The table names. */
 	private List<String> tableNames;
+	
+	/** The target folder. */
 	private String targetFolder;
+	
+	/** The package name. */
 	private String packageName;
+	
+	/** The jdbc driver class name. */
 	private String jdbcDriverClassName; // "oracle.jdbc.driver.OracleDriver" "com.mysql.jdbc.Driver";
 	
 //	"jdbcDriverClassName": "com.mysql.jdbc.Driver",
@@ -36,7 +71,12 @@ public class CreateBasicDaoVo {
 	// "blood_glucose|blood_pressure" "/tmp" "com.pzybrick.iote2e.stream.persist" "iote2e_batch" "Password*8" "jdbc:mysql://localhost:3307/db_iote2e_batch"  "com.mysql.jdbc.Driver"
 	
 	
-	public static void main(String[] args) {
+	/**
+ * The main method.
+ *
+ * @param args the arguments
+ */
+public static void main(String[] args) {
 		try {
 			List<String> tableNames = Arrays.asList(args[0].split("[|]"));
 			String targetFolder = args[1];
@@ -61,6 +101,11 @@ public class CreateBasicDaoVo {
 		}
 	}
 
+	/**
+	 * Process.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void process() throws Exception {
 		Map<String, List<ColumnItem>> columnItemsByTableName = new HashMap<String, List<ColumnItem>>();
 		Connection conn = null;
@@ -456,14 +501,33 @@ public class CreateBasicDaoVo {
 	}
 
 	
+	/**
+	 * Table name to class.
+	 *
+	 * @param tableName the table name
+	 * @return the string
+	 */
 	public static String tableNameToClass( String tableName ) {
 		return commonTableAttr( tableName, 0 );
 	}
 	
+	/**
+	 * Column name to attribute.
+	 *
+	 * @param columnName the column name
+	 * @return the string
+	 */
 	public static String columnNameToAttribute( String columnName ) {
 		return commonTableAttr( columnName, 1 );
 	}
 	
+	/**
+	 * Common table attr.
+	 *
+	 * @param name the name
+	 * @param startOffset the start offset
+	 * @return the string
+	 */
 	public static String commonTableAttr( String name, int startOffset ) {
 		name = name.toLowerCase();
 		StringBuilder targetName = new StringBuilder();
@@ -487,6 +551,14 @@ public class CreateBasicDaoVo {
 	}
 	
 	
+	/**
+	 * Find jdbc types.
+	 *
+	 * @param sqlType the sql type
+	 * @param columnSize the column size
+	 * @param decimalDigits the decimal digits
+	 * @return the jdbc type item
+	 */
 	public static JdbcTypeItem findJdbcTypes( int sqlType, long columnSize, int decimalDigits ) {
 		if( Types.CHAR == sqlType || Types.VARCHAR == sqlType ) {
 			return new JdbcTypeItem().setDataType("String").setGetter("getString(\"").setSetter("setString(");
@@ -508,28 +580,75 @@ public class CreateBasicDaoVo {
 	}
 	
 	
+	/**
+	 * The Class JdbcTypeItem.
+	 */
 	public static class JdbcTypeItem {
+		
+		/** The data type. */
 		private String dataType;
+		
+		/** The getter. */
 		private String getter;
+		
+		/** The setter. */
 		private String setter;
 		
+		/**
+		 * Gets the data type.
+		 *
+		 * @return the data type
+		 */
 		public String getDataType() {
 			return dataType;
 		}
+		
+		/**
+		 * Gets the getter.
+		 *
+		 * @return the getter
+		 */
 		public String getGetter() {
 			return getter;
 		}
+		
+		/**
+		 * Gets the setter.
+		 *
+		 * @return the setter
+		 */
 		public String getSetter() {
 			return setter;
 		}
+		
+		/**
+		 * Sets the data type.
+		 *
+		 * @param dataType the data type
+		 * @return the jdbc type item
+		 */
 		public JdbcTypeItem setDataType(String dataType) {
 			this.dataType = dataType;
 			return this;
 		}
+		
+		/**
+		 * Sets the getter.
+		 *
+		 * @param getter the getter
+		 * @return the jdbc type item
+		 */
 		public JdbcTypeItem setGetter(String getter) {
 			this.getter = getter;
 			return this;
 		}
+		
+		/**
+		 * Sets the setter.
+		 *
+		 * @param setter the setter
+		 * @return the jdbc type item
+		 */
 		public JdbcTypeItem setSetter(String setter) {
 			this.setter = setter;
 			return this;
@@ -537,89 +656,199 @@ public class CreateBasicDaoVo {
 		
 	}
 
+	/**
+	 * The Class ColumnItem.
+	 */
 	public static class ColumnItem {
+		
+		/** The name. */
 		private String name;
+		
+		/** The type. */
 		private int type;
+		
+		/** The size. */
 		private long size;
+		
+		/** The decimal digits. */
 		private int decimalDigits;
+		
+		/** The java type. */
 		private String javaType;
+		
+		/** The jdbc get. */
 		private String jdbcGet;
+		
+		/** The jdbc set. */
 		private String jdbcSet;
+		
+		/** The pk. */
 		private boolean pk;
 
+		/**
+		 * Gets the name.
+		 *
+		 * @return the name
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * Gets the type.
+		 *
+		 * @return the type
+		 */
 		public int getType() {
 			return type;
 		}
 
+		/**
+		 * Gets the size.
+		 *
+		 * @return the size
+		 */
 		public long getSize() {
 			return size;
 		}
 
+		/**
+		 * Gets the decimal digits.
+		 *
+		 * @return the decimal digits
+		 */
 		public int getDecimalDigits() {
 			return decimalDigits;
 		}
 
+		/**
+		 * Sets the name.
+		 *
+		 * @param name the name
+		 * @return the column item
+		 */
 		public ColumnItem setName(String name) {
 			this.name = name;
 			return this;
 		}
 
+		/**
+		 * Sets the type.
+		 *
+		 * @param type the type
+		 * @return the column item
+		 */
 		public ColumnItem setType(int type) {
 			this.type = type;
 			return this;
 		}
 
+		/**
+		 * Sets the size.
+		 *
+		 * @param size the size
+		 * @return the column item
+		 */
 		public ColumnItem setSize(long size) {
 			this.size = size;
 			return this;
 		}
 
+		/**
+		 * Sets the decimal digits.
+		 *
+		 * @param decimalDigits the decimal digits
+		 * @return the column item
+		 */
 		public ColumnItem setDecimalDigits(int decimalDigits) {
 			this.decimalDigits = decimalDigits;
 			return this;
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString() {
 			return "ColumnItem [name=" + name + ", type=" + type + ", size=" + size + ", decimalDigits=" + decimalDigits
 					+ ", javaType=" + javaType + ", jdbcGet=" + jdbcGet + ", jdbcSet=" + jdbcSet + "]";
 		}
 
+		/**
+		 * Gets the java type.
+		 *
+		 * @return the java type
+		 */
 		public String getJavaType() {
 			return javaType;
 		}
 
+		/**
+		 * Gets the jdbc get.
+		 *
+		 * @return the jdbc get
+		 */
 		public String getJdbcGet() {
 			return jdbcGet;
 		}
 
+		/**
+		 * Sets the java type.
+		 *
+		 * @param javaType the java type
+		 * @return the column item
+		 */
 		public ColumnItem setJavaType(String javaType) {
 			this.javaType = javaType;
 			return this;
 		}
 
+		/**
+		 * Sets the jdbc get.
+		 *
+		 * @param jdbcGet the jdbc get
+		 * @return the column item
+		 */
 		public ColumnItem setJdbcGet(String jdbcGet) {
 			this.jdbcGet = jdbcGet;
 			return this;
 		}
 
+		/**
+		 * Gets the jdbc set.
+		 *
+		 * @return the jdbc set
+		 */
 		public String getJdbcSet() {
 			return jdbcSet;
 		}
 
+		/**
+		 * Sets the jdbc set.
+		 *
+		 * @param jdbcSet the jdbc set
+		 * @return the column item
+		 */
 		public ColumnItem setJdbcSet(String jdbcSet) {
 			this.jdbcSet = jdbcSet;
 			return this;
 		}
 
+		/**
+		 * Checks if is pk.
+		 *
+		 * @return true, if is pk
+		 */
 		public boolean isPk() {
 			return pk;
 		}
 
+		/**
+		 * Sets the pk.
+		 *
+		 * @param pk the pk
+		 * @return the column item
+		 */
 		public ColumnItem setPk(boolean pk) {
 			this.pk = pk;
 			return this;
@@ -628,49 +857,104 @@ public class CreateBasicDaoVo {
 	}
 
 
+	/**
+	 * Gets the table names.
+	 *
+	 * @return the table names
+	 */
 	public List<String> getTableNames() {
 		return tableNames;
 	}
 
+	/**
+	 * Gets the target folder.
+	 *
+	 * @return the target folder
+	 */
 	public String getTargetFolder() {
 		return targetFolder;
 	}
 
+	/**
+	 * Gets the package name.
+	 *
+	 * @return the package name
+	 */
 	public String getPackageName() {
 		return packageName;
 	}
 
+	/**
+	 * Sets the table names.
+	 *
+	 * @param tableNames the table names
+	 * @return the creates the basic dao vo
+	 */
 	public CreateBasicDaoVo setTableNames(List<String> tableNames) {
 		this.tableNames = tableNames;
 		return this;
 	}
 
+	/**
+	 * Sets the target folder.
+	 *
+	 * @param targetFolder the target folder
+	 * @return the creates the basic dao vo
+	 */
 	public CreateBasicDaoVo setTargetFolder(String targetFolder) {
 		if( !targetFolder.endsWith("/")) targetFolder = targetFolder + "/";
 		this.targetFolder = targetFolder;
 		return this;
 	}
 
+	/**
+	 * Sets the package name.
+	 *
+	 * @param packageName the package name
+	 * @return the creates the basic dao vo
+	 */
 	public CreateBasicDaoVo setPackageName(String packageName) {
 		this.packageName = packageName;
 		return this;
 	}
 
 
+	/**
+	 * Gets the ds.
+	 *
+	 * @return the ds
+	 */
 	public BasicDataSource getDs() {
 		return ds;
 	}
 
 
+	/**
+	 * Sets the ds.
+	 *
+	 * @param ds the ds
+	 * @return the creates the basic dao vo
+	 */
 	public CreateBasicDaoVo setDs(BasicDataSource ds) {
 		this.ds = ds;
 		return this;
 	}
 
+	/**
+	 * Gets the jdbc driver class name.
+	 *
+	 * @return the jdbc driver class name
+	 */
 	public String getJdbcDriverClassName() {
 		return jdbcDriverClassName;
 	}
 
+	/**
+	 * Sets the jdbc driver class name.
+	 *
+	 * @param jdbcDriverClassName the jdbc driver class name
+	 * @return the creates the basic dao vo
+	 */
 	public CreateBasicDaoVo setJdbcDriverClassName(String jdbcDriverClassName) {
 		this.jdbcDriverClassName = jdbcDriverClassName;
 		return this;

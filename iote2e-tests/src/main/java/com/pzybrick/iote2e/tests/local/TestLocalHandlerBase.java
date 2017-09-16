@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.local;
 
 import java.util.HashMap;
@@ -19,23 +38,50 @@ import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.tests.common.Iote2eRequestHandlerIgniteTestThread;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
+
+/**
+ * The Class TestLocalHandlerBase.
+ */
 public class TestLocalHandlerBase extends TestCommonHandler {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(TestLocalHandlerBase.class);
+	
+	/** The queue iote 2 e requests. */
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
+	
+	/** The iote 2 e request handler. */
 	protected Iote2eRequestHandlerIgniteTestThread iote2eRequestHandler;
+	
+	/** The iote 2 e svc. */
 	protected Iote2eSvcLocalTestImpl iote2eSvc;
 
+	/**
+	 * Instantiates a new test local handler base.
+	 *
+	 * @throws Exception the exception
+	 */
 	public TestLocalHandlerBase() throws Exception {
 		super();
 	}
 	
 	
+	/**
+	 * Before class.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		TestCommonHandler.beforeClass();
 	}
 
 	
+	/**
+	 * Before.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void before() throws Exception {
 		logger.info(
@@ -47,6 +93,11 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 		iote2eRequestHandler.start();
 	}
 
+	/**
+	 * After.
+	 *
+	 * @throws Exception the exception
+	 */
 	@After
 	public void after() throws Exception {
 		while (!queueIote2eRequests.isEmpty()) {
@@ -62,11 +113,32 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 		}
 	}
 
+	/**
+	 * Common run.
+	 *
+	 * @param loginName the login name
+	 * @param sourceName the source name
+	 * @param sourceType the source type
+	 * @param sensorName the sensor name
+	 * @param sensorValue the sensor value
+	 * @throws Exception the exception
+	 */
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
 			String sensorValue ) throws Exception {
 		commonRun( loginName, sourceName, sourceType, sensorName, sensorValue, (Map<CharSequence, CharSequence>)null );
 	}
 
+	/**
+	 * Common run.
+	 *
+	 * @param loginName the login name
+	 * @param sourceName the source name
+	 * @param sourceType the source type
+	 * @param sensorName the sensor name
+	 * @param sensorValue the sensor value
+	 * @param metadata the metadata
+	 * @throws Exception the exception
+	 */
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
 			String sensorValue, Map<CharSequence, CharSequence> metadata ) throws Exception {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
@@ -86,6 +158,12 @@ public class TestLocalHandlerBase extends TestCommonHandler {
 		}
 	}
 
+	/**
+	 * Common get rule eval results.
+	 *
+	 * @param maxWaitMsecs the max wait msecs
+	 * @return the list
+	 */
 	protected List<RuleEvalResult> commonGetRuleEvalResults(long maxWaitMsecs) {
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {

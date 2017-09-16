@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.ws.socket;
 
 import java.io.ByteArrayOutputStream;
@@ -26,22 +45,50 @@ import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.ws.route.RouteIote2eRequest;
 
+
+/**
+ * The Class ThreadEntryPointIote2eRequest.
+ */
 public class ThreadEntryPointIote2eRequest extends Thread {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ThreadEntryPointIote2eRequest.class);
+	
+	/** The Constant serverSideSocketIote2eRequest. */
 	public static final Map<String, ServerSideSocketIote2eRequest> serverSideSocketIote2eRequest = new ConcurrentHashMap<String, ServerSideSocketIote2eRequest>();
+	
+	/** The Constant toClientIote2eResults. */
 	public static final ConcurrentLinkedQueue<Iote2eResult> toClientIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
+	
+	/** The Constant fromClientIote2eRequests. */
 	public static final ConcurrentLinkedQueue<Iote2eRequest> fromClientIote2eRequests = new ConcurrentLinkedQueue<Iote2eRequest>();
+	
+	/** The route iote 2 e request. */
 	private RouteIote2eRequest routeIote2eRequest;
+	
+	/** The server. */
 	private Server server;
+	
+	/** The connector. */
 	private ServerConnector connector;
+	
+	/** The master config. */
 	public static MasterConfig masterConfig;
 	
 	
+	/**
+	 * Instantiates a new thread entry point iote 2 e request.
+	 *
+	 * @param masterConfig the master config
+	 */
 	public ThreadEntryPointIote2eRequest( MasterConfig masterConfig ) {
 		ThreadEntryPointIote2eRequest.masterConfig = masterConfig;
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	public void run( ) {
 		logger.info(masterConfig.toString());
 		try {
@@ -87,21 +134,39 @@ public class ThreadEntryPointIote2eRequest extends Thread {
 		}
 	}
 
+	/**
+	 * The Class ThreadFromClientIote2eRequest.
+	 */
 	public class ThreadFromClientIote2eRequest extends Thread {
+		
+		/** The route iote 2 e request. */
 		private RouteIote2eRequest routeIote2eRequest;
+		
+		/** The shutdown. */
 		private boolean shutdown;
 
+		/**
+		 * Instantiates a new thread from client iote 2 e request.
+		 *
+		 * @param routeIote2eRequest the route iote 2 e request
+		 */
 		public ThreadFromClientIote2eRequest(RouteIote2eRequest routeIote2eRequest) {
 			super();
 			this.routeIote2eRequest = routeIote2eRequest;
 		}
 
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			logger.info("Shutdown");
 			shutdown = true;
 			interrupt();
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			logger.info("ThreadFromClientIote2eRequest Run");
@@ -136,15 +201,26 @@ public class ThreadEntryPointIote2eRequest extends Thread {
 		}
 	}
 
+	/**
+	 * The Class ThreadToClientLoginIote2eResult.
+	 */
 	public class ThreadToClientLoginIote2eResult extends Thread {
+		
+		/** The shutdown. */
 		private boolean shutdown;
 
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			logger.info("Shutdown");
 			shutdown = true;
 			interrupt();
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			logger.info("ThreadToClientLoginIote2eResult Run");
@@ -202,10 +278,21 @@ public class ThreadEntryPointIote2eRequest extends Thread {
 		}
 	}
 
+	/**
+	 * Gets the route iote 2 e request.
+	 *
+	 * @return the route iote 2 e request
+	 */
 	public RouteIote2eRequest getRouteIote2eRequest() {
 		return routeIote2eRequest;
 	}
 
+	/**
+	 * Sets the route iote 2 e request.
+	 *
+	 * @param routeLoginSourceSensorValue the route login source sensor value
+	 * @return the thread entry point iote 2 e request
+	 */
 	public ThreadEntryPointIote2eRequest setRouteIote2eRequest(RouteIote2eRequest routeLoginSourceSensorValue) {
 		this.routeIote2eRequest = routeLoginSourceSensorValue;
 		return this;

@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.persist;
 
 import java.sql.Connection;
@@ -12,12 +31,31 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.stream.bdbb.EngineStatus;
 
 
+
+/**
+ * The Class EngineStatusDao.
+ */
 public class EngineStatusDao {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(EngineStatusDao.class);
+	
+	/** The sql delete by pk. */
 	private static String sqlDeleteByPk = "DELETE FROM engine_status WHERE engine_status_uuid=?";
+	
+	/** The sql insert. */
 	private static String sqlInsert = "INSERT INTO engine_status (engine_status_uuid,flight_status_uuid,engine_uuid,engine_number,oil_temp_c,oil_pressure,exhaust_gas_temp_c,n1_pct,n2_pct,engine_status_ts) VALUES (?,?,?,?,?,?,?,?,?,?)";
+	
+	/** The sql find by pk. */
 	private static String sqlFindByPk = "SELECT engine_status_uuid,flight_status_uuid,engine_uuid,engine_number,oil_temp_c,oil_pressure,exhaust_gas_temp_c,n1_pct,n2_pct,engine_status_ts,insert_ts FROM engine_status WHERE engine_status_uuid=?";
 
+	/**
+	 * Insert batch mode.
+	 *
+	 * @param con the con
+	 * @param engineStatus the engine status
+	 * @throws Exception the exception
+	 */
 	public static void insertBatchMode( Connection con, EngineStatus engineStatus ) throws Exception {
 		PreparedStatement pstmt = null;
 		try {
@@ -47,6 +85,13 @@ public class EngineStatusDao {
 		}
 	}
 
+	/**
+	 * Insert.
+	 *
+	 * @param masterConfig the master config
+	 * @param engineStatus the engine status
+	 * @throws Exception the exception
+	 */
 	public static void insert( MasterConfig masterConfig, EngineStatus engineStatus ) throws Exception {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -93,6 +138,13 @@ public class EngineStatusDao {
 		}
 	}
 
+	/**
+	 * Delete by pk.
+	 *
+	 * @param masterConfig the master config
+	 * @param engineStatus the engine status
+	 * @throws Exception the exception
+	 */
 	public static void deleteByPk( MasterConfig masterConfig, EngineStatus engineStatus ) throws Exception {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -129,6 +181,13 @@ public class EngineStatusDao {
 		}
 	}
 
+	/**
+	 * Delete batch mode.
+	 *
+	 * @param con the con
+	 * @param engineStatus the engine status
+	 * @throws Exception the exception
+	 */
 	public static void deleteBatchMode( Connection con, EngineStatus engineStatus ) throws Exception {
 		PreparedStatement pstmt = null;
 		try {
@@ -149,6 +208,14 @@ public class EngineStatusDao {
 		}
 	}
 
+	/**
+	 * Find by pk.
+	 *
+	 * @param masterConfig the master config
+	 * @param engineStatus the engine status
+	 * @return the engine status
+	 * @throws Exception the exception
+	 */
 	public static EngineStatus findByPk( MasterConfig masterConfig, EngineStatus engineStatus ) throws Exception {
 		Connection con = null;
 		PreparedStatement pstmt = null;

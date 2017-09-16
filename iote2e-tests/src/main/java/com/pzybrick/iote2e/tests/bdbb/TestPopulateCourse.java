@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.bdbb;
 
 import java.io.File;
@@ -29,14 +48,33 @@ import com.pzybrick.iote2e.stream.persist.EngineStatusDao;
 import com.pzybrick.iote2e.stream.persist.FlightStatusDao;
 import com.pzybrick.iote2e.stream.persist.PooledDataSource;
 
+
+/**
+ * The Class TestPopulateCourse.
+ */
 public class TestPopulateCourse {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(TestPopulateCourse.class);
+	
+	/** The num iterations. */
 	public static Integer NUM_ITERATIONS = 120;
+	
+	/** The freq msecs. */
 	public static Long FREQ_MSECS = 1000L;
+	
+	/** The min pct exceeded. */
 	public static Integer MIN_PCT_EXCEEDED = 1;
+	
+	/** The is truncate tables. */
 	public static boolean IS_TRUNCATE_TABLES = true;
 
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			MasterConfig.getInstance( args[0], args[1], args[2] );
@@ -51,6 +89,12 @@ public class TestPopulateCourse {
 	}
 	
 	
+	/**
+	 * Populate tables.
+	 *
+	 * @param listFlightStatuss the list flight statuss
+	 * @throws Exception the exception
+	 */
 	public static void populateTables( List<List<FlightStatus>> listFlightStatuss ) throws Exception {
 		logger.info("start");
 		try ( Connection con = PooledDataSource.getInstance(MasterConfig.getInstance()).getConnection();
@@ -94,6 +138,11 @@ public class TestPopulateCourse {
 	}
 
 	
+	/**
+	 * Dump to console.
+	 *
+	 * @param listFlightStatuss the list flight statuss
+	 */
 	public static void dumpToConsole( List<List<FlightStatus>> listFlightStatuss ) {
 		try {
 			// TODO: 
@@ -121,6 +170,13 @@ public class TestPopulateCourse {
 	}
 	
 	
+	/**
+	 * Populate sim flight.
+	 *
+	 * @param pathSimCourseDefJson the path sim course def json
+	 * @return the list
+	 * @throws Exception the exception
+	 */
 	public static List<List<FlightStatus>> populateSimFlight( String pathSimCourseDefJson ) throws Exception {
 		long baseTimeMillis = System.currentTimeMillis();
 		List<List<FlightStatus>> listFlightStatuss = new ArrayList<List<FlightStatus>>();
@@ -137,6 +193,16 @@ public class TestPopulateCourse {
 	}
 	
 	
+	/**
+	 * Sim flight status.
+	 *
+	 * @param baseTimeMillis the base time millis
+	 * @param simCourseDef the sim course def
+	 * @param simFlightDef the sim flight def
+	 * @param offsetAirframe the offset airframe
+	 * @return the list
+	 * @throws Exception the exception
+	 */
 	private static List<FlightStatus> simFlightStatus( long baseTimeMillis, SimCourseDef simCourseDef, SimFlightDef simFlightDef, int offsetAirframe ) throws Exception {
 		final String templateAirframeUuid = "af%d-af%d-af%d-af%d-af%d";
 		final String templateEngineUuid = "af%de%d-af%de%d-af%de%d-af%de%d-af%de%d";
@@ -206,13 +272,29 @@ public class TestPopulateCourse {
 	}
 
 	
+	/**
+	 * The Class SimEngineStatus.
+	 */
 	private static class SimEngineStatus {
+		
+		/** The oil temp C sim. */
 		private SimSequenceFloat oilTempCSim;
+		
+		/** The oil pressure sim. */
 		private SimSequenceFloat oilPressureSim;
+		
+		/** The exhaust gas temp C sim. */
 		private SimSequenceFloat exhaustGasTempCSim;
+		
+		/** The n 1 pct sim. */
 		private SimSequenceFloat n1PctSim;
+		
+		/** The n 2 pct sim. */
 		private SimSequenceFloat n2PctSim;
 		
+		/**
+		 * Instantiates a new sim engine status.
+		 */
 		public SimEngineStatus() {
 			this.oilTempCSim = new SimSequenceFloat()
 					.setExceed(45F)
@@ -251,46 +333,101 @@ public class TestPopulateCourse {
 					.setMinPctExceeded(MIN_PCT_EXCEEDED);
 		}
 
+		/**
+		 * Gets the oil temp C sim.
+		 *
+		 * @return the oil temp C sim
+		 */
 		public SimSequenceFloat getOilTempCSim() {
 			return oilTempCSim;
 		}
 
+		/**
+		 * Gets the oil pressure sim.
+		 *
+		 * @return the oil pressure sim
+		 */
 		public SimSequenceFloat getOilPressureSim() {
 			return oilPressureSim;
 		}
 
+		/**
+		 * Gets the exhaust gas temp C sim.
+		 *
+		 * @return the exhaust gas temp C sim
+		 */
 		public SimSequenceFloat getExhaustGasTempCSim() {
 			return exhaustGasTempCSim;
 		}
 
+		/**
+		 * Gets the n 1 pct sim.
+		 *
+		 * @return the n 1 pct sim
+		 */
 		public SimSequenceFloat getN1PctSim() {
 			return n1PctSim;
 		}
 
+		/**
+		 * Gets the n 2 pct sim.
+		 *
+		 * @return the n 2 pct sim
+		 */
 		public SimSequenceFloat getN2PctSim() {
 			return n2PctSim;
 		}
 
+		/**
+		 * Sets the oil temp C sim.
+		 *
+		 * @param oilTempCSim the oil temp C sim
+		 * @return the sim engine status
+		 */
 		public SimEngineStatus setOilTempCSim(SimSequenceFloat oilTempCSim) {
 			this.oilTempCSim = oilTempCSim;
 			return this;
 		}
 
+		/**
+		 * Sets the oil pressure sim.
+		 *
+		 * @param oilPressureSim the oil pressure sim
+		 * @return the sim engine status
+		 */
 		public SimEngineStatus setOilPressureSim(SimSequenceFloat oilPressureSim) {
 			this.oilPressureSim = oilPressureSim;
 			return this;
 		}
 
+		/**
+		 * Sets the exhaust gas temp C sim.
+		 *
+		 * @param exhaustGasTempCSim the exhaust gas temp C sim
+		 * @return the sim engine status
+		 */
 		public SimEngineStatus setExhaustGasTempCSim(SimSequenceFloat exhaustGasTempCSim) {
 			this.exhaustGasTempCSim = exhaustGasTempCSim;
 			return this;
 		}
 
+		/**
+		 * Sets the N 1 pct sim.
+		 *
+		 * @param n1PctSim the n 1 pct sim
+		 * @return the sim engine status
+		 */
 		public SimEngineStatus setN1PctSim(SimSequenceFloat n1PctSim) {
 			this.n1PctSim = n1PctSim;
 			return this;
 		}
 
+		/**
+		 * Sets the N 2 pct sim.
+		 *
+		 * @param n2PctSim the n 2 pct sim
+		 * @return the sim engine status
+		 */
 		public SimEngineStatus setN2PctSim(SimSequenceFloat n2PctSim) {
 			this.n2PctSim = n2PctSim;
 			return this;

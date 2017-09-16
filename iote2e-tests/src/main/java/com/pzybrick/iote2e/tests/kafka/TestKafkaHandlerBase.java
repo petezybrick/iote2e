@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.kafka;
 
 import java.util.HashMap;
@@ -36,30 +55,71 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
 
+
+/**
+ * The Class TestKafkaHandlerBase.
+ */
 public class TestKafkaHandlerBase extends TestCommonHandler {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(TestKafkaHandlerBase.class);
+	
+	/** The queue iote 2 e requests. */
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
+	
+	/** The queue iote 2 e results. */
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
+	
+	/** The iote 2 e request reuse item. */
 	protected Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
+	
+	/** The iote 2 e request handler. */
 	protected Iote2eRequestHandlerIgniteTestThread iote2eRequestHandler;
+	
+	/** The iote 2 e svc. */
 	protected Iote2eSvcKafkaImpl iote2eSvc;
+	
+	/** The kafka producer. */
 	protected KafkaProducer<String, byte[]> kafkaProducer;
+	
+	/** The kafka topic. */
 	protected String kafkaTopic;
+	
+	/** The kafka group. */
 	protected String kafkaGroup;
+	
+	/** The kafka consumer connector. */
 	protected ConsumerConnector kafkaConsumerConnector;
+	
+	/** The executor. */
 	protected ExecutorService executor;
 
+	/**
+	 * Instantiates a new test kafka handler base.
+	 *
+	 * @throws Exception the exception
+	 */
 	public TestKafkaHandlerBase() throws Exception {
 		super();
 	}
 	
 	
+	/**
+	 * Before class.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		TestCommonHandler.beforeClass();
 	}
 
 	
+	/**
+	 * Before.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void before() throws Exception {
 		logger.info(
@@ -85,6 +145,11 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 		startStreamConsumers(masterConfig.getKafkaConsumerNumThreads());
 	}
 
+	/**
+	 * After.
+	 *
+	 * @throws Exception the exception
+	 */
 	@After
 	public void after() throws Exception {
 		while (!queueIote2eRequests.isEmpty()) {
@@ -99,6 +164,16 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 		kafkaProducer.close();
 	}
 
+	/**
+	 * Common run.
+	 *
+	 * @param loginName the login name
+	 * @param sourceName the source name
+	 * @param sourceType the source type
+	 * @param sensorName the sensor name
+	 * @param sensorValue the sensor value
+	 * @throws Exception the exception
+	 */
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
 			String sensorValue) throws Exception {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,
@@ -130,6 +205,12 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 	}
 
 
+	/**
+	 * Common get rule eval results.
+	 *
+	 * @param maxWaitMsecs the max wait msecs
+	 * @return the list
+	 */
 	protected List<RuleEvalResult> commonGetRuleEvalResults(long maxWaitMsecs) {
 		long wakeupAt = System.currentTimeMillis() + maxWaitMsecs;
 		while (System.currentTimeMillis() < wakeupAt) {
@@ -143,6 +224,13 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
 		return null;
 	}
 	
+	/**
+	 * Creates the consumer config.
+	 *
+	 * @param zookeeper the zookeeper
+	 * @param groupId the group id
+	 * @return the consumer config
+	 */
 	private static ConsumerConfig createConsumerConfig(String zookeeper, String groupId) {
         Properties props = new Properties();
         props.put("zookeeper.connect", zookeeper);
@@ -155,6 +243,11 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
     }
 	
 	 
+    /**
+     * Start stream consumers.
+     *
+     * @param numThreads the num threads
+     */
     public void startStreamConsumers(int numThreads) {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(kafkaTopic, new Integer(numThreads));
@@ -169,16 +262,32 @@ public class TestKafkaHandlerBase extends TestCommonHandler {
     }
     
 	
+	/**
+	 * The Class KafkaConsumerThread.
+	 */
 	public class KafkaConsumerThread implements Runnable {
-	    private KafkaStream<byte[], byte[]> kafkaStream;
-	    private int threadNumber;
+	    
+    	/** The kafka stream. */
+    	private KafkaStream<byte[], byte[]> kafkaStream;
+	    
+    	/** The thread number. */
+    	private int threadNumber;
 	 
-	    public KafkaConsumerThread(KafkaStream<byte[], byte[]> kafkaStream, int threadNumber ) {
+	    /**
+    	 * Instantiates a new kafka consumer thread.
+    	 *
+    	 * @param kafkaStream the kafka stream
+    	 * @param threadNumber the thread number
+    	 */
+    	public KafkaConsumerThread(KafkaStream<byte[], byte[]> kafkaStream, int threadNumber ) {
 	        this.threadNumber = threadNumber;
 	        this.kafkaStream = kafkaStream;
 	    }
 	 
-	    public void run() {
+	    /* (non-Javadoc)
+    	 * @see java.lang.Runnable#run()
+    	 */
+    	public void run() {
 	    	Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 	        ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
 	        while (it.hasNext()) {

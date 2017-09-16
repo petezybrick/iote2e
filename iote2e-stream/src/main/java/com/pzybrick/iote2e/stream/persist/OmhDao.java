@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.persist;
 
 import java.sql.Connection;
@@ -13,12 +32,25 @@ import org.openmhealth.schema.domain.omh.RespiratoryRate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pzybrick.iote2e.common.config.MasterConfig;
 
+
+/**
+ * The Class OmhDao.
+ */
 public abstract class OmhDao {
 	
 	/*
 	 * TODO: This is a hack, ok for small number of vo's, needs to be refactored
 	 */
 
+	/**
+	 * Insert batch.
+	 *
+	 * @param con the con
+	 * @param dataPoint the data point
+	 * @param objectMapper the object mapper
+	 * @param rawBody the raw body
+	 * @throws Exception the exception
+	 */
 	// TODO: having issues with generics on Body after sending over kafka, gets unmarshalled into java.util.LinkedHashMap for some reason
 	public static void insertBatch( Connection con, DataPoint dataPoint, ObjectMapper objectMapper, String rawBody ) throws Exception {
 		if (BloodGlucose.SCHEMA_ID.getName().equals(dataPoint.getHeader().getBodySchemaId().getName())) {
@@ -49,6 +81,15 @@ public abstract class OmhDao {
 	}
 
 	
+	/**
+	 * Insert each.
+	 *
+	 * @param masterConfig the master config
+	 * @param dataPoint the data point
+	 * @param objectMapper the object mapper
+	 * @param rawBody the raw body
+	 * @throws Exception the exception
+	 */
 	public static void insertEach( MasterConfig masterConfig, DataPoint dataPoint, ObjectMapper objectMapper, String rawBody ) throws Exception {
 		if (BloodGlucose.SCHEMA_ID.getName().equals(dataPoint.getHeader().getBodySchemaId().getName())) {
 			BloodGlucose  bloodGlucose = objectMapper.readValue(rawBody, BloodGlucose.class);
@@ -78,6 +119,13 @@ public abstract class OmhDao {
 	}
 	
 	
+	/**
+	 * Insert batch.
+	 *
+	 * @param con the con
+	 * @param dataPoint the data point
+	 * @throws Exception the exception
+	 */
 	public static void insertBatch( Connection con, DataPoint dataPoint ) throws Exception {
 		if (BloodGlucose.SCHEMA_ID.getName().equals(dataPoint.getHeader().getBodySchemaId().getName())) {
 			DataPoint<BloodGlucose> dpBody = dataPoint;
@@ -107,6 +155,13 @@ public abstract class OmhDao {
 	}
 
 	
+	/**
+	 * Insert each.
+	 *
+	 * @param masterConfig the master config
+	 * @param dataPoint the data point
+	 * @throws Exception the exception
+	 */
 	public static void insertEach( MasterConfig masterConfig, DataPoint dataPoint ) throws Exception {
 		if (BloodGlucose.SCHEMA_ID.getName().equals(dataPoint.getHeader().getBodySchemaId().getName())) {
 			DataPoint<BloodGlucose> dpBody = dataPoint;

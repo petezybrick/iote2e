@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.ws.socket;
 
 import java.io.EOFException;
@@ -24,30 +43,68 @@ import com.pzybrick.iote2e.ws.security.IotE2eAuthentication;
 import com.pzybrick.iote2e.ws.security.LoginVo;
 import com.pzybrick.iote2e.ws.security.IotE2eAuthentication.IotAuthenticationException;
 
+
+/**
+ * The Class ServerSideSocketIote2eRequest.
+ */
 @ClientEndpoint
 @ServerEndpoint(value = "/iote2e/")
 public class ServerSideSocketIote2eRequest {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ServerSideSocketIote2eRequest.class);
+	
+	/** The session. */
 	private Session session;
+	
+	/** The authenticated. */
 	private boolean authenticated;
+	
+	/** The login uuid. */
 	private String loginUuid;
+	
+	/** The login vo. */
 	private LoginVo loginVo;
+	
+	/** The iote 2 e request reuse item. */
 	private Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
+	
+	/** The key common. */
 	private String keyCommon;
+	
+	/** The thread ignite subscribe. */
 	private ThreadIgniteSubscribe threadIgniteSubscribe;
 
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
 	public Session getSession() {
 		return session;
 	}
 
+	/**
+	 * Sets the session.
+	 *
+	 * @param session the new session
+	 */
 	public void setSession(Session session) {
 		this.session = session;
 	}
 
+	/**
+	 * Instantiates a new server side socket iote 2 e request.
+	 */
 	public ServerSideSocketIote2eRequest() {
 
 	}
 
+	/**
+	 * On web socket connect.
+	 *
+	 * @param session the session
+	 */
 	@OnOpen
 	public void onWebSocketConnect(Session session) {
 		this.session = session;
@@ -55,6 +112,11 @@ public class ServerSideSocketIote2eRequest {
 		logger.info("Socket Connected: " + session.getId());
 	}
 
+	/**
+	 * On web socket text.
+	 *
+	 * @param message the message
+	 */
 	@OnMessage
 	public void onWebSocketText(String message) {
 		logger.debug("onWebSocketText " + message);
@@ -111,6 +173,11 @@ public class ServerSideSocketIote2eRequest {
 		}
 	}
 
+	/**
+	 * On web socket byte.
+	 *
+	 * @param bytes the bytes
+	 */
 	@OnMessage
 	public void onWebSocketByte(byte[] bytes) {
 		logger.debug("onWebSocketByte len=" + bytes.length);
@@ -137,6 +204,11 @@ public class ServerSideSocketIote2eRequest {
 		}
 	}
 
+	/**
+	 * On web socket close.
+	 *
+	 * @param reason the reason
+	 */
 	@OnClose
 	public void onWebSocketClose(CloseReason reason) {
 		boolean isRemove = ThreadEntryPointIote2eRequest.serverSideSocketIote2eRequest.remove(keyCommon, this);
@@ -144,6 +216,11 @@ public class ServerSideSocketIote2eRequest {
 		shutdownThreadIgniteSubscribe();
 	}
 
+	/**
+	 * On web socket error.
+	 *
+	 * @param cause the cause
+	 */
 	@OnError
 	public void onWebSocketError(Throwable cause) {
 		boolean isRemove = ThreadEntryPointIote2eRequest.serverSideSocketIote2eRequest.remove(keyCommon, this);
@@ -151,6 +228,9 @@ public class ServerSideSocketIote2eRequest {
 		shutdownThreadIgniteSubscribe();
 	}
 	
+	/**
+	 * Shutdown thread ignite subscribe.
+	 */
 	private void shutdownThreadIgniteSubscribe() {
 		logger.debug("Shutting down threadIgniteSubscribe");
 		try {
@@ -162,6 +242,9 @@ public class ServerSideSocketIote2eRequest {
 		}
 	}
 
+	/**
+	 * Createkey.
+	 */
 	private void createkey() {
 		StringBuilder sb = new StringBuilder(loginVo.getLoginName()).append("|").append(loginVo.getSourceName()).append("|");
 		if( null != loginVo.getOptionalFilterSensorName() && loginVo.getOptionalFilterSensorName().length() > 0 )
@@ -170,15 +253,30 @@ public class ServerSideSocketIote2eRequest {
 		logger.debug("keyCommon {}", keyCommon );
 	}
 	
+	/**
+	 * Checks if is authenticated.
+	 *
+	 * @return true, if is authenticated
+	 */
 	public boolean isAuthenticated() {
 		return authenticated;
 	}
 
+	/**
+	 * Gets the login uuid.
+	 *
+	 * @return the login uuid
+	 */
 	public String getLoginUuid() {
 		return loginUuid;
 	}
 
 
+	/**
+	 * Gets the login vo.
+	 *
+	 * @return the login vo
+	 */
 	public LoginVo getLoginVo() {
 		return loginVo;
 	}

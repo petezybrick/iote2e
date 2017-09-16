@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.ws.nrt;
 
 import java.util.ArrayList;
@@ -30,27 +49,60 @@ import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 
+
+/**
+ * The Class ServerSideSocketNearRealTime.
+ */
 @ClientEndpoint
 @ServerEndpoint(value = "/nrt/")
 public class ServerSideSocketNearRealTime {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ServerSideSocketNearRealTime.class);
+	
+	/** The session. */
 	private Session session;
+	
+	/** The thread ignite subscribe temperature. */
 	private ThreadIgniteSubscribe threadIgniteSubscribeTemperature;
+	
+	/** The thread ignite subscribe omh. */
 	private ThreadIgniteSubscribe threadIgniteSubscribeOmh;
+	
+	/** The thread ignite subscribe bdbb. */
 	private ThreadIgniteSubscribe threadIgniteSubscribeBdbb;
 
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
 	public Session getSession() {
 		return session;
 	}
 
+	/**
+	 * Sets the session.
+	 *
+	 * @param session the new session
+	 */
 	public void setSession(Session session) {
 		this.session = session;
 	}
 
+	/**
+	 * Instantiates a new server side socket near real time.
+	 */
 	public ServerSideSocketNearRealTime() {
 
 	}
 
+	/**
+	 * On web socket connect.
+	 *
+	 * @param session the session
+	 * @throws Exception the exception
+	 */
 	@OnOpen
 	public void onWebSocketConnect(Session session) throws Exception {
 		this.session = session;
@@ -65,16 +117,31 @@ public class ServerSideSocketNearRealTime {
 		logger.info("Socket Connected: " + session.getId());
 	}
 
+	/**
+	 * On web socket text.
+	 *
+	 * @param message the message
+	 */
 	@OnMessage
 	public void onWebSocketText(String message) {
 		logger.debug("onWebSocketText " + message);
 	}
 
+	/**
+	 * On web socket byte.
+	 *
+	 * @param bytes the bytes
+	 */
 	@OnMessage
 	public void onWebSocketByte(byte[] bytes) {
 		logger.debug("onWebSocketByte len=" + bytes.length);
 	}
 
+	/**
+	 * On web socket close.
+	 *
+	 * @param reason the reason
+	 */
 	@OnClose
 	public void onWebSocketClose(CloseReason reason) {
 		boolean isRemove = ThreadEntryPointNearRealTime.serverSideSocketNearRealTimes.remove(Iote2eConstants.SOCKET_KEY_NRT, this);
@@ -82,6 +149,11 @@ public class ServerSideSocketNearRealTime {
 		shutdownThreadIgniteSubscribe();
 	}
 
+	/**
+	 * On web socket error.
+	 *
+	 * @param cause the cause
+	 */
 	@OnError
 	public void onWebSocketError(Throwable cause) {
 		boolean isRemove = ThreadEntryPointNearRealTime.serverSideSocketNearRealTimes.remove(Iote2eConstants.SOCKET_KEY_NRT, this);
@@ -89,6 +161,9 @@ public class ServerSideSocketNearRealTime {
 		shutdownThreadIgniteSubscribe();
 	}
 	
+	/**
+	 * Shutdown thread ignite subscribe.
+	 */
 	private void shutdownThreadIgniteSubscribe() {
 		logger.debug("Shutting down threadIgniteSubscribe");
 		try {
@@ -106,15 +181,26 @@ public class ServerSideSocketNearRealTime {
 	
 
 
+	/**
+	 * The Class ThreadPumpTestData.
+	 */
 	public class ThreadPumpTestData extends Thread {
+		
+		/** The shutdown. */
 		private boolean shutdown;
 
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			logger.info("Shutdown");
 			shutdown = true;
 			interrupt();
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			logger.info("ThreadPumpTestData Run");
@@ -196,33 +282,87 @@ public class ServerSideSocketNearRealTime {
 		}
 	}
 	
+	/**
+	 * The Class PumpTemperatureItem.
+	 */
 	private class PumpTemperatureItem {
+		
+		/** The source name. */
 		private String sourceName;
+		
+		/** The degrees C. */
 		private float degreesC;
+		
+		/** The is increasing. */
 		private boolean isIncreasing = true;
 		
+		/**
+		 * Instantiates a new pump temperature item.
+		 *
+		 * @param rpiName the rpi name
+		 * @param temperature the temperature
+		 */
 		public PumpTemperatureItem(String rpiName, float temperature) {
 			super();
 			this.sourceName = rpiName;
 			this.degreesC = temperature;
 		}
+		
+		/**
+		 * Gets the source name.
+		 *
+		 * @return the source name
+		 */
 		public String getSourceName() {
 			return sourceName;
 		}
+		
+		/**
+		 * Sets the source name.
+		 *
+		 * @param sourceName the source name
+		 * @return the pump temperature item
+		 */
 		public PumpTemperatureItem setSourceName(String sourceName) {
 			this.sourceName = sourceName;
 			return this;
 		}
+		
+		/**
+		 * Gets the degrees C.
+		 *
+		 * @return the degrees C
+		 */
 		public float getDegreesC() {
 			return degreesC;
 		}
+		
+		/**
+		 * Checks if is increasing.
+		 *
+		 * @return true, if is increasing
+		 */
 		public boolean isIncreasing() {
 			return isIncreasing;
 		}
+		
+		/**
+		 * Sets the degrees C.
+		 *
+		 * @param degreesC the degrees C
+		 * @return the pump temperature item
+		 */
 		public PumpTemperatureItem setDegreesC(float degreesC) {
 			this.degreesC = degreesC;
 			return this;
 		}
+		
+		/**
+		 * Sets the increasing.
+		 *
+		 * @param isIncreasing the is increasing
+		 * @return the pump temperature item
+		 */
 		public PumpTemperatureItem setIncreasing(boolean isIncreasing) {
 			this.isIncreasing = isIncreasing;
 			return this;

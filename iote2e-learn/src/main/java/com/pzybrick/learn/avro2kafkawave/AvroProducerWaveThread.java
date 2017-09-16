@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.learn.avro2kafkawave;
 
 import java.io.ByteArrayOutputStream;
@@ -14,15 +33,37 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import com.pzybrick.avro.schema.Wave;
 
+
+/**
+ * The Class AvroProducerWaveThread.
+ */
 public class AvroProducerWaveThread extends Thread {
+    
+    /** The Constant ISO8601_UTC. */
     private static final SimpleDateFormat ISO8601_UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    
+    /** The thread number. */
     private int threadNumber;
 
+	/** The run secs. */
 	private int runSecs;
+    
+    /** The sleep msecs. */
     private int sleepMsecs;
+    
+    /** The source uuid. */
     private String sourceUuid;
+    
+    /** The run exception. */
     private Exception runException;
     
+    /**
+     * Instantiates a new avro producer wave thread.
+     *
+     * @param threadNumber the thread number
+     * @param runSecs the run secs
+     * @param sleepMsecs the sleep msecs
+     */
     public AvroProducerWaveThread( int threadNumber, int runSecs, int sleepMsecs ) {
     	this.threadNumber = threadNumber;
     	this.runSecs = runSecs;
@@ -31,6 +72,9 @@ public class AvroProducerWaveThread extends Thread {
     }
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		try {
@@ -94,6 +138,12 @@ public class AvroProducerWaveThread extends Thread {
 		}
 	}
 	
+	/**
+	 * Round dbl two dec.
+	 *
+	 * @param dbl the dbl
+	 * @return the double
+	 */
 	public static double roundDblTwoDec( double dbl ) {
 		dbl = dbl*100;
 		dbl = Math.round(dbl);
@@ -102,20 +152,40 @@ public class AvroProducerWaveThread extends Thread {
 	}
 
 
+	/**
+	 * Gets the run exception.
+	 *
+	 * @return the run exception
+	 */
 	public Exception getRunException() {
 		return runException;
 	}
 
 
+	/**
+	 * Sets the run exception.
+	 *
+	 * @param runException the new run exception
+	 */
 	public void setRunException(Exception runException) {
 		this.runException = runException;
 	}
 
+    /**
+     * Gets the thread number.
+     *
+     * @return the thread number
+     */
     public int getThreadNumber() {
 		return threadNumber;
 	}
 
 
+	/**
+	 * Sets the thread number.
+	 *
+	 * @param threadNumber the new thread number
+	 */
 	public void setThreadNumber(int threadNumber) {
 		this.threadNumber = threadNumber;
 	}

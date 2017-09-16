@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.simws;
 
 import java.util.HashMap;
@@ -18,12 +37,27 @@ import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 import com.pzybrick.iote2e.ws.security.LoginVo;
 
+
+/**
+ * The Class SimWsClientLedGreen.
+ */
 public class SimWsClientLedGreen extends SimWsClientBase {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(SimWsClientLedGreen.class);
+	
+	/** The Constant LEDGREEN_PUT_FREQ_MS. */
 	private static final long LEDGREEN_PUT_FREQ_MS = 4000;
+	
+	/** The led green state. */
 	private String ledGreenState = "0";
 
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			SimWsClientLedGreen simWsClientLedGreen = new SimWsClientLedGreen();
@@ -34,11 +68,21 @@ public class SimWsClientLedGreen extends SimWsClientBase {
 	}
 
 	
+	/**
+	 * Instantiates a new sim ws client led green.
+	 *
+	 * @throws Exception the exception
+	 */
 	public SimWsClientLedGreen() throws Exception {
 		super();
 	}
 
 
+	/**
+	 * Process.
+	 *
+	 * @param args the args
+	 */
 	public void process(String[] args) {
 		try {
 			url = args[0];
@@ -87,11 +131,21 @@ public class SimWsClientLedGreen extends SimWsClientBase {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.tests.simws.SimWsClientBase#after()
+	 */
 	public void after() throws Exception {
 		super.after();
 	}
 
+	/**
+	 * The Class SimWsTempToFanShutdownHook.
+	 */
 	private class SimWsTempToFanShutdownHook extends Thread {
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			try {
@@ -104,12 +158,23 @@ public class SimWsClientLedGreen extends SimWsClientBase {
 		}
 	}
 
+	/**
+	 * Gets the led green state.
+	 *
+	 * @return the led green state
+	 */
 	public String getLedGreenState() {
 		synchronized(ledGreenState ) {
 			return ledGreenState;
 		}
 	}
 
+	/**
+	 * Sets the led green state.
+	 *
+	 * @param ledGreenState the led green state
+	 * @return the sim ws client led green
+	 */
 	public SimWsClientLedGreen setLedGreenState(String ledGreenState) {
 		synchronized(ledGreenState ) {
 			this.ledGreenState = ledGreenState;

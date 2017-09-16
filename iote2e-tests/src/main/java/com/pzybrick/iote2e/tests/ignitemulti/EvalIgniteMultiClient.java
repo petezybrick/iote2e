@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.ignitemulti;
 
 import java.util.ArrayList;
@@ -21,15 +40,36 @@ import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eSchemaConstants;
 
+
+/**
+ * The Class EvalIgniteMultiClient.
+ */
 public class EvalIgniteMultiClient {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(EvalIgniteMultiClient.class);
+	
+	/** The eval ignite subscribe threads. */
 	private List<EvalIgniteSubscribeThread> evalIgniteSubscribeThreads;
+	
+	/** The iote 2 e result poller threads. */
 	private List<Iote2eResultPollerThread> iote2eResultPollerThreads;
+	
+	/** The cache. */
 	private IgniteCache<String, byte[]> cache = null;
+	
+	/** The ignite. */
 	private Ignite ignite = null;
+	
+	/** The iote 2 e request result item. */
 	private Iote2eResultReuseItem iote2eRequestResultItem = new Iote2eResultReuseItem();	
 
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			EvalIgniteMultiClient evalIgniteMultiClient = new EvalIgniteMultiClient();
@@ -39,6 +79,11 @@ public class EvalIgniteMultiClient {
 		}
 	}
 	
+	/**
+	 * Process.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void process() throws Exception {
 		final int max_conns = 10;
 		initIgniteSender();
@@ -92,6 +137,13 @@ public class EvalIgniteMultiClient {
 		ignite.close();			
 	}
 	
+	/**
+	 * Creates the iote 2 e result.
+	 *
+	 * @param threadOffset the thread offset
+	 * @param testNumber the test number
+	 * @return the iote 2 e result
+	 */
 	private Iote2eResult createIote2eResult( int threadOffset, int testNumber ) {
 		Map<CharSequence,CharSequence> pairs = new HashMap<CharSequence,CharSequence>();
 		pairs.put( new Utf8(Iote2eSchemaConstants.PAIRNAME_SENSOR_NAME), new Utf8("sensor-"+threadOffset ));
@@ -115,6 +167,11 @@ public class EvalIgniteMultiClient {
 	}
 	
 	
+	/**
+	 * Inits the ignite sender.
+	 *
+	 * @throws Exception the exception
+	 */
 	private void initIgniteSender() throws Exception {
 		try {
 			String cacheName = "iote2e-evalmulticlient-cache";
@@ -135,17 +192,35 @@ public class EvalIgniteMultiClient {
 		}
 	}
 	
+	/**
+	 * The Class Iote2eResultPollerThread.
+	 */
 	public class Iote2eResultPollerThread extends Thread {
+		
+		/** The shutdown. */
 		private boolean shutdown = false;
+		
+		/** The offset. */
 		private int offset;
+		
+		/** The queue iote 2 e results. */
 		private ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
 		
+		/**
+		 * Instantiates a new iote 2 e result poller thread.
+		 *
+		 * @param offset the offset
+		 * @param queueIote2eResults the queue iote 2 e results
+		 */
 		public Iote2eResultPollerThread(int offset, ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults) {
 			super();
 			this.offset = offset;
 			this.queueIote2eResults = queueIote2eResults;
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			try {
@@ -179,6 +254,9 @@ public class EvalIgniteMultiClient {
 			}
 		}
 		
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			shutdown = true;
 			interrupt();

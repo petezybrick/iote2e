@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.learn.kafka;
 
 import java.util.HashMap;
@@ -12,17 +31,37 @@ import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
  
+
+/**
+ * The Class ConsumerDemoMaster.
+ */
 public class ConsumerDemoMaster {
+    
+    /** The consumer. */
     private final ConsumerConnector consumer;
+    
+    /** The topic. */
     private final String topic;
+    
+    /** The executor. */
     private  ExecutorService executor;
  
+    /**
+     * Instantiates a new consumer demo master.
+     *
+     * @param a_zookeeper the a zookeeper
+     * @param a_groupId the a group id
+     * @param a_topic the a topic
+     */
     public ConsumerDemoMaster(String a_zookeeper, String a_groupId, String a_topic) {
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
                 createConsumerConfig(a_zookeeper, a_groupId));
         this.topic = a_topic;
     }
  
+    /**
+     * Shutdown.
+     */
     public void shutdown() {
         if (consumer != null) consumer.shutdown();
         if (executor != null) executor.shutdown();
@@ -35,6 +74,11 @@ public class ConsumerDemoMaster {
         }
    }
  
+    /**
+     * Run.
+     *
+     * @param a_numThreads the a num threads
+     */
     public void run(int a_numThreads) {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(topic, new Integer(a_numThreads));
@@ -54,22 +98,49 @@ public class ConsumerDemoMaster {
         }
     }
  
+    /**
+     * Gets the executor.
+     *
+     * @return the executor
+     */
     public ExecutorService getExecutor() {
 		return executor;
 	}
 
+	/**
+	 * Sets the executor.
+	 *
+	 * @param executor the new executor
+	 */
 	public void setExecutor(ExecutorService executor) {
 		this.executor = executor;
 	}
 
+	/**
+	 * Gets the consumer.
+	 *
+	 * @return the consumer
+	 */
 	public ConsumerConnector getConsumer() {
 		return consumer;
 	}
 
+	/**
+	 * Gets the topic.
+	 *
+	 * @return the topic
+	 */
 	public String getTopic() {
 		return topic;
 	}
 
+	/**
+	 * Creates the consumer config.
+	 *
+	 * @param a_zookeeper the a zookeeper
+	 * @param a_groupId the a group id
+	 * @return the consumer config
+	 */
 	private static ConsumerConfig createConsumerConfig(String a_zookeeper, String a_groupId) {
         Properties props = new Properties();
         props.put("zookeeper.connect", a_zookeeper);
@@ -81,6 +152,11 @@ public class ConsumerDemoMaster {
         return new ConsumerConfig(props);
     }
  
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String[] args) {
         String zooKeeper = "localhost:2181"; // args[0];
         String groupId = "group1"; // args[1];

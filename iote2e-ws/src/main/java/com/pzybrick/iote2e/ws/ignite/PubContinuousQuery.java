@@ -1,18 +1,21 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
  */
 
 package com.pzybrick.iote2e.ws.ignite;
@@ -34,6 +37,7 @@ import org.apache.ignite.cache.query.ScanQuery;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.lang.IgniteBiPredicate;
 
+
 /**
  * This examples demonstrates continuous query API.
  * <p>
@@ -47,14 +51,28 @@ public class PubContinuousQuery {
     /** Cache name. */
     private static final String CACHE_NAME = "pzcache";
 
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws Exception the exception
+     */
     public static void main(String[] args) throws Exception {
     	PubContinuousQuery pubContinuousQuery = new PubContinuousQuery();
     	pubContinuousQuery.process();
     }
 
+    /**
+     * Instantiates a new pub continuous query.
+     */
     public PubContinuousQuery() {
     }
     
+    /**
+     * Process.
+     *
+     * @throws Exception the exception
+     */
     public void process() throws Exception {
     	Ignite ignite = null;
         try {
@@ -86,13 +104,26 @@ public class PubContinuousQuery {
         }
     }
     
+    /**
+     * The Class PublishTestMessage.
+     */
     private static class PublishTestMessage extends Thread {
-    	private IgniteCache<Integer, String> cache;
     	
-    	public PublishTestMessage( IgniteCache<Integer, String> cache ) {
+	    /** The cache. */
+	    private IgniteCache<Integer, String> cache;
+    	
+    	/**
+	     * Instantiates a new publish test message.
+	     *
+	     * @param cache the cache
+	     */
+	    public PublishTestMessage( IgniteCache<Integer, String> cache ) {
     		this.cache = cache;
     	}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			try {

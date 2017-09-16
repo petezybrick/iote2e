@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.test.iote2e.scratchpad;
 
 import java.util.ArrayList;
@@ -18,19 +37,43 @@ import com.datastax.driver.core.exceptions.NoHostAvailableException;
 import com.pzybrick.iote2e.stream.svc.ActuatorState;
 import com.pzybrick.iote2e.stream.svc.LoginSourceSensorActuator;
 
+
+/**
+ * The Class LearnCassandra.
+ */
 public class LearnCassandra {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(LearnCassandra.class);
+	
+	/** The Constant TEST_KEYSPACE_NAME. */
 	private static final String TEST_KEYSPACE_NAME = "iote2e";
+	
+	/** The Constant TEST_TABLE_NAME. */
 	private static final String TEST_TABLE_NAME = "actuator_state";
+	
+	/** The Constant TEST_CONTACT_POINT. */
 	private static final String TEST_CONTACT_POINT = "127.0.0.1";
+	
+	/** The cluster. */
 	private Cluster cluster;
+	
+	/** The session. */
 	private Session session;
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		LearnCassandra learnCassandra = new LearnCassandra();
 		learnCassandra.process();
 	}
 	
+	/**
+	 * Process.
+	 */
 	public void process()  {
 
 		try {
@@ -72,6 +115,13 @@ public class LearnCassandra {
 		}
 	}
 	
+	/**
+	 * Execute.
+	 *
+	 * @param cql the cql
+	 * @return the result set
+	 * @throws Exception the exception
+	 */
 	protected ResultSet execute( String cql ) throws Exception {
 		Exception lastException = null;
 		long sleepMs = 1000;
@@ -103,6 +153,13 @@ public class LearnCassandra {
 		else throw new Exception(lastException);
 	}
 	
+	/**
+	 * Count.
+	 *
+	 * @param tableName the table name
+	 * @return the long
+	 * @throws Exception the exception
+	 */
 	public long count( String tableName ) throws Exception {
 		long cnt = -1;
 		try {
@@ -123,6 +180,12 @@ public class LearnCassandra {
 		return cnt;
 	}
 	
+	/**
+	 * Truncate.
+	 *
+	 * @param tableName the table name
+	 * @throws Exception the exception
+	 */
 	public void truncate( String tableName ) throws Exception {
 		try {
 			String truncate = String.format("TRUNCATE %s", tableName );
@@ -137,6 +200,12 @@ public class LearnCassandra {
 		}
 	}
 	
+	/**
+	 * Delete row.
+	 *
+	 * @param pk the pk
+	 * @throws Exception the exception
+	 */
 	public void deleteRow( String pk ) throws Exception {
 		try {
 			String delete = String.format("DELETE FROM actuator_state where login_source_sensor='%s'", pk);
@@ -152,6 +221,13 @@ public class LearnCassandra {
 	}
 	
 	
+	/**
+	 * Update row.
+	 *
+	 * @param pk the pk
+	 * @param newValue the new value
+	 * @throws Exception the exception
+	 */
 	public void updateRow( String pk, String newValue ) throws Exception {
 		try {
 			String update = String.format("UPDATE actuator_state SET actuator_value='%s',actuator_value_updated_at=toTimestamp(now()) where login_source_sensor='%s'", newValue, pk);
@@ -167,6 +243,13 @@ public class LearnCassandra {
 	}
 	
 	
+	/**
+	 * Find row.
+	 *
+	 * @param pk the pk
+	 * @return the map
+	 * @throws Exception the exception
+	 */
 	public Map<String,Object> findRow( String pk ) throws Exception {
 		try {				
 			Map<String,Object> map = null;
@@ -195,6 +278,12 @@ public class LearnCassandra {
 	}
 
 	
+	/**
+	 * Insert actuator state.
+	 *
+	 * @param actuatorState the actuator state
+	 * @throws Exception the exception
+	 */
 	public void insertActuatorState( ActuatorState actuatorState) throws Exception {
 		try {
 			logger.debug("loginSourceSensorActuator={}",actuatorState.toString());
@@ -209,6 +298,12 @@ public class LearnCassandra {
 	}
 	
 	
+	/**
+	 * Insert actuator state batch.
+	 *
+	 * @param actuatorStates the actuator states
+	 * @throws Exception the exception
+	 */
 	public void insertActuatorStateBatch( List<ActuatorState> actuatorStates ) throws Exception {
 		try {
 			logger.debug( "inserting {} batch rows", actuatorStates.size());
@@ -227,6 +322,12 @@ public class LearnCassandra {
 	}
 
 	
+	/**
+	 * Creates the insert actuator state.
+	 *
+	 * @param actuatorState the actuator state
+	 * @return the string
+	 */
 	public static String createInsertActuatorState( ActuatorState actuatorState ) {
 		String key = actuatorState.getLoginName() + "|" +
 				actuatorState.getSourceName() + "|" +
@@ -240,6 +341,12 @@ public class LearnCassandra {
 	}
 
 	
+	/**
+	 * Use keyspace.
+	 *
+	 * @param keyspaceName the keyspace name
+	 * @throws Exception the exception
+	 */
 	public void useKeyspace( String keyspaceName ) throws Exception {
 		try {
 			logger.debug("keyspaceName={}",keyspaceName);
@@ -250,6 +357,12 @@ public class LearnCassandra {
 		}
 	}	
 	
+	/**
+	 * Creates the table.
+	 *
+	 * @param createTable the create table
+	 * @throws Exception the exception
+	 */
 	public void createTable( String createTable ) throws Exception {
 		try {
 			logger.debug("createTable={}",createTable);
@@ -259,6 +372,13 @@ public class LearnCassandra {
 			throw e;
 		}
 	}	
+	
+	/**
+	 * Creates the keyspace.
+	 *
+	 * @param keyspaceName the keyspace name
+	 * @throws Exception the exception
+	 */
 	public void createKeyspace( String keyspaceName ) throws Exception {
 		try {
 			logger.debug("keyspaceName={}",keyspaceName);
@@ -272,6 +392,11 @@ public class LearnCassandra {
 		}
 	}
 	
+	/**
+	 * Connect.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void connect() throws Exception {
 		try {
 			logger.debug("contactPoint={}",TEST_CONTACT_POINT);
@@ -284,6 +409,9 @@ public class LearnCassandra {
 		}
 	}
 	
+	/**
+	 * Disconnect.
+	 */
 	public void disconnect() {
 		logger.debug("closing session and cluster");
 		if( session != null ) {
@@ -303,11 +431,21 @@ public class LearnCassandra {
 		logger.debug("closed session and cluster");
 	}
 	
+	/**
+	 * Creates the actuator state single.
+	 *
+	 * @return the actuator state
+	 */
 	private static ActuatorState createActuatorStateSingle() {
 		return new ActuatorState().setLoginName("lo1").setSourceName("lo1_so1").setSensorName("lo1_so1_se1")
 				.setActuatorName("fan1").setActuatorValue("off").setActuatorDesc("fan in greenhouse");
 	}
 	
+	/**
+	 * Creates the actuator state batch.
+	 *
+	 * @return the list
+	 */
 	private static List<ActuatorState> createActuatorStateBatch() {
 		List<ActuatorState> actuatorStates = new ArrayList<ActuatorState>();
 		actuatorStates.add( new ActuatorState().setLoginName("lo2").setSourceName("lo2_so2").setSensorName("lo2_so2_se2")

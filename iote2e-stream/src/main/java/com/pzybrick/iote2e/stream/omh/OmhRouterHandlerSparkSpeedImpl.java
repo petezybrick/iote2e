@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.omh;
 
 import java.nio.ByteBuffer;
@@ -34,22 +53,46 @@ import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.stream.email.Email;
 
+
+/**
+ * The Class OmhRouterHandlerSparkSpeedImpl.
+ */
 public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(OmhRouterHandlerSparkSpeedImpl.class);
+	
+	/** The master config. */
 	private MasterConfig masterConfig;
+	
+	/** The ignite grid connection. */
 	private IgniteGridConnection igniteGridConnection;
+	
+	/** The iote 2 e result reuse item. */
 	private Iote2eResultReuseItem iote2eResultReuseItem;
+	
+	/** The object mapper. */
 	// TODO have a cached pool of objectMapper's
 	private ObjectMapper objectMapper;
+	
+	/** The nrt filter blood pressure. */
 	private Set<String> nrtFilterBloodPressure = new HashSet<String>();
 
 
+	/**
+	 * Instantiates a new omh router handler spark speed impl.
+	 *
+	 * @throws Exception the exception
+	 */
 	public OmhRouterHandlerSparkSpeedImpl( ) throws Exception {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.omh.OmhRouterHandler#init(com.pzybrick.iote2e.common.config.MasterConfig)
+	 */
 	public void init(MasterConfig masterConfig) throws Exception {
 		try {
 			this.masterConfig = masterConfig;
@@ -65,6 +108,9 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.omh.OmhRouterHandler#processRequests(java.util.List)
+	 */
 	public void processRequests( List<ByteBuffer> byteBuffers ) throws Exception {
 		try {
 			if( byteBuffers != null && byteBuffers.size() > 0 ) {
@@ -103,6 +149,13 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 	}
 	
 	
+	/**
+	 * Check blood pressure exceeded.
+	 *
+	 * @param dataPoint the data point
+	 * @param bloodPressure the blood pressure
+	 * @throws Exception the exception
+	 */
 	/*
 	 * TODO: need a true rule processor here, this is just a simple stub check BP Diastolic exceeded
 	 */
@@ -122,6 +175,13 @@ public class OmhRouterHandlerSparkSpeedImpl implements OmhRouterHandler {
 	}
 	
 	
+	/**
+	 * Near real time blood pressure.
+	 *
+	 * @param dataPoint the data point
+	 * @param bloodPressure the blood pressure
+	 * @throws Exception the exception
+	 */
 	private void nearRealTimeBloodPressure( DataPoint dataPoint, BloodPressure bloodPressure ) throws Exception {
 		CharSequence systolic = new Utf8( String.valueOf(bloodPressure.getSystolicBloodPressure().getValue().intValue() ));
 		CharSequence diastolic = new Utf8( String.valueOf(bloodPressure.getDiastolicBloodPressure().getValue().intValue() ));

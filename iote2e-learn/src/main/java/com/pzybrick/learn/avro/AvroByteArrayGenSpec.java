@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.learn.avro;
 
 import java.io.ByteArrayOutputStream;
@@ -26,8 +45,17 @@ import org.apache.avro.specific.SpecificDatumWriter;
 import com.pzybrick.avro.schema.User;
 import com.pzybrick.avro.schema.Wave;
 
+
+/**
+ * The Class AvroByteArrayGenSpec.
+ */
 public class AvroByteArrayGenSpec {
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			AvroByteArrayGenSpec avroByteArray = new AvroByteArrayGenSpec();
@@ -40,6 +68,11 @@ public class AvroByteArrayGenSpec {
 
 	}
 
+	/**
+	 * Process single.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void processSingle() throws Exception {
 		int base = (int) System.currentTimeMillis();
 		Map<CharSequence, CharSequence> myMap = new HashMap<CharSequence, CharSequence>();
@@ -119,6 +152,11 @@ public class AvroByteArrayGenSpec {
 
 	}
 
+	/**
+	 * Process singlex.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void processSinglex() throws Exception {
 		int base = (int) System.currentTimeMillis();
 		User user = User.newBuilder().setName("name" + base).setFavoriteColor("color" + base).setFavoriteNumber(base)
@@ -142,6 +180,11 @@ public class AvroByteArrayGenSpec {
 		System.out.println(genericRecord.get("name"));
 	}
 
+	/**
+	 * Process list.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void processList() throws Exception {
 		List<User> users = new ArrayList<User>();
 		int base = (int) System.currentTimeMillis();

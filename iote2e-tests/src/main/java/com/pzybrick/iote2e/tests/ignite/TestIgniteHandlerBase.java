@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.ignite;
 
 import java.util.HashMap;
@@ -27,26 +46,59 @@ import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.tests.common.Iote2eRequestHandlerIgniteTestThread;
 import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 
+
+/**
+ * The Class TestIgniteHandlerBase.
+ */
 public class TestIgniteHandlerBase extends TestCommonHandler {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(TestIgniteHandlerBase.class);
+	
+	/** The queue iote 2 e requests. */
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
+	
+	/** The queue iote 2 e results. */
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
+	
+	/** The iote 2 e request handler. */
 	protected Iote2eRequestHandlerIgniteTestThread iote2eRequestHandler;
+	
+	/** The iote 2 e svc. */
 	protected Iote2eSvc iote2eSvc;
+	
+	/** The thread ignite subscribe. */
 	protected ThreadIgniteSubscribe threadIgniteSubscribe;
+	
+	/** The iote 2 e result reuse item. */
 	protected Iote2eResultReuseItem iote2eResultReuseItem;
 	
+	/**
+	 * Instantiates a new test ignite handler base.
+	 *
+	 * @throws Exception the exception
+	 */
 	public TestIgniteHandlerBase() throws Exception {
 		super();
 	}
 	
 	
+	/**
+	 * Before class.
+	 *
+	 * @throws Exception the exception
+	 */
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		TestCommonHandler.beforeClass();
 	}
 	
 	
+	/**
+	 * Before.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void before() throws Exception {
 		try {			
@@ -70,6 +122,11 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 		}
 	}
 
+	/**
+	 * After.
+	 *
+	 * @throws Exception the exception
+	 */
 	@After
 	public void after() throws Exception {
 		while (!queueIote2eRequests.isEmpty()) {
@@ -90,6 +147,11 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 		}
 	}
 	
+	/**
+	 * After class.
+	 *
+	 * @throws Exception the exception
+	 */
 	@AfterClass
 	public static void afterClass() throws Exception {
 		try {
@@ -99,6 +161,17 @@ public class TestIgniteHandlerBase extends TestCommonHandler {
 		}
 	}
 
+	/**
+	 * Common run.
+	 *
+	 * @param loginName the login name
+	 * @param sourceName the source name
+	 * @param sourceType the source type
+	 * @param sensorName the sensor name
+	 * @param sensorValue the sensor value
+	 * @param igniteFilterKey the ignite filter key
+	 * @throws Exception the exception
+	 */
 	protected void commonRun(String loginName, String sourceName, String sourceType, String sensorName,
 			String sensorValue, String igniteFilterKey) throws Exception {
 		logger.info(String.format("loginName=%s, sourceName=%s, sourceType=%s, sensorName=%s, sensorValue=%s", loginName,

@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.kafka;
 
 import java.util.HashMap;
@@ -16,25 +35,58 @@ import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.schema.avro.OPERATION;
 import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 
+
+/**
+ * The Class InjectIote2eRequestsToKafka.
+ */
 public class InjectIote2eRequestsToKafka {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(InjectIote2eRequestsToKafka.class);
+	
+	/** The kafka producer. */
 	private KafkaProducer<String, byte[]> kafkaProducer;
+	
+	/** The iote 2 e request reuse item. */
 	private Iote2eRequestReuseItem iote2eRequestReuseItem;
+	
+	/** The kafka topic. */
 	private String kafkaTopic;
+	
+	/** The kafka group. */
 	private String kafkaGroup;
+	
+	/** The bootstrap servers. */
 	private String bootstrapServers;
+	
+	/** The arg map. */
 	private ArgMap argMap;
 	
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws Exception the exception
+     */
     public static void main(String[] args) throws Exception {
     	logger.info(">>> Starting injector <<<");
     	InjectIote2eRequestsToKafka injectIote2eRequestsToKafka = new InjectIote2eRequestsToKafka();
     	injectIote2eRequestsToKafka.process(args);
     }
 
+	/**
+	 * Instantiates a new inject iote 2 e requests to kafka.
+	 */
 	public InjectIote2eRequestsToKafka() {
 		super();
 	}
 
+	/**
+	 * Process.
+	 *
+	 * @param args the args
+	 * @throws Exception the exception
+	 */
 	public void process(String[] args) throws Exception {
     	argMap = new ArgMap(args);
     	logger.info("Starting, argMap: " + argMap.dump() );

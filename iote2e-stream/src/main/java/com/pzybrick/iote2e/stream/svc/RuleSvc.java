@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.svc;
 
 import java.util.ArrayList;
@@ -11,20 +30,70 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.stream.svc.RuleDefCondItem.RuleComparator;
 
+
+/**
+ * The Class RuleSvc.
+ */
 public abstract class RuleSvc {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(RuleSvc.class);
 
+	/**
+	 * Inits the.
+	 *
+	 * @param masterConfig the master config
+	 * @throws Exception the exception
+	 */
 	public abstract void init(MasterConfig masterConfig) throws Exception;
 
+	/**
+	 * Find rule def item.
+	 *
+	 * @param ruleUuid the rule uuid
+	 * @return the rule def item
+	 * @throws Exception the exception
+	 */
 	protected abstract RuleDefItem findRuleDefItem(String ruleUuid) throws Exception;
 
+	/**
+	 * Find source sensor actuator.
+	 *
+	 * @param loginUuid the login uuid
+	 * @param sourceUuid the source uuid
+	 * @param sensorName the sensor name
+	 * @return the actuator state
+	 * @throws Exception the exception
+	 */
 	protected abstract ActuatorState findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorName)
 			throws Exception;
 
+	/**
+	 * Update actuator value.
+	 *
+	 * @param loginSourceSensorActuator the login source sensor actuator
+	 * @throws Exception the exception
+	 */
 	protected abstract void updateActuatorValue(ActuatorState loginSourceSensorActuator) throws Exception;
 
+	/**
+	 * Find rule login source sensor.
+	 *
+	 * @param loginUuid the login uuid
+	 * @param sourceUuid the source uuid
+	 * @param sensorName the sensor name
+	 * @return the rule login source sensor
+	 * @throws Exception the exception
+	 */
 	protected abstract RuleLoginSourceSensor findRuleLoginSourceSensor(String loginUuid, String sourceUuid, String sensorName) throws Exception;
 
+	/**
+	 * Process.
+	 *
+	 * @param iote2eRequest the iote 2 e request
+	 * @return the list
+	 * @throws Exception the exception
+	 */
 	public List<RuleEvalResult> process(Iote2eRequest iote2eRequest ) throws Exception {
 		List<RuleEvalResult> ruleEvalResults = new ArrayList<RuleEvalResult>();
 		for( Map.Entry<CharSequence,CharSequence> entry : iote2eRequest.getPairs().entrySet() ) {
@@ -50,6 +119,17 @@ public abstract class RuleSvc {
 		return ruleEvalResults;
 	}
 	
+	/**
+	 * Rule eval.
+	 *
+	 * @param loginUuid the login uuid
+	 * @param sourceUuid the source uuid
+	 * @param sensorName the sensor name
+	 * @param sensorValue the sensor value
+	 * @param ruleDefItem the rule def item
+	 * @param ruleEvalResults the rule eval results
+	 * @throws Exception the exception
+	 */
 	protected void ruleEval(String loginUuid, String sourceUuid, String sensorName, String sensorValue,
 			RuleDefItem ruleDefItem, List<RuleEvalResult> ruleEvalResults) throws Exception {
 		for (RuleDefCondItem ruleDefCondItem : ruleDefItem.getRuleDefCondItems()) {
@@ -74,6 +154,15 @@ public abstract class RuleSvc {
 		logger.debug(ruleEvalResults);
 	}
 
+	/**
+	 * Eval rule sensor.
+	 *
+	 * @param sensorValue the sensor value
+	 * @param ruleDefCondItem the rule def cond item
+	 * @param ruleDefItem the rule def item
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	private boolean evalRuleSensor(String sensorValue, RuleDefCondItem ruleDefCondItem, RuleDefItem ruleDefItem)
 			throws Exception {
 		return ruleEvalCommon(sensorValue, ruleDefCondItem.getSensorTypeValue(),
@@ -81,6 +170,17 @@ public abstract class RuleSvc {
 				ruleDefCondItem.getDblSensorCompareValue(), ruleDefCondItem.getRuleComparatorSensor(), ruleDefItem);
 	}
 
+	/**
+	 * Rule eval actuator.
+	 *
+	 * @param loginName the login name
+	 * @param sourceName the source name
+	 * @param sensorName the sensor name
+	 * @param ruleDefCondItem the rule def cond item
+	 * @param ruleDefItem the rule def item
+	 * @return the rule eval result
+	 * @throws Exception the exception
+	 */
 	private RuleEvalResult ruleEvalActuator(String loginName, String sourceName, String sensorName, RuleDefCondItem ruleDefCondItem,
 			RuleDefItem ruleDefItem) throws Exception {
 		ActuatorState actuatorState = findSourceSensorActuator(loginName, sourceName, sensorName);
@@ -107,6 +207,19 @@ public abstract class RuleSvc {
 		return ruleEvalResult;
 	}
 
+	/**
+	 * Rule eval common.
+	 *
+	 * @param currentValue the current value
+	 * @param typeValue the type value
+	 * @param strCompareValue the str compare value
+	 * @param intCompareValue the int compare value
+	 * @param dblCompareValue the dbl compare value
+	 * @param ruleComparator the rule comparator
+	 * @param ruleDefItem the rule def item
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	private boolean ruleEvalCommon(String currentValue, String typeValue, String strCompareValue,
 			Integer intCompareValue, Double dblCompareValue, RuleComparator ruleComparator, RuleDefItem ruleDefItem)
 			throws Exception {

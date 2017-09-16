@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.simws;
 
 import java.net.URI;
@@ -31,23 +50,62 @@ import com.pzybrick.iote2e.tests.common.TestCommonHandler;
 import com.pzybrick.iote2e.tests.common.ThreadSparkRun;
 import com.pzybrick.iote2e.ws.security.LoginVo;
 
+
+/**
+ * The Class ClientKsiInjector.
+ */
 public class ClientKsiInjector {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ClientKsiInjector.class);
+	
+	/** The uri. */
 	private URI uri;
+	
+	/** The container. */
 	private WebSocketContainer container;
+	
+	/** The master config. */
 	private MasterConfig masterConfig;
+	
+	/** The thread ignite subscribe. */
 	private ThreadIgniteSubscribe threadIgniteSubscribe;
+	
+	/** The thread poll result. */
 	private ThreadPollResult threadPollResult;
+	
+	/** The queue iote 2 e requests. */
 	protected ConcurrentLinkedQueue<ByteBuffer> queueIote2eRequests = new ConcurrentLinkedQueue<ByteBuffer>();
+	
+	/** The queue iote 2 e results. */
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults = new ConcurrentLinkedQueue<Iote2eResult>();
+	
+	/** The iote 2 e request spark consumer. */
 	protected Iote2eRequestSparkConsumer iote2eRequestSparkConsumer;
+	
+	/** The thread spark run. */
 	protected ThreadSparkRun threadSparkRun;
+	
+	/** The iot client socket thread. */
 	protected IotClientSocketThread iotClientSocketThread;
+	
+	/** The test source login. */
 	private static Utf8 TEST_SOURCE_LOGIN = new Utf8("pzybrick1");
+	
+	/** The test source name. */
 	private static Utf8 TEST_SOURCE_NAME = new Utf8("rpi-999");
+	
+	/** The test source type. */
 	private static Utf8 TEST_SOURCE_TYPE = new Utf8("temp");
+	
+	/** The test sensor name. */
 	private static Utf8 TEST_SENSOR_NAME = new Utf8("temp1");	// fan
     
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		// "ws://localhost:8090/iote2e/"
 		try {
@@ -60,12 +118,23 @@ public class ClientKsiInjector {
 	}
 	
 	
+	/**
+	 * Instantiates a new client ksi injector.
+	 *
+	 * @throws Exception the exception
+	 */
 	public ClientKsiInjector() throws Exception {
 		this.masterConfig = MasterConfig.getInstance(System.getenv("MASTER_CONFIG_JSON_KEY"), 
 				System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME") );
 	}
 
 	
+	/**
+	 * Process.
+	 *
+	 * @param url the url
+	 * @throws Exception the exception
+	 */
 	public void process(String url) throws Exception {
 		try {
 			startKsiThreads();
@@ -94,6 +163,11 @@ public class ClientKsiInjector {
 	}
 	
 	
+	/**
+	 * Start ksi threads.
+	 *
+	 * @throws Exception the exception
+	 */
 	private void startKsiThreads() throws Exception {
 		threadPollResult.start();
 		threadIgniteSubscribe = ThreadIgniteSubscribe.startThreadSubscribe( masterConfig,
@@ -115,6 +189,9 @@ public class ClientKsiInjector {
 
 	}
 	
+	/**
+	 * Stop ksi threads.
+	 */
 	private void stopKsiThreads() {
 		try {
 			if( iotClientSocketThread != null ) {
@@ -137,18 +214,41 @@ public class ClientKsiInjector {
 
 	}
 	
+	/**
+	 * The Class IotClientSocketThread.
+	 */
 	private static class IotClientSocketThread extends Thread {
+		
+		/** The login. */
 		private String login;
+		
+		/** The uri. */
 		private URI uri;
+		
+		/** The container. */
 		private WebSocketContainer container;
+		
+		/** The shutdown. */
 		private boolean shutdown;
+		
+		/** The iote 2 e request reuse item. */
 		private Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
+		
+		/** The iote 2 e result reuse item. */
 		private Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 
+		/**
+		 * Instantiates a new iot client socket thread.
+		 *
+		 * @throws Exception the exception
+		 */
 		public IotClientSocketThread() throws Exception {
 
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			Session session = null;
@@ -196,33 +296,69 @@ public class ClientKsiInjector {
 			}
 		}
 
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			shutdown = true;
 			interrupt();
 		}
 
+		/**
+		 * Gets the login.
+		 *
+		 * @return the login
+		 */
 		public String getLogin() {
 			return login;
 		}
 
+		/**
+		 * Sets the login.
+		 *
+		 * @param login the login
+		 * @return the iot client socket thread
+		 */
 		public IotClientSocketThread setLogin(String login) {
 			this.login = login;
 			return this;
 		}
 
+		/**
+		 * Gets the uri.
+		 *
+		 * @return the uri
+		 */
 		public URI getUri() {
 			return uri;
 		}
 
+		/**
+		 * Sets the uri.
+		 *
+		 * @param uri the uri
+		 * @return the iot client socket thread
+		 */
 		public IotClientSocketThread setUri(URI uri) {
 			this.uri = uri;
 			return this;
 		}
 
+		/**
+		 * Gets the container.
+		 *
+		 * @return the container
+		 */
 		public WebSocketContainer getContainer() {
 			return container;
 		}
 
+		/**
+		 * Sets the container.
+		 *
+		 * @param container the container
+		 * @return the iot client socket thread
+		 */
 		public IotClientSocketThread setContainer(WebSocketContainer container) {
 			this.container = container;
 			return this;
@@ -230,18 +366,32 @@ public class ClientKsiInjector {
 	}
 	
 	
+	/**
+	 * The Class ThreadPollResult.
+	 */
 	private class ThreadPollResult extends Thread {
+		
+		/** The shutdown. */
 		private boolean shutdown;
 
+		/**
+		 * Instantiates a new thread poll result.
+		 */
 		public ThreadPollResult( ) {
 			super();
 		}
 		
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			this.shutdown = true;
 			interrupt();
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			while( true ) {

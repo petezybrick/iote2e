@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.kafka;
 
 import java.util.HashMap;
@@ -24,18 +43,40 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
  
+
+/**
+ * The Class KafkaAvroDemo.
+ */
 public class KafkaAvroDemo {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(KafkaAvroDemo.class);
+    
+    /** The consumer. */
     private final ConsumerConnector consumer;
+    
+    /** The topic. */
     private final String topic;
+    
+    /** The executor. */
     private ExecutorService executor;
  
+    /**
+     * Instantiates a new kafka avro demo.
+     *
+     * @param zookeeper the zookeeper
+     * @param groupId the group id
+     * @param topic the topic
+     */
     public KafkaAvroDemo(String zookeeper, String groupId, String topic) {
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
                 createConsumerConfig(zookeeper, groupId));
         this.topic = topic;
     }
  
+    /**
+     * Shutdown.
+     */
     public void shutdown() {
         if (consumer != null) consumer.shutdown();
         if (executor != null) executor.shutdown();
@@ -48,6 +89,11 @@ public class KafkaAvroDemo {
         }
    }
  
+    /**
+     * Run.
+     *
+     * @param numThreads the num threads
+     */
     public void run(int numThreads) {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(topic, new Integer(numThreads));
@@ -67,22 +113,49 @@ public class KafkaAvroDemo {
         }
     }
  
+    /**
+     * Gets the executor.
+     *
+     * @return the executor
+     */
     public ExecutorService getExecutor() {
 		return executor;
 	}
 
+	/**
+	 * Sets the executor.
+	 *
+	 * @param executor the new executor
+	 */
 	public void setExecutor(ExecutorService executor) {
 		this.executor = executor;
 	}
 
+	/**
+	 * Gets the consumer.
+	 *
+	 * @return the consumer
+	 */
 	public ConsumerConnector getConsumer() {
 		return consumer;
 	}
 
+	/**
+	 * Gets the topic.
+	 *
+	 * @return the topic
+	 */
 	public String getTopic() {
 		return topic;
 	}
 
+	/**
+	 * Creates the consumer config.
+	 *
+	 * @param zookeeper the zookeeper
+	 * @param groupId the group id
+	 * @return the consumer config
+	 */
 	private static ConsumerConfig createConsumerConfig(String zookeeper, String groupId) {
         Properties props = new Properties();
         props.put("zookeeper.connect", zookeeper);
@@ -94,6 +167,11 @@ public class KafkaAvroDemo {
         return new ConsumerConfig(props);
     }
  
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String[] args) {
     	int numMsgs = Integer.parseInt(args[0]);
         String zooKeeper = args[1];  // "iote2e-zoo2:2181"; 
@@ -123,6 +201,14 @@ public class KafkaAvroDemo {
     }
     
 	
+	/**
+	 * Produce test msgs.
+	 *
+	 * @param numEvents the num events
+	 * @param bootstrapServers the bootstrap servers
+	 * @param topic the topic
+	 * @throws Exception the exception
+	 */
 	private static void produceTestMsgs( long numEvents, String bootstrapServers, String topic ) throws Exception {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", bootstrapServers );
@@ -168,18 +254,37 @@ public class KafkaAvroDemo {
 	}
 	
 	
+	/**
+	 * The Class ConsumerDemoThread.
+	 */
 	public class ConsumerDemoThread implements Runnable {
-	    private KafkaStream kafkaStream;
-	    private int threadNumber;
-	    private KafkaAvroDemo consumerDemoMaster;
+	    
+    	/** The kafka stream. */
+    	private KafkaStream kafkaStream;
+	    
+    	/** The thread number. */
+    	private int threadNumber;
+	    
+    	/** The consumer demo master. */
+    	private KafkaAvroDemo consumerDemoMaster;
 	 
-	    public ConsumerDemoThread(KafkaStream kafkaStream, int threadNumber, KafkaAvroDemo consumerDemoMaster) {
+	    /**
+    	 * Instantiates a new consumer demo thread.
+    	 *
+    	 * @param kafkaStream the kafka stream
+    	 * @param threadNumber the thread number
+    	 * @param consumerDemoMaster the consumer demo master
+    	 */
+    	public ConsumerDemoThread(KafkaStream kafkaStream, int threadNumber, KafkaAvroDemo consumerDemoMaster) {
 	        this.threadNumber = threadNumber;
 	        this.kafkaStream = kafkaStream;
 	        this.consumerDemoMaster = consumerDemoMaster;
 	    }
 	 
-	    public void run() {
+	    /* (non-Javadoc)
+    	 * @see java.lang.Runnable#run()
+    	 */
+    	public void run() {
 	    	Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
 	        ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
 	        while (it.hasNext()) {

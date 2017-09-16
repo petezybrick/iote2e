@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.persist;
 
 import java.time.OffsetDateTime;
@@ -33,20 +52,51 @@ import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaHeartRateImpl;
 import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaHkWorkoutImpl;
 import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaRespiratoryRateImpl;
 
+
+/**
+ * The Class TestOmhSingleInsert.
+ */
 public class TestOmhSingleInsert {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(TestOmhSingleInsert.class);
+	
+	/** The sleep interval ms. */
 	private static long SLEEP_INTERVAL_MS = 1000L;
+	
+	/** The sim schemas by name. */
 	private Map<String,SimSchema> simSchemasByName;
+	
+	/** The sorted sim schema names. */
 	private List<String> sortedSimSchemaNames;
+	
+	/** The prev bodies by name login. */
 	private Map<String,Object> prevBodiesByNameLogin;
+	
+	/** The sim users file path. */
 	private String simUsersFilePath;
+	
+	/** The sim users offset. */
 	private Integer simUsersOffset;
+	
+	/** The sim users num users. */
 	private Integer simUsersNumUsers;
+	
+	/** The subset omh users. */
 	private List<OmhUser> subsetOmhUsers;
+	
+	/** The object mapper. */
 	private ObjectMapper objectMapper;
+	
+	/** The master config. */
 	private MasterConfig masterConfig;
 
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			// Args: simUsersFilePath; simUsersOffset; simUsersNumUsers
@@ -59,6 +109,11 @@ public class TestOmhSingleInsert {
 		}
 	}
 	
+	/**
+	 * Instantiates a new test omh single insert.
+	 *
+	 * @throws Exception the exception
+	 */
 	public TestOmhSingleInsert() throws Exception {
 		this.masterConfig = MasterConfig.getInstance(System.getenv("MASTER_CONFIG_JSON_KEY"), System.getenv("CASSANDRA_CONTACT_POINT"), System.getenv("CASSANDRA_KEYSPACE_NAME") );
         this.objectMapper = new ObjectMapper();
@@ -77,6 +132,11 @@ public class TestOmhSingleInsert {
 		Collections.sort(this.sortedSimSchemaNames);
 	}
 	
+	/**
+	 * Process.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void process() throws Exception {
 		this.subsetOmhUsers = SimOmhUsers.getInstance(simUsersFilePath).getOmhUsers().subList(simUsersOffset, simUsersOffset + simUsersNumUsers );
         ObjectMapper objectMapper = new ObjectMapper();
@@ -124,65 +184,142 @@ public class TestOmhSingleInsert {
 	 */
 
 
+	/**
+	 * Gets the sim schemas by name.
+	 *
+	 * @return the sim schemas by name
+	 */
 	public Map<String, SimSchema> getSimSchemasByName() {
 		return simSchemasByName;
 	}
 
+	/**
+	 * Gets the sorted sim schema names.
+	 *
+	 * @return the sorted sim schema names
+	 */
 	public List<String> getSortedSimSchemaNames() {
 		return sortedSimSchemaNames;
 	}
 
+	/**
+	 * Gets the prev bodies by name login.
+	 *
+	 * @return the prev bodies by name login
+	 */
 	public Map<String, Object> getPrevBodiesByNameLogin() {
 		return prevBodiesByNameLogin;
 	}
 
+	/**
+	 * Gets the sim users file path.
+	 *
+	 * @return the sim users file path
+	 */
 	public String getSimUsersFilePath() {
 		return simUsersFilePath;
 	}
 
+	/**
+	 * Gets the sim users offset.
+	 *
+	 * @return the sim users offset
+	 */
 	public Integer getSimUsersOffset() {
 		return simUsersOffset;
 	}
 
+	/**
+	 * Gets the sim users num users.
+	 *
+	 * @return the sim users num users
+	 */
 	public Integer getSimUsersNumUsers() {
 		return simUsersNumUsers;
 	}
 
+	/**
+	 * Gets the subset omh users.
+	 *
+	 * @return the subset omh users
+	 */
 	public List<OmhUser> getSubsetOmhUsers() {
 		return subsetOmhUsers;
 	}
 
+	/**
+	 * Sets the sim schemas by name.
+	 *
+	 * @param simSchemasByName the sim schemas by name
+	 * @return the test omh single insert
+	 */
 	public TestOmhSingleInsert setSimSchemasByName(Map<String, SimSchema> simSchemasByName) {
 		this.simSchemasByName = simSchemasByName;
 		return this;
 	}
 
+	/**
+	 * Sets the sorted sim schema names.
+	 *
+	 * @param sortedSimSchemaNames the sorted sim schema names
+	 * @return the test omh single insert
+	 */
 	public TestOmhSingleInsert setSortedSimSchemaNames(List<String> sortedSimSchemaNames) {
 		this.sortedSimSchemaNames = sortedSimSchemaNames;
 		return this;
 	}
 
+	/**
+	 * Sets the prev bodies by name login.
+	 *
+	 * @param prevBodiesByNameLogin the prev bodies by name login
+	 * @return the test omh single insert
+	 */
 	public TestOmhSingleInsert setPrevBodiesByNameLogin(Map<String, Object> prevBodiesByNameLogin) {
 		this.prevBodiesByNameLogin = prevBodiesByNameLogin;
 		return this;
 	}
 
+	/**
+	 * Sets the sim users file path.
+	 *
+	 * @param simUsersFilePath the sim users file path
+	 * @return the test omh single insert
+	 */
 	public TestOmhSingleInsert setSimUsersFilePath(String simUsersFilePath) {
 		this.simUsersFilePath = simUsersFilePath;
 		return this;
 	}
 
+	/**
+	 * Sets the sim users offset.
+	 *
+	 * @param simUsersOffset the sim users offset
+	 * @return the test omh single insert
+	 */
 	public TestOmhSingleInsert setSimUsersOffset(Integer simUsersOffset) {
 		this.simUsersOffset = simUsersOffset;
 		return this;
 	}
 
+	/**
+	 * Sets the sim users num users.
+	 *
+	 * @param simUsersNumUsers the sim users num users
+	 * @return the test omh single insert
+	 */
 	public TestOmhSingleInsert setSimUsersNumUsers(Integer simUsersNumUsers) {
 		this.simUsersNumUsers = simUsersNumUsers;
 		return this;
 	}
 
 
+	/**
+	 * Sets the subset omh users.
+	 *
+	 * @param subsetOmhUsers the subset omh users
+	 * @return the test omh single insert
+	 */
 	public TestOmhSingleInsert setSubsetOmhUsers(List<OmhUser> subsetOmhUsers) {
 		this.subsetOmhUsers = subsetOmhUsers;
 		return this;

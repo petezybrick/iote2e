@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.omh;
 
 import java.net.URI;
@@ -14,17 +33,40 @@ import org.eclipse.jetty.util.component.LifeCycle;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.ws.security.LoginVo;
 
+
+/**
+ * The Class ClientSocketOmhHandler.
+ */
 public class ClientSocketOmhHandler {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ClientSocketOmhHandler.class);
+	
+	/** The url. */
 	private String url;
+	
+	/** The uri. */
 	private URI uri;
+	
+	/** The container. */
 	private WebSocketContainer container;
+	
+	/** The session. */
 	protected Session session;
+	
+	/** The login vo. */
 	protected LoginVo loginVo;
+	
+	/** The Constant TEST_SOURCE_LOGIN. */
 	private static final Utf8 TEST_SOURCE_LOGIN = new Utf8("pzybrick1");
 
 
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		// "ws://localhost:8090/iote2e/"
 		try {
@@ -38,6 +80,11 @@ public class ClientSocketOmhHandler {
 		}
 	}
 
+	/**
+	 * Connect.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void connect() throws Exception {
 		if( url == null || url.length() == 0 ) 
 			throw new Exception("URL must be set before calling connect()");
@@ -58,6 +105,11 @@ public class ClientSocketOmhHandler {
 		}
 	}
 	
+	/**
+	 * Shutdown.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void shutdown() throws Exception {
 		if (session != null && session.isOpen()) {
 			try {
@@ -85,19 +137,41 @@ public class ClientSocketOmhHandler {
 	}
 	
 
+	/**
+	 * Gets the login vo.
+	 *
+	 * @return the login vo
+	 */
 	public LoginVo getLoginVo() {
 		return loginVo;
 	}
 
+	/**
+	 * Sets the login vo.
+	 *
+	 * @param loginVo the login vo
+	 * @return the client socket omh handler
+	 */
 	public ClientSocketOmhHandler setLoginVo(LoginVo loginVo) {
 		this.loginVo = loginVo;
 		return this;
 	}
 
+	/**
+	 * Gets the url.
+	 *
+	 * @return the url
+	 */
 	public String getUrl() {
 		return url;
 	}
 
+	/**
+	 * Sets the url.
+	 *
+	 * @param url the url
+	 * @return the client socket omh handler
+	 */
 	public ClientSocketOmhHandler setUrl(String url) {
 		this.url = url;
 		return this;

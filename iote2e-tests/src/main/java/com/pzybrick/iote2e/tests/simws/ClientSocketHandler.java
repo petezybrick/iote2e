@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.simws;
 
 import java.net.URI;
@@ -20,21 +39,54 @@ import com.pzybrick.iote2e.schema.util.Iote2eRequestReuseItem;
 import com.pzybrick.iote2e.schema.util.Iote2eResultReuseItem;
 import com.pzybrick.iote2e.ws.security.LoginVo;
 
+
+/**
+ * The Class ClientSocketHandler.
+ */
 public class ClientSocketHandler {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(ClientSocketHandler.class);
+	
+	/** The url. */
 	private String url;
+	
+	/** The uri. */
 	private URI uri;
+	
+	/** The container. */
 	private WebSocketContainer container;
+	
+	/** The queue iote 2 e requests. */
 	protected ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests;
+	
+	/** The queue iote 2 e results. */
 	protected ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults;
+	
+	/** The session. */
 	protected Session session;
+	
+	/** The iote 2 e request send thread. */
 	protected Iote2eRequestSendThread iote2eRequestSendThread;
+	
+	/** The iote 2 e receive receive thread. */
 	protected Iote2eRequestReceiveThread iote2eReceiveReceiveThread;
+	
+	/** The iote 2 e result bytes. */
 	protected ConcurrentLinkedQueue<byte[]> iote2eResultBytes;
+	
+	/** The login vo. */
 	protected LoginVo loginVo;
+	
+	/** The poll iote 2 e results thread. */
 	protected Thread pollIote2eResultsThread;
 
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		// "ws://localhost:8090/iote2e/"
 		try {
@@ -56,6 +108,11 @@ public class ClientSocketHandler {
 		}
 	}
 
+	/**
+	 * Connect.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void connect() throws Exception {
 		try {
 			uri = URI.create(url);
@@ -78,6 +135,11 @@ public class ClientSocketHandler {
 		}
 	}
 	
+	/**
+	 * Shutdown.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void shutdown() throws Exception {
 		if (session != null && session.isOpen()) {
 			try {
@@ -108,14 +170,28 @@ public class ClientSocketHandler {
 	}
 	
 	
+	/**
+	 * Send iote 2 e request.
+	 *
+	 * @param iote2eRequest the iote 2 e request
+	 * @throws Exception the exception
+	 */
 	public void sendIote2eRequest( Iote2eRequest iote2eRequest ) throws Exception {
 		queueIote2eRequests.add(iote2eRequest);
 		iote2eRequestSendThread.interrupt();
 	}
 
+	/**
+	 * The Class Iote2eRequestSendThread.
+	 */
 	protected class Iote2eRequestSendThread extends Thread {
+		
+		/** The shutdown. */
 		private boolean shutdown;
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			Iote2eRequestReuseItem iote2eRequestReuseItem = new Iote2eRequestReuseItem();
@@ -138,6 +214,9 @@ public class ClientSocketHandler {
 			}
 		}
 
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			shutdown = true;
 			interrupt();
@@ -145,10 +224,20 @@ public class ClientSocketHandler {
 	}
 
 	
+	/**
+	 * The Class Iote2eRequestReceiveThread.
+	 */
 	private class Iote2eRequestReceiveThread extends Thread {
+		
+		/** The shutdown. */
 		private boolean shutdown;
+		
+		/** The iote 2 e result reuse item. */
 		private Iote2eResultReuseItem iote2eResultReuseItem = new Iote2eResultReuseItem();
 
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			while( true ) {
@@ -172,52 +261,110 @@ public class ClientSocketHandler {
 			}
 		}
 
+		/**
+		 * Shutdown.
+		 */
 		public void shutdown() {
 			shutdown = true;
 			interrupt();
 		}
 	}
 	
+	/**
+	 * Gets the queue iote 2 e requests.
+	 *
+	 * @return the queue iote 2 e requests
+	 */
 	public ConcurrentLinkedQueue<Iote2eRequest> getQueueIote2eRequests() {
 		return queueIote2eRequests;
 	}
 
+	/**
+	 * Gets the queue iote 2 e results.
+	 *
+	 * @return the queue iote 2 e results
+	 */
 	public ConcurrentLinkedQueue<Iote2eResult> getQueueIote2eResults() {
 		return queueIote2eResults;
 	}
 
+	/**
+	 * Sets the queue iote 2 e requests.
+	 *
+	 * @param queueIote2eRequests the queue iote 2 e requests
+	 * @return the client socket handler
+	 */
 	public ClientSocketHandler setQueueIote2eRequests(ConcurrentLinkedQueue<Iote2eRequest> queueIote2eRequests) {
 		this.queueIote2eRequests = queueIote2eRequests;
 		return this;
 	}
 
+	/**
+	 * Sets the queue iote 2 e results.
+	 *
+	 * @param queueIote2eResults the queue iote 2 e results
+	 * @return the client socket handler
+	 */
 	public ClientSocketHandler setQueueIote2eResults(ConcurrentLinkedQueue<Iote2eResult> queueIote2eResults) {
 		this.queueIote2eResults = queueIote2eResults;
 		return this;
 	}
 
+	/**
+	 * Gets the login vo.
+	 *
+	 * @return the login vo
+	 */
 	public LoginVo getLoginVo() {
 		return loginVo;
 	}
 
+	/**
+	 * Sets the login vo.
+	 *
+	 * @param loginVo the login vo
+	 * @return the client socket handler
+	 */
 	public ClientSocketHandler setLoginVo(LoginVo loginVo) {
 		this.loginVo = loginVo;
 		return this;
 	}
 
+	/**
+	 * Gets the url.
+	 *
+	 * @return the url
+	 */
 	public String getUrl() {
 		return url;
 	}
 
+	/**
+	 * Sets the url.
+	 *
+	 * @param url the url
+	 * @return the client socket handler
+	 */
 	public ClientSocketHandler setUrl(String url) {
 		this.url = url;
 		return this;
 	}
 
+	/**
+	 * Gets the poll iote 2 e results thread.
+	 *
+	 * @return the poll iote 2 e results thread
+	 */
 	public Thread getPollIote2eResultsThread() {
 		return pollIote2eResultsThread;
 	}
 
+	/**
+	 * Sets the poll iote 2 e results thread.
+	 *
+	 * @param pollIote2eResultsThread the poll iote 2 e results thread
+	 * @return the client socket handler
+	 */
 	public ClientSocketHandler setPollIote2eResultsThread(Thread pollIote2eResultsThread) {
 		this.pollIote2eResultsThread = pollIote2eResultsThread;
 		return this;

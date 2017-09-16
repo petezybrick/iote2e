@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.ksidb;
 
 import org.apache.logging.log4j.LogManager;
@@ -6,15 +25,33 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+
+/**
+ * The Class TestKsiDbHandlerTempToFan.
+ */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestKsiDbHandlerTempToFan extends TestKsiDbHandlerBase {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(TestKsiDbHandlerTempToFan.class);
+	
+	/** The Constant pkActuatorState. */
 	private static final String pkActuatorState = testTempToFanLoginName + "|" + testTempToFanSourceName + "|" + testTempToFanSensorName;
 	
+	/**
+	 * Instantiates a new test ksi db handler temp to fan.
+	 *
+	 * @throws Exception the exception
+	 */
 	public TestKsiDbHandlerTempToFan() throws Exception {
 		super();
 	}
 	
+	/**
+	 * Test temp to fan temp fan rule fire fan off.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testTempToFanTempFanRuleFireFanOff() throws Exception {
 		logger.info("begins");
@@ -30,6 +67,11 @@ public class TestKsiDbHandlerTempToFan extends TestKsiDbHandlerBase {
 		//Assert.assertEquals("Cassandra actuator_state value=off", "off", ActuatorStateDao.findActuatorValue(pkActuatorState));
 	}
 	
+	/**
+	 * Test temp to fan temp fan rule fire fan on.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testTempToFanTempFanRuleFireFanOn() throws Exception {
 		logger.info("begins");
@@ -44,6 +86,11 @@ public class TestKsiDbHandlerTempToFan extends TestKsiDbHandlerBase {
 		//Assert.assertEquals("Cassandra actuator_state value=on", "on", ActuatorStateDao.findActuatorValue(pkActuatorState));
 	}
 	
+	/**
+	 * Test temp to fan temp fan rule not fire.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Test
 	public void testTempToFanTempFanRuleNotFire() throws Exception {
 		logger.info("begins");

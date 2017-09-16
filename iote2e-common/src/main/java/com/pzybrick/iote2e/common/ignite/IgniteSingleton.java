@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.common.ignite;
 
 import org.apache.ignite.Ignite;
@@ -9,17 +28,40 @@ import org.apache.logging.log4j.Logger;
 
 import com.pzybrick.iote2e.common.config.MasterConfig;
 
+
+/**
+ * The Class IgniteSingleton.
+ */
 public class IgniteSingleton {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(IgniteSingleton.class);
+	
+	/** The ignite singleton. */
 	private static IgniteSingleton igniteSingleton;
+	
+	/** The ignite. */
 	private Ignite ignite;
+	
+	/** The cache. */
 	private IgniteCache<String, byte[]> cache;
 	
+	/**
+	 * Instantiates a new ignite singleton.
+	 *
+	 * @param ignite the ignite
+	 * @param cache the cache
+	 */
 	private IgniteSingleton(Ignite ignite, IgniteCache<String, byte[]> cache) {
 		this.ignite = ignite;
 		this.cache = cache;
 	}
 	
+	/**
+	 * Reset.
+	 *
+	 * @throws Exception the exception
+	 */
 	public static synchronized void reset( ) throws Exception {
 		logger.info("reset called");
 		if( igniteSingleton != null ) {
@@ -46,6 +88,13 @@ public class IgniteSingleton {
 		}
 	}
 		
+	/**
+	 * Gets the single instance of IgniteSingleton.
+	 *
+	 * @param masterConfig the master config
+	 * @return single instance of IgniteSingleton
+	 * @throws Exception the exception
+	 */
 	public static synchronized IgniteSingleton getInstance( MasterConfig masterConfig ) throws Exception {
 		if( System.currentTimeMillis() > 0 ) throw new Exception("DEPRECATED: IgniteSingleton.getInstance()");
 		if( igniteSingleton == null ) {
@@ -83,10 +132,20 @@ public class IgniteSingleton {
 		return igniteSingleton;
 	}
 
+	/**
+	 * Gets the ignite.
+	 *
+	 * @return the ignite
+	 */
 	public Ignite getIgnite() {
 		return ignite;
 	}
 
+	/**
+	 * Gets the cache.
+	 *
+	 * @return the cache
+	 */
 	public IgniteCache<String, byte[]> getCache() {
 		return cache;
 	}

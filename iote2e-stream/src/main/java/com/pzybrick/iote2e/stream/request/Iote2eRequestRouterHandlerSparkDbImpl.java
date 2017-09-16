@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.request;
 
 import java.sql.Connection;
@@ -18,16 +37,32 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 import com.pzybrick.iote2e.schema.avro.Iote2eRequest;
 import com.pzybrick.iote2e.stream.persist.PooledDataSource;
 
+
+/**
+ * The Class Iote2eRequestRouterHandlerSparkDbImpl.
+ */
 public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRouterHandler {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(Iote2eRequestRouterHandlerSparkDbImpl.class);
+	
+	/** The master config. */
 	private MasterConfig masterConfig;
 
 
+	/**
+	 * Instantiates a new iote 2 e request router handler spark db impl.
+	 *
+	 * @throws Exception the exception
+	 */
 	public Iote2eRequestRouterHandlerSparkDbImpl( ) throws Exception {
 
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.request.Iote2eRequestRouterHandler#init(com.pzybrick.iote2e.common.config.MasterConfig)
+	 */
 	public void init(MasterConfig masterConfig) throws Exception {
 		try {
 			this.masterConfig = masterConfig;
@@ -37,6 +72,9 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.request.Iote2eRequestRouterHandler#processRequests(java.util.List)
+	 */
 	public void processRequests( List<Iote2eRequest> iote2eRequests ) throws Exception {
 		Connection con = null;
 		Map<String,PreparedStatement> cachePrepStmtsByTableName = new HashMap<String,PreparedStatement>();
@@ -72,6 +110,14 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 	}
 	
 	
+	/**
+	 * Insert all blocks.
+	 *
+	 * @param iote2eRequests the iote 2 e requests
+	 * @param con the con
+	 * @param cachePrepStmtsByTableName the cache prep stmts by table name
+	 * @throws Exception the exception
+	 */
 	private void insertAllBlocks( List<Iote2eRequest> iote2eRequests, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
 		Integer insertBlockSize = masterConfig.getJdbcInsertBlockSize();
 		for( int i=0 ;; i+=insertBlockSize ) {
@@ -92,6 +138,14 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 	}
 	
 	
+	/**
+	 * Insert each block.
+	 *
+	 * @param iote2eRequests the iote 2 e requests
+	 * @param con the con
+	 * @param cachePrepStmtsByTableName the cache prep stmts by table name
+	 * @throws Exception the exception
+	 */
 	private void insertEachBlock( List<Iote2eRequest> iote2eRequests, Connection con, Map<String,PreparedStatement> cachePrepStmtsByTableName ) throws Exception {
 		final DateTimeFormatter dtfmt = ISODateTimeFormat.dateTime();
 		String tableName = null;
@@ -152,6 +206,15 @@ public class Iote2eRequestRouterHandlerSparkDbImpl implements Iote2eRequestRoute
 	}
 	
 	
+	/**
+	 * Gets the prepared statement.
+	 *
+	 * @param tableName the table name
+	 * @param con the con
+	 * @param cachePrepStmtsByTableName the cache prep stmts by table name
+	 * @return the prepared statement
+	 * @throws Exception the exception
+	 */
 	/*
 	 * A bit of a hack
 	 */

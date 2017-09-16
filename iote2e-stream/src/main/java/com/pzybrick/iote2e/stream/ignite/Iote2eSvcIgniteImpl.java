@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.ignite;
 
 import java.util.HashMap;
@@ -23,17 +42,39 @@ import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
 import com.pzybrick.iote2e.stream.request.Iote2eSvc;
 import com.pzybrick.iote2e.stream.svc.RuleEvalResult;
 
+
+/**
+ * The Class Iote2eSvcIgniteImpl.
+ */
 public class Iote2eSvcIgniteImpl implements Iote2eSvc {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(Iote2eSvcIgniteImpl.class);
+	
+	/** The iote 2 e result reuse item. */
 	private Iote2eResultReuseItem iote2eResultReuseItem;
+	
+	/** The keyspace name. */
 	private String keyspaceName;
+	
+	/** The ignite grid connection. */
 	private IgniteGridConnection igniteGridConnection;
+	
+	/** The master config. */
 	private MasterConfig masterConfig;
 
+	/**
+	 * Instantiates a new iote 2 e svc ignite impl.
+	 *
+	 * @throws Exception the exception
+	 */
 	public Iote2eSvcIgniteImpl() throws Exception {
 		this.iote2eResultReuseItem = new Iote2eResultReuseItem();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.request.Iote2eSvc#processRuleEvalResults(com.pzybrick.iote2e.schema.avro.Iote2eRequest, java.util.List)
+	 */
 	@Override
 	public synchronized void processRuleEvalResults(Iote2eRequest iote2eRequest, List<RuleEvalResult> ruleEvalResults)
 			throws Exception {
@@ -143,6 +184,9 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.request.Iote2eSvc#init(com.pzybrick.iote2e.common.config.MasterConfig)
+	 */
 	@Override
 	public synchronized void init(MasterConfig masterConfig) throws Exception {
 		try {
@@ -158,6 +202,9 @@ public class Iote2eSvcIgniteImpl implements Iote2eSvc {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.request.Iote2eSvc#close()
+	 */
 	@Override
 	public synchronized void close() throws Exception {
 		try {

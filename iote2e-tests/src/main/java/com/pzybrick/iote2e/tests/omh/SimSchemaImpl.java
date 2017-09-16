@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.tests.omh;
 
 import static org.openmhealth.schema.domain.omh.BloodGlucoseUnit.MILLIGRAMS_PER_DECILITER;
@@ -39,16 +58,34 @@ import org.openmhealth.schema.domain.omh.TemporalRelationshipToPhysicalActivity;
 import org.openmhealth.schema.domain.omh.TimeFrame;
 import org.openmhealth.schema.domain.omh.TypedUnitValue;
 
+
+/**
+ * The Class SimSchemaImpl.
+ */
 public class SimSchemaImpl {
+	
+	/** The random. */
 	private static Random random = new Random();
+	
+	/** The Constant MIN_PCT_EXCEED. */
 	private static final int MIN_PCT_EXCEED = 2;
 	
+	/**
+	 * The Class SimSchemaBloodGlucoseImpl.
+	 */
 	public static class SimSchemaBloodGlucoseImpl implements SimSchema {
+		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#getSchemaId()
+		 */
 		@Override
 		public SchemaId getSchemaId() {
 			return BloodGlucose.SCHEMA_ID;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#createBody(java.time.OffsetDateTime, java.lang.Object)
+		 */
 		@Override// TODO Auto-generated method stub
 
 		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
@@ -89,12 +126,22 @@ public class SimSchemaImpl {
 	}
 
 	
+	/**
+	 * The Class SimSchemaBloodPressureImpl.
+	 */
 	public static class SimSchemaBloodPressureImpl implements SimSchema {
+		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#getSchemaId()
+		 */
 		@Override
 		public SchemaId getSchemaId() {
 			return BloodPressure.SCHEMA_ID;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#createBody(java.time.OffsetDateTime, java.lang.Object)
+		 */
 		@Override
 		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
 			// Systolic
@@ -152,13 +199,23 @@ public class SimSchemaImpl {
 	}
 	
 	
+	/**
+	 * The Class SimSchemaBodyTempImpl.
+	 */
 	public static class SimSchemaBodyTempImpl implements SimSchema {
+		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#getSchemaId()
+		 */
 		@Override
 		public SchemaId getSchemaId() {
 			// for some reason SCHEMA_ID is private for body-temperature
 			return new SchemaId(SchemaSupport.OMH_NAMESPACE, "body-temperature", "1.0");
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#createBody(java.time.OffsetDateTime, java.lang.Object)
+		 */
 		@Override
 		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
 			final double mid = 98.6;
@@ -193,12 +250,22 @@ public class SimSchemaImpl {
 	}
 	
 	
+	/**
+	 * The Class SimSchemaHeartRateImpl.
+	 */
 	public static class SimSchemaHeartRateImpl implements SimSchema {
+		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#getSchemaId()
+		 */
 		@Override
 		public SchemaId getSchemaId() {
 			return HeartRate.SCHEMA_ID;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#createBody(java.time.OffsetDateTime, java.lang.Object)
+		 */
 		@Override
 		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
 			final long mid = 72;
@@ -234,12 +301,22 @@ public class SimSchemaImpl {
 	}
 
 	
+	/**
+	 * The Class SimSchemaHkWorkoutImpl.
+	 */
 	public static class SimSchemaHkWorkoutImpl implements SimSchema {
+		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#getSchemaId()
+		 */
 		@Override
 		public SchemaId getSchemaId() {
 			return PhysicalActivity.SCHEMA_ID;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#createBody(java.time.OffsetDateTime, java.lang.Object)
+		 */
 		@Override
 		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
 			// Distance
@@ -297,13 +374,23 @@ public class SimSchemaImpl {
 	}
 	
 	
+	/**
+	 * The Class SimSchemaRespiratoryRateImpl.
+	 */
 	public static class SimSchemaRespiratoryRateImpl implements SimSchema {
+		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#getSchemaId()
+		 */
 		@Override
 		public SchemaId getSchemaId() {
 			// for some reason SCHEMA_ID is private for respiratory-rate
 			return new SchemaId(SchemaSupport.OMH_NAMESPACE, "respiratory-rate", "1.0");
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.pzybrick.iote2e.tests.omh.SimSchema#createBody(java.time.OffsetDateTime, java.lang.Object)
+		 */
 		@Override
 		public Object createBody( OffsetDateTime now, Object prevBody ) throws Exception {
 			final double mid = 12;

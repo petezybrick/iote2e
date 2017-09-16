@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.test.iote2e.scratchpad;
 
 import java.io.File;
@@ -15,9 +34,20 @@ import com.pzybrick.iote2e.stream.svc.RuleDefCondItem;
 import com.pzybrick.iote2e.stream.svc.RuleDefItem;
 import com.pzybrick.iote2e.stream.svc.RuleLoginSourceSensor;
 
+
+/**
+ * The Class CreateRuleDefJsonFile.
+ */
 public class CreateRuleDefJsonFile {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(CreateRuleDefJsonFile.class);
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			String nameExtRuleDefs = args[0] + "/rule_def_item.json";
@@ -102,6 +132,11 @@ public class CreateRuleDefJsonFile {
 
 	}
 
+	/**
+	 * Creates the temp rule def item.
+	 *
+	 * @return the rule def item
+	 */
 	public static RuleDefItem createTempRuleDefItem() {
 		List<RuleDefCondItem> ruleDefCondItems = new ArrayList<RuleDefCondItem>();
 		// If temp >= 80 and fan is off then turn fan on
@@ -123,6 +158,11 @@ public class CreateRuleDefJsonFile {
 		return ruleDefItem;
 	}
 
+	/**
+	 * Creates the humidity rule def item.
+	 *
+	 * @return the rule def item
+	 */
 	public static RuleDefItem createHumidityRuleDefItem() {
 		List<RuleDefCondItem> ruleDefCondItems = new ArrayList<RuleDefCondItem>();
 		// If rel humidity < 85% and mister off then turn mister on
@@ -144,6 +184,11 @@ public class CreateRuleDefJsonFile {
 		return ruleDefItem;
 	}
 
+	/**
+	 * Creates the led green rule def item.
+	 *
+	 * @return the rule def item
+	 */
 	public static RuleDefItem createLedGreenRuleDefItem() {
 		List<RuleDefCondItem> ruleDefCondItems = new ArrayList<RuleDefCondItem>();
 		// If switch is on and LED is not green then turn on LED green
@@ -165,6 +210,11 @@ public class CreateRuleDefJsonFile {
 		return ruleDefItem;
 	}
 
+	/**
+	 * Creates the led red rule def item.
+	 *
+	 * @return the rule def item
+	 */
 	public static RuleDefItem createLedRedRuleDefItem() {
 		List<RuleDefCondItem> ruleDefCondItems = new ArrayList<RuleDefCondItem>();
 		// If switch is on and LED is not red then turn on LED red
@@ -186,6 +236,11 @@ public class CreateRuleDefJsonFile {
 		return ruleDefItem;
 	}
 
+	/**
+	 * Creates the led yellow rule def item.
+	 *
+	 * @return the rule def item
+	 */
 	public static RuleDefItem createLedYellowRuleDefItem() {
 		List<RuleDefCondItem> ruleDefCondItems = new ArrayList<RuleDefCondItem>();
 		// If switch is on and LED is not yellow then turn on LED yellow

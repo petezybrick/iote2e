@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.svc;
 
 import java.util.Arrays;
@@ -15,19 +34,39 @@ import com.pzybrick.iote2e.common.persist.ConfigDao;
 import com.pzybrick.iote2e.common.utils.Iote2eUtils;
 import com.pzybrick.iote2e.stream.persist.ActuatorStateDao;
 
+
+/**
+ * The Class RuleSvcJsonImpl.
+ */
 public class RuleSvcJsonImpl extends RuleSvc {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(RuleSvcJsonImpl.class);
+	
+	/** The rss by login source uuid. */
 	private Map<String, Map<String, RuleLoginSourceSensor>> rssByLoginSourceUuid;
+	
+	/** The rule login source sensors. */
 	private List<RuleLoginSourceSensor> ruleLoginSourceSensors;
+	
+	/** The rdi by rule uuid. */
 	private Map<String, RuleDefItem> rdiByRuleUuid;
+	
+	/** The rule def items. */
 	private List<RuleDefItem> ruleDefItems;
 
+	/**
+	 * Instantiates a new rule svc json impl.
+	 */
 	public RuleSvcJsonImpl() {
 		this.rssByLoginSourceUuid = new HashMap<String, Map<String, RuleLoginSourceSensor>>();
 		this.rdiByRuleUuid = new HashMap<String, RuleDefItem>();
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.svc.RuleSvc#init(com.pzybrick.iote2e.common.config.MasterConfig)
+	 */
 	public void init(MasterConfig masterConfig) throws Exception {
 		logger.info(masterConfig.toString());
 		ConfigDao.connect(masterConfig.getContactPoint(), masterConfig.getKeyspaceName());
@@ -101,6 +140,11 @@ public class RuleSvcJsonImpl extends RuleSvc {
 		}
 	}
 	
+	/**
+	 * Expand logins source names.
+	 *
+	 * @throws Exception the exception
+	 */
 	protected void expandLoginsSourceNames() throws Exception {
 		ListIterator<RuleLoginSourceSensor> lit = ruleLoginSourceSensors.listIterator();
 		while( lit.hasNext() ) {
@@ -121,20 +165,32 @@ public class RuleSvcJsonImpl extends RuleSvc {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.svc.RuleSvc#findSourceSensorActuator(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	protected ActuatorState findSourceSensorActuator(String loginUuid, String sourceUuid, String sensorName) throws Exception {
 		String pk = String.format("%s|%s|%s|", loginUuid, sourceUuid,sensorName);
 		return ActuatorStateDao.findActuatorState(pk);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.svc.RuleSvc#findRuleDefItem(java.lang.String)
+	 */
 	protected RuleDefItem findRuleDefItem(String ruleUuid) throws Exception {
 		return rdiByRuleUuid.get(ruleUuid);
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.svc.RuleSvc#updateActuatorValue(com.pzybrick.iote2e.stream.svc.ActuatorState)
+	 */
 	protected void updateActuatorValue(ActuatorState actuatorState) throws Exception {
 		ActuatorStateDao.updateActuatorValue(actuatorState.getPk(), actuatorState.getActuatorValue() );
 	}
 
+	/* (non-Javadoc)
+	 * @see com.pzybrick.iote2e.stream.svc.RuleSvc#findRuleLoginSourceSensor(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	protected RuleLoginSourceSensor findRuleLoginSourceSensor(String loginUuid, String sourceUuid, String sensorName) throws Exception {
 		String key = loginUuid + "|" + sourceUuid;
 		if( rssByLoginSourceUuid.containsKey(key)

@@ -1,3 +1,22 @@
+/**
+ *    Copyright 2016, 2017 Peter Zybrick and others.
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ * 
+ * @author  Pete Zybrick
+ * @version 1.0.0, 2017-09
+ * 
+ */
 package com.pzybrick.iote2e.stream.spark;
 
 import java.util.HashMap;
@@ -18,13 +37,31 @@ import consumer.kafka.Config;
 import consumer.kafka.MessageAndMetadata;
 import consumer.kafka.ReceiverLauncher;
 
+
+/**
+ * The Class BdbbSparkConsumer.
+ */
 public class BdbbSparkConsumer {
+	
+	/** The Constant logger. */
 	private static final Logger logger = LogManager.getLogger(BdbbSparkConsumer.class.getName());
+    
+    /** The conf. */
     private SparkConf conf;
+    
+    /** The ssc. */
     private JavaStreamingContext ssc;
+    
+    /** The started. */
     private boolean started = false;
 	
 	
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws Exception the exception
+     */
     public static void main(String[] args) throws Exception {
     	BdbbSparkConsumer bdbbSparkConsumer = new BdbbSparkConsumer();
     	MasterConfig masterConfig = MasterConfig.getInstance( args[0], args[1], args[2] );
@@ -39,15 +76,32 @@ public class BdbbSparkConsumer {
 
     }
     
+    /**
+     * The Class RunProcess.
+     */
     // local testing
     private static class RunProcess extends Thread {
-    	private BdbbSparkConsumer bdbbSparkConsumer;
-    	private MasterConfig masterConfig;
     	
-    	public RunProcess( BdbbSparkConsumer bdbbSparkConsumer, MasterConfig masterConfig ) {
+	    /** The bdbb spark consumer. */
+	    private BdbbSparkConsumer bdbbSparkConsumer;
+    	
+	    /** The master config. */
+	    private MasterConfig masterConfig;
+    	
+    	/**
+	     * Instantiates a new run process.
+	     *
+	     * @param bdbbSparkConsumer the bdbb spark consumer
+	     * @param masterConfig the master config
+	     */
+	    public RunProcess( BdbbSparkConsumer bdbbSparkConsumer, MasterConfig masterConfig ) {
     		this.bdbbSparkConsumer = bdbbSparkConsumer;
     		this.masterConfig = masterConfig;
     	}
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			try {
@@ -58,6 +112,12 @@ public class BdbbSparkConsumer {
 		}
     }
     	
+    /**
+     * Process.
+     *
+     * @param masterConfig the master config
+     * @throws Exception the exception
+     */
     public void process(MasterConfig masterConfig) throws Exception {
     	logger.info(masterConfig.toString());
     	String sparkAppNameBdbb = masterConfig.getSparkAppNameBdbb();
@@ -134,11 +194,21 @@ public class BdbbSparkConsumer {
 		
     }
     
+    /**
+     * Stop.
+     *
+     * @throws Exception the exception
+     */
     public void stop() throws Exception {
     	logger.info("Stopping Spark...");
     	ssc.stop(true);
     }
 
+	/**
+	 * Checks if is started.
+	 *
+	 * @return true, if is started
+	 */
 	public boolean isStarted() {
 		return started;
 	}
