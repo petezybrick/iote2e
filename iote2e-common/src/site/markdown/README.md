@@ -1,45 +1,33 @@
-# IoTE2E - Internet of Things End to End
+# iote2e - Internet of Things End to End
 
-## Network Addresses
-
-### Docker Network
-docker network create --driver=bridge \
---subnet=192.168.21.0/24 --gateway=192.168.21.1 \
---ip-range=192.168.21.128/25 iote2enet
-
-sudo docker network ls
-
-### Docker Cluster Addressing
-- All servers are created in clusters with fixed address blocks for easy identification of server groups
-- All servers have a VOLUME specifying /tmp/iote2e. This is mapped against the local systems /tmp folder when the container is created in the Docker Compose, this helps to copy any files for configuration and/or experimentation
-- The addresses start on .10 divisible boundaries, i.e. 192.168.21.10, 192.168.21.20, etc.
-- Demo Manager instances: start address 192.168.21.10
-- Spark cluster: start address 192.168.21.20
-- Ignite cluster: start address 192.168.21.30
-- Kafka cluster: start address 192.168.21.40 (zoo1-zoo3 .41-.43, Kafka starts .44)
-- ClientMgrWebSocket cluster: start address 192.168.21.50
-- RealtimeWebsocket Server cluster: start address 192.168.21.60
-- MySQL database cluster: start address 192.168.21.70
-- RiakTS database cluster: start address 192.168.21.80
-- Cassandra cluster: start address 192.168.21.90
+iote2e is a set of projects that demonstrates four use cases of IoT End to End interactions via a Lambda architecture.  The four use cases are highlighted below. Please view this [presentation](slides/iote2e-1.0.0.pptx) for a high level understanding.  To install locally, please review the [Installation Guide](INSTALL.md).  This project encompasses the usage and integration of various open source technologies, including Docker, Avro, Kafka, Spark Streaming, Cassandra, Ignite, Zeppelin and Rickshaw running on Ubuntu and integrating Raspberry Pi's.  The application consists of 24 virtual servers running under Docker on a single workstation/laptop as well as optional Tableau dashboards running on Windows.
 
 
-### Zookeeper
-- this assumes Zookeeper 3.4.8, change as necessary if you use another version.
-- cd to folder: iote2e-common/docker/zookeeper
-- to create the image: docker build -t zookeeper:3.4.8 .
-- use the docker-compose.yml to create the 2 containers
-- optionally create a single container and exec into it to review it's configuration
-docker create --name=zookeeper -p 2181:2181 zookeeper:3.4.8
-docker start zookeeper
-docker exec -it zookeeper /bin/bash
+## Demonstrated Use Cases
 
+### MyHomeGreenhouse.com
+- A greenhouse in your backyard that is remotely managed
+- Sensor data is streamed from all greenhouses, actuators are instructed to perform tasks (i.e. turn on water, turn off fan)
+- Realtime Display of Temperature Data
 
-https://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#sc_configuration
-cluster: https://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html
+### Dynamic Clinical Trial
+- Clinical trial for a blood pressure medication
+- Pill Dispenser is installed in the home of each Subject
+- Each pill is 40mg, and the number of pills dispensed is based on criteria determined by the team managing the trial
+- This criteria can change change the number of pills dispensed/subject over the course of the study and must be tracked
+- When pills are dispensed, the number of pills dispensed must be verified programmatically and receipt confirmed by the subject
 
+### YourPersonalizedMedicine.com
+- Patient Device submits various measures (blood pressure, blood glucose, etc.) 
+- Scalably support ever increasing number of patients
+- Support industry standards - Open mHealth and Apple HealthKit
+- Dashboard for doctor and patient, can view history and real time values
+- If a criteria is exceeded (i.e. diastolic > 100) then send an email to doctor, with dashboard link embedded in the email.
 
+### Big Data Black Box
+- Stream Flight Status data for Airframe and Engines
+- Scalably support ever increasing number of flights
+- Dashboard for airline chief mechanic, view history and real time values
+- If a criteria is exceeded (i.e. oil pressure > 90) then send an email to that airlines chief mechanic, with dashboard link embedded in the email.
 
-Reset
-remove iote2enet
 
