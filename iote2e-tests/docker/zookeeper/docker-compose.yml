@@ -1,0 +1,76 @@
+version: '2'
+
+services:
+  zoo1:
+    image: zookeeper:3.4.8
+    entrypoint: /opt/zookeeper/bin/zkMyIdWrapper.sh
+    command: start-foreground
+    hostname: zoo1
+    container_name: zoo1
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.127.31
+    environment:
+      MYID_SERVER_ID: 1
+    expose:
+      - 2181
+      - 2888
+      - 3888
+    ports:
+      - 2181:2181
+    volumes:
+      - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
+      
+  zoo2:
+    image: zookeeper:3.4.8
+    entrypoint: /opt/zookeeper/bin/zkMyIdWrapper.sh
+    command: start-foreground
+    hostname: zoo2
+    container_name: zoo2
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.127.32
+    environment:
+      MYID_SERVER_ID: 2
+    expose:
+      - 2181
+      - 2888
+      - 3888
+    ports:
+      - 2182:2181
+    volumes:
+      - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
+
+  zoo3:
+    image: zookeeper:3.4.8
+    entrypoint: /opt/zookeeper/bin/zkMyIdWrapper.sh
+    command: start-foreground
+    hostname: zoo3
+    container_name: zoo3
+    mem_limit: 16g
+    memswap_limit: 16g
+    networks:
+      default:
+        ipv4_address: 192.168.127.33
+    environment:
+      MYID_SERVER_ID: 3
+    expose:
+      - 2181
+      - 2888
+      - 3888
+    ports:
+      - 2183:2181
+    volumes:
+      - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
+
+networks:
+  default:
+    external:
+      name: sparkdevnet

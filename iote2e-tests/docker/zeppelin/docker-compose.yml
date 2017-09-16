@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+  iote2e-zeppelin1:
+    image: zeppelin:0.7.0
+    command: /usr/share/zeppelin-0.7.0/bin/iote2e-start-zeppelin.sh
+    hostname: iote2e-zeppelin1
+    container_name: iote2e-zeppelin1
+    mem_limit: 8g
+    memswap_limit: 8g
+    networks:
+      default:
+        ipv4_address: 192.168.21.14
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
+    volumes:
+      - ../../iote2e-shared:/tmp/iote2e-shared
+  
+networks:
+  default:
+    external:
+      name: iote2enet

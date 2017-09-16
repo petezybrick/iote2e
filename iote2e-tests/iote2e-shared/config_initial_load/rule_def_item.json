@@ -1,0 +1,149 @@
+[
+  {
+    "ruleUuid": "rule_temp_to_fan",
+    "ruleName": "TempFan",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "GE",
+        "sensorCompareValue": "50",
+        "sensorTypeValue": "dbl",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "off",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "fan",
+        "actuatorTargetValue": "on",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "LE",
+        "sensorCompareValue": "35",
+        "sensorTypeValue": "dbl",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "on",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "fan",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "rule_humidity_to_mister",
+    "ruleName": "HumidityMister",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "LE",
+        "sensorCompareValue": "85",
+        "sensorTypeValue": "dbl",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "off",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "mister",
+        "actuatorTargetValue": "on",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "GE",
+        "sensorCompareValue": "90",
+        "sensorTypeValue": "dbl",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "on",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "mister",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "rule_led_green",
+    "ruleName": "LedGreenOnOff",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "1",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "NE",
+        "actuatorCompareValue": "green",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "green",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "0",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "green",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "rule_led_red",
+    "ruleName": "LedRedOnOff",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "1",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "NE",
+        "actuatorCompareValue": "red",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "red",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "0",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "red",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "rule_led_yellow",
+    "ruleName": "LedYellowOnOff",
+    "ruleDefCondItems": [
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "1",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "NE",
+        "actuatorCompareValue": "yellow",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "yellow",
+        "stopEvalOnMatch": true
+      },
+      {
+        "sensorComparator": "EQ",
+        "sensorCompareValue": "0",
+        "sensorTypeValue": "int",
+        "actuatorComparator": "EQ",
+        "actuatorCompareValue": "green",
+        "actuatorTypeValue": "str",
+        "actuatorTargetCmd": "led_color",
+        "actuatorTargetValue": "off",
+        "stopEvalOnMatch": true
+      }
+    ]
+  },
+  {
+    "ruleUuid": "rule_custom_pill_dispenser",
+    "ruleName": "CustomPillDispenser",
+    "ruleCustomClassName": "com.pzybrick.iote2e.stream.svc.RuleCustomPillDispenserImpl"
+  }
+]
+
+

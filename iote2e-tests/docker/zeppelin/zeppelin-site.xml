@@ -1,0 +1,7 @@
+<configuration>
+	<property>
+		<name>zeppelin.server.port</name>
+		<value>8081</value>
+		<description>Server port.</description>
+	</property>
+</configuration>

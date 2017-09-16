@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chat Client</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+#chatBox {
+	width: 100%;
+	height: 80%;
+	position: absolute;
+	top: 0;
+	overflow: scroll;
+}
+
+#messageForm {
+	width: 100%;
+	height: 20%;
+	position: absolute;
+	bottom: 0;
+}
+
+html body {
+	width: 100%;
+	height: 100%
+}
+</style>
+<script>
+	var url = "ws://hp-lt-ubuntu-1:8080/events/";
+	var user;
+	var socket;
+	var arrSize = 10;
+	var waveItems = [ arrSize ];
+	var curOffset = 0;
+
+	function addWaveItem( msgData ) {
+		waveItems[curOffset] = msgData;
+		dumpValues();
+		curOffset++;
+		if (curOffset == arrSize)
+			curOffset = 0;
+	}
+	function dumpValues() {
+		var i = curOffset;
+		chatBox.innerHTML = "";
+		while (true) {
+			if (typeof waveItems[i] != 'undefined') {
+				chatBox.innerHTML = "<b>" + waveItems[i].timeMillis + " " + waveItems[i].waveValue + "<br>"
+					+ chatBox.innerHTML;
+			}
+			i--;
+			if (i == -1) {
+				i = arrSize - 1;
+			}
+			if (i == curOffset) {
+				break;
+			}
+		}
+	}
+
+	function connectToChat() {
+		socket = new WebSocket(url);
+		user = document.getElementById("name").value;
+		socket.onmessage = function(msg) {
+			//var chatBox = document.getElementById("chatBox");
+			//chatBox.innerHTML = "<b>" + msg.data + "<br>" + chatBox.innerHTML;
+			var message = JSON.parse(msg.data);		
+			addWaveItem( message );
+		};
+		socket.onopen = function() {
+			var message = {};
+			message.user = user;
+			message.text = "<b>Joined the chat</b>";
+			socket.send(JSON.stringify(message));
+		};
+		document.getElementById("chat").setAttribute("style", "");
+		document.getElementById("welcome")
+				.setAttribute("style", "display:none");
+	}
+	function sendMessage() {
+		var message = {};
+		message.user = user;
+		message.text = document.getElementById("message").value;
+		socket.send(JSON.stringify(message));
+		document.getElementById("message").value = "";
+	}
+	window.onload = function() {
+		document.getElementById("chat").setAttribute("style", "display:none");
+	}
+</script>
+</head>
+<body>
+	<div id="welcome">
+		<h1>WebSocket Chat</h1>
+		What is your name? <input type="text" id="name"> <input
+			type="button" value="Join Chat" onclick="connectToChat();">
+	</div>
+	<div id="chat">
+		<div id="chatBox"></div>
+		<div id="messageForm">
+			<input type="text" id="message"> <input type="button"
+				value="send" onclick="sendMessage();">
+		</div>
+	</div>
+</body>
+</html>

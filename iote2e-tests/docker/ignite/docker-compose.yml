@@ -1,0 +1,84 @@
+version: '2'
+services:
+  iote2e-ignite0:
+    image: ignite:1.8.0
+    entrypoint: /bin/sh
+    command: -c /opt/ignite/apache-ignite-fabric-1.8.0-bin/bin/ignite.sh
+    hostname: iote2e-ignite0
+    container_name: iote2e-ignite0
+    mem_limit: 8g
+    memswap_limit: 8g
+    networks:
+      default:
+        ipv4_address: 192.168.21.30
+    environment:     
+      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
+      IGNITE_VERSION: 1.8.0
+      DEFAULT_CONFIG: /tmp/iote2e-shared/config_ignite/ignite-iote2e-docker.xml
+      JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
+    expose:
+      - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
+    volumes:
+      - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
+      - ../../iote2e-shared/jars:/opt/ignite/apache-ignite-fabric-1.8.0-bin/libs/iote2e
+      
+  iote2e-ignite1:
+    image: ignite:1.8.0
+    entrypoint: /bin/sh
+    command: -c /opt/ignite/apache-ignite-fabric-1.8.0-bin/bin/ignite.sh
+    hostname: iote2e-ignite1
+    container_name: iote2e-ignite1
+    mem_limit: 8g
+    memswap_limit: 8g
+    networks:
+      default:
+        ipv4_address: 192.168.21.31
+    environment:     
+      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
+      IGNITE_VERSION: 1.8.0
+      DEFAULT_CONFIG: /tmp/iote2e-shared/config_ignite/ignite-iote2e-docker.xml
+      JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
+    expose:
+      - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
+    volumes:
+      - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
+      - ../../iote2e-shared/jars:/opt/ignite/apache-ignite-fabric-1.8.0-bin/libs/iote2e
+      
+  iote2e-ignite2:
+    image: ignite:1.8.0
+    entrypoint: /bin/sh
+    command: -c /opt/ignite/apache-ignite-fabric-1.8.0-bin/bin/ignite.sh
+    hostname: iote2e-ignite2
+    container_name: iote2e-ignite2
+    mem_limit: 8g
+    memswap_limit: 8g
+    networks:
+      default:
+        ipv4_address: 192.168.21.32
+    environment:     
+      IGNITE_HOME: /opt/ignite/apache-ignite-fabric-1.8.0-bin
+      IGNITE_VERSION: 1.8.0
+      DEFAULT_CONFIG: /tmp/iote2e-shared/config_ignite/ignite-iote2e-docker.xml
+      JVM_OPTS: -Xms1g -Xmx2g -server -XX:+AggressiveOpts -XX:MaxMetaspaceSize=256m
+    expose:
+      - 47500-47509
+      - 11211  
+      - 47100
+      - 49112
+    volumes:
+      - ./data:/tmp/data
+      - ../../iote2e-shared:/tmp/iote2e-shared
+      - ../../iote2e-shared/jars:/opt/ignite/apache-ignite-fabric-1.8.0-bin/libs/iote2e
+
+networks:
+  default:
+    external:
+      name: iote2enet

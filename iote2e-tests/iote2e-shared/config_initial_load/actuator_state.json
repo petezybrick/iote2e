@@ -1,0 +1,42 @@
+[
+  {
+    "loginName": "pzybrick1|jdoe2|sjones3",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
+    "sourceType": "temp",
+    "sensorName": "temp1",
+    "actuatorName": "fan1",
+    "actuatorDesc": "TempToFan"
+  },
+  {
+    "loginName": "pzybrick1|jdoe2|sjones3",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
+    "sourceType": "humidity",
+    "sensorName": "humidity1",
+    "actuatorName": "mister1",
+    "actuatorDesc": "HumidityToMister"
+  },
+  {
+    "loginName": "pzybrick1|jdoe2|sjones3",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
+    "sourceType": "switch",
+    "sensorName": "switch0",
+    "actuatorName": "ledGreen1",
+    "actuatorDesc": "Switch0ToLedGreen"
+  },
+  {
+    "loginName": "pzybrick1|jdoe2|sjones3",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
+    "sourceType": "switch",
+    "sensorName": "switch1",
+    "actuatorName": "ledRed1",
+    "actuatorDesc": "Switch1ToLedRed"
+  },
+  {
+    "loginName": "pzybrick1|jdoe2|sjones3",
+    "sourceName": "rpi-001|rpi-002|rpi-003|rpi-999",
+    "sourceType": "switch",
+    "sensorName": "switch2",
+    "actuatorName": "ledYellow1",
+    "actuatorDesc": "Switch2ToLedYellow"
+  }
+]
