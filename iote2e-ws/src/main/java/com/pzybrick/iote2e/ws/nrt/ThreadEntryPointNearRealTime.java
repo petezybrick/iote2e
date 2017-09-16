@@ -85,7 +85,7 @@ public class ThreadEntryPointNearRealTime extends Thread {
 
 		@Override
 		public void run() {
-			final CharSequence checkTemp = new Utf8("temp");
+			final CharSequence checkTemp = new Utf8("temperature");
 			final CharSequence checkBloodPressure = new Utf8("blood-pressure");
 			final CharSequence checkSystolic = new Utf8("SYSTOLIC");
 			final CharSequence checkDiastolic = new Utf8("DIASTOLIC");
