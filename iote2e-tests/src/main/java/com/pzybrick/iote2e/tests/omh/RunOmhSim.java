@@ -128,7 +128,7 @@ public class RunOmhSim {
 		// for some reason RespiratoryRate SCHEMA_ID is private
 		this.simSchemasByName.put( "respiratory-rate" , new SimSchemaRespiratoryRateImpl());
 		this.sortedSimSchemaNames = new ArrayList<String>( this.simSchemasByName.keySet());
-		Collections.sort(this.sortedSimSchemaNames);
+		this.sortedSimSchemaNames.sort( (p1,p2)->p1.compareTo(p2));
 	}
 	
 	/**
