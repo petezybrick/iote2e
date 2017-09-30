@@ -34,5 +34,7 @@
 	"wsOmhServerListenPort": "8092",
 	"wsOmhRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteOmhByteBufferToKafkaImpl",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestLoopbackImpl",
-	"wsServerListenPort": "8090"
+	"wsServerListenPort": "8090",
+	"wsValidicServerListenPort": "8094",
+	"wsValidicRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteValidicByteBufferToKafkaImpl"
 }

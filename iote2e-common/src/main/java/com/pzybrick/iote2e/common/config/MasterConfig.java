@@ -137,6 +137,10 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String kafkaGroupBdbb;
 	
+	/** The kafka group validic. */
+	@Expose
+	private String kafkaGroupValidic;
+	
 	/** The kafka topic. */
 	@Expose
 	private String kafkaTopic;
@@ -148,6 +152,10 @@ public class MasterConfig implements Serializable {
 	/** The kafka topic bdbb. */
 	@Expose
 	private String kafkaTopicBdbb;
+	
+	/** The kafka topic validic. */
+	@Expose
+	private String kafkaTopicValidic;
 	
 	/** The kafka bootstrap servers. */
 	@Expose
@@ -193,6 +201,10 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private String routerBdbbClassName;
 	
+	/** The router validic class name. */
+	@Expose
+	private String routerValidicClassName;
+	
 	/** The spark app name. */
 	@Expose
 	private String sparkAppName;
@@ -204,6 +216,10 @@ public class MasterConfig implements Serializable {
 	/** The spark app name omh. */
 	@Expose
 	private String sparkAppNameOmh;
+	
+	/** The spark app name validic. */
+	@Expose
+	private String sparkAppNameValidic;
 	
 	/** The spark master. */
 	@Expose
@@ -261,6 +277,10 @@ public class MasterConfig implements Serializable {
 	@Expose
 	private Integer wsOmhServerListenPort;
 	
+	/** The ws omh server listen port. */
+	@Expose
+	private Integer wsValidicServerListenPort;
+	
 	/** The ws router impl class name. */
 	@Expose
 	private String wsRouterImplClassName;
@@ -272,6 +292,10 @@ public class MasterConfig implements Serializable {
 	/** The ws omh router impl class name. */
 	@Expose
 	private String wsOmhRouterImplClassName;
+	
+	/** The ws omh router impl class name. */
+	@Expose
+	private String wsValidicRouterImplClassName;
 	
 	/** The ws server listen port. */
 	@Expose
@@ -713,9 +737,6 @@ public class MasterConfig implements Serializable {
 		return sb.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "MasterConfig [masterConfigJsonKey=" + masterConfigJsonKey + ", contactPoint=" + contactPoint
@@ -728,25 +749,28 @@ public class MasterConfig implements Serializable {
 				+ forceResetActuatorState + ", jdbcDriverClassName=" + jdbcDriverClassName + ", jdbcInsertBlockSize="
 				+ jdbcInsertBlockSize + ", jdbcLogin=" + jdbcLogin + ", jdbcPassword=" + jdbcPassword + ", jdbcUrl="
 				+ jdbcUrl + ", kafkaGroup=" + kafkaGroup + ", kafkaGroupOmh=" + kafkaGroupOmh + ", kafkaGroupBdbb="
-				+ kafkaGroupBdbb + ", kafkaTopic=" + kafkaTopic + ", kafkaTopicOmh=" + kafkaTopicOmh
-				+ ", kafkaTopicBdbb=" + kafkaTopicBdbb + ", kafkaBootstrapServers=" + kafkaBootstrapServers
-				+ ", kafkaZookeeperHosts=" + kafkaZookeeperHosts + ", kafkaZookeeperPort=" + kafkaZookeeperPort
-				+ ", kafkaConsumerNumThreads=" + kafkaConsumerNumThreads + ", kafkaZookeeperBrokerPath="
-				+ kafkaZookeeperBrokerPath + ", kafkaConsumerId=" + kafkaConsumerId
-				+ ", kafkaZookeeperConsumerConnection=" + kafkaZookeeperConsumerConnection
-				+ ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath + ", routerIote2eRequestClassName="
-				+ routerIote2eRequestClassName + ", routerOmhClassName=" + routerOmhClassName + ", routerBdbbClassName="
-				+ routerBdbbClassName + ", sparkAppName=" + sparkAppName + ", sparkAppNameBdbb=" + sparkAppNameBdbb
-				+ ", sparkAppNameOmh=" + sparkAppNameOmh + ", sparkMaster=" + sparkMaster + ", smtpEmailOmh="
-				+ smtpEmailOmh + ", smtpLoginOmh=" + smtpLoginOmh + ", smtpPasswordOmh=" + smtpPasswordOmh
-				+ ", smtpEmailBdbb=" + smtpEmailBdbb + ", smtpLoginBdbb=" + smtpLoginBdbb + ", smtpPasswordBdbb="
-				+ smtpPasswordBdbb + ", sparkStreamDurationMs=" + sparkStreamDurationMs + ", webServerPort="
-				+ webServerPort + ", webServerContentPath=" + webServerContentPath + ", webServerContextPath="
-				+ webServerContextPath + ", wsBdbbServerListenPort=" + wsBdbbServerListenPort
-				+ ", wsNrtServerListenPort=" + wsNrtServerListenPort + ", wsOmhServerListenPort="
-				+ wsOmhServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName
+				+ kafkaGroupBdbb + ", kafkaGroupValidic=" + kafkaGroupValidic + ", kafkaTopic=" + kafkaTopic
+				+ ", kafkaTopicOmh=" + kafkaTopicOmh + ", kafkaTopicBdbb=" + kafkaTopicBdbb + ", kafkaTopicValidic="
+				+ kafkaTopicValidic + ", kafkaBootstrapServers=" + kafkaBootstrapServers + ", kafkaZookeeperHosts="
+				+ kafkaZookeeperHosts + ", kafkaZookeeperPort=" + kafkaZookeeperPort + ", kafkaConsumerNumThreads="
+				+ kafkaConsumerNumThreads + ", kafkaZookeeperBrokerPath=" + kafkaZookeeperBrokerPath
+				+ ", kafkaConsumerId=" + kafkaConsumerId + ", kafkaZookeeperConsumerConnection="
+				+ kafkaZookeeperConsumerConnection + ", kafkaZookeeperConsumerPath=" + kafkaZookeeperConsumerPath
+				+ ", routerIote2eRequestClassName=" + routerIote2eRequestClassName + ", routerOmhClassName="
+				+ routerOmhClassName + ", routerBdbbClassName=" + routerBdbbClassName + ", routerValidicClassName="
+				+ routerValidicClassName + ", sparkAppName=" + sparkAppName + ", sparkAppNameBdbb=" + sparkAppNameBdbb
+				+ ", sparkAppNameOmh=" + sparkAppNameOmh + ", sparkAppNameValidic=" + sparkAppNameValidic
+				+ ", sparkMaster=" + sparkMaster + ", smtpEmailOmh=" + smtpEmailOmh + ", smtpLoginOmh=" + smtpLoginOmh
+				+ ", smtpPasswordOmh=" + smtpPasswordOmh + ", smtpEmailBdbb=" + smtpEmailBdbb + ", smtpLoginBdbb="
+				+ smtpLoginBdbb + ", smtpPasswordBdbb=" + smtpPasswordBdbb + ", sparkStreamDurationMs="
+				+ sparkStreamDurationMs + ", webServerPort=" + webServerPort + ", webServerContentPath="
+				+ webServerContentPath + ", webServerContextPath=" + webServerContextPath + ", wsBdbbServerListenPort="
+				+ wsBdbbServerListenPort + ", wsNrtServerListenPort=" + wsNrtServerListenPort
+				+ ", wsOmhServerListenPort=" + wsOmhServerListenPort + ", wsValidicServerListenPort="
+				+ wsValidicServerListenPort + ", wsRouterImplClassName=" + wsRouterImplClassName
 				+ ", wsBdbbRouterImplClassName=" + wsBdbbRouterImplClassName + ", wsOmhRouterImplClassName="
-				+ wsOmhRouterImplClassName + ", wsServerListenPort=" + wsServerListenPort + "]";
+				+ wsOmhRouterImplClassName + ", wsValidicRouterImplClassName=" + wsValidicRouterImplClassName
+				+ ", wsServerListenPort=" + wsServerListenPort + "]";
 	}
 
 	/**
@@ -1623,6 +1647,72 @@ public class MasterConfig implements Serializable {
 	 */
 	public MasterConfig setSmtpPasswordBdbb(String smtpPasswordBdbb) {
 		this.smtpPasswordBdbb = smtpPasswordBdbb;
+		return this;
+	}
+
+
+	public String getKafkaGroupValidic() {
+		return kafkaGroupValidic;
+	}
+
+
+	public String getKafkaTopicValidic() {
+		return kafkaTopicValidic;
+	}
+
+
+	public MasterConfig setKafkaGroupValidic(String kafkaGroupValidic) {
+		this.kafkaGroupValidic = kafkaGroupValidic;
+		return this;
+	}
+
+
+	public MasterConfig setKafkaTopicValidic(String kafkaTopicValidic) {
+		this.kafkaTopicValidic = kafkaTopicValidic;
+		return this;
+	}
+
+
+	public Integer getWsValidicServerListenPort() {
+		return wsValidicServerListenPort;
+	}
+
+
+	public String getWsValidicRouterImplClassName() {
+		return wsValidicRouterImplClassName;
+	}
+
+
+	public MasterConfig setWsValidicServerListenPort(Integer wsValidicServerListenPort) {
+		this.wsValidicServerListenPort = wsValidicServerListenPort;
+		return this;
+	}
+
+
+	public MasterConfig setWsValidicRouterImplClassName(String wsValidicRouterImplClassName) {
+		this.wsValidicRouterImplClassName = wsValidicRouterImplClassName;
+		return this;
+	}
+
+
+	public String getRouterValidicClassName() {
+		return routerValidicClassName;
+	}
+
+
+	public MasterConfig setRouterValidicClassName(String routerValidicClassName) {
+		this.routerValidicClassName = routerValidicClassName;
+		return this;
+	}
+
+
+	public String getSparkAppNameValidic() {
+		return sparkAppNameValidic;
+	}
+
+
+	public MasterConfig setSparkAppNameValidic(String sparkAppNameValidic) {
+		this.sparkAppNameValidic = sparkAppNameValidic;
 		return this;
 	}
 

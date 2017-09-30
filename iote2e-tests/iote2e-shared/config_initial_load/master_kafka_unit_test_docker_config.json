@@ -12,9 +12,11 @@
 	"kafkaGroup": "iote2e-group-sandbox",
 	"kafkaGroupBdbb": "bdbb-group-sandbox",
 	"kafkaGroupOmh": "omh-group-sandbox",
+	"kafkaGroupValidic": "validic-group-sandbox",
 	"kafkaTopic": "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox",
 	"kafkaTopicBdbb": "com.pzybrick.iote2e.ws.bdbb.ThreadEntryPointBdbb-sandbox",
-	"kafkaTopicOmh": "com.pzybrick.iote2e.ws.omh.ThreadEntryPointOmh-sandbox",
+	"kafkaTopicOmh": "com.pzybrick.iote2e.ws.validic.ThreadEntryPointValidic-sandbox",
+	"kafkaTopicValidic": "com.pzybrick.iote2e.ws.omh.ThreadEntryPointValidic-sandbox",
 	"kafkaZookeeperHosts": "iote2e-zoo1,iote2e-zoo2,iote2e-zoo3",
 	"kafkaZookeeperPort": "2181",
 	"requestSvcClassName": "com.pzybrick.iote2e.stream.kafka.Iote2eSvcKafkaImpl",
@@ -34,5 +36,7 @@
 	"webServerContentPath": "/tmp/WebContent",
 	"webServerContextPath": "/iote2e-web/",
 	"wsOmhServerListenPort": "8092",
-	"wsOmhRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteOmhByteBufferToKafkaImpl"
+	"wsOmhRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteOmhByteBufferToKafkaImpl",
+	"wsValidicServerListenPort": "8094",
+	"wsValidicRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteValidicByteBufferToKafkaImpl"
 }

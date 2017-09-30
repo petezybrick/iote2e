@@ -28,6 +28,7 @@ import com.pzybrick.iote2e.ws.ignite.web.ThreadEntryPointWeb;
 import com.pzybrick.iote2e.ws.nrt.ThreadEntryPointNearRealTime;
 import com.pzybrick.iote2e.ws.omh.ThreadEntryPointOmh;
 import com.pzybrick.iote2e.ws.socket.ThreadEntryPointIote2eRequest;
+import com.pzybrick.iote2e.ws.validic.ThreadEntryPointValidic;
 
 
 /**
@@ -53,18 +54,21 @@ public class ServerLauncher {
 			ThreadEntryPointOmh threadEntryPointOmh = new ThreadEntryPointOmh(masterConfig);
 			ThreadEntryPointWeb threadEntryPointWeb = new ThreadEntryPointWeb(masterConfig);
 			ThreadEntryPointBdbb threadEntryPointBdbb = new ThreadEntryPointBdbb(masterConfig);
+			ThreadEntryPointValidic threadEntryPointValidic = new ThreadEntryPointValidic(masterConfig);
 
 			threadEntryPointIote2eRequest.start();
 			threadEntryPointNearRealTime.start();
 			threadEntryPointOmh.start();
 			threadEntryPointWeb.start();
 			threadEntryPointBdbb.start();
+			threadEntryPointValidic.start();
 			
 			threadEntryPointIote2eRequest.join();
 			threadEntryPointNearRealTime.join();
 			threadEntryPointOmh.join();
 			threadEntryPointWeb.join();
 			threadEntryPointBdbb.join();
+			threadEntryPointValidic.join();
 			
 		} catch( Exception e ) {
 			logger.error(e.getMessage(),e);

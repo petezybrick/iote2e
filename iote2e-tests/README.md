@@ -36,6 +36,7 @@ Note: if the topic doesn't already exist, then create it now:
 	./bin/kafka-topics.sh  --create --topic com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox --zookeeper localhost:2181 --replication-factor 3  --partitions 3
 	./bin/kafka-topics.sh  --create --topic com.pzybrick.iote2e.ws.omh.ThreadEntryPointOmh-sandbox --zookeeper localhost:2181 --replication-factor 3  --partitions 3
 	./bin/kafka-topics.sh  --create --topic com.pzybrick.iote2e.ws.bdbb.ThreadEntryPointBdbb-sandbox --zookeeper localhost:2181 --replication-factor 3  --partitions 3
+	./bin/kafka-topics.sh  --create --topic com.pzybrick.iote2e.ws.validic.ThreadEntryPointValidic-sandbox --zookeeper localhost:2181 --replication-factor 3  --partitions 3
 	./bin/kafka-topics.sh --zookeeper localhost:2181 --list
 env JMX_PORT=9999 ./bin/kafka-server-start.sh config/server-0.properties
 env JMX_PORT=10000 ./bin/kafka-server-start.sh config/server-1.properties

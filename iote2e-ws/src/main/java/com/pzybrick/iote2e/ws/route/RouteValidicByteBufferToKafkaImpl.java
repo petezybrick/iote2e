@@ -33,38 +33,38 @@ import com.pzybrick.iote2e.common.config.MasterConfig;
 
 
 /**
- * The Class RouteOmhByteBufferToKafkaImpl.
+ * The Class RouteValidicByteBufferToKafkaImpl.
  */
-public class RouteOmhByteBufferToKafkaImpl implements RouteOmhByteBuffer {
+public class RouteValidicByteBufferToKafkaImpl implements RouteValidicByteBuffer {
 	
 	/** The Constant logger. */
-	private static final Logger logger = LogManager.getLogger(RouteOmhByteBufferToKafkaImpl.class);
+	private static final Logger logger = LogManager.getLogger(RouteValidicByteBufferToKafkaImpl.class);
 	
 	/** The kafka producer. */
 	protected KafkaProducer<String, byte[]> kafkaProducer;
 	
-	/** The kafka topic omh. */
-	protected String kafkaTopicOmh;
+	/** The kafka topic validic. */
+	protected String kafkaTopicValidic;
 	
-	/** The kafka group omh. */
-	protected String kafkaGroupOmh;
+	/** The kafka group validic. */
+	protected String kafkaGroupValidic;
 	
 	
 	/**
-	 * Instantiates a new route omh byte buffer to kafka impl.
+	 * Instantiates a new route validic byte buffer to kafka impl.
 	 */
-	public RouteOmhByteBufferToKafkaImpl(){
+	public RouteValidicByteBufferToKafkaImpl(){
 		
 	}
 
 	
 	/* (non-Javadoc)
-	 * @see com.pzybrick.iote2e.ws.route.RouteOmhByteBuffer#init(com.pzybrick.iote2e.common.config.MasterConfig)
+	 * @see com.pzybrick.iote2e.ws.route.RouteValidicByteBuffer#init(com.pzybrick.iote2e.common.config.MasterConfig)
 	 */
 	public void init(MasterConfig masterConfig) throws Exception {
 		logger.debug("constructing, connecting to Kafka producer");
-		kafkaTopicOmh = masterConfig.getKafkaTopicOmh();
-		kafkaGroupOmh = masterConfig.getKafkaGroupOmh();
+		kafkaTopicValidic = masterConfig.getKafkaTopicValidic();
+		kafkaGroupValidic = masterConfig.getKafkaGroupValidic();
 		Properties props = new Properties();
 		props.put("bootstrap.servers", masterConfig.getKafkaBootstrapServers() );
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -76,7 +76,7 @@ public class RouteOmhByteBufferToKafkaImpl implements RouteOmhByteBuffer {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.pzybrick.iote2e.ws.route.RouteOmhByteBuffer#routeToTarget(java.nio.ByteBuffer)
+	 * @see com.pzybrick.iote2e.ws.route.RouteValidicByteBuffer#routeToTarget(java.nio.ByteBuffer)
 	 */
 	public void routeToTarget( ByteBuffer byteBuffer ) throws Exception {
 		String key = String.valueOf(System.currentTimeMillis());
@@ -88,7 +88,7 @@ public class RouteOmhByteBufferToKafkaImpl implements RouteOmhByteBuffer {
 		for( int i=0 ; i<MAX_RETRIES ; i++ ) {
 			isSuccess = false;
 			try {
-				data = new ProducerRecord<String, byte[]>(kafkaTopicOmh, key, byteBuffer.array() );
+				data = new ProducerRecord<String, byte[]>(kafkaTopicValidic, key, byteBuffer.array() );
 				// send is an async call
 				// for this simple testing, treat the send like a synchronous call, wait for it to complete
 				Future<RecordMetadata> future = kafkaProducer.send(data);;
@@ -107,7 +107,7 @@ public class RouteOmhByteBufferToKafkaImpl implements RouteOmhByteBuffer {
 			retrySleepMs = retrySleepMs * 2;
 		}
 		if( !isSuccess ) throw new Exception("Failure on send/get");
-		logger.debug("OMH sent to kafka, kafka key={}", key );
+		logger.debug("Validic sent to kafka, kafka key={}", key );
 
 	} 
 }

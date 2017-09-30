@@ -44,6 +44,12 @@ public class Iote2eUtils {
 		return ISODateTimeFormat.dateTime().print(new DateTime().toDateTime(DateTimeZone.UTC));
 	}
 	
+	public static void sleepMillis( Long millis ) {
+		try {
+			Thread.sleep(millis);
+		} catch (Exception e) { }
+	}
+	
 	/**
 	 * Gets the gson instance.
 	 *

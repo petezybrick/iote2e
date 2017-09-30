@@ -13,9 +13,11 @@
 	"kafkaGroup": "iote2e-group-sandbox",
 	"kafkaGroupBdbb": "bdbb-group-sandbox",
 	"kafkaGroupOmh": "omh-group-sandbox",
+	"kafkaGroupValidic": "validic-group-sandbox",
 	"kafkaTopic": "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox",
 	"kafkaTopicBdbb": "com.pzybrick.iote2e.ws.bdbb.ThreadEntryPointBdbb-sandbox",
-	"kafkaTopicOmh": "com.pzybrick.iote2e.ws.omh.ThreadEntryPointOmh-sandbox",
+	"kafkaTopicOmh": "com.pzybrick.iote2e.ws.validic.ThreadEntryPointValidic-sandbox",
+	"kafkaTopicValidic": "com.pzybrick.iote2e.ws.omh.ThreadEntryPointValidic-sandbox",
 	"kafkaZookeeperBrokerPath": "/brokers",
 	"kafkaZookeeperConsumerConnection": "hp-lt-ubuntu-1",
 	"kafkaZookeeperConsumerPath": "/iote2erequest-sandbox",
@@ -46,5 +48,7 @@
 	"wsOmhServerListenPort": "8092",
 	"wsOmhRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteOmhByteBufferToKafkaImpl",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestToKafkaImpl",
-	"wsServerListenPort": "8090"
+	"wsServerListenPort": "8090",
+	"wsValidicServerListenPort": "8094",
+	"wsValidicRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteValidicByteBufferToKafkaImpl"
 }

@@ -156,8 +156,12 @@ public class ThreadEntryPointNearRealTime extends Thread {
 			EngineOilPressureSensorItem engineOilPressureSensorItem = new EngineOilPressureSensorItem();
 			logger.info("ThreadToBrowserNrtMonitor Run");
 			try {
+				int cntHeartBeat = 0;
 				while (true) {
-					logger.info("ThreadToBrowserNrtMonitor alive");
+					if( ++cntHeartBeat == 10  ) {
+						cntHeartBeat = 0;
+						logger.info("heartbeat");
+					}
 					while (!toClientIote2eResults.isEmpty()) {
 						Iote2eResult iote2eResult = toClientIote2eResults.poll();
 						if( iote2eResult != null ) {

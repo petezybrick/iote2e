@@ -11,10 +11,14 @@
 	"jdbcLogin": "iote2e_batch",
 	"jdbcPassword": "Password*8",
 	"jdbcUrl": "jdbc:mysql://iote2e-mysql-master:3307/db_iote2e_batch",
+	"kafkaGroup": "iote2e-group-sandbox",
 	"kafkaGroupBdbb": "bdbb-group-sandbox",
 	"kafkaGroupOmh": "omh-group-sandbox",
+	"kafkaGroupValidic": "validic-group-sandbox",
+	"kafkaTopic": "com.pzybrick.iote2e.schema.avro.Iote2eRequest-sandbox",
 	"kafkaTopicBdbb": "com.pzybrick.iote2e.ws.bdbb.ThreadEntryPointBdbb-sandbox",
-	"kafkaTopicOmh": "com.pzybrick.iote2e.ws.omh.ThreadEntryPointOmh-sandbox",
+	"kafkaTopicOmh": "com.pzybrick.iote2e.ws.validic.ThreadEntryPointValidic-sandbox",
+	"kafkaTopicValidic": "com.pzybrick.iote2e.ws.omh.ThreadEntryPointValidic-sandbox",
 	"requestSvcClassName": "com.pzybrick.iote2e.tests.local.Iote2eSvcLocalTestImpl",
 	"routerIote2eRequestClassName": "com.pzybrick.iote2e.stream.request.Iote2eRequestRouterHandlerSparkRuleImpl",
 	"routerBdbbClassName": "com.pzybrick.iote2e.stream.bdbb.BdbbRouterHandlerSparkSpeedImpl",
@@ -37,5 +41,7 @@
 	"wsOmhServerListenPort": "8092",
 	"wsOmhRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteOmhByteBufferToKafkaImpl",
 	"wsRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteIote2eRequestLoopbackImpl",
-	"wsServerListenPort": "8090"
+	"wsServerListenPort": "8090",
+	"wsValidicServerListenPort": "8094",
+	"wsValidicRouterImplClassName": "com.pzybrick.iote2e.ws.route.RouteValidicByteBufferToKafkaImpl"
 }

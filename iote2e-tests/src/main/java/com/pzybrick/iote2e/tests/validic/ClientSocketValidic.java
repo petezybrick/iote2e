@@ -17,7 +17,7 @@
  * @version 1.0.0, 2017-09
  * 
  */
-package com.pzybrick.iote2e.tests.bdbb;
+package com.pzybrick.iote2e.tests.validic;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -35,20 +35,20 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * The Class ClientSocketBdbb.
+ * The Class ClientSocketValidic.
  */
 @ClientEndpoint
 @ServerEndpoint(value = "/omh/")
-public class ClientSocketBdbb {
+public class ClientSocketValidic {
 	
 	/** The Constant logger. */
-	private static final Logger logger = LogManager.getLogger(ClientSocketBdbb.class);
+	private static final Logger logger = LogManager.getLogger(ClientSocketValidic.class);
 	
 	/**
-	 * Instantiates a new client socket bdbb.
+	 * Instantiates a new client socket validic.
 	 */
-	public ClientSocketBdbb( ) {
-		logger.debug("ClientSocketBdbb ctor empty");
+	public ClientSocketValidic( ) {
+		logger.debug("ClientSocketValidic ctor empty");
 	}
 	
 

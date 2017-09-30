@@ -184,6 +184,11 @@ truncate heart_rate;
 truncate hk_workout;
 truncate respiratory_rate;
 
+** Validic concurrent run with OmH **
+cd /tmp/iote2e-shared
+java -cp jars/iote2e-tests-1.0.0.jar com.pzybrick.iote2e.tests.validic.RunValidicSim "data/simOmhUsers.csv" 6 5 60 "ws://iote2e-ws1:8094/validic/" 
+
+
 * Copy OMH simulator jar to RPi's
 * Launch simulators
 
