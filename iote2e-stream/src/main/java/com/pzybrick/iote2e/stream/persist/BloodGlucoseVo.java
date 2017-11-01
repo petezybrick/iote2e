@@ -29,6 +29,9 @@ import org.apache.logging.log4j.Logger;
 import org.openmhealth.schema.domain.omh.BloodGlucose;
 import org.openmhealth.schema.domain.omh.DataPointHeader;
 
+import com.pzybrick.iote2e.stream.validic.Diabete;
+import com.pzybrick.iote2e.stream.validic.ValidicHeader;
+
 
 
 /**
@@ -101,6 +104,25 @@ public class BloodGlucoseVo extends OmhVo {
 		this.temporalRelationshipToSleep = bloodGlucose.getTemporalRelationshipToSleep().name();
 		this.bloodGlucoseUnit = bloodGlucose.getBloodGlucose().getUnit();
 		this.bloodGlucoseValue = bloodGlucose.getBloodGlucose().getValue().intValue();
+	}
+
+
+	public BloodGlucoseVo( ValidicHeader header, Diabete diabete ) throws SQLException {
+		this.bloodGlucoseUuid = header.getUuid();
+		this.hdrSourceName = diabete.getSourceName();
+		this.hdrSourceCreationDateTime = new Timestamp( offsetDateTimeToMillis(header.getCreationDateTime() ) ) ;
+		this.hdrUserId = header.getUserId();
+		this.hdrModality =  "NA";
+		this.hdrSchemaNamespace = diabete.getSchemaName();
+		this.hdrSchemaVersion = "NA";
+		this.effectiveTimeFrame = new Timestamp( offsetDateTimeToMillis( diabete.getTimestamp()) );
+		this.descriptiveStatistic = "NA";
+		this.userNotes = "NA";
+		this.bloodSpecimenType = "NA";
+		this.temporalRelationshipToMeal = diabete.getRelationshipToMeal();
+		this.temporalRelationshipToSleep = "NA";
+		this.bloodGlucoseUnit = "NA";
+		this.bloodGlucoseValue = diabete.getBloodGlucose().intValue();
 	}
 
 

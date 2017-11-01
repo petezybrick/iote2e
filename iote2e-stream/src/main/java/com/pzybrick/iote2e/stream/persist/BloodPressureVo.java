@@ -29,6 +29,9 @@ import org.apache.logging.log4j.Logger;
 import org.openmhealth.schema.domain.omh.BloodPressure;
 import org.openmhealth.schema.domain.omh.DataPointHeader;
 
+import com.pzybrick.iote2e.stream.validic.Biometric;
+import com.pzybrick.iote2e.stream.validic.ValidicHeader;
+
 
 
 /**
@@ -97,7 +100,26 @@ public class BloodPressureVo extends OmhVo {
 		this.diastolicBloodPressureValue = bloodPressure.getDiastolicBloodPressure().getValue().intValue();
 	}
 
+	
+	public BloodPressureVo( ValidicHeader header, Biometric biometric ) throws SQLException {
+		this.bloodPressureUuid = header.getUuid();
+		this.hdrSourceName = biometric.getSourceName();
+		this.hdrSourceCreationDateTime = new Timestamp( offsetDateTimeToMillis(header.getCreationDateTime() ) ) ;
+		this.hdrUserId = header.getUserId();
+		this.hdrModality =  "NA";
+		this.hdrSchemaNamespace = biometric.getSchemaName();
+		this.hdrSchemaVersion = "NA";
+		this.effectiveTimeFrame = new Timestamp( offsetDateTimeToMillis( biometric.getTimestamp()) );
+		this.descriptiveStatistic = "NA";
+		this.userNotes = "NA";
+		this.positionDuringMeasurement = "NA";
+		this.systolicBloodPressureUnit = "mmHg";
+		this.systolicBloodPressureValue = biometric.getSystolic().intValue();
+		this.diastolicBloodPressureUnit = "mmHg";
+		this.diastolicBloodPressureValue = biometric.getDiastolic().intValue();
+	}
 
+	 
 	/**
 	 * Instantiates a new blood pressure vo.
 	 *

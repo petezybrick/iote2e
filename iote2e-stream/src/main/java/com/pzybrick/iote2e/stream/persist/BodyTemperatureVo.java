@@ -29,6 +29,9 @@ import org.apache.logging.log4j.Logger;
 import org.openmhealth.schema.domain.omh.BodyTemperature;
 import org.openmhealth.schema.domain.omh.DataPointHeader;
 
+import com.pzybrick.iote2e.stream.validic.Biometric;
+import com.pzybrick.iote2e.stream.validic.ValidicHeader;
+
 
 
 /**
@@ -87,6 +90,23 @@ public class BodyTemperatureVo extends OmhVo  {
 		this.measurementLocation = bodyTemperature.getMeasurementLocation().name();
 		this.bodyTemperatureUnit = bodyTemperature.getBodyTemperature().getUnit();
 		this.bodyTemperatureValue = bodyTemperature.getBodyTemperature().getValue().floatValue();
+	}
+	
+	
+	public BodyTemperatureVo( ValidicHeader header, Biometric biometric ) throws SQLException {
+		this.bodyTemperatureUuid = header.getUuid();
+		this.hdrSourceName = biometric.getSourceName();
+		this.hdrSourceCreationDateTime = new Timestamp( offsetDateTimeToMillis(header.getCreationDateTime() ) ) ;
+		this.hdrUserId = header.getUserId();
+		this.hdrModality =  "NA";
+		this.hdrSchemaNamespace = biometric.getSchemaName();
+		this.hdrSchemaVersion = "NA";
+		this.effectiveTimeFrame = new Timestamp( offsetDateTimeToMillis( biometric.getTimestamp()) );
+		this.descriptiveStatistic = "NA";
+		this.userNotes = "NA";
+		this.measurementLocation = "NA";
+		this.bodyTemperatureUnit = "F";
+		this.bodyTemperatureValue = biometric.getTemperature().floatValue();
 	}
 
 
