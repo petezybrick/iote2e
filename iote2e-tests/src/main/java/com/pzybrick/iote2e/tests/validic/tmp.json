@@ -1,0 +1,147 @@
+{
+	"header": {
+		"uuid": "6b073860-48e4-4fc2-b3df-614a64e7a1df",
+		"user_id": "justin.simpson@gmail.com",
+		"start_date_time": "2017-11-27T18:26:08.331-0500",
+		"end_date_time": "2017-11-27T18:26:14.347-0500",
+		"creation_date_time": "2017-11-27T18:26:14.348-0500",
+		"additional_properties": {
+			"testKey1": "testValue1"
+		}
+	},
+	"bodies": [
+		{
+			"schema_name": "Diabete",
+			"_id": "d5aef63a-276b-4c3b-92a8-d36ca30faa97",
+			"blood_glucose": 110.0,
+			"last_updated": "2017-11-27T18:26:08.331-0500",
+			"source_name": "validic",
+			"timestamp": "2017-11-27T18:26:08.331-0500"
+		},
+		{
+			"schema_name": "Biometric",
+			"_id": "2c6f2fa4-6ff4-4197-8395-9a4c0f9ce32d",
+			"diastolic": 80.0,
+			"last_updated": "2017-11-27T18:26:08.331-0500",
+			"resting_heartrate": 72.0,
+			"source_name": "validic",
+			"systolic": 120.0,
+			"temperature": 98.6,
+			"timestamp": 1511825168.331000000
+		},
+		{
+			"schema_name": "Diabete",
+			"_id": "21c0bd5d-97be-4883-9b06-11147fef9ff7",
+			"blood_glucose": 107.0,
+			"last_updated": "2017-11-27T18:26:09.344-0500",
+			"source_name": "validic",
+			"timestamp": "2017-11-27T18:26:09.344-0500"
+		},
+		{
+			"schema_name": "Biometric",
+			"_id": "9d7004f2-3a60-4ffc-9431-fde2e172dcfd",
+			"diastolic": 85.0,
+			"last_updated": "2017-11-27T18:26:09.344-0500",
+			"resting_heartrate": 69.0,
+			"source_name": "validic",
+			"systolic": 115.0,
+			"temperature": 104.0,
+			"timestamp": 1511825169.344000000
+		},
+		{
+			"schema_name": "Diabete",
+			"_id": "e66bed82-c73c-4e38-8ea0-1523534f3c5d",
+			"blood_glucose": 110.0,
+			"last_updated": "2017-11-27T18:26:10.345-0500",
+			"source_name": "validic",
+			"timestamp": "2017-11-27T18:26:10.345-0500"
+		},
+		{
+			"schema_name": "Biometric",
+			"_id": "d722e22b-fe7a-45e8-acd1-6038de2b0341",
+			"diastolic": 80.0,
+			"last_updated": "2017-11-27T18:26:10.345-0500",
+			"resting_heartrate": 66.0,
+			"source_name": "validic",
+			"systolic": 120.0,
+			"temperature": 98.4,
+			"timestamp": 1511825170.345000000
+		},
+		{
+			"schema_name": "Diabete",
+			"_id": "9f76823b-f017-40ed-abb4-8841657b5b46",
+			"blood_glucose": 113.0,
+			"last_updated": "2017-11-27T18:26:11.345-0500",
+			"source_name": "validic",
+			"timestamp": "2017-11-27T18:26:11.345-0500"
+		},
+		{
+			"schema_name": "Biometric",
+			"_id": "c05eab5d-b8bd-40d1-9904-30cc18d4dbfa",
+			"diastolic": 85.0,
+			"last_updated": "2017-11-27T18:26:11.345-0500",
+			"resting_heartrate": 69.0,
+			"source_name": "validic",
+			"systolic": 125.0,
+			"temperature": 98.2,
+			"timestamp": 1511825171.345000000
+		},
+		{
+			"schema_name": "Diabete",
+			"_id": "6fa37465-4a0f-4165-8b38-3805430d1786",
+			"blood_glucose": 116.0,
+			"last_updated": "2017-11-27T18:26:12.346-0500",
+			"source_name": "validic",
+			"timestamp": "2017-11-27T18:26:12.346-0500"
+		},
+		{
+			"schema_name": "Biometric",
+			"_id": "00431a3c-bb5e-413e-8e18-5b340e7a3dde",
+			"diastolic": 90.0,
+			"last_updated": "2017-11-27T18:26:12.346-0500",
+			"resting_heartrate": 72.0,
+			"source_name": "validic",
+			"systolic": 120.0,
+			"temperature": 98.4,
+			"timestamp": 1511825172.346000000
+		},
+		{
+			"schema_name": "Diabete",
+			"_id": "af7f3c33-e94d-4c7a-a94b-1a95ee295463",
+			"blood_glucose": 113.0,
+			"last_updated": "2017-11-27T18:26:13.346-0500",
+			"source_name": "validic",
+			"timestamp": "2017-11-27T18:26:13.346-0500"
+		},
+		{
+			"schema_name": "Biometric",
+			"_id": "1326f250-6361-4d4b-90b1-5986a7de93c3",
+			"diastolic": 85.0,
+			"last_updated": "2017-11-27T18:26:13.346-0500",
+			"resting_heartrate": 69.0,
+			"source_name": "validic",
+			"systolic": 125.0,
+			"temperature": 98.6,
+			"timestamp": 1511825173.346000000
+		},
+		{
+			"schema_name": "Diabete",
+			"_id": "25d90b55-1782-4236-ad72-bdc57c3bffbe",
+			"blood_glucose": 116.0,
+			"last_updated": "2017-11-27T18:26:14.347-0500",
+			"source_name": "validic",
+			"timestamp": "2017-11-27T18:26:14.347-0500"
+		},
+		{
+			"schema_name": "Biometric",
+			"_id": "4e6a4b0d-3b88-42e2-989c-8a7188669ceb",
+			"diastolic": 80.0,
+			"last_updated": "2017-11-27T18:26:14.347-0500",
+			"resting_heartrate": 66.0,
+			"source_name": "validic",
+			"systolic": 120.0,
+			"temperature": 98.4,
+			"timestamp": 1511825174.347000000
+		}
+	]
+}

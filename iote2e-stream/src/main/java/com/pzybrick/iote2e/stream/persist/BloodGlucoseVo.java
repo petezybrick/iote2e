@@ -108,7 +108,7 @@ public class BloodGlucoseVo extends OmhVo {
 
 
 	public BloodGlucoseVo( ValidicHeader header, Diabete diabete ) throws SQLException {
-		this.bloodGlucoseUuid = header.getUuid();
+		this.bloodGlucoseUuid = diabete.getId();
 		this.hdrSourceName = diabete.getSourceName();
 		this.hdrSourceCreationDateTime = new Timestamp( offsetDateTimeToMillis(header.getCreationDateTime() ) ) ;
 		this.hdrUserId = header.getUserId();

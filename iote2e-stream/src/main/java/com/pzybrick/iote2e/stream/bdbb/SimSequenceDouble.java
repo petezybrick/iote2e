@@ -19,6 +19,8 @@
  */
 package com.pzybrick.iote2e.stream.bdbb;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Random;
 
 
@@ -31,22 +33,22 @@ public class SimSequenceDouble {
 	private static Random random = new Random();
 	
 	/** The mid. */
-	private Double mid;
+	private BigDecimal mid;
 	
 	/** The max. */
-	private Double max;
+	private BigDecimal max;
 	
 	/** The min. */
-	private Double min;
+	private BigDecimal min;
 	
 	/** The exceed. */
-	private Double exceed;
+	private BigDecimal exceed;
 	
 	/** The incr. */
-	private Double incr;
+	private BigDecimal incr;
 	
 	/** The prev. */
-	private Double prev;
+	private BigDecimal prev;
 	
 	/** The min pct exceeded. */
 	private Integer minPctExceeded;
@@ -58,21 +60,20 @@ public class SimSequenceDouble {
 	 * @throws Exception the exception
 	 */
 	public Double nextDouble() throws Exception {
-		Double value = 0.0D;
-
+		BigDecimal value = new BigDecimal(0.0D).setScale(2,  RoundingMode.HALF_UP);
 		if (prev != null) {
-			if( prev == min ) {
-				value = prev + incr;
-			} else if( prev == max ) {
-				value = prev - incr;
+			if( prev.equals(min) ) {
+				value = value.add(prev).add(incr);
+			} else if( prev.equals(max) ) {
+				value = value.add(prev).subtract(incr);
 			}
-			else if ((random.nextInt() % 2) == 1 )
-				value = prev + incr;
+			else if ((random.nextInt(100) % 2) == 1 )
+				value = value.add(prev).add(incr);
 			else
-				value = prev - incr;
-			if (value < min)
+				value = value.add(prev).subtract(incr);
+			if (value.compareTo(min) < 0 )
 				value = min;
-			else if (value > max)
+			else if (value.compareTo(max) > 0)
 				value = max;
 		} else
 			value = mid;
@@ -81,7 +82,7 @@ public class SimSequenceDouble {
 			value = exceed;
 			prev = mid;
 		}
-		return value;
+		return value.doubleValue();
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class SimSequenceDouble {
 	 * @return the mid
 	 */
 	public Double getMid() {
-		return mid;
+		return mid.doubleValue();
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class SimSequenceDouble {
 	 * @return the max
 	 */
 	public Double getMax() {
-		return max;
+		return max.doubleValue();
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class SimSequenceDouble {
 	 * @return the min
 	 */
 	public Double getMin() {
-		return min;
+		return min.doubleValue();
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class SimSequenceDouble {
 	 * @return the exceed
 	 */
 	public Double getExceed() {
-		return exceed;
+		return exceed.doubleValue();
 	}
 
 	/**
@@ -135,7 +136,7 @@ public class SimSequenceDouble {
 	 * @return the incr
 	 */
 	public Double getIncr() {
-		return incr;
+		return incr.doubleValue();
 	}
 
 	/**
@@ -144,7 +145,7 @@ public class SimSequenceDouble {
 	 * @return the prev
 	 */
 	public Double getPrev() {
-		return prev;
+		return prev.doubleValue();
 	}
 
 	/**
@@ -163,7 +164,7 @@ public class SimSequenceDouble {
 	 * @return the sim sequence double
 	 */
 	public SimSequenceDouble setMid(Double mid) {
-		this.mid = mid;
+		this.mid = new BigDecimal(mid).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -174,7 +175,7 @@ public class SimSequenceDouble {
 	 * @return the sim sequence double
 	 */
 	public SimSequenceDouble setMax(Double max) {
-		this.max = max;
+		this.max = new BigDecimal(max).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -185,7 +186,7 @@ public class SimSequenceDouble {
 	 * @return the sim sequence double
 	 */
 	public SimSequenceDouble setMin(Double min) {
-		this.min = min;
+		this.min = new BigDecimal(min).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -196,7 +197,7 @@ public class SimSequenceDouble {
 	 * @return the sim sequence double
 	 */
 	public SimSequenceDouble setExceed(Double exceed) {
-		this.exceed = exceed;
+		this.exceed = new BigDecimal(exceed).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -207,7 +208,7 @@ public class SimSequenceDouble {
 	 * @return the sim sequence double
 	 */
 	public SimSequenceDouble setIncr(Double incr) {
-		this.incr = incr;
+		this.incr = new BigDecimal(incr).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -218,7 +219,7 @@ public class SimSequenceDouble {
 	 * @return the sim sequence double
 	 */
 	public SimSequenceDouble setPrev(Double prev) {
-		this.prev = prev;
+		this.prev = new BigDecimal(prev).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 

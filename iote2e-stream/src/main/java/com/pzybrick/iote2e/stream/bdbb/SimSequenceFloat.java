@@ -19,6 +19,8 @@
  */
 package com.pzybrick.iote2e.stream.bdbb;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Random;
 
 
@@ -31,48 +33,47 @@ public class SimSequenceFloat {
 	private static Random random = new Random();
 	
 	/** The mid. */
-	private Float mid;
+	private BigDecimal mid;
 	
 	/** The max. */
-	private Float max;
+	private BigDecimal max;
 	
 	/** The min. */
-	private Float min;
+	private BigDecimal min;
 	
 	/** The exceed. */
-	private Float exceed;
+	private BigDecimal exceed;
 	
 	/** The incr. */
-	private Float incr;
+	private BigDecimal incr;
 	
 	/** The prev. */
-	private Float prev;
+	private BigDecimal prev;
 	
 	/** The min pct exceeded. */
 	private Integer minPctExceeded;
 
 	/**
-	 * Next float.
+	 * Next double.
 	 *
-	 * @return the float
+	 * @return the double
 	 * @throws Exception the exception
 	 */
 	public Float nextFloat() throws Exception {
-		Float value = 0.0F;
-
+		BigDecimal value = new BigDecimal(0.0D).setScale(2,  RoundingMode.HALF_UP);
 		if (prev != null) {
-			if( prev == min ) {
-				value = prev + incr;
-			} else if( prev == max ) {
-				value = prev - incr;
+			if( prev.equals(min) ) {
+				value = value.add(prev).add(incr);
+			} else if( prev.equals(max) ) {
+				value = value.add(prev).subtract(incr);
 			}
-			else if ((random.nextInt() % 2) == 1 )
-				value = prev + incr;
+			else if ((random.nextInt(100) % 2) == 1 )
+				value = value.add(prev).add(incr);
 			else
-				value = prev - incr;
-			if (value < min)
+				value = value.add(prev).subtract(incr);
+			if (value.compareTo(min) < 0 )
 				value = min;
-			else if (value > max)
+			else if (value.compareTo(max) > 0)
 				value = max;
 		} else
 			value = mid;
@@ -81,7 +82,7 @@ public class SimSequenceFloat {
 			value = exceed;
 			prev = mid;
 		}
-		return value;
+		return value.floatValue();
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class SimSequenceFloat {
 	 * @return the mid
 	 */
 	public Float getMid() {
-		return mid;
+		return mid.floatValue();
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class SimSequenceFloat {
 	 * @return the max
 	 */
 	public Float getMax() {
-		return max;
+		return max.floatValue();
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class SimSequenceFloat {
 	 * @return the min
 	 */
 	public Float getMin() {
-		return min;
+		return min.floatValue();
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class SimSequenceFloat {
 	 * @return the exceed
 	 */
 	public Float getExceed() {
-		return exceed;
+		return exceed.floatValue();
 	}
 
 	/**
@@ -135,7 +136,7 @@ public class SimSequenceFloat {
 	 * @return the incr
 	 */
 	public Float getIncr() {
-		return incr;
+		return incr.floatValue();
 	}
 
 	/**
@@ -144,7 +145,7 @@ public class SimSequenceFloat {
 	 * @return the prev
 	 */
 	public Float getPrev() {
-		return prev;
+		return prev.floatValue();
 	}
 
 	/**
@@ -160,10 +161,10 @@ public class SimSequenceFloat {
 	 * Sets the mid.
 	 *
 	 * @param mid the mid
-	 * @return the sim sequence float
+	 * @return the sim sequence double
 	 */
 	public SimSequenceFloat setMid(Float mid) {
-		this.mid = mid;
+		this.mid = new BigDecimal(mid).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -171,10 +172,10 @@ public class SimSequenceFloat {
 	 * Sets the max.
 	 *
 	 * @param max the max
-	 * @return the sim sequence float
+	 * @return the sim sequence double
 	 */
 	public SimSequenceFloat setMax(Float max) {
-		this.max = max;
+		this.max = new BigDecimal(max).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -182,10 +183,10 @@ public class SimSequenceFloat {
 	 * Sets the min.
 	 *
 	 * @param min the min
-	 * @return the sim sequence float
+	 * @return the sim sequence double
 	 */
 	public SimSequenceFloat setMin(Float min) {
-		this.min = min;
+		this.min = new BigDecimal(min).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -193,10 +194,10 @@ public class SimSequenceFloat {
 	 * Sets the exceed.
 	 *
 	 * @param exceed the exceed
-	 * @return the sim sequence float
+	 * @return the sim sequence double
 	 */
 	public SimSequenceFloat setExceed(Float exceed) {
-		this.exceed = exceed;
+		this.exceed = new BigDecimal(exceed).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -204,10 +205,10 @@ public class SimSequenceFloat {
 	 * Sets the incr.
 	 *
 	 * @param incr the incr
-	 * @return the sim sequence float
+	 * @return the sim sequence double
 	 */
 	public SimSequenceFloat setIncr(Float incr) {
-		this.incr = incr;
+		this.incr = new BigDecimal(incr).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -215,10 +216,10 @@ public class SimSequenceFloat {
 	 * Sets the prev.
 	 *
 	 * @param prev the prev
-	 * @return the sim sequence float
+	 * @return the sim sequence double
 	 */
 	public SimSequenceFloat setPrev(Float prev) {
-		this.prev = prev;
+		this.prev = new BigDecimal(prev).setScale(2, RoundingMode.HALF_UP);
 		return this;
 	}
 
@@ -226,7 +227,7 @@ public class SimSequenceFloat {
 	 * Sets the min pct exceeded.
 	 *
 	 * @param minPctExceeded the min pct exceeded
-	 * @return the sim sequence float
+	 * @return the sim sequence double
 	 */
 	public SimSequenceFloat setMinPctExceeded(Integer minPctExceeded) {
 		this.minPctExceeded = minPctExceeded;

@@ -94,7 +94,7 @@ public class BodyTemperatureVo extends OmhVo  {
 	
 	
 	public BodyTemperatureVo( ValidicHeader header, Biometric biometric ) throws SQLException {
-		this.bodyTemperatureUuid = header.getUuid();
+		this.bodyTemperatureUuid = biometric.getId();
 		this.hdrSourceName = biometric.getSourceName();
 		this.hdrSourceCreationDateTime = new Timestamp( offsetDateTimeToMillis(header.getCreationDateTime() ) ) ;
 		this.hdrUserId = header.getUserId();

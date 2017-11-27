@@ -38,7 +38,7 @@ import org.apache.logging.log4j.Logger;
  * The Class ClientSocketValidic.
  */
 @ClientEndpoint
-@ServerEndpoint(value = "/omh/")
+@ServerEndpoint(value = "/validic/")
 public class ClientSocketValidic {
 	
 	/** The Constant logger. */

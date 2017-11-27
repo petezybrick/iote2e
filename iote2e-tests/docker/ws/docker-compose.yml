@@ -17,12 +17,14 @@ services:
       - 8091
       - 8092
       - 8093
+      - 8094
     ports:
       - 8082:8082
       - 8090:8090
       - 8091:8091
       - 8092:8092
       - 8093:8093
+      - 8094:8094
     volumes:
       - ./data:/tmp/data
       - ../../iote2e-shared:/tmp/iote2e-shared

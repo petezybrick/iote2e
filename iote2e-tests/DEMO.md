@@ -185,6 +185,32 @@ truncate hk_workout;
 truncate respiratory_rate;
 
 ** Validic concurrent run with OmH **
+cd to local spark folder
+cd /home/pete/development/server/spark-2.0.2-bin-hadoop2.7
+
+* Batch layer - writes to db
+./bin/spark-submit \
+  --class com.pzybrick.iote2e.stream.spark.ValidicSparkConsumer \
+  --deploy-mode cluster \
+  --master spark://localhost:6066 \
+  --executor-memory 8G \
+  --executor-cores 2 \
+  --total-executor-cores 6 \
+  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
+  master_spark_run_docker_batch_config iote2e-cassandra1 iote2e
+
+* Speed layer - runs rules
+./bin/spark-submit \
+  --class com.pzybrick.iote2e.stream.spark.validicSparkConsumer \
+  --deploy-mode cluster \
+  --master spark://localhost:6066 \
+  --executor-memory 8G \
+  --executor-cores 2 \
+  --total-executor-cores 8 \
+  /tmp/iote2e-shared/jars/iote2e-stream-1.0.0.jar \
+  master_spark_run_docker_speed_config iote2e-cassandra1 iote2e
+  
+
 cd /tmp/iote2e-shared
 java -cp jars/iote2e-tests-1.0.0.jar com.pzybrick.iote2e.tests.validic.RunValidicSim "data/simOmhUsers.csv" 6 5 60 "ws://iote2e-ws1:8094/validic/" 
 

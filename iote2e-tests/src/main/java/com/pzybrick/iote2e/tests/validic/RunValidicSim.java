@@ -22,7 +22,6 @@ package com.pzybrick.iote2e.tests.validic;
 import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +29,6 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openmhealth.schema.domain.omh.BloodGlucose;
-import org.openmhealth.schema.domain.omh.BloodPressure;
-import org.openmhealth.schema.domain.omh.DataPoint;
-import org.openmhealth.schema.domain.omh.DataPointAcquisitionProvenance;
-import org.openmhealth.schema.domain.omh.DataPointHeader;
-import org.openmhealth.schema.domain.omh.DataPointModality;
-import org.openmhealth.schema.domain.omh.HeartRate;
-import org.openmhealth.schema.domain.omh.PhysicalActivity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -51,19 +42,10 @@ import com.pzybrick.iote2e.stream.validic.ValidicBody;
 import com.pzybrick.iote2e.stream.validic.ValidicBodyDeserializer;
 import com.pzybrick.iote2e.stream.validic.ValidicHeader;
 import com.pzybrick.iote2e.stream.validic.ValidicMessage;
-import com.pzybrick.iote2e.tests.omh.ClientSocketOmhHandler;
-import com.pzybrick.iote2e.tests.omh.OmhUser;
-import com.pzybrick.iote2e.tests.omh.SimOmhUsers;
-import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaBloodGlucoseImpl;
-import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaBloodPressureImpl;
-import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaBodyTempImpl;
-import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaHeartRateImpl;
-import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaHkWorkoutImpl;
-import com.pzybrick.iote2e.tests.omh.SimSchemaImpl.SimSchemaRespiratoryRateImpl;
 
 
 /**
- * The Class RunOmhSim.
+ * The Class RunValidicSim.
  */
 public class RunValidicSim {
 	
@@ -71,6 +53,8 @@ public class RunValidicSim {
 	private static final Logger logger = LogManager.getLogger(RunValidicSim.class);
 	
 	public static int MIN_PCT_EXCEEDED = 2;
+	
+	public static int ITEMS_PER_BLOCK = 7;
 	
 	/** The sim users file path. */
 	private String simUsersFilePath;
@@ -87,14 +71,13 @@ public class RunValidicSim {
 	/** The max loops. */
 	private Integer maxLoops;
 	
-	/** The subset omh users. */
-	private List<OmhUser> subsetOmhUsers;
+	/** The subset validic users. */
+	private List<ValidicUser> subsetValidicUsers;
 	
 	private String url;
 	
 	
 	private ObjectMapper objectMapper;
-
 
 	
 	/**
@@ -105,18 +88,18 @@ public class RunValidicSim {
 	public static void main(String[] args) {
 		try {
 			// Args: simUsersFilePath; simUsersOffset; simUsersNumUsers wsEndpoint
-			// Args: "iote2e-shared/data/simOmhUsers.csv" 1 5 "ws://localhost:8092/omh/"
-			RunValidicSim runOmhSim = new RunValidicSim( ).setSimUsersFilePath(args[0]).setSimUsersOffset( Integer.parseInt(args[1]) )
+			// Args: "iote2e-shared/data/simValidicUsers.csv" 1 5 "ws://localhost:8092/validic/"
+			RunValidicSim runValidicSim = new RunValidicSim( ).setSimUsersFilePath(args[0]).setSimUsersOffset( Integer.parseInt(args[1]) )
 					.setSimUsersNumUsers( Integer.parseInt(args[2]) ).setMaxLoops(Integer.parseInt(args[3])).setWsEndpoint(args[4])
 					.setUrl(args[4]);					
-			runOmhSim.process();
+			runValidicSim.process();
 		} catch(Exception e ) {
 			logger.error(e.getMessage(), e);
 		}
 	}
 	
 	/**
-	 * Instantiates a new run omh sim.
+	 * Instantiates a new run validic sim.
 	 *
 	 * @throws Exception the exception
 	 */
@@ -130,7 +113,7 @@ public class RunValidicSim {
 	 * @throws Exception the exception
 	 */
 	public void process() throws Exception {
-		this.subsetOmhUsers = SimOmhUsers.getInstance(simUsersFilePath).getOmhUsers().subList(simUsersOffset, simUsersOffset + simUsersNumUsers );
+		this.subsetValidicUsers = SimValidicUsers.getInstance(simUsersFilePath).getValidicUsers().subList(simUsersOffset, simUsersOffset + simUsersNumUsers );
 
 		this.objectMapper = new ObjectMapper();
 		this.objectMapper.registerModule(new JavaTimeModule());		
@@ -138,9 +121,8 @@ public class RunValidicSim {
 		module.addDeserializer(ValidicBody.class, new ValidicBodyDeserializer(objectMapper));
 		objectMapper.registerModule(module);
 		
-        int numLoops = 0;
         List<Thread> threads = new ArrayList<Thread>();
-        subsetOmhUsers.forEach( u-> {
+        subsetValidicUsers.forEach( u-> {
 			Runnable task = () -> {createMessageBlock( u.getEmail(), maxLoops );  };
 			Thread thread = new Thread(task);
 			threads.add( thread );
@@ -153,9 +135,44 @@ public class RunValidicSim {
 	}
 
 	
-	
 	public void createMessageBlock(String userId, int numBlocks ) {
 		try {
+			SimSequenceDouble bloodGlucose = new SimSequenceDouble()
+					.setExceed(170.0)
+					.setIncr(3.0)
+					.setMax(130.0)
+					.setMid(110.0)
+					.setMin(90.0)
+					.setMinPctExceeded(MIN_PCT_EXCEEDED);
+			SimSequenceDouble restingHeartrate = new SimSequenceDouble()
+					.setExceed(100.0)
+					.setIncr(3.0)
+					.setMax(85.0)
+					.setMid(72.0)
+					.setMin(65.0)
+					.setMinPctExceeded(MIN_PCT_EXCEEDED);
+			SimSequenceDouble systolic = new SimSequenceDouble()
+					.setExceed(150.0)
+					.setIncr(5.0)
+					.setMax(130.0)
+					.setMid(120.0)
+					.setMin(110.0)
+					.setMinPctExceeded(MIN_PCT_EXCEEDED);
+			SimSequenceDouble diastolic = new SimSequenceDouble()
+					.setExceed(105.0)
+					.setIncr(5.0)
+					.setMax(90.0)
+					.setMid(80.0)
+					.setMin(70.0)
+					.setMinPctExceeded(MIN_PCT_EXCEEDED);
+			SimSequenceDouble temperature = new SimSequenceDouble()
+					.setExceed(104.0)
+					.setIncr(.2)
+					.setMax(99.2)
+					.setMid(98.6)
+					.setMin(98.0)
+					.setMinPctExceeded(MIN_PCT_EXCEEDED);
+
 			ClientSocketValidicHandler clientSocketValidicHandler = new ClientSocketValidicHandler().setUrl(url);
 			clientSocketValidicHandler.connect();
 
@@ -168,51 +185,18 @@ public class RunValidicSim {
 						.setStartDateTime(startDateTime).setAdditionalProperties(additionalProperties);
 				List<ValidicBody> bodies = new ArrayList<ValidicBody>();			
 				OffsetDateTime bodyDateTime = startDateTime;			
-				SimSequenceDouble bloodGlucose = new SimSequenceDouble()
-						.setExceed(170.0)
-						.setIncr(3.0)
-						.setMax(130.0)
-						.setMid(110.0)
-						.setMin(90.0)
-						.setMinPctExceeded(MIN_PCT_EXCEEDED);
-				SimSequenceDouble restingHeartrate = new SimSequenceDouble()
-						.setExceed(100.0)
-						.setIncr(3.0)
-						.setMax(85.0)
-						.setMid(72.0)
-						.setMin(65.0)
-						.setMinPctExceeded(MIN_PCT_EXCEEDED);
-				SimSequenceDouble systolic = new SimSequenceDouble()
-						.setExceed(150.0)
-						.setIncr(5.0)
-						.setMax(130.0)
-						.setMid(120.0)
-						.setMin(110.0)
-						.setMinPctExceeded(MIN_PCT_EXCEEDED);
-				SimSequenceDouble diastolic = new SimSequenceDouble()
-						.setExceed(105.0)
-						.setIncr(5.0)
-						.setMax(90.0)
-						.setMid(80.0)
-						.setMin(70.0)
-						.setMinPctExceeded(MIN_PCT_EXCEEDED);
-				SimSequenceDouble temperature = new SimSequenceDouble()
-						.setExceed(104.0)
-						.setIncr(.2)
-						.setMax(99.2)
-						.setMid(98.6)
-						.setMin(98.0)
-						.setMinPctExceeded(MIN_PCT_EXCEEDED);
-				
+
 				int cntLoop = 0;
 				while(true) {
 					Diabete diabete = new Diabete()
+							.setSourceName("validic")
 							.setId(UUID.randomUUID().toString())
 							.setBloodGlucose(bloodGlucose.nextDouble())
 							.setLastUpdated(bodyDateTime)
 							.setTimestamp(bodyDateTime);
 					bodies.add(diabete);
 					Biometric biometric = new Biometric()
+							.setSourceName("validic")
 							.setId(UUID.randomUUID().toString())
 							.setRestingHeartrate(restingHeartrate.nextDouble())
 							.setSystolic(systolic.nextDouble())
@@ -222,8 +206,8 @@ public class RunValidicSim {
 							.setTimestamp(bodyDateTime);
 					bodies.add(biometric);
 					
-					if( ++cntLoop == 3 ) break;
 					Iote2eUtils.sleepMillis(1000L);
+					if( ++cntLoop == ITEMS_PER_BLOCK ) break;
 					bodyDateTime = OffsetDateTime.now();
 				}
 				header.setEndDateTime(bodyDateTime);
@@ -231,6 +215,7 @@ public class RunValidicSim {
 				
 				ValidicMessage validicMessage = new ValidicMessage().setHeader(header).setBodies(bodies);				
 		        String rawJson = objectMapper.writeValueAsString(validicMessage);
+		        logger.debug(rawJson);
 				byte[] compressed = CompressionUtils.compress(rawJson.getBytes());
 				clientSocketValidicHandler.session.getBasicRemote().sendBinary(ByteBuffer.wrap(compressed));
 				logger.debug("Raw ValidicMessage for {}", validicMessage.getHeader().getUserId() );
@@ -240,6 +225,8 @@ public class RunValidicSim {
 			logger.error(e.getMessage(), e );
 		}
 	}
+
+	
 	
 	public String getSimUsersFilePath() {
 		return simUsersFilePath;
@@ -261,8 +248,8 @@ public class RunValidicSim {
 		return maxLoops;
 	}
 
-	public List<OmhUser> getSubsetOmhUsers() {
-		return subsetOmhUsers;
+	public List<ValidicUser> getSubsetValidicUsers() {
+		return subsetValidicUsers;
 	}
 
 
@@ -291,8 +278,8 @@ public class RunValidicSim {
 		return this;
 	}
 
-	public RunValidicSim setSubsetOmhUsers(List<OmhUser> subsetOmhUsers) {
-		this.subsetOmhUsers = subsetOmhUsers;
+	public RunValidicSim setSubsetValidicUsers(List<ValidicUser> subsetValidicUsers) {
+		this.subsetValidicUsers = subsetValidicUsers;
 		return this;
 	}
 

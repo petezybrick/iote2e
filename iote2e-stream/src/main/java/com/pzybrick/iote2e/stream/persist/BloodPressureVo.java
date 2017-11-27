@@ -102,7 +102,7 @@ public class BloodPressureVo extends OmhVo {
 
 	
 	public BloodPressureVo( ValidicHeader header, Biometric biometric ) throws SQLException {
-		this.bloodPressureUuid = header.getUuid();
+		this.bloodPressureUuid = biometric.getId();
 		this.hdrSourceName = biometric.getSourceName();
 		this.hdrSourceCreationDateTime = new Timestamp( offsetDateTimeToMillis(header.getCreationDateTime() ) ) ;
 		this.hdrUserId = header.getUserId();
